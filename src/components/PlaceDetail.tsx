@@ -3,7 +3,8 @@ import type { Place, VerseRef } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { booksForPlace, erasForPlace } from '../lib/places';
-import { BOOK_BY_OSIS } from '../data/books';
+import { usePlaceImage } from '../lib/wikidataImage';
+import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { ERA_BY_ID, ERAS } from '../data/eras';
 
 interface Props {
@@ -41,6 +42,7 @@ function SourceLink({ href, children }: { href: string; children: React.ReactNod
 
 export default function PlaceDetail({ place, lang, onClose }: Props) {
   const t = useT();
+  const img = usePlaceImage(place);
   const grouped = useMemo(() => groupByBook(place.verses), [place]);
   const eras = useMemo(() => {
     const ids = new Set(erasForPlace(place));
@@ -55,9 +57,9 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
     <div className="animate-fade-in flex h-full flex-col">
       {/* image header */}
       <div className="relative">
-        {place.img ? (
+        {img ? (
           <img
-            src={place.img.url}
+            src={img.url}
             alt={place.name}
             className="h-40 w-full object-cover"
             loading="lazy"
@@ -79,14 +81,14 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
             <path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" />
           </svg>
         </button>
-        {place.img?.credit && (
+        {img?.credit && (
           <a
-            href={place.img.creditUrl ?? '#'}
+            href={img.creditUrl ?? '#'}
             target="_blank"
             rel="noreferrer"
             className="absolute bottom-1 right-2 rounded bg-black/45 px-1.5 py-0.5 text-[10px] text-white/90"
           >
-            © {place.img.credit}
+            © {img.credit}
           </a>
         )}
       </div>
@@ -169,15 +171,7 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
             <SourceLink href={obUrl}>{t('openbible')}</SourceLink>
             {place.biblia && <SourceLink href={place.biblia}>{t('biblia')}</SourceLink>}
             {wikiUrl && <SourceLink href={wikiUrl}>{t('wikipedia')}</SourceLink>}
-            {books[0] && (
-              <SourceLink
-                href={`https://bibleproject.com/explore/video/?q=${encodeURIComponent(
-                  BOOK_BY_OSIS[books[0]]?.en ?? '',
-                )}`}
-              >
-                {t('video')}
-              </SourceLink>
-            )}
+            {books[0] && <SourceLink href={bibleProjectUrl(books[0])}>{t('video')}</SourceLink>}
           </div>
         </div>
       </div>

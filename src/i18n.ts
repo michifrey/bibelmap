@@ -33,6 +33,8 @@ const STRINGS: Dict = {
   prev: { de: 'Zurück', en: 'Back' },
   next: { de: 'Weiter', en: 'Next' },
   placesInChapter: { de: 'Orte in diesem Kapitel', en: 'Places in this chapter' },
+  textLoading: { de: 'Text wird geladen …', en: 'Loading text …' },
+  noText: { de: 'Für dieses Kapitel liegt kein Text vor.', en: 'No text available for this chapter.' },
   noPlacesChapter: { de: 'In diesem Kapitel sind keine kartierten Orte erwähnt.', en: 'No mapped places are mentioned in this chapter.' },
   close: { de: 'Schließen', en: 'Close' },
   exit: { de: 'Beenden', en: 'Exit' },

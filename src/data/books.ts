@@ -95,9 +95,29 @@ export function bibleGatewayUrl(osis: string, chapter: number, version: string):
   return `https://www.biblegateway.com/passage/?search=${search}&version=${version}`;
 }
 
-// A BibleProject search link for a book (their book-overview videos).
+// BibleProject "guide" pages carry the book-overview video plus resources.
+// Slugs follow `book-of-<name>`, except a few books that BibleProject groups
+// into a single guide (Kings, Samuel, Chronicles). Maintain exceptions here.
+const BP_GUIDE_OVERRIDE: Record<string, string> = {
+  '1Kgs': 'books-of-kings',
+  '2Kgs': 'books-of-kings',
+  '1Sam': 'books-of-samuel',
+  '2Sam': 'books-of-samuel',
+  '1Chr': 'books-of-chronicles',
+  '2Chr': 'books-of-chronicles',
+};
+
+function bookSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+// Link to a book's BibleProject overview (guide page with the video).
 export function bibleProjectUrl(osis: string): string {
   const b = BOOK_BY_OSIS[osis];
-  const q = encodeURIComponent(b ? b.en : osis);
-  return `https://bibleproject.com/explore/video/?q=${q}`;
+  if (!b) return 'https://bibleproject.com/';
+  const slug = BP_GUIDE_OVERRIDE[osis] ?? `book-of-${bookSlug(b.en)}`;
+  return `https://bibleproject.com/guides/${slug}/`;
 }

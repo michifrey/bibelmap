@@ -20,7 +20,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   vorkommt, inkl. aller Bibelstellen.
 - **Heatmap** – die am häufigsten erwähnten Orte als Wärmebild.
 - **Präsentationsmodus** – ein Buch wählen (z. B. *2. Könige*) und chronologisch
-  Kapitel für Kapitel durchgehen; die Karte zoomt jeweils auf die erwähnten Orte.
+  Kapitel für Kapitel durchgehen: links der **Bibeltext** (Luther 1912 / WEB) mit
+  klickbaren Orts-Pins, rechts zoomt die Karte auf die erwähnten Orte
+  (Tastatur ← / → blättert Kapitel).
 - **Zweisprachig** – Oberfläche und Buchnamen auf Deutsch/Englisch.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
@@ -33,6 +35,13 @@ npm run dev        # Vite Dev-Server
 npm run build      # Typecheck + Production-Build
 npm run preview    # Build lokal anschauen
 ```
+
+### Deployment (GitHub Pages)
+
+Ein Workflow (`.github/workflows/deploy.yml`) baut und deployt automatisch bei jedem
+Push auf den Default-Branch. **Einmalig** in den Repo-Einstellungen aktivieren:
+*Settings → Pages → Source: GitHub Actions*. Der Build setzt `VITE_BASE=/bibelmap/`
+für das Project-Pages-Unterverzeichnis; lokal bleibt die Basis `/`.
 
 ## Daten
 
@@ -52,6 +61,18 @@ OB_DATA=/tmp/ob-data npm run data
 Das Skript (`scripts/build-data.mjs`) extrahiert pro Ort: Koordinaten, Namen +
 Schreibvarianten, Bibelstellen (mit kanonischer Sortierung `BBCCCVVV`), ein
 Wikimedia-Vorschaubild sowie Links zu Wikidata und Biblia.
+
+**Bibeltext** (`public/data/text/<Buch>.json`) für den Präsentationsmodus stammt aus
+[seven1m/open-bibles](https://github.com/seven1m/open-bibles) – **Lutherbibel 1912**
+(OSIS) und **World English Bible** (USFX), beide gemeinfrei:
+
+```bash
+git clone --depth 1 https://github.com/seven1m/open-bibles /tmp/open-bibles
+OPEN_BIBLES=/tmp/open-bibles npm run text
+```
+
+**Ortsbilder:** Orte ohne OpenBible-Foto, die eine Wikidata-ID haben, laden ihr Bild
+zur Laufzeit aus Wikidata (P18) → Wikimedia Commons nach (`src/lib/wikidataImage.ts`).
 
 ### Epochen & Zeitleiste
 

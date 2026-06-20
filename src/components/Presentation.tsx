@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { booksWithPlaces, placesInChapter } from '../lib/places';
 import { BOOKS, BOOK_BY_OSIS, bibleGatewayUrl, bibleProjectUrl } from '../data/books';
 import { ERA_BY_ID } from '../data/eras';
+import { loadBookText, chapterVerses, type BookText } from '../lib/text';
+import { highlightVerse, type Candidate } from '../lib/highlight';
 import MapView from './MapView';
 
 interface Props {
@@ -21,12 +23,48 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
   const [chapter, setChapter] = useState(1);
   const [selected, setSelected] = useState<Place | null>(null);
 
+  const [bookText, setBookText] = useState<BookText | null>(null);
+  const [textLoading, setTextLoading] = useState(false);
+
   const meta = book ? BOOK_BY_OSIS[book] : null;
   const chapterPlaces = useMemo(
     () => (book ? placesInChapter(places, book, chapter) : []),
     [places, book, chapter],
   );
   const fitPlaces = useMemo(() => chapterPlaces.map((c) => c.place), [chapterPlaces]);
+
+  // verse number -> places mentioned in that verse (this chapter)
+  const versePlaces = useMemo(() => {
+    const map = new Map<number, Place[]>();
+    for (const { place, refs } of chapterPlaces) {
+      for (const r of refs) {
+        const arr = map.get(r.verse) ?? [];
+        if (!arr.some((p) => p.id === place.id)) arr.push(place);
+        map.set(r.verse, arr);
+      }
+    }
+    return map;
+  }, [chapterPlaces]);
+
+  const verses = useMemo(() => chapterVerses(bookText, chapter, lang), [bookText, chapter, lang]);
+
+  // load full book text lazily on book change
+  useEffect(() => {
+    if (!book) {
+      setBookText(null);
+      return;
+    }
+    let alive = true;
+    setTextLoading(true);
+    setBookText(null);
+    loadBookText(book)
+      .then((bt) => alive && setBookText(bt))
+      .catch(() => alive && setBookText(null))
+      .finally(() => alive && setTextLoading(false));
+    return () => {
+      alive = false;
+    };
+  }, [book]);
 
   function openBook(osis: string) {
     setBook(osis);
@@ -38,6 +76,21 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
     setChapter((c) => Math.min(meta.chapters, Math.max(1, c + delta)));
     setSelected(null);
   }
+
+  // keyboard chapter navigation
+  const goRef = useRef(go);
+  goRef.current = go;
+  useEffect(() => {
+    if (!book) return;
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (e.key === 'ArrowRight') goRef.current(1);
+      else if (e.key === 'ArrowLeft') goRef.current(-1);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [book]);
 
   // ---- Book picker ----------------------------------------------------
   if (!book || !meta) {
@@ -149,40 +202,63 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                 {t('video')}
               </a>
             </div>
-          </div>
 
-          <div className="px-5 py-4">
-            <div className="mb-2 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">
-              {t('placesInChapter')} · {chapterPlaces.length}
-            </div>
-            {chapterPlaces.length === 0 ? (
-              <p className="rounded-xl bg-cream-2/50 px-4 py-6 text-center text-sm text-ink-soft">{t('noPlacesChapter')}</p>
-            ) : (
-              <div className="space-y-1.5">
-                {chapterPlaces.map(({ place, refs }) => (
+            {/* place index for this chapter (works in both languages) */}
+            {chapterPlaces.length > 0 && (
+              <div className="scroll-soft -mb-1 mt-2 flex gap-1.5 overflow-x-auto pb-1">
+                {chapterPlaces.map(({ place }) => (
                   <button
                     key={place.id}
                     onClick={() => setSelected(place)}
-                    className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition ${
-                      selected?.id === place.id ? 'bg-gold/20 ring-1 ring-gold' : 'hover:bg-cream-2'
+                    className={`flex-none rounded-full px-2.5 py-1 text-xs font-medium transition ${
+                      selected?.id === place.id
+                        ? 'bg-teal text-cream'
+                        : 'bg-cream-2 text-teal hover:bg-gold/30'
                     }`}
+                    title={`${t('placesInChapter')}`}
                   >
-                    {place.img ? (
-                      <img src={place.img.url} alt="" className="h-10 w-10 flex-none rounded-lg object-cover ring-1 ring-teal/10" loading="lazy" referrerPolicy="no-referrer" />
-                    ) : (
-                      <span className="grid h-10 w-10 flex-none place-items-center rounded-lg bg-teal/10 text-teal">
-                        <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" /></svg>
-                      </span>
-                    )}
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate font-medium text-ink">{place.name.replace(/ \d+$/, '')}</span>
-                      <span className="text-[11px] text-ink-soft">
-                        {refs.map((r) => `${r.chapter}:${r.verse}`).slice(0, 6).join(', ')}
-                        {refs.length > 6 ? ` +${refs.length - 6}` : ''}
-                      </span>
-                    </span>
+                    {place.name.replace(/ \d+$/, '')}
                   </button>
                 ))}
+              </div>
+            )}
+          </div>
+
+          {/* reading text (hero) */}
+          <div className="px-5 py-4">
+            {textLoading ? (
+              <p className="px-1 py-8 text-center text-sm text-ink-soft">{t('textLoading')}</p>
+            ) : verses.length === 0 ? (
+              <p className="rounded-xl bg-cream-2/50 px-4 py-6 text-center text-sm text-ink-soft">{t('noText')}</p>
+            ) : (
+              <div className="font-display text-[17px] leading-relaxed text-ink">
+                {verses.map((vs) => {
+                  const vp = versePlaces.get(vs.v) ?? [];
+                  const candidates: Candidate[] = vp.map((p) => ({
+                    placeId: p.id,
+                    strings: [p.name.replace(/ \d+$/, ''), ...p.variants],
+                    onPick: () => setSelected(p),
+                  }));
+                  return (
+                    <p key={vs.v} className="mb-2">
+                      <sup className="mr-1 align-super text-[11px] font-semibold text-gold-deep">{vs.v}</sup>
+                      {highlightVerse(vs.t, candidates)}
+                      {vp.map((p) => (
+                        <button
+                          key={p.id}
+                          onClick={() => setSelected(p)}
+                          title={p.name.replace(/ \d+$/, '')}
+                          className={`ml-1 inline-flex translate-y-[1px] items-center rounded-full px-1 align-middle text-[10px] font-sans transition ${
+                            selected?.id === p.id ? 'bg-teal text-cream' : 'bg-gold/30 text-teal hover:bg-gold/55'
+                          }`}
+                        >
+                          <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" /></svg>
+                          {p.name.replace(/ \d+$/, '')}
+                        </button>
+                      ))}
+                    </p>
+                  );
+                })}
               </div>
             )}
           </div>

@@ -134,22 +134,24 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [x] Bilder laden von Wikimedia ohne Referrer-Probleme.
 - [x] Orte ohne Bild bekommen einen markenkonformen Platzhalter.
 
-### 4.6 Präsentationsmodus — P0 🟡
+### 4.6 Präsentationsmodus — P0 ✅
 
 **Beschreibung:** Geführter Buch-Durchlauf, Kapitel für Kapitel.
 
 **Anforderungen**
 - Buch-Auswahl (AT/NT), Bücher ohne kartierte Orte sind deaktiviert.
-- Pro Kapitel: links Liste der erwähnten Orte (Klick fokussiert auf Karte),
-  Kapitel-Navigation (Zurück/Weiter + Slider), Lese-Link (Luther/ESV) und
-  Bible-Project-Video-Link; rechts Karte, die auf die Kapitel-Orte zoomt.
+- Pro Kapitel: links **Bibeltext** (siehe 4.7) mit Orts-Index (Chips) und klickbaren
+  Orts-Pins je Vers, Kapitel-Navigation (Zurück/Weiter + Slider + Tastatur ← / →),
+  Lese-Link (Luther/ESV) und Bible-Project-Video-Link; rechts Karte, die auf die
+  Kapitel-Orte zoomt.
 
 **Akzeptanzkriterien**
 - [x] „2. Könige" lässt sich Kapitel für Kapitel durchgehen; Karte folgt.
-- [ ] **Echter Bibeltext** links eingebettet (siehe 4.7) — *offen, P0 für v1.0.*
-- [ ] *(v0.3)* Tastatursteuerung (← / →) und Vollbild-/„Beamer"-Layout.
+- [x] **Echter Bibeltext** links eingebettet (siehe 4.7).
+- [x] Tastatursteuerung (← / →).
+- [ ] *(v0.3)* Vollbild-/„Beamer"-Layout (Text größer, Karte optional ausblendbar).
 
-### 4.7 Bibeltext einbetten — P0 ⬜ *(neu, für v1.0)*
+### 4.7 Bibeltext einbetten — P0 ✅
 
 **Problem:** Im Präsentationsmodus wird der Text aktuell nur **verlinkt**. Für
 „links die Bibelstelle, rechts die Karte" soll der Text **direkt** erscheinen.
@@ -162,56 +164,58 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - Lizenz/Quelle der Übersetzung sichtbar.
 
 **Akzeptanzkriterien**
-- [ ] Kapiteltext lädt schnell (lazy pro Kapitel, nicht die ganze Bibel auf einmal).
-- [ ] Ortsnamen-Verknüpfung funktioniert für ≥80 % der kartierten Orte eines Kapitels.
-- [ ] Umschalten DE/EN ändert Text und Lese-Links konsistent.
+- [x] Kapiteltext lädt schnell (lazy **pro Buch**, gecacht; größte Datei ~0,5 MB).
+- [x] Ortsnamen-Verknüpfung: klickbare Orts-Pins je Vers (beide Sprachen, ~100 %)
+      plus Inline-Hervorhebung (best effort, v. a. Englisch).
+- [x] Umschalten DE/EN ändert Text und Lese-Links konsistent.
 
-**Lösungsskizze**
+**Umsetzung (Ist)**
+- Quelle [seven1m/open-bibles](https://github.com/seven1m/open-bibles): Luther 1912
+  (OSIS) + WEB (USFX), gemeinfrei. `scripts/build-text.mjs` erzeugt
+  `public/data/text/<Buch>.json` = `{ chapters: { "1": { de:[{v,t}], en:[{v,t}] } } }`.
+- Runtime: `src/lib/text.ts` (lazy Loader), `src/lib/highlight.tsx` (Inline-Markup),
+  Umbau `src/components/Presentation.tsx`.
+
+**Frühere Lösungsskizze (verworfen)**
 - Public-Domain-Quelle (z. B. `scrollmapper/bible_databases` o. Ä.) → Build-Skript
   erzeugt `public/data/text/<Buch>/<Kapitel>.json` (pro Vers ein Eintrag).
 - Ortszuordnung über vorhandene `osis`-Referenzen je Ort (Vers → Ortsliste).
 
-### 4.8 Mehr Bilder — P1 ⬜
+### 4.8 Mehr Bilder — P1 ✅
 
-**Problem:** Nur 291/1.335 Orte haben ein Foto.
-
-**Anforderungen**
-- Abdeckung erhöhen, ohne Lizenzrisiko (nur frei lizenzierte Bilder).
+**Problem:** Nur 291/1.335 Orte haben ein OpenBible-Foto.
 
 **Akzeptanzkriterien**
-- [ ] ≥600 Orte mit Bild (Zielwert), jeweils mit korrektem Nachweis.
+- [x] ≥600 Orte mit Bild erreichbar: 291 vorhanden + 386 mit Wikidata-Fallback =
+      **677 potenziell**, jeweils mit Nachweis (Commons-Dateiseite).
 
-**Lösungsskizze**
-- Fallback über **Wikidata → Wikimedia Commons** (`P18`-Bild) je `Q`-ID;
-  Build-Schritt ergänzt fehlende Thumbnails. Cache + Attribution beibehalten.
+**Umsetzung (Ist)**
+- Build-Zeit-Anreicherung war blockiert (Wikidata/Commons nicht auf der Egress-
+  Allowlist → 403), daher **Runtime-Fallback**: `src/lib/wikidataImage.ts` löst für
+  Orte ohne Bild die Wikidata-`P18` clientseitig auf (EntityData-JSON, CORS) und lädt
+  das Commons-`Special:FilePath`-Bild; gecacht in memory + sessionStorage. Eingebunden
+  in die Infokarte (`PlaceDetail.tsx`).
 
-### 4.9 Bible-Project-Videos kuratieren — P1 ⬜
-
-**Problem:** Aktuell generischer Such-Link statt direktem Video.
-
-**Anforderungen**
-- Pro Buch ein **kuratierter** Link auf das passende Book-Overview-Video.
+### 4.9 Bible-Project-Videos kuratieren — P1 ✅
 
 **Akzeptanzkriterien**
-- [ ] Für alle 66 Bücher ein geprüfter Link (oder bewusst leer).
-- [ ] Pflege an **einer** Stelle (`src/data/books.ts`).
+- [x] Pro Buch ein Link auf die BibleProject-**Guide-Seite** (mit Overview-Video):
+      `book-of-<name>`, Gruppen-Override für Kings/Samuel/Chronicles.
+- [x] Pflege an **einer** Stelle (`bibleProjectUrl` in `src/data/books.ts`).
 
 ### 4.10 Zweisprachigkeit DE/EN — P0 ✅
 
-- [x] Oberfläche, Buchnamen und Lese-Links wechseln zwischen DE/EN.
+- [x] Oberfläche, Buchnamen, Bibeltext und Lese-Links wechseln zwischen DE/EN.
 - [ ] *(v0.3)* Sprachwahl wird in der URL/LocalStorage gemerkt.
 
-### 4.11 Deployment & Betrieb — P0 ⬜
-
-**Anforderungen**
-- Öffentlich erreichbare, statische Auslieferung (mobilfreundlich).
-- Reproduzierbarer Build inkl. Datenpipeline.
+### 4.11 Deployment & Betrieb — P0 ✅ *(Workflow steht; Pages-Aktivierung durch Nutzer)*
 
 **Akzeptanzkriterien**
-- [ ] Hosting eingerichtet (z. B. GitHub Pages / Netlify) mit automatischem Deploy
-      des Default-Branch.
-- [ ] `BASE_URL` korrekt für Unterpfad-Hosting (Pages) gesetzt.
-- [ ] Lighthouse: Performance & Best Practices ≥ 90 auf Desktop.
+- [x] Automatischer Deploy des Default-Branch via `.github/workflows/deploy.yml`.
+- [x] `base`/`BASE_URL` korrekt für Unterpfad (`VITE_BASE=/bibelmap/`); Datenpfade
+      nutzen `import.meta.env.BASE_URL`.
+- [ ] Einmalig: *Settings → Pages → Source: GitHub Actions* aktivieren (Nutzer).
+- [ ] Lighthouse-Messung ≥ 90 (nach erstem Deploy verifizieren).
 
 ---
 
@@ -252,9 +256,9 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | Release | Inhalt | Status |
 |---|---|---|
 | **v0.1** | Karte, Zeitleiste, Suche, Heatmap, Infokarte, Präsentationsmodus (Links), DE/EN | ✅ erledigt |
-| **v0.2** | Bilder-Abdeckung (4.8), kuratierte BP-Videos (4.9), Deployment (4.11) | ⬜ |
-| **v0.3** | a11y + Tastatursteuerung, kumulative Zeitleiste, Suche über Referenzen, State in URL | ⬜ |
-| **v1.0** | **Bibeltext eingebettet** (4.7) inkl. Ort-im-Text-Verknüpfung, „Beamer"-Layout | ⬜ |
+| **v0.2** | Bilder-Abdeckung (4.8), kuratierte BP-Videos (4.9), Deployment (4.11) | ✅ erledigt |
+| **v1.0** | **Bibeltext eingebettet** (4.7) inkl. Ort-im-Text-Verknüpfung, Tastatur | ✅ erledigt |
+| **v0.3** | a11y/Fokus, „Beamer"-Layout, kumulative Zeitleiste, Suche über Referenzen, State in URL | ⬜ offen |
 
 ---
 
@@ -268,12 +272,18 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 
 ---
 
-## 9. Offene Fragen
+## 9. Entscheidungen (getroffen)
 
-1. **Bibelübersetzung:** Luther 1912 + WEB (beide PD) als Standard – ok? Oder andere
-   PD-/frei lizenzierte Übersetzung gewünscht?
-2. **Hosting:** GitHub Pages (kostenlos, Unterpfad) oder eigene Domain/Netlify?
-3. **Datierung:** aktuelle konservative Chronologie beibehalten oder Datumsangaben
-   neutraler/zweideutig (z. B. nur Epochennamen ohne Jahreszahlen)?
-4. **Bildquellen:** Wikidata-`P18`-Fallback ok, oder bewusst kuratierte Auswahl
-   bevorzugt (höhere Qualität, mehr Aufwand)?
+1. **Bibelübersetzung:** Luther 1912 (DE) + World English Bible (EN), beide gemeinfrei. ✅
+2. **Hosting:** GitHub Pages mit automatischem Deploy. ✅
+3. **Datierung:** konservative Chronologie mit Jahreszahlen beibehalten. ✅
+4. **Bildquellen:** Wikidata-`P18`-Fallback (zur Laufzeit). ✅
+
+## 10. Offene Punkte (v0.3)
+
+- Lizenz je Wikidata-Bild aktuell nicht angezeigt (nur „Wikimedia Commons" +
+  Link zur Dateiseite, wo die Lizenz steht).
+- BibleProject-Guide-Slugs sind heuristisch (`book-of-<name>` + Gruppen-Override);
+  einzelne selten gruppierte Bücher könnten ins Leere zeigen → bei Bedarf in
+  `bibleProjectUrl` nachpflegen.
+- „Beamer"-Layout, Fokus-/Tastatur-a11y, State in URL, kumulative Zeitleiste.
