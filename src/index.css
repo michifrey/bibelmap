@@ -1,0 +1,112 @@
+@import 'tailwindcss';
+@import 'leaflet/dist/leaflet.css';
+@import 'leaflet.markercluster/dist/MarkerCluster.css';
+
+/* ------------------------------------------------------------------ */
+/* Design tokens – a warm, editorial palette inspired by BibleProject  */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-cream: #f7f1e6;
+  --color-cream-2: #efe6d6;
+  --color-ink: #20302e;
+  --color-ink-soft: #4a5754;
+  --color-teal: #1f3d3a;
+  --color-teal-2: #2f6f66;
+  --color-gold: #e0a449;
+  --color-gold-deep: #c2812a;
+  --color-clay: #b8742e;
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  background: var(--color-cream);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+
+/* Thin, elegant scrollbars */
+.scroll-soft {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(31, 61, 58, 0.3) transparent;
+}
+.scroll-soft::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-soft::-webkit-scrollbar-thumb {
+  background: rgba(31, 61, 58, 0.25);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Leaflet overrides                                                   */
+/* ------------------------------------------------------------------ */
+.leaflet-container {
+  background: #e9e2d3;
+  font-family: var(--font-sans);
+}
+
+.bm-marker {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  transition: transform 0.12s ease;
+}
+.bm-marker:hover {
+  transform: scale(1.25);
+  z-index: 1000;
+}
+
+.bm-cluster {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(31, 61, 58, 0.9);
+  color: #f7f1e6;
+  border: 2px solid rgba(224, 164, 73, 0.9);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  box-shadow: 0 10px 30px rgba(31, 61, 58, 0.25);
+}
+.leaflet-popup-content {
+  margin: 0;
+}
+
+/* Highlighted marker ring (search / presentation focus) */
+.bm-marker--focus {
+  box-shadow: 0 0 0 4px rgba(224, 164, 73, 0.55), 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes bm-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: bm-fade-in 0.25s ease both;
+}
