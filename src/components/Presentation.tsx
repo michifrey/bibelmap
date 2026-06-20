@@ -3,11 +3,12 @@ import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { booksWithPlaces, placesInChapter } from '../lib/places';
-import { BOOKS, BOOK_BY_OSIS, bibleGatewayUrl, bibleProjectUrl } from '../data/books';
+import { BOOKS, BOOK_BY_OSIS, bibleGatewayUrl, bibleProjectUrl, bibleProjectVideoIds } from '../data/books';
 import { ERA_BY_ID } from '../data/eras';
 import { loadBookText, chapterVerses, type BookText } from '../lib/text';
 import { highlightVerse, type Candidate } from '../lib/highlight';
 import MapView from './MapView';
+import YouTubeEmbed from './YouTubeEmbed';
 
 interface Props {
   places: Place[];
@@ -25,6 +26,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
 
   const [bookText, setBookText] = useState<BookText | null>(null);
   const [textLoading, setTextLoading] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
 
   const meta = book ? BOOK_BY_OSIS[book] : null;
   const chapterPlaces = useMemo(
@@ -70,6 +72,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
     setBook(osis);
     setChapter(1);
     setSelected(null);
+    setShowVideo(false);
   }
   function go(delta: number) {
     if (!meta) return;
@@ -193,14 +196,24 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
               >
                 {lang === 'de' ? t('readDe') : t('readEn')}
               </a>
-              <a
-                href={bibleProjectUrl(meta.osis)}
-                target="_blank"
-                rel="noreferrer"
-                className="rounded-lg bg-gold/25 px-2.5 py-1 text-xs font-medium text-teal transition hover:bg-gold/40"
-              >
-                {t('video')}
-              </a>
+              {bibleProjectVideoIds(meta.osis).length > 0 ? (
+                <button
+                  onClick={() => setShowVideo(true)}
+                  className="inline-flex items-center gap-1 rounded-lg bg-clay px-2.5 py-1 text-xs font-medium text-cream transition hover:bg-gold-deep"
+                >
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                  {t('video')}
+                </button>
+              ) : (
+                <a
+                  href={bibleProjectUrl(meta.osis)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-lg bg-gold/25 px-2.5 py-1 text-xs font-medium text-teal transition hover:bg-gold/40"
+                >
+                  {t('video')}
+                </a>
+              )}
             </div>
 
             {/* place index for this chapter (works in both languages) */}
@@ -276,6 +289,29 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
           />
         </div>
       </div>
+
+      {showVideo && bibleProjectVideoIds(meta.osis).length > 0 && (
+        <div
+          className="fixed inset-0 z-[2200] grid place-items-center bg-black/60 p-4"
+          onClick={() => setShowVideo(false)}
+        >
+          <div className="w-full max-w-2xl rounded-2xl bg-cream p-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-2 flex items-center justify-between">
+              <div className="font-display text-lg font-semibold text-teal">
+                {lang === 'de' ? meta.de : meta.en} · {t('video')}
+              </div>
+              <button
+                onClick={() => setShowVideo(false)}
+                className="grid h-8 w-8 place-items-center rounded-full bg-cream-2 text-teal transition hover:bg-gold/30"
+                aria-label={t('close')}
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
+              </button>
+            </div>
+            <YouTubeEmbed ids={bibleProjectVideoIds(meta.osis)} title={lang === 'de' ? meta.de : meta.en} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

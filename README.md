@@ -22,7 +22,16 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 - **Präsentationsmodus** – ein Buch wählen (z. B. *2. Könige*) und chronologisch
   Kapitel für Kapitel durchgehen: links der **Bibeltext** (Luther 1912 / WEB) mit
   klickbaren Orts-Pins, rechts zoomt die Karte auf die erwähnten Orte
-  (Tastatur ← / → blättert Kapitel).
+  (Tastatur ← / → blättert Kapitel). **BibleProject-Videos** sind eingebettet,
+  wo vorhanden.
+- **Heilsgeschichte-Modus** – geführte chronologische Reise von der Schöpfung bis
+  zur neuen Welt (Schöpfung, Abraham, Exodus, Exil, Jesus, frühe Kirche …) mit
+  Karte, Bibelstelle und Video je Station.
+- **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
+  Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
+  Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
+- **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
+  robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
 - **Zweisprachig** – Oberfläche und Buchnamen auf Deutsch/Englisch.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).

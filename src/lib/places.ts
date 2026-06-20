@@ -86,6 +86,25 @@ export function searchPlaces(places: Place[], query: string, limit = 40): Place[
   return scored.slice(0, limit).map((s) => s.p);
 }
 
+/** Resolve a list of place names to Place objects (best match per name). */
+export function findPlacesByNames(places: Place[], names: string[]): Place[] {
+  const out: Place[] = [];
+  const seen = new Set<string>();
+  for (const raw of names) {
+    const q = norm(raw);
+    let best: Place | null = null;
+    for (const p of places) {
+      const base = norm(p.name.replace(/ \d+$/, ''));
+      if (base === q && (!best || p.mentionCount > best.mentionCount)) best = p;
+    }
+    if (best && !seen.has(best.id)) {
+      seen.add(best.id);
+      out.push(best);
+    }
+  }
+  return out;
+}
+
 /** Books (OSIS) that actually have mapped places, in canonical order. */
 export function booksWithPlaces(places: Place[]): string[] {
   const set = new Set<string>();

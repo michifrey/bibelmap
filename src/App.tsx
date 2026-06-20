@@ -4,11 +4,13 @@ import { LangContext, type Lang, useT } from './i18n';
 import { loadPlaces, placesInEra, searchPlaces, erasForPlace } from './lib/places';
 import { ERAS } from './data/eras';
 import MapView from './components/MapView';
-import Header from './components/Header';
+import Header, { type Mode } from './components/Header';
 import Timeline from './components/Timeline';
 import SearchPanel from './components/SearchPanel';
 import PlaceDetail from './components/PlaceDetail';
 import Presentation from './components/Presentation';
+import HistoryMode from './components/HistoryMode';
+import CompareMode from './components/CompareMode';
 
 function Loading() {
   const t = useT();
@@ -34,7 +36,7 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
-  const [present, setPresent] = useState(false);
+  const [mode, setMode] = useState<Mode | null>(null);
 
   useEffect(() => {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
@@ -84,7 +86,7 @@ export default function App() {
           flyTo={flyTo}
         />
 
-        <Header lang={lang} onLang={setLang} heat={heat} onHeat={setHeat} onPresent={() => setPresent(true)} />
+        <Header lang={lang} onLang={setLang} heat={heat} onHeat={setHeat} onMode={setMode} />
 
         {/* Left panel */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-[1100] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
@@ -105,20 +107,9 @@ export default function App() {
 
         {!heat && <Timeline lang={lang} selected={era} counts={eraCounts} onSelect={setEra} />}
 
-        {/* mobile present button */}
-        <button
-          onClick={() => setPresent(true)}
-          className="absolute bottom-4 right-4 z-[1100] grid h-12 w-12 place-items-center rounded-full bg-teal text-cream shadow-xl ring-1 ring-teal/20 transition hover:bg-teal-2 sm:hidden"
-          aria-label="Präsentationsmodus"
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-            <path d="M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z" />
-          </svg>
-        </button>
-
-        {present && (
-          <Presentation places={places} lang={lang} onExit={() => setPresent(false)} />
-        )}
+        {mode === 'present' && <Presentation places={places} lang={lang} onExit={() => setMode(null)} />}
+        {mode === 'history' && <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />}
+        {mode === 'compare' && <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />}
       </div>
     </LangContext.Provider>
   );
