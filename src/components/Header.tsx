@@ -24,8 +24,8 @@ export default function Header({ lang, onLang, heat, onHeat, onMode }: Props) {
 
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex items-start justify-between gap-3 p-3 sm:p-4">
-      <div className="pointer-events-auto flex items-center gap-3 rounded-2xl bg-cream/85 px-4 py-2.5 shadow-lg ring-1 ring-teal/10 backdrop-blur">
-        <div className="grid h-9 w-9 place-items-center rounded-xl bg-teal text-gold">
+      <div className="pointer-events-auto flex items-center gap-3 rounded-3xl bg-cream/75 px-4 py-2.5 shadow-lg ring-1 ring-white/40 backdrop-blur-xl">
+        <div className="grid h-9 w-9 place-items-center rounded-2xl bg-gradient-to-br from-teal to-teal-2 text-gold shadow-inner">
           <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
             <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
           </svg>
@@ -74,7 +74,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode }: Props) {
           )}
         </div>
 
-        <div className="hidden overflow-hidden rounded-xl bg-cream/85 shadow-lg ring-1 ring-teal/10 backdrop-blur sm:flex">
+        <div className="hidden overflow-hidden rounded-xl bg-cream/75 shadow-lg ring-1 ring-white/40 backdrop-blur-xl sm:flex">
           <button
             onClick={() => onHeat(false)}
             className={`px-3 py-2.5 text-sm font-medium transition ${!heat ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
@@ -89,7 +89,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode }: Props) {
           </button>
         </div>
 
-        <div className="flex overflow-hidden rounded-xl bg-cream/85 shadow-lg ring-1 ring-teal/10 backdrop-blur">
+        <div className="flex overflow-hidden rounded-xl bg-cream/75 shadow-lg ring-1 ring-white/40 backdrop-blur-xl">
           {(['de', 'en'] as Lang[]).map((l) => (
             <button
               key={l}

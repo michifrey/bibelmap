@@ -57,6 +57,9 @@ const STRINGS: Dict = {
   compareIntro: { de: 'Gemeinsame Gestalten von Judentum, Christentum und Islam – mit den Stellen, an denen die Schriften auf sie Bezug nehmen, betrachtet aus jüdisch-christlich-biblischer Sicht.', en: 'Figures shared by Judaism, Christianity and Islam — with the passages where each scripture refers to them, seen from a Jewish–Christian–biblical perspective.' },
   compareDisclaimer: { de: 'Die Angaben dienen als Lese-Wegweiser und behaupten keine Gleichsetzung der Texte. Unterschiede sind im jeweiligen Text nachzulesen.', en: 'References are reading pointers and do not claim the texts are equivalent. Differences are found in the texts themselves.' },
   modes: { de: 'Modi', en: 'Modes' },
+  basemapLight: { de: 'Karte', en: 'Map' },
+  basemapSatellite: { de: 'Satellit', en: 'Satellite' },
+  basemapRelief: { de: 'Relief', en: 'Terrain' },
   showing: { de: 'Sichtbar', en: 'Showing' },
   places: { de: 'Orte', en: 'places' },
 };

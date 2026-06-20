@@ -32,6 +32,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
 - **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
   robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
+- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
+  Imagery) und **Relief/„historisch"** (Esri Shaded Relief).
 - **Zweisprachig** – Oberfläche und Buchnamen auf Deutsch/Englisch.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
