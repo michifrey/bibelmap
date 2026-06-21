@@ -60,6 +60,7 @@ const STRINGS: Dict = {
   basemapLight: { de: 'Karte', en: 'Map' },
   basemapSatellite: { de: 'Satellit', en: 'Satellite' },
   basemapRelief: { de: 'Relief', en: 'Terrain' },
+  basemapAntique: { de: 'Antike Welt', en: 'Ancient world' },
   showing: { de: 'Sichtbar', en: 'Showing' },
   places: { de: 'Orte', en: 'places' },
 };

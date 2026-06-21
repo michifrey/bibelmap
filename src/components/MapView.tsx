@@ -19,12 +19,13 @@ interface Props {
   flyTo?: { lat: number; lon: number; zoom?: number; key: number } | null;
 }
 
-export type BasemapId = 'light' | 'satellite' | 'relief';
+export type BasemapId = 'light' | 'satellite' | 'relief' | 'antique';
 
 interface Basemap {
   url: string;
   attribution: string;
   maxZoom: number;
+  maxNativeZoom?: number;
   subdomains?: string;
   dark?: boolean;
 }
@@ -49,6 +50,14 @@ export const BASEMAPS: Record<BasemapId, Basemap> = {
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
     attribution: 'Tiles &copy; Esri — Source: Esri ' + OB_ATTR,
     maxZoom: 13,
+  },
+  antique: {
+    // Digital Atlas of the Roman Empire (DARE / "Imperium"), Univ. of Gothenburg.
+    url: 'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png',
+    attribution:
+      'Historische Karte &copy; <a href="https://imperium.ahlfeldt.se/">DARE</a> (Univ. Göteborg, CC-BY) ' + OB_ATTR,
+    maxZoom: 14,
+    maxNativeZoom: 11,
   },
 };
 
@@ -146,6 +155,7 @@ export default function MapView({ places, heat, selectedId, onSelect, basemap = 
       attribution: bm.attribution,
       subdomains: bm.subdomains ?? 'abc',
       maxZoom: bm.maxZoom,
+      maxNativeZoom: bm.maxNativeZoom ?? bm.maxZoom,
     }).addTo(map);
     tileRef.current.setZIndex(0);
     const c = map.getContainer();

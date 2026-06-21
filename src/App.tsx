@@ -113,7 +113,8 @@ export default function App() {
             ['light', 'M3 12h18M12 3v18', 'basemapLight'],
             ['satellite', 'M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20M12 2c2.5 2.7 2.5 17.3 0 20M12 2c-2.5 2.7-2.5 17.3 0 20', 'basemapSatellite'],
             ['relief', 'M3 18l5-8 4 5 3-4 6 7z', 'basemapRelief'],
-          ] as [BasemapId, string, 'basemapLight' | 'basemapSatellite' | 'basemapRelief'][]).map(([id, icon, key]) => (
+            ['antique', 'M9 3 4 5v16l5-2 6 2 5-2V3l-5 2-6-2zM9 3v16M15 5v16', 'basemapAntique'],
+          ] as [BasemapId, string, 'basemapLight' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'][]).map(([id, icon, key]) => (
             <button
               key={id}
               onClick={() => setBasemap(id)}
