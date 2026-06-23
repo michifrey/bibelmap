@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 
-export type Mode = 'present' | 'history' | 'compare';
+export type Mode = 'present' | 'history' | 'compare' | 'church';
 
 interface Props {
   lang: Lang;
@@ -19,6 +19,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode }: Props) {
   const modes: { id: Mode; label: string; hint: string; icon: string }[] = [
     { id: 'present', label: t('presentation'), hint: t('presentationHint'), icon: 'M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z' },
     { id: 'history', label: t('historyMode'), hint: t('historyHint'), icon: 'M12 8v5l3 2' },
+    { id: 'church', label: t('churchMode'), hint: t('churchHint'), icon: 'M12 3v18M7 8h10M5 21h14' },
     { id: 'compare', label: t('compareMode'), hint: t('compareIntro'), icon: 'M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z' },
   ];
 
