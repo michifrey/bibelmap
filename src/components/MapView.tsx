@@ -11,13 +11,55 @@ interface Props {
   heat: boolean;
   selectedId: string | null;
   onSelect: (p: Place) => void;
+  /** Base map style. */
+  basemap?: BasemapId;
   /** Fit the map to exactly these places (presentation mode). */
   fitPlaces?: Place[] | null;
   /** Fly to a single coordinate (search focus). */
   flyTo?: { lat: number; lon: number; zoom?: number; key: number } | null;
 }
 
-const CARTO = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+export type BasemapId = 'light' | 'satellite' | 'relief' | 'antique';
+
+interface Basemap {
+  url: string;
+  attribution: string;
+  maxZoom: number;
+  maxNativeZoom?: number;
+  subdomains?: string;
+  dark?: boolean;
+}
+
+const OB_ATTR = '· Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY)';
+
+export const BASEMAPS: Record<BasemapId, Basemap> = {
+  light: {
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> ' + OB_ATTR,
+    maxZoom: 19,
+    subdomains: 'abcd',
+  },
+  satellite: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics ' + OB_ATTR,
+    maxZoom: 18,
+    dark: true,
+  },
+  relief: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri — Source: Esri ' + OB_ATTR,
+    maxZoom: 13,
+  },
+  antique: {
+    // Digital Atlas of the Roman Empire (DARE / "Imperium"), Univ. of Gothenburg.
+    url: 'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png',
+    attribution:
+      'Historische Karte &copy; <a href="https://imperium.ahlfeldt.se/">DARE</a> (Univ. Göteborg, CC-BY) ' + OB_ATTR,
+    maxZoom: 14,
+    maxNativeZoom: 11,
+  },
+};
 
 function primaryEraColor(p: Place): string {
   const eras = erasForPlace(p);
@@ -51,9 +93,34 @@ function makeIcon(p: Place, focused: boolean): L.DivIcon {
   });
 }
 
-export default function MapView({ places, heat, selectedId, onSelect, fitPlaces, flyTo }: Props) {
+// Rich marker popup: image (when available), name, type/mentions and links.
+function buildPopup(p: Place, onDetails: () => void): HTMLElement {
+  const name = p.name.replace(/ \d+$/, '');
+  const obUrl = `https://www.openbible.info/geo/ancient/${p.id}/${p.slug}`;
+  const wikiUrl = p.wikidata ? `https://www.wikidata.org/wiki/${p.wikidata}` : '';
+  const img = p.img
+    ? `<img src="${p.img.url}" referrerpolicy="no-referrer" onerror="this.style.display='none'" alt="" class="mb-2 h-28 w-full rounded-lg object-cover" />`
+    : '';
+  const el = document.createElement('div');
+  el.className = 'w-[210px] font-sans';
+  el.innerHTML = `
+    ${img}
+    <div class="font-display text-base font-semibold leading-tight text-teal">${name}</div>
+    <div class="mt-0.5 text-[11px] text-ink-soft">${[p.types.join(', '), `${p.mentionCount}×`].filter(Boolean).join(' · ')}</div>
+    <div class="mt-2 flex flex-wrap items-center gap-1.5">
+      <button data-details class="rounded-lg bg-teal px-2.5 py-1 text-xs font-medium text-cream">Details</button>
+      <a href="${obUrl}" target="_blank" rel="noreferrer" class="rounded-lg bg-cream-2 px-2 py-1 text-xs text-teal">OpenBible</a>
+      ${wikiUrl ? `<a href="${wikiUrl}" target="_blank" rel="noreferrer" class="rounded-lg bg-cream-2 px-2 py-1 text-xs text-teal">Wikidata</a>` : ''}
+    </div>`;
+  const btn = el.querySelector('[data-details]') as HTMLButtonElement | null;
+  if (btn) btn.onclick = onDetails;
+  return el;
+}
+
+export default function MapView({ places, heat, selectedId, onSelect, basemap = 'light', fitPlaces, flyTo }: Props) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  const tileRef = useRef<L.TileLayer | null>(null);
   const clusterRef = useRef<L.MarkerClusterGroup | null>(null);
   const heatRef = useRef<L.Layer | null>(null);
   const markerById = useRef<Map<string, L.Marker>>(new Map());
@@ -67,21 +134,33 @@ export default function MapView({ places, heat, selectedId, onSelect, fitPlaces,
       center: [31.5, 35.4],
       zoom: 7,
       minZoom: 2,
-      maxZoom: 13,
+      maxZoom: 17,
       zoomControl: true,
       worldCopyJump: true,
     });
-    L.tileLayer(CARTO, {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY)',
-      subdomains: 'abcd',
-    }).addTo(map);
     mapRef.current = map;
     return () => {
       map.remove();
       mapRef.current = null;
     };
   }, []);
+
+  // basemap tile layer (swappable)
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const bm = BASEMAPS[basemap] ?? BASEMAPS.light;
+    if (tileRef.current) map.removeLayer(tileRef.current);
+    tileRef.current = L.tileLayer(bm.url, {
+      attribution: bm.attribution,
+      subdomains: bm.subdomains ?? 'abc',
+      maxZoom: bm.maxZoom,
+      maxNativeZoom: bm.maxNativeZoom ?? bm.maxZoom,
+    }).addTo(map);
+    tileRef.current.setZIndex(0);
+    const c = map.getContainer();
+    c.classList.toggle('bm-dark', !!bm.dark);
+  }, [basemap]);
 
   // (re)build markers / heat when data or mode changes
   useEffect(() => {
@@ -132,7 +211,12 @@ export default function MapView({ places, heat, selectedId, onSelect, fitPlaces,
         icon: makeIcon(p, p.id === selectedId),
         title: p.name,
       });
-      marker.on('click', () => onSelectRef.current(p));
+      marker.bindPopup(() => buildPopup(p, () => onSelectRef.current(p)), {
+        maxWidth: 240,
+        minWidth: 210,
+        closeButton: true,
+        autoPanPadding: [40, 40],
+      });
       markerById.current.set(p.id, marker);
       cluster.addLayer(marker);
     }

@@ -2,6 +2,7 @@ import type { Place } from '../types';
 import { useT } from '../i18n';
 import { erasForPlace } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
+import PlaceThumb from './PlaceThumb';
 
 interface Props {
   query: string;
@@ -31,21 +32,8 @@ function Row({ p, onSelect, t }: { p: Place; onSelect: (p: Place) => void; t: (k
       onClick={() => onSelect(p)}
       className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-cream-2"
     >
-      {p.img ? (
-        <img
-          src={p.img.url}
-          alt=""
-          className="h-11 w-11 flex-none rounded-lg object-cover ring-1 ring-teal/10"
-          loading="lazy"
-          referrerPolicy="no-referrer"
-        />
-      ) : (
-        <span className="grid h-11 w-11 flex-none place-items-center rounded-lg bg-teal/10 text-teal">
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-            <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
-          </svg>
-        </span>
-      )}
+      <PlaceThumb place={p} className="h-11 w-11 flex-none rounded-lg ring-1 ring-teal/10" />
+
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
           <span className="truncate font-medium text-ink group-hover:text-teal">{p.name.replace(/ \d+$/, '')}</span>
