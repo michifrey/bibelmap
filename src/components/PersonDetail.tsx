@@ -1,0 +1,111 @@
+import type { Lang } from '../i18n';
+import { useT } from '../i18n';
+import {
+  type Person,
+  EPOCH_BY_ID,
+  PERSON_BY_ID,
+  formatYear,
+  bibleRefUrl,
+} from '../data/genealogy';
+
+interface Props {
+  person: Person;
+  lang: Lang;
+  onClose: () => void;
+  onSelect: (id: string) => void;
+}
+
+export default function PersonDetail({ person, lang, onClose, onSelect }: Props) {
+  const t = useT();
+  const epoch = EPOCH_BY_ID[person.epoch];
+  const name = lang === 'de' ? person.de : person.en;
+  const text = lang === 'de' ? person.deText : person.enText;
+  const parent = person.parent ? PERSON_BY_ID[person.parent] : null;
+  const reign = lang === 'de' ? person.reignDe : person.reignEn;
+
+  return (
+    <div className="animate-fade-in flex h-full flex-col">
+      {/* header band, colored by epoch */}
+      <div className="relative px-4 pb-3 pt-4 text-cream" style={{ background: epoch?.color ?? '#1f3d3a' }}>
+        <button
+          onClick={onClose}
+          aria-label={t('close')}
+          className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/15 text-cream transition hover:bg-black/30"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+            <path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" />
+          </svg>
+        </button>
+        <div className="text-[11px] font-medium uppercase tracking-wide text-cream/85">
+          {epoch ? (lang === 'de' ? epoch.de : epoch.en) : ''}
+        </div>
+        <h2 className="mt-0.5 font-display text-2xl font-semibold leading-tight">{name}</h2>
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[12px] text-cream/90">
+          {person.born !== undefined && (
+            <span>
+              {t('born')} {formatYear(person.born, lang)}
+            </span>
+          )}
+          {person.lifespan !== undefined && (
+            <span>
+              · {t('lived')} {person.lifespan} {t('years')}
+            </span>
+          )}
+        </div>
+        {reign && <div className="mt-0.5 text-[12px] text-cream/90">{reign}</div>}
+      </div>
+
+      <div className="scroll-soft flex-1 overflow-y-auto px-4 pb-5 pt-3">
+        {person.faith && (
+          <div className="mb-3 rounded-lg bg-cream-2/70 px-2.5 py-1.5 text-[11px] font-medium text-ink-soft ring-1 ring-teal/10">
+            ✦ {t('faithWitness')}
+          </div>
+        )}
+
+        <p className="text-sm leading-relaxed text-ink">{text}</p>
+
+        {person.spouse && (
+          <div className="mt-4">
+            <div className="text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{t('spouse')}</div>
+            <div className="text-sm text-ink">{lang === 'de' ? person.spouse.de : person.spouse.en}</div>
+          </div>
+        )}
+
+        {parent && (
+          <div className="mt-4">
+            <div className="text-[11px] font-semibold uppercase tracking-wide text-ink-soft">
+              {person.faith ? (lang === 'de' ? 'Folgt auf' : 'Follows') : lang === 'de' ? 'Kind von' : 'Child of'}
+            </div>
+            <button
+              onClick={() => onSelect(parent.id)}
+              className="mt-0.5 text-sm font-medium text-teal-2 underline-offset-2 hover:underline"
+            >
+              {lang === 'de' ? parent.de : parent.en}
+            </button>
+          </div>
+        )}
+
+        {person.refs.length > 0 && (
+          <div className="mt-4">
+            <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">
+              {t('references')}
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {person.refs.map((r) => (
+                <a
+                  key={r}
+                  href={bibleRefUrl(r)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-md bg-cream-2 px-2 py-0.5 text-[11px] font-medium text-teal ring-1 ring-teal/10 transition hover:bg-gold/25"
+                >
+                  {r}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}

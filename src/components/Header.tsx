@@ -3,6 +3,7 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 
 export type Mode = 'present' | 'history' | 'compare' | 'church';
+export type View = 'map' | 'tree';
 
 interface Props {
   lang: Lang;
@@ -10,9 +11,11 @@ interface Props {
   heat: boolean;
   onHeat: (v: boolean) => void;
   onMode: (m: Mode) => void;
+  view: View;
+  onView: (v: View) => void;
 }
 
-export default function Header({ lang, onLang, heat, onHeat, onMode }: Props) {
+export default function Header({ lang, onLang, heat, onHeat, onMode, view, onView }: Props) {
   const t = useT();
   const [open, setOpen] = useState(false);
 
@@ -38,57 +41,77 @@ export default function Header({ lang, onLang, heat, onHeat, onMode }: Props) {
       </div>
 
       <div className="pointer-events-auto flex items-center gap-2">
-        {/* modes dropdown */}
-        <div className="relative">
+        {/* view switch: map ↔ time tree */}
+        <div className="flex overflow-hidden rounded-xl bg-cream/75 shadow-lg ring-1 ring-white/40 backdrop-blur-xl">
           <button
-            onClick={() => setOpen((v) => !v)}
-            className="flex items-center gap-1.5 rounded-xl bg-teal px-3.5 py-2.5 text-sm font-medium text-cream shadow-lg ring-1 ring-teal/20 transition hover:bg-teal-2"
+            onClick={() => onView('map')}
+            className={`px-3 py-2.5 text-sm font-medium transition ${view === 'map' ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2"/></svg>
-            <span className="hidden sm:inline">{t('modes')}</span>
-            <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
+            {t('map')}
           </button>
-          {open && (
-            <>
-              <div className="fixed inset-0 z-[-1]" onClick={() => setOpen(false)} />
-              <div className="absolute right-0 mt-2 w-72 overflow-hidden rounded-2xl bg-cream shadow-2xl ring-1 ring-teal/10">
-                {modes.map((m) => (
-                  <button
-                    key={m.id}
-                    onClick={() => {
-                      onMode(m.id);
-                      setOpen(false);
-                    }}
-                    className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-cream-2"
-                  >
-                    <span className="mt-0.5 grid h-8 w-8 flex-none place-items-center rounded-lg bg-teal/10 text-teal">
-                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d={m.icon} stroke="currentColor" strokeWidth="1.6" fill={m.id === 'present' ? 'currentColor' : 'none'} /></svg>
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-sm font-semibold text-teal">{m.label}</span>
-                      <span className="block text-[11px] leading-snug text-ink-soft line-clamp-2">{m.hint}</span>
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
+          <button
+            onClick={() => onView('tree')}
+            className={`px-3 py-2.5 text-sm font-medium transition ${view === 'tree' ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
+          >
+            {t('tree')}
+          </button>
         </div>
 
-        <div className="hidden overflow-hidden rounded-xl bg-cream/75 shadow-lg ring-1 ring-white/40 backdrop-blur-xl sm:flex">
-          <button
-            onClick={() => onHeat(false)}
-            className={`px-3 py-2.5 text-sm font-medium transition ${!heat ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
-          >
-            {t('markers')}
-          </button>
-          <button
-            onClick={() => onHeat(true)}
-            className={`px-3 py-2.5 text-sm font-medium transition ${heat ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
-          >
-            {t('heatmap')}
-          </button>
-        </div>
+        {/* modes dropdown — only on the map */}
+        {view === 'map' && (
+          <div className="relative">
+            <button
+              onClick={() => setOpen((v) => !v)}
+              className="flex items-center gap-1.5 rounded-xl bg-teal px-3.5 py-2.5 text-sm font-medium text-cream shadow-lg ring-1 ring-teal/20 transition hover:bg-teal-2"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2"/></svg>
+              <span className="hidden sm:inline">{t('modes')}</span>
+              <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
+            </button>
+            {open && (
+              <>
+                <div className="fixed inset-0 z-[-1]" onClick={() => setOpen(false)} />
+                <div className="absolute right-0 mt-2 w-72 overflow-hidden rounded-2xl bg-cream shadow-2xl ring-1 ring-teal/10">
+                  {modes.map((m) => (
+                    <button
+                      key={m.id}
+                      onClick={() => {
+                        onMode(m.id);
+                        setOpen(false);
+                      }}
+                      className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-cream-2"
+                    >
+                      <span className="mt-0.5 grid h-8 w-8 flex-none place-items-center rounded-lg bg-teal/10 text-teal">
+                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d={m.icon} stroke="currentColor" strokeWidth="1.6" fill={m.id === 'present' ? 'currentColor' : 'none'} /></svg>
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-sm font-semibold text-teal">{m.label}</span>
+                        <span className="block text-[11px] leading-snug text-ink-soft line-clamp-2">{m.hint}</span>
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
+        {view === 'map' && (
+          <div className="hidden overflow-hidden rounded-xl bg-cream/75 shadow-lg ring-1 ring-white/40 backdrop-blur-xl sm:flex">
+            <button
+              onClick={() => onHeat(false)}
+              className={`px-3 py-2.5 text-sm font-medium transition ${!heat ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
+            >
+              {t('markers')}
+            </button>
+            <button
+              onClick={() => onHeat(true)}
+              className={`px-3 py-2.5 text-sm font-medium transition ${heat ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
+            >
+              {t('heatmap')}
+            </button>
+          </div>
+        )}
 
         <div className="flex overflow-hidden rounded-xl bg-cream/75 shadow-lg ring-1 ring-white/40 backdrop-blur-xl">
           {(['de', 'en'] as Lang[]).map((l) => (
