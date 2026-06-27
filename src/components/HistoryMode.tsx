@@ -140,6 +140,7 @@ export default function HistoryMode({ places, lang, onExit }: Props) {
             places={stops}
             heat={false}
             selectedId={selected?.id ?? null}
+            lang={lang}
             onSelect={setSelected}
             fitPlaces={stops}
             flyTo={selected ? { lat: selected.lat, lon: selected.lon, zoom: 8, key: Date.now() } : null}

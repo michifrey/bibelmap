@@ -90,6 +90,7 @@ export default function App() {
               places={visible}
               heat={heat}
               selectedId={selected?.id ?? null}
+              lang={lang}
               onSelect={select}
               basemap={basemap}
               flyTo={flyTo}

@@ -123,9 +123,217 @@ body {
 .leaflet-popup-content-wrapper {
   border-radius: 14px;
   box-shadow: 0 10px 30px rgba(31, 61, 58, 0.25);
+  overflow: hidden;
 }
 .leaflet-popup-content {
   margin: 0;
+}
+.bm-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  background: var(--color-cream);
+}
+.bm-popup .leaflet-popup-tip {
+  background: var(--color-cream);
+}
+.bm-popup .leaflet-popup-close-button {
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  color: var(--color-teal);
+  background: rgba(247, 241, 230, 0.9);
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  font-size: 18px;
+  line-height: 1;
+}
+.bm-popup .leaflet-popup-close-button:hover {
+  background: var(--color-cream);
+  color: var(--color-teal-2);
+}
+
+/* ---- Rich place popup ---- */
+.bm-pop {
+  width: 266px;
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+}
+.bm-pop-img {
+  position: relative;
+  height: 7.5rem;
+  background: linear-gradient(135deg, var(--color-teal), var(--color-teal-2));
+}
+.bm-pop-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.bm-pop-noimg {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}
+.bm-pop-noimg svg {
+  width: 2.25rem;
+  height: 2.25rem;
+  fill: rgba(224, 164, 73, 0.75);
+}
+.bm-pop-credit {
+  position: absolute;
+  right: 0.4rem;
+  bottom: 0.35rem;
+  background: rgba(0, 0, 0, 0.45);
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 10px;
+  line-height: 1.2;
+  padding: 1px 5px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.bm-pop-body {
+  padding: 0.7rem 0.85rem 0.85rem;
+}
+.bm-pop-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.2rem;
+  line-height: 1.15;
+  color: var(--color-teal);
+  margin: 0;
+}
+.bm-pop-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.4rem;
+}
+.bm-pop-chip {
+  background: var(--color-cream-2);
+  color: var(--color-ink-soft);
+  font-size: 10px;
+  text-transform: capitalize;
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+.bm-pop-mentions {
+  background: rgba(31, 61, 58, 0.1);
+  color: var(--color-teal);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 999px;
+}
+.bm-pop-eras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.45rem;
+}
+.bm-pop-era {
+  color: var(--color-cream);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+.bm-pop-variants {
+  margin-top: 0.5rem;
+  font-size: 12px;
+  color: var(--color-ink);
+}
+.bm-pop-variants span {
+  font-weight: 600;
+  color: var(--color-ink-soft);
+}
+.bm-pop-section-label {
+  margin-top: 0.6rem;
+  margin-bottom: 0.3rem;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-ink-soft);
+}
+.bm-pop-refs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  align-items: center;
+}
+.bm-pop-ref {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--color-cream-2);
+  color: var(--color-ink-soft);
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.bm-pop-ref:hover {
+  background: rgba(224, 164, 73, 0.25);
+  color: var(--color-teal);
+}
+.bm-pop-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  flex: none;
+}
+.bm-pop-morerefs {
+  font-size: 11px;
+  color: var(--color-ink-soft);
+}
+.bm-pop-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.65rem;
+}
+.bm-pop-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: var(--color-cream-2);
+  color: var(--color-teal);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.12s ease;
+}
+.bm-pop-link:hover {
+  background: rgba(224, 164, 73, 0.3);
+}
+.bm-pop-link svg {
+  width: 11px;
+  height: 11px;
+  fill: currentColor;
+  opacity: 0.6;
+}
+.bm-pop-more {
+  margin-top: 0.7rem;
+  width: 100%;
+  background: var(--color-teal);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.bm-pop-more:hover {
+  background: var(--color-teal-2);
 }
 
 /* Highlighted marker ring (search / presentation focus) */

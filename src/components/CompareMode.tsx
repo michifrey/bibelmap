@@ -86,6 +86,7 @@ export default function CompareMode({ places, lang, onExit }: Props) {
                   places={stops}
                   heat={false}
                   selectedId={selectedPlace?.id ?? null}
+                  lang={lang}
                   onSelect={setSelectedPlace}
                   fitPlaces={stops}
                   flyTo={selectedPlace ? { lat: selectedPlace.lat, lon: selectedPlace.lon, zoom: 8, key: Date.now() } : null}

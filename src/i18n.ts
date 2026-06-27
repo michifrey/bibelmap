@@ -68,6 +68,7 @@ const STRINGS: Dict = {
   basemapAntique: { de: 'Antike Welt', en: 'Ancient world' },
   showing: { de: 'Sichtbar', en: 'Showing' },
   places: { de: 'Orte', en: 'places' },
+  details: { de: 'Alle Details', en: 'All details' },
   // Zeitbaum / genealogy tree
   map: { de: 'Karte', en: 'Map' },
   tree: { de: 'Zeitbaum', en: 'Time tree' },

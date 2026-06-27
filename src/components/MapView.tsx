@@ -5,11 +5,14 @@ import 'leaflet.heat';
 import type { Place } from '../types';
 import { erasForPlace } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
+import { buildPlacePopup } from '../lib/placePopup';
+import type { Lang } from '../i18n';
 
 interface Props {
   places: Place[];
   heat: boolean;
   selectedId: string | null;
+  lang: Lang;
   onSelect: (p: Place) => void;
   /** Base map style. */
   basemap?: BasemapId;
@@ -93,31 +96,7 @@ function makeIcon(p: Place, focused: boolean): L.DivIcon {
   });
 }
 
-// Rich marker popup: image (when available), name, type/mentions and links.
-function buildPopup(p: Place, onDetails: () => void): HTMLElement {
-  const name = p.name.replace(/ \d+$/, '');
-  const obUrl = `https://www.openbible.info/geo/ancient/${p.id}/${p.slug}`;
-  const wikiUrl = p.wikidata ? `https://www.wikidata.org/wiki/${p.wikidata}` : '';
-  const img = p.img
-    ? `<img src="${p.img.url}" referrerpolicy="no-referrer" onerror="this.style.display='none'" alt="" class="mb-2 h-28 w-full rounded-lg object-cover" />`
-    : '';
-  const el = document.createElement('div');
-  el.className = 'w-[210px] font-sans';
-  el.innerHTML = `
-    ${img}
-    <div class="font-display text-base font-semibold leading-tight text-teal">${name}</div>
-    <div class="mt-0.5 text-[11px] text-ink-soft">${[p.types.join(', '), `${p.mentionCount}×`].filter(Boolean).join(' · ')}</div>
-    <div class="mt-2 flex flex-wrap items-center gap-1.5">
-      <button data-details class="rounded-lg bg-teal px-2.5 py-1 text-xs font-medium text-cream">Details</button>
-      <a href="${obUrl}" target="_blank" rel="noreferrer" class="rounded-lg bg-cream-2 px-2 py-1 text-xs text-teal">OpenBible</a>
-      ${wikiUrl ? `<a href="${wikiUrl}" target="_blank" rel="noreferrer" class="rounded-lg bg-cream-2 px-2 py-1 text-xs text-teal">Wikidata</a>` : ''}
-    </div>`;
-  const btn = el.querySelector('[data-details]') as HTMLButtonElement | null;
-  if (btn) btn.onclick = onDetails;
-  return el;
-}
-
-export default function MapView({ places, heat, selectedId, onSelect, basemap = 'light', fitPlaces, flyTo }: Props) {
+export default function MapView({ places, heat, selectedId, lang, onSelect, basemap = 'light', fitPlaces, flyTo }: Props) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const tileRef = useRef<L.TileLayer | null>(null);
@@ -126,6 +105,8 @@ export default function MapView({ places, heat, selectedId, onSelect, basemap = 
   const markerById = useRef<Map<string, L.Marker>>(new Map());
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const langRef = useRef(lang);
+  langRef.current = lang;
 
   // init map once
   useEffect(() => {
@@ -211,12 +192,17 @@ export default function MapView({ places, heat, selectedId, onSelect, basemap = 
         icon: makeIcon(p, p.id === selectedId),
         title: p.name,
       });
-      marker.bindPopup(() => buildPopup(p, () => onSelectRef.current(p)), {
-        maxWidth: 240,
-        minWidth: 210,
-        closeButton: true,
-        autoPanPadding: [40, 40],
-      });
+      // Rich on-map popup (thumbnail, passages, links) – built lazily on open so
+      // we never construct ~1.3k DOM trees up front, and always in the current
+      // language. The "details" button hands off to the full side panel.
+      marker.bindPopup(
+        () =>
+          buildPlacePopup(p, langRef.current, () => {
+            onSelectRef.current(p);
+            mapRef.current?.closePopup();
+          }),
+        { maxWidth: 300, minWidth: 248, className: 'bm-popup', autoPanPadding: [56, 56] },
+      );
       markerById.current.set(p.id, marker);
       cluster.addLayer(marker);
     }
