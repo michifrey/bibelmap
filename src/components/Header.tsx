@@ -1,15 +1,19 @@
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 
+type View = 'map' | 'tree';
+
 interface Props {
   lang: Lang;
   onLang: (l: Lang) => void;
   heat: boolean;
   onHeat: (v: boolean) => void;
   onPresent: () => void;
+  view: View;
+  onView: (v: View) => void;
 }
 
-export default function Header({ lang, onLang, heat, onHeat, onPresent }: Props) {
+export default function Header({ lang, onLang, heat, onHeat, onPresent, view, onView }: Props) {
   const t = useT();
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex items-start justify-between gap-3 p-3 sm:p-4">
@@ -26,30 +30,50 @@ export default function Header({ lang, onLang, heat, onHeat, onPresent }: Props)
       </div>
 
       <div className="pointer-events-auto flex items-center gap-2">
-        <button
-          onClick={onPresent}
-          className="hidden items-center gap-1.5 rounded-xl bg-teal px-3.5 py-2.5 text-sm font-medium text-cream shadow-lg ring-1 ring-teal/20 transition hover:bg-teal-2 sm:flex"
-        >
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
-            <path d="M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z" />
-          </svg>
-          {t('presentation')}
-        </button>
+        {view === 'map' && (
+          <button
+            onClick={onPresent}
+            className="hidden items-center gap-1.5 rounded-xl bg-teal px-3.5 py-2.5 text-sm font-medium text-cream shadow-lg ring-1 ring-teal/20 transition hover:bg-teal-2 sm:flex"
+          >
+            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+              <path d="M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z" />
+            </svg>
+            {t('presentation')}
+          </button>
+        )}
 
+        {/* view switch: map ↔ time tree */}
         <div className="flex overflow-hidden rounded-xl bg-cream/85 shadow-lg ring-1 ring-teal/10 backdrop-blur">
           <button
-            onClick={() => onHeat(false)}
-            className={`px-3 py-2.5 text-sm font-medium transition ${!heat ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
+            onClick={() => onView('map')}
+            className={`px-3 py-2.5 text-sm font-medium transition ${view === 'map' ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
           >
-            {t('markers')}
+            {t('map')}
           </button>
           <button
-            onClick={() => onHeat(true)}
-            className={`px-3 py-2.5 text-sm font-medium transition ${heat ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
+            onClick={() => onView('tree')}
+            className={`px-3 py-2.5 text-sm font-medium transition ${view === 'tree' ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
           >
-            {t('heatmap')}
+            {t('tree')}
           </button>
         </div>
+
+        {view === 'map' && (
+          <div className="flex overflow-hidden rounded-xl bg-cream/85 shadow-lg ring-1 ring-teal/10 backdrop-blur">
+            <button
+              onClick={() => onHeat(false)}
+              className={`px-3 py-2.5 text-sm font-medium transition ${!heat ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
+            >
+              {t('markers')}
+            </button>
+            <button
+              onClick={() => onHeat(true)}
+              className={`px-3 py-2.5 text-sm font-medium transition ${heat ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
+            >
+              {t('heatmap')}
+            </button>
+          </div>
+        )}
 
         <div className="flex overflow-hidden rounded-xl bg-cream/85 shadow-lg ring-1 ring-teal/10 backdrop-blur">
           {(['de', 'en'] as Lang[]).map((l) => (

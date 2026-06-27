@@ -48,6 +48,25 @@ const STRINGS: Dict = {
   reset: { de: 'Zurücksetzen', en: 'Reset' },
   showing: { de: 'Sichtbar', en: 'Showing' },
   places: { de: 'Orte', en: 'places' },
+  // Zeitbaum / genealogy tree
+  map: { de: 'Karte', en: 'Map' },
+  tree: { de: 'Zeitbaum', en: 'Time tree' },
+  treeTitle: { de: 'Zeitbaum', en: 'Time Tree' },
+  treeSubtitle: { de: 'Von Adam & Eva bis in die Neuzeit', en: 'From Adam & Eve into the modern era' },
+  expandAll: { de: 'Alle ausklappen', en: 'Expand all' },
+  collapseAll: { de: 'Einklappen', en: 'Collapse' },
+  expandHint: { de: 'Auf ▸ tippen zum Aufklappen · auf eine Person für Infos', en: 'Tap ▸ to unfold · tap a person for details' },
+  born: { de: 'geb.', en: 'b.' },
+  lived: { de: 'lebte', en: 'lived' },
+  years: { de: 'Jahre', en: 'years' },
+  spouse: { de: 'Ehe mit', en: 'Married to' },
+  epoch: { de: 'Epoche', en: 'Epoch' },
+  references: { de: 'Bibelstellen', en: 'Bible passages' },
+  faithWitness: { de: 'Glaubenszeuge (Kirchengeschichte)', en: 'Faith witness (church history)' },
+  bloodlineNote: {
+    de: 'Die biblische Stammlinie endet bei Jesus Christus. Danach folgen keine Blutsverwandten, sondern bedeutende Glaubenszeugen der Kirchengeschichte (gestrichelte Linien).',
+    en: 'The biblical bloodline ends with Jesus Christ. What follows are not blood relatives but key faith witnesses of church history (dashed lines).',
+  },
 };
 
 export const LangContext = createContext<Lang>('de');

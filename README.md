@@ -16,6 +16,12 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   und nach Häufigkeit der Erwähnung größer. Klick öffnet eine Infokarte mit Bild,
   Bibelstellen, alternativen Schreibweisen und Quellen.
 - **Zeitleiste** – filtert die Orte nach biblischer Epoche (Erzväter → Frühe Kirche).
+- **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
+  (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
+  Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
+  Calvin, Spurgeon, Bonhoeffer …). Verlauf von links nach rechts mit einer
+  **Zeitschiene** unten; Knoten lassen sich aufklappen und zeigen per Klick
+  Lebensdaten, Bibelstellen und eine Kurzbeschreibung. Umschalter **Karte ↔ Zeitbaum**.
 - **Suche** – z. B. `Goschen`: zeigt *wo* (Karte) und *wann* (Epochen/Bücher) ein Ort
   vorkommt, inkl. aller Bibelstellen.
 - **Heatmap** – die am häufigsten erwähnten Orte als Wärmebild.

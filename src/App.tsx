@@ -9,6 +9,9 @@ import Timeline from './components/Timeline';
 import SearchPanel from './components/SearchPanel';
 import PlaceDetail from './components/PlaceDetail';
 import Presentation from './components/Presentation';
+import TreeView from './components/TreeView';
+
+type View = 'map' | 'tree';
 
 function Loading() {
   const t = useT();
@@ -35,6 +38,7 @@ export default function App() {
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
   const [present, setPresent] = useState(false);
+  const [view, setView] = useState<View>('map');
 
   useEffect(() => {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
@@ -76,45 +80,59 @@ export default function App() {
   return (
     <LangContext.Provider value={lang}>
       <div className="relative h-full w-full overflow-hidden">
-        <MapView
-          places={visible}
+        {view === 'tree' ? (
+          <TreeView lang={lang} />
+        ) : (
+          <>
+            <MapView
+              places={visible}
+              heat={heat}
+              selectedId={selected?.id ?? null}
+              onSelect={select}
+              flyTo={flyTo}
+            />
+
+            {/* Left panel */}
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-[1100] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
+              <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-cream/92 shadow-2xl ring-1 ring-teal/10 backdrop-blur">
+                {selected ? (
+                  <PlaceDetail place={selected} lang={lang} onClose={() => setSelected(null)} />
+                ) : (
+                  <SearchPanel
+                    query={query}
+                    onQuery={setQuery}
+                    results={results}
+                    topPlaces={topPlaces}
+                    onSelect={select}
+                  />
+                )}
+              </div>
+            </div>
+
+            {!heat && <Timeline lang={lang} selected={era} counts={eraCounts} onSelect={setEra} />}
+
+            {/* mobile present button */}
+            <button
+              onClick={() => setPresent(true)}
+              className="absolute bottom-4 right-4 z-[1100] grid h-12 w-12 place-items-center rounded-full bg-teal text-cream shadow-xl ring-1 ring-teal/20 transition hover:bg-teal-2 sm:hidden"
+              aria-label="Präsentationsmodus"
+            >
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+                <path d="M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z" />
+              </svg>
+            </button>
+          </>
+        )}
+
+        <Header
+          lang={lang}
+          onLang={setLang}
           heat={heat}
-          selectedId={selected?.id ?? null}
-          onSelect={select}
-          flyTo={flyTo}
+          onHeat={setHeat}
+          onPresent={() => setPresent(true)}
+          view={view}
+          onView={setView}
         />
-
-        <Header lang={lang} onLang={setLang} heat={heat} onHeat={setHeat} onPresent={() => setPresent(true)} />
-
-        {/* Left panel */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-[1100] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
-          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-cream/92 shadow-2xl ring-1 ring-teal/10 backdrop-blur">
-            {selected ? (
-              <PlaceDetail place={selected} lang={lang} onClose={() => setSelected(null)} />
-            ) : (
-              <SearchPanel
-                query={query}
-                onQuery={setQuery}
-                results={results}
-                topPlaces={topPlaces}
-                onSelect={select}
-              />
-            )}
-          </div>
-        </div>
-
-        {!heat && <Timeline lang={lang} selected={era} counts={eraCounts} onSelect={setEra} />}
-
-        {/* mobile present button */}
-        <button
-          onClick={() => setPresent(true)}
-          className="absolute bottom-4 right-4 z-[1100] grid h-12 w-12 place-items-center rounded-full bg-teal text-cream shadow-xl ring-1 ring-teal/20 transition hover:bg-teal-2 sm:hidden"
-          aria-label="Präsentationsmodus"
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-            <path d="M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z" />
-          </svg>
-        </button>
 
         {present && (
           <Presentation places={places} lang={lang} onExit={() => setPresent(false)} />
