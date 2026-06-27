@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import type { Place, PlaceImage } from '../types';
+import type { PlaceImage } from '../types';
 
 // Runtime fallback for place photos: many places without an OpenBible image do
 // carry a Wikidata Q-id. We resolve the Wikidata P18 image client-side (the
@@ -8,7 +7,8 @@ import type { Place, PlaceImage } from '../types';
 
 const mem = new Map<string, PlaceImage | null>();
 
-export async function fetchWikidataImage(qid: string): Promise<PlaceImage | null> {
+/** Resolve a Wikidata Q-id to a Commons image (P18), cached. Exposed for reuse. */
+export async function resolveWikidataImage(qid: string): Promise<PlaceImage | null> {
   if (mem.has(qid)) return mem.get(qid)!;
   const sk = `wdimg:${qid}`;
   try {
@@ -49,25 +49,4 @@ export async function fetchWikidataImage(qid: string): Promise<PlaceImage | null
     /* ignore */
   }
   return result;
-}
-
-/** Returns the place's own image, or lazily resolves a Wikidata fallback. */
-export function usePlaceImage(place: Place): PlaceImage | null {
-  const [img, setImg] = useState<PlaceImage | null>(place.img);
-  useEffect(() => {
-    if (place.img) {
-      setImg(place.img);
-      return;
-    }
-    setImg(null);
-    if (!place.wikidata) return;
-    let alive = true;
-    fetchWikidataImage(place.wikidata).then((r) => {
-      if (alive) setImg(r);
-    });
-    return () => {
-      alive = false;
-    };
-  }, [place.id, place.img, place.wikidata]);
-  return img;
 }

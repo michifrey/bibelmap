@@ -14,13 +14,55 @@ interface Props {
   selectedId: string | null;
   lang: Lang;
   onSelect: (p: Place) => void;
+  /** Base map style. */
+  basemap?: BasemapId;
   /** Fit the map to exactly these places (presentation mode). */
   fitPlaces?: Place[] | null;
   /** Fly to a single coordinate (search focus). */
   flyTo?: { lat: number; lon: number; zoom?: number; key: number } | null;
 }
 
-const CARTO = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+export type BasemapId = 'light' | 'satellite' | 'relief' | 'antique';
+
+interface Basemap {
+  url: string;
+  attribution: string;
+  maxZoom: number;
+  maxNativeZoom?: number;
+  subdomains?: string;
+  dark?: boolean;
+}
+
+const OB_ATTR = '· Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY)';
+
+export const BASEMAPS: Record<BasemapId, Basemap> = {
+  light: {
+    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> ' + OB_ATTR,
+    maxZoom: 19,
+    subdomains: 'abcd',
+  },
+  satellite: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics ' + OB_ATTR,
+    maxZoom: 18,
+    dark: true,
+  },
+  relief: {
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri — Source: Esri ' + OB_ATTR,
+    maxZoom: 13,
+  },
+  antique: {
+    // Digital Atlas of the Roman Empire (DARE / "Imperium"), Univ. of Gothenburg.
+    url: 'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png',
+    attribution:
+      'Historische Karte &copy; <a href="https://imperium.ahlfeldt.se/">DARE</a> (Univ. Göteborg, CC-BY) ' + OB_ATTR,
+    maxZoom: 14,
+    maxNativeZoom: 11,
+  },
+};
 
 function primaryEraColor(p: Place): string {
   const eras = erasForPlace(p);
@@ -54,9 +96,10 @@ function makeIcon(p: Place, focused: boolean): L.DivIcon {
   });
 }
 
-export default function MapView({ places, heat, selectedId, lang, onSelect, fitPlaces, flyTo }: Props) {
+export default function MapView({ places, heat, selectedId, lang, onSelect, basemap = 'light', fitPlaces, flyTo }: Props) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  const tileRef = useRef<L.TileLayer | null>(null);
   const clusterRef = useRef<L.MarkerClusterGroup | null>(null);
   const heatRef = useRef<L.Layer | null>(null);
   const markerById = useRef<Map<string, L.Marker>>(new Map());
@@ -72,21 +115,33 @@ export default function MapView({ places, heat, selectedId, lang, onSelect, fitP
       center: [31.5, 35.4],
       zoom: 7,
       minZoom: 2,
-      maxZoom: 13,
+      maxZoom: 17,
       zoomControl: true,
       worldCopyJump: true,
     });
-    L.tileLayer(CARTO, {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY)',
-      subdomains: 'abcd',
-    }).addTo(map);
     mapRef.current = map;
     return () => {
       map.remove();
       mapRef.current = null;
     };
   }, []);
+
+  // basemap tile layer (swappable)
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    const bm = BASEMAPS[basemap] ?? BASEMAPS.light;
+    if (tileRef.current) map.removeLayer(tileRef.current);
+    tileRef.current = L.tileLayer(bm.url, {
+      attribution: bm.attribution,
+      subdomains: bm.subdomains ?? 'abc',
+      maxZoom: bm.maxZoom,
+      maxNativeZoom: bm.maxNativeZoom ?? bm.maxZoom,
+    }).addTo(map);
+    tileRef.current.setZIndex(0);
+    const c = map.getContainer();
+    c.classList.toggle('bm-dark', !!bm.dark);
+  }, [basemap]);
 
   // (re)build markers / heat when data or mode changes
   useEffect(() => {

@@ -1,11 +1,11 @@
-import { useMemo } from 'react';
-import type { Place, VerseRef } from '../types';
+import { useMemo, useState } from 'react';
+import type { Place, PlaceImage, VerseRef } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { booksForPlace, erasForPlace } from '../lib/places';
-import { usePlaceImage } from '../lib/wikidataImage';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { ERA_BY_ID, ERAS } from '../data/eras';
+import PlaceThumb from './PlaceThumb';
 
 interface Props {
   place: Place;
@@ -42,7 +42,7 @@ function SourceLink({ href, children }: { href: string; children: React.ReactNod
 
 export default function PlaceDetail({ place, lang, onClose }: Props) {
   const t = useT();
-  const img = usePlaceImage(place);
+  const [img, setImg] = useState<PlaceImage | null>(place.img);
   const grouped = useMemo(() => groupByBook(place.verses), [place]);
   const eras = useMemo(() => {
     const ids = new Set(erasForPlace(place));
@@ -57,21 +57,18 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
     <div className="animate-fade-in flex h-full flex-col">
       {/* image header */}
       <div className="relative">
-        {img ? (
-          <img
-            src={img.url}
-            alt={place.name}
-            className="h-40 w-full object-cover"
-            loading="lazy"
-            referrerPolicy="no-referrer"
-          />
-        ) : (
-          <div className="flex h-28 w-full items-center justify-center bg-gradient-to-br from-teal to-teal-2">
-            <svg viewBox="0 0 24 24" className="h-10 w-10 text-gold/70" fill="currentColor">
-              <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
-            </svg>
-          </div>
-        )}
+        <PlaceThumb
+          place={place}
+          className="h-40 w-full"
+          onResolved={setImg}
+          placeholder={
+            <div className="flex h-28 w-full items-center justify-center bg-gradient-to-br from-teal to-teal-2">
+              <svg viewBox="0 0 24 24" className="h-10 w-10 text-gold/70" fill="currentColor">
+                <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
+              </svg>
+            </div>
+          }
+        />
         <button
           onClick={onClose}
           aria-label={t('close')}

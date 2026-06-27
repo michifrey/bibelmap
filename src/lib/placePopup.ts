@@ -3,7 +3,7 @@ import { t, type Lang } from '../i18n';
 import { erasForPlace, booksForPlace } from './places';
 import { ERAS, ERA_BY_ID } from '../data/eras';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
-import { fetchWikidataImage } from './wikidataImage';
+import { resolveWikidataImage } from './wikidataImage';
 
 const EXTERNAL_ICON =
   '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14zM5 5h5v2H7v10h10v-3h2v5H5z"/></svg>';
@@ -124,7 +124,7 @@ export function buildPlacePopup(place: Place, lang: Lang, onMore: () => void): H
   // Lazily resolve a Wikidata fallback image and swap it into the header.
   if (!place.img && place.wikidata) {
     const slot = el.querySelector('[data-img]');
-    fetchWikidataImage(place.wikidata)
+    resolveWikidataImage(place.wikidata)
       .then((img) => {
         if (img && slot) slot.innerHTML = imageHtml(img, name);
       })

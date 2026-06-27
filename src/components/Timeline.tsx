@@ -13,7 +13,7 @@ export default function Timeline({ lang, selected, counts, onSelect }: Props) {
   const t = useT();
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1100] flex justify-center p-3 sm:p-4">
-      <div className="pointer-events-auto w-full max-w-5xl rounded-2xl bg-cream/90 p-3 shadow-xl ring-1 ring-teal/10 backdrop-blur">
+      <div className="pointer-events-auto w-full max-w-5xl rounded-3xl bg-cream/80 p-3 shadow-2xl ring-1 ring-white/40 backdrop-blur-xl">
         <div className="mb-2 flex items-center justify-between px-1">
           <span className="font-display text-sm font-semibold tracking-wide text-teal">{t('timeline')}</span>
           <button

@@ -16,13 +16,33 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   und nach Häufigkeit der Erwähnung größer. Klick öffnet eine Infokarte mit Bild,
   Bibelstellen, alternativen Schreibweisen und Quellen.
 - **Zeitleiste** – filtert die Orte nach biblischer Epoche (Erzväter → Frühe Kirche).
+- **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
+  (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
+  Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
+  Calvin, Spurgeon, Bonhoeffer …). Verlauf von links nach rechts mit einer
+  **Zeitschiene** unten; Knoten lassen sich aufklappen und zeigen per Klick
+  Lebensdaten, Bibelstellen und eine Kurzbeschreibung. Umschalter **Karte ↔ Zeitbaum**.
 - **Suche** – z. B. `Goschen`: zeigt *wo* (Karte) und *wann* (Epochen/Bücher) ein Ort
   vorkommt, inkl. aller Bibelstellen.
 - **Heatmap** – die am häufigsten erwähnten Orte als Wärmebild.
 - **Präsentationsmodus** – ein Buch wählen (z. B. *2. Könige*) und chronologisch
   Kapitel für Kapitel durchgehen: links der **Bibeltext** (Luther 1912 / WEB) mit
   klickbaren Orts-Pins, rechts zoomt die Karte auf die erwähnten Orte
-  (Tastatur ← / → blättert Kapitel).
+  (Tastatur ← / → blättert Kapitel). **BibleProject-Videos** sind eingebettet,
+  wo vorhanden.
+- **Heilsgeschichte-Modus** – geführte chronologische Reise von der Schöpfung bis
+  zur neuen Welt (Schöpfung, Abraham, Exodus, Exil, Jesus, frühe Kirche …) mit
+  Karte, Bibelstelle und Video je Station.
+- **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
+  Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
+  Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
+- **Kirchengeschichte-Modus** – **Paulus’ Missionsreisen** als eingezeichnete
+  Routen, **Kirchenväter** (westlich/lateinisch · östlich/griechisch · orientalisch)
+  und die **Konzilien** (Apostelkonzil + die 7 ökumenischen) auf der Karte.
+- **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
+  robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
+- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
+  Imagery) und **Relief/„historisch"** (Esri Shaded Relief).
 - **Zweisprachig** – Oberfläche und Buchnamen auf Deutsch/Englisch.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
