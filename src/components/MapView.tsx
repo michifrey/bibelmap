@@ -5,11 +5,14 @@ import 'leaflet.heat';
 import type { Place } from '../types';
 import { erasForPlace } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
+import { buildPlacePopup } from '../lib/placePopup';
+import type { Lang } from '../i18n';
 
 interface Props {
   places: Place[];
   heat: boolean;
   selectedId: string | null;
+  lang: Lang;
   onSelect: (p: Place) => void;
   /** Fit the map to exactly these places (presentation mode). */
   fitPlaces?: Place[] | null;
@@ -51,7 +54,7 @@ function makeIcon(p: Place, focused: boolean): L.DivIcon {
   });
 }
 
-export default function MapView({ places, heat, selectedId, onSelect, fitPlaces, flyTo }: Props) {
+export default function MapView({ places, heat, selectedId, lang, onSelect, fitPlaces, flyTo }: Props) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const clusterRef = useRef<L.MarkerClusterGroup | null>(null);
@@ -59,6 +62,8 @@ export default function MapView({ places, heat, selectedId, onSelect, fitPlaces,
   const markerById = useRef<Map<string, L.Marker>>(new Map());
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const langRef = useRef(lang);
+  langRef.current = lang;
 
   // init map once
   useEffect(() => {
@@ -132,7 +137,17 @@ export default function MapView({ places, heat, selectedId, onSelect, fitPlaces,
         icon: makeIcon(p, p.id === selectedId),
         title: p.name,
       });
-      marker.on('click', () => onSelectRef.current(p));
+      // Rich on-map popup (thumbnail, passages, links) – built lazily on open so
+      // we never construct ~1.3k DOM trees up front, and always in the current
+      // language. The "details" button hands off to the full side panel.
+      marker.bindPopup(
+        () =>
+          buildPlacePopup(p, langRef.current, () => {
+            onSelectRef.current(p);
+            mapRef.current?.closePopup();
+          }),
+        { maxWidth: 300, minWidth: 248, className: 'bm-popup', autoPanPadding: [56, 56] },
+      );
       markerById.current.set(p.id, marker);
       cluster.addLayer(marker);
     }

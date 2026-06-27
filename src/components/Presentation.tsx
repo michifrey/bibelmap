@@ -270,6 +270,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
             places={fitPlaces}
             heat={false}
             selectedId={selected?.id ?? null}
+            lang={lang}
             onSelect={setSelected}
             fitPlaces={fitPlaces}
             flyTo={selected ? { lat: selected.lat, lon: selected.lon, zoom: 9, key: Date.now() } : null}

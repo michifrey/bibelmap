@@ -8,7 +8,7 @@ import type { Place, PlaceImage } from '../types';
 
 const mem = new Map<string, PlaceImage | null>();
 
-async function fetchWikidataImage(qid: string): Promise<PlaceImage | null> {
+export async function fetchWikidataImage(qid: string): Promise<PlaceImage | null> {
   if (mem.has(qid)) return mem.get(qid)!;
   const sk = `wdimg:${qid}`;
   try {

@@ -48,6 +48,7 @@ const STRINGS: Dict = {
   reset: { de: 'Zurücksetzen', en: 'Reset' },
   showing: { de: 'Sichtbar', en: 'Showing' },
   places: { de: 'Orte', en: 'places' },
+  details: { de: 'Alle Details', en: 'All details' },
 };
 
 export const LangContext = createContext<Lang>('de');
