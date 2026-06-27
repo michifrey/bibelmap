@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "data": "node scripts/build-data.mjs",
-    "text": "node scripts/build-text.mjs"
+    "text": "node scripts/build-text.mjs",
+    "xrefs": "node scripts/build-xrefs.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
