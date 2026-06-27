@@ -81,6 +81,7 @@ const STRINGS: Dict = {
   lived: { de: 'lebte', en: 'lived' },
   years: { de: 'Jahre', en: 'years' },
   spouse: { de: 'Ehe mit', en: 'Married to' },
+  children: { de: 'Kinder', en: 'Children' },
   epoch: { de: 'Epoche', en: 'Epoch' },
   references: { de: 'Bibelstellen', en: 'Bible passages' },
   faithWitness: { de: 'Glaubenszeuge (Kirchengeschichte)', en: 'Faith witness (church history)' },
