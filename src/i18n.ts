@@ -72,6 +72,19 @@ const STRINGS: Dict = {
   // Zeitbaum / genealogy tree
   map: { de: 'Karte', en: 'Map' },
   tree: { de: 'Zeitbaum', en: 'Time tree' },
+  // Verweis-Graph / cross-reference graph
+  graph: { de: 'Graph', en: 'Graph' },
+  graphTitle: { de: 'Verweis-Graph', en: 'Reference graph' },
+  graphSubtitle: {
+    de: 'Bücher & Orte als Netz – welcher Ort wird wo erwähnt',
+    en: 'Books & places as a web – where each place is mentioned',
+  },
+  graphPlaces: { de: 'Orte', en: 'Places' },
+  graphBooks: { de: 'Bücher', en: 'books' },
+  graphHint: {
+    de: 'Ziehen zum Verschieben · scrollen zum Zoomen · Knoten antippen für Verbindungen',
+    en: 'Drag to pan · scroll to zoom · tap a node for its links',
+  },
   treeTitle: { de: 'Zeitbaum', en: 'Time Tree' },
   treeSubtitle: { de: 'Von Adam & Eva bis in die Neuzeit', en: 'From Adam & Eve into the modern era' },
   expandAll: { de: 'Alle ausklappen', en: 'Expand all' },

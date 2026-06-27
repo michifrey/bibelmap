@@ -3,7 +3,7 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 
 export type Mode = 'present' | 'history' | 'compare' | 'church';
-export type View = 'map' | 'tree';
+export type View = 'map' | 'tree' | 'graph';
 
 interface Props {
   lang: Lang;
@@ -54,6 +54,12 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
             className={`px-3 py-2.5 text-sm font-medium transition ${view === 'tree' ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
           >
             {t('tree')}
+          </button>
+          <button
+            onClick={() => onView('graph')}
+            className={`px-3 py-2.5 text-sm font-medium transition ${view === 'graph' ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'}`}
+          >
+            {t('graph')}
           </button>
         </div>
 
