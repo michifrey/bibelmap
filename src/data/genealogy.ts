@@ -519,3 +519,26 @@ export function formatYear(year: number, lang: 'de' | 'en'): string {
 export function bibleRefUrl(ref: string): string {
   return `https://www.bible.com/search/bible?query=${encodeURIComponent(ref)}`;
 }
+
+/**
+ * Children of each person, keyed by parent id, in authored (≈ chronological)
+ * order. Lets a person card list and link the next generation, not just the
+ * parent above it.
+ */
+export const CHILDREN_BY_PARENT: Record<string, Person[]> = (() => {
+  const map: Record<string, Person[]> = {};
+  for (const p of GENEALOGY) {
+    if (p.parent) (map[p.parent] ??= []).push(p);
+  }
+  return map;
+})();
+
+/**
+ * Wikipedia lookup for a named person who is not (yet) a tree node — e.g. the
+ * wives carried only as `spouse` text. `/w/index.php?search=` jumps straight to
+ * the article on an exact match and otherwise shows search results.
+ */
+export function wikipediaSearchUrl(name: string, lang: 'de' | 'en'): string {
+  const host = lang === 'de' ? 'de.wikipedia.org' : 'en.wikipedia.org';
+  return `https://${host}/w/index.php?search=${encodeURIComponent(name)}`;
+}

@@ -4,8 +4,10 @@ import {
   type Person,
   EPOCH_BY_ID,
   PERSON_BY_ID,
+  CHILDREN_BY_PARENT,
   formatYear,
   bibleRefUrl,
+  wikipediaSearchUrl,
 } from '../data/genealogy';
 
 interface Props {
@@ -22,6 +24,8 @@ export default function PersonDetail({ person, lang, onClose, onSelect }: Props)
   const text = lang === 'de' ? person.deText : person.enText;
   const parent = person.parent ? PERSON_BY_ID[person.parent] : null;
   const reign = lang === 'de' ? person.reignDe : person.reignEn;
+  const children = CHILDREN_BY_PARENT[person.id] ?? [];
+  const spouseName = person.spouse ? (lang === 'de' ? person.spouse.de : person.spouse.en) : null;
 
   return (
     <div className="animate-fade-in flex h-full flex-col">
@@ -64,10 +68,22 @@ export default function PersonDetail({ person, lang, onClose, onSelect }: Props)
 
         <p className="text-sm leading-relaxed text-ink">{text}</p>
 
-        {person.spouse && (
+        {spouseName && (
           <div className="mt-4">
             <div className="text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{t('spouse')}</div>
-            <div className="text-sm text-ink">{lang === 'de' ? person.spouse.de : person.spouse.en}</div>
+            <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
+              {spouseName.split(' & ').map((wife) => (
+                <a
+                  key={wife}
+                  href={wikipediaSearchUrl(wife, lang)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="font-medium text-teal-2 underline-offset-2 hover:underline"
+                >
+                  {wife}
+                </a>
+              ))}
+            </div>
           </div>
         )}
 
@@ -82,6 +98,25 @@ export default function PersonDetail({ person, lang, onClose, onSelect }: Props)
             >
               {lang === 'de' ? parent.de : parent.en}
             </button>
+          </div>
+        )}
+
+        {children.length > 0 && (
+          <div className="mt-4">
+            <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">
+              {t('children')}
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {children.map((child) => (
+                <button
+                  key={child.id}
+                  onClick={() => onSelect(child.id)}
+                  className="rounded-md bg-cream-2 px-2 py-0.5 text-[11px] font-medium text-teal-2 ring-1 ring-teal/10 transition hover:bg-gold/25"
+                >
+                  {lang === 'de' ? child.de : child.en}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
