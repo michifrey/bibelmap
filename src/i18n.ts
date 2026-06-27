@@ -72,6 +72,24 @@ const STRINGS: Dict = {
   // Zeitbaum / genealogy tree
   map: { de: 'Karte', en: 'Map' },
   tree: { de: 'Zeitbaum', en: 'Time tree' },
+  // Verweis-Graph / cross-reference graph
+  graph: { de: 'Graph', en: 'Graph' },
+  graphTitle: { de: 'Verweis-Graph', en: 'Reference graph' },
+  graphSubtitle: {
+    de: 'Bücher & Orte als Netz – welcher Ort wird wo erwähnt',
+    en: 'Books & places as a web – where each place is mentioned',
+  },
+  graphPlaces: { de: 'Orte', en: 'Places' },
+  graphPeople: { de: 'Personen', en: 'People' },
+  graphBooks: { de: 'Bücher', en: 'books' },
+  graphBookLinks: { de: 'Buch-Verweise', en: 'Book links' },
+  graphSearch: { de: 'Suchen …', en: 'Search …' },
+  graphXrefReal: { de: 'OpenBible-Querverweise', en: 'OpenBible cross-refs' },
+  graphXrefDerived: { de: 'aus gemeinsamen Orten/Personen', en: 'from shared places/people' },
+  graphHint: {
+    de: 'Ziehen · zoomen · Knoten antippen für Verbindungen',
+    en: 'Drag · zoom · tap a node for its links',
+  },
   treeTitle: { de: 'Zeitbaum', en: 'Time Tree' },
   treeSubtitle: { de: 'Von Adam & Eva bis in die Neuzeit', en: 'From Adam & Eve into the modern era' },
   expandAll: { de: 'Alle ausklappen', en: 'Expand all' },

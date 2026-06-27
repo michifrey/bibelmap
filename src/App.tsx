@@ -13,6 +13,7 @@ import HistoryMode from './components/HistoryMode';
 import CompareMode from './components/CompareMode';
 import ChurchMode from './components/ChurchMode';
 import TreeView from './components/TreeView';
+import GraphView from './components/GraphView';
 
 function Loading() {
   const t = useT();
@@ -84,6 +85,8 @@ export default function App() {
       <div className="relative h-full w-full overflow-hidden">
         {view === 'tree' ? (
           <TreeView lang={lang} />
+        ) : view === 'graph' ? (
+          <GraphView places={places} lang={lang} />
         ) : (
           <>
             <MapView
