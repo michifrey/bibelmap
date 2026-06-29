@@ -6,7 +6,8 @@ import { erasForPlace } from '../lib/places';
 import { osisFromRef } from '../lib/bookAbbr';
 import { BOOKS } from '../data/books';
 import { ERA_BY_ID } from '../data/eras';
-import { GENEALOGY, type Person } from '../data/genealogy';
+import { GENEALOGY, type Person, bibleRefUrl } from '../data/genealogy';
+import { PASSAGES, type Passage } from '../data/passages';
 import PlaceDetail from './PlaceDetail';
 import PersonDetail from './PersonDetail';
 
@@ -15,7 +16,9 @@ interface Props {
   lang: Lang;
 }
 
-type NodeKind = 'book' | 'place' | 'person';
+type NodeKind = 'book' | 'place' | 'person' | 'passage';
+
+const PASSAGE_COLOR = '#b8742e';
 
 interface GNode {
   id: string;
@@ -30,6 +33,7 @@ interface GNode {
   deg: number;
   place?: Place;
   person?: Person;
+  passage?: Passage;
   bookOsis?: string;
 }
 
@@ -80,8 +84,11 @@ function buildGraph(places: Place[], placeLimit: number, xrefs: Xref[] | null) {
       }
     }
   }
+  // a book gets a node if it carries places OR has a curated key passage
+  const passageBooks = new Set(PASSAGES.map((p) => p.book));
   for (const b of BOOKS) {
-    if (!bookMentions.get(b.osis)) continue;
+    const mentions = bookMentions.get(b.osis) ?? 0;
+    if (!mentions && !passageBooks.has(b.osis)) continue;
     const era = ERA_BY_ID[b.era];
     bookIndex.set(b.osis, nodes.length);
     nodes.push({
@@ -89,7 +96,7 @@ function buildGraph(places: Place[], placeLimit: number, xrefs: Xref[] | null) {
       kind: 'book',
       label: b.de === b.en ? b.en : b.de.replace(/ \(.*\)$/, ''),
       color: era?.color ?? TEAL,
-      r: 7 + Math.min(13, Math.sqrt(bookMentions.get(b.osis)!) * 1.6),
+      r: 7 + Math.min(13, Math.sqrt(Math.max(1, mentions)) * 1.6),
       x: 0, y: 0, vx: 0, vy: 0, deg: 0,
       bookOsis: b.osis,
     });
@@ -155,6 +162,24 @@ function buildGraph(places: Place[], placeLimit: number, xrefs: Xref[] | null) {
     });
   }
 
+  // passage nodes (curated key Bible passages), wired to their book
+  for (const psg of PASSAGES) {
+    const bi = bookIndex.get(psg.book);
+    if (bi === undefined) continue;
+    const pi = nodes.length;
+    edges.push({ a: pi, b: bi, w: 1 });
+    nodes[bi].deg += 1;
+    nodes.push({
+      id: `passage:${psg.id}`,
+      kind: 'passage',
+      label: psg.de,
+      color: PASSAGE_COLOR,
+      r: 6,
+      x: 0, y: 0, vx: 0, vy: 0, deg: 1,
+      passage: psg,
+    });
+  }
+
   // book↔book edges
   const bookEdges: GEdge[] = [];
   if (xrefs && xrefs.length) {
@@ -199,11 +224,11 @@ function buildGraph(places: Place[], placeLimit: number, xrefs: Xref[] | null) {
   }
 
   // seed positions on rings by kind
-  const counts = { book: 0, place: 0, person: 0 } as Record<NodeKind, number>;
-  const totals = { book: 0, place: 0, person: 0 } as Record<NodeKind, number>;
+  const counts = { book: 0, place: 0, person: 0, passage: 0 } as Record<NodeKind, number>;
+  const totals = { book: 0, place: 0, person: 0, passage: 0 } as Record<NodeKind, number>;
   for (const n of nodes) totals[n.kind]++;
   for (const n of nodes) {
-    const ring = n.kind === 'book' ? 300 : n.kind === 'place' ? 540 : 720;
+    const ring = n.kind === 'book' ? 300 : n.kind === 'place' ? 540 : n.kind === 'passage' ? 430 : 720;
     const idx = counts[n.kind]++;
     const a = (idx / Math.max(1, totals[n.kind])) * Math.PI * 2;
     n.x = Math.cos(a) * ring + (seeded(idx + (n.kind === 'place' ? 7 : 50)) - 0.5) * 80;
@@ -227,10 +252,12 @@ export default function GraphView({ places, lang }: Props) {
   const [placeLimit, setPlaceLimit] = useState(90);
   const [showPlaces, setShowPlaces] = useState(true);
   const [showPeople, setShowPeople] = useState(true);
+  const [showPassages, setShowPassages] = useState(true);
   const [showBookLinks, setShowBookLinks] = useState(false);
   const [query, setQuery] = useState('');
   const [selPlace, setSelPlace] = useState<Place | null>(null);
   const [selPerson, setSelPerson] = useState<string | null>(null);
+  const [selPassage, setSelPassage] = useState<Passage | null>(null);
   const [bookInfo, setBookInfo] = useState<{ osis: string; label: string } | null>(null);
   const [xrefs, setXrefs] = useState<Xref[] | null>(null);
   const [xrefReal, setXrefReal] = useState(false);
@@ -255,8 +282,8 @@ export default function GraphView({ places, lang }: Props) {
   const graph = useMemo(() => buildGraph(places, placeLimit, xrefs), [places, placeLimit, xrefs]);
 
   // keep latest filter/label state in refs for the animation loop
-  const filt = useRef({ showPlaces, showPeople, showBookLinks, lang });
-  filt.current = { showPlaces, showPeople, showBookLinks, lang };
+  const filt = useRef({ showPlaces, showPeople, showPassages, showBookLinks, lang });
+  filt.current = { showPlaces, showPeople, showPassages, showBookLinks, lang };
   const view = useRef({ x: 0, y: 0, k: 1 });
   const hover = useRef<number | null>(null);
   const active = useRef<number | null>(null);
@@ -266,6 +293,7 @@ export default function GraphView({ places, lang }: Props) {
   function nodeVisible(n: GNode): boolean {
     if (n.kind === 'book') return true;
     if (n.kind === 'place') return filt.current.showPlaces;
+    if (n.kind === 'passage') return filt.current.showPassages;
     return filt.current.showPeople;
   }
 
@@ -280,7 +308,12 @@ export default function GraphView({ places, lang }: Props) {
     let found = -1;
     for (let i = 0; i < nodes.length; i++) {
       const n = nodes[i];
-      const label = n.kind === 'person' && n.person ? (lang === 'de' ? n.person.de : n.person.en) : n.label;
+      const label =
+        n.kind === 'person' && n.person
+          ? lang === 'de' ? n.person.de : n.person.en
+          : n.kind === 'passage' && n.passage
+            ? `${lang === 'de' ? n.passage.de : n.passage.en} ${n.passage.ref}`
+            : n.label;
       if (nodeVisible(n) && label.toLowerCase().includes(q)) {
         found = i;
         break;
@@ -319,6 +352,7 @@ export default function GraphView({ places, lang }: Props) {
 
     function labelOf(n: GNode): string {
       if (n.kind === 'person' && n.person) return filt.current.lang === 'de' ? n.person.de : n.person.en;
+      if (n.kind === 'passage' && n.passage) return filt.current.lang === 'de' ? n.passage.de : n.passage.en;
       return n.label;
     }
 
@@ -460,12 +494,15 @@ export default function GraphView({ places, lang }: Props) {
           ctx.lineTo(sx, sy + r);
           ctx.lineTo(sx - r, sy);
           ctx.closePath();
+        } else if (n.kind === 'passage') {
+          // square for Bible passages
+          ctx.rect(sx - r, sy - r, r * 2, r * 2);
         } else {
           ctx.arc(sx, sy, r, 0, Math.PI * 2);
         }
         ctx.fillStyle = n.color;
         ctx.fill();
-        if (n.kind === 'book') {
+        if (n.kind === 'book' || n.kind === 'passage') {
           ctx.lineWidth = 2;
           ctx.strokeStyle = '#fff';
           ctx.stroke();
@@ -473,11 +510,13 @@ export default function GraphView({ places, lang }: Props) {
         const showLabel =
           n.kind === 'book'
             ? v.k > 0.4
-            : !dim && (i === focus || (neigh && neigh.has(i)) || n.r > 7) && v.k > 0.55;
+            : n.kind === 'passage'
+              ? !dim && (i === focus || (neigh && neigh.has(i))) && v.k > 0.5
+              : !dim && (i === focus || (neigh && neigh.has(i)) || n.r > 7) && v.k > 0.55;
         if (showLabel) {
           ctx.globalAlpha = dim ? 0.25 : 1;
-          ctx.font = `${n.kind === 'book' ? 600 : 400} ${n.kind === 'book' ? 12 : 11}px Inter, sans-serif`;
-          ctx.fillStyle = n.kind === 'book' ? TEAL : '#4a5754';
+          ctx.font = `${n.kind === 'book' || n.kind === 'passage' ? 600 : 400} ${n.kind === 'book' ? 12 : 11}px Inter, sans-serif`;
+          ctx.fillStyle = n.kind === 'book' ? TEAL : n.kind === 'passage' ? PASSAGE_COLOR : '#4a5754';
           ctx.strokeStyle = 'rgba(247,241,230,0.9)';
           ctx.lineWidth = 3;
           ctx.strokeText(labelOf(n), sx, sy + r + 2);
@@ -574,28 +613,29 @@ export default function GraphView({ places, lang }: Props) {
       if (!d || d.moved) return;
       const p = pick(ev.clientX, ev.clientY);
       focusReq.current = null;
-      if (p == null) {
-        active.current = null;
+      const clearPanels = () => {
         setSelPlace(null);
         setSelPerson(null);
+        setSelPassage(null);
         setBookInfo(null);
+      };
+      if (p == null) {
+        active.current = null;
+        clearPanels();
         return;
       }
       active.current = p;
       const n = nodes[p];
       alpha = Math.max(alpha, 0.2);
+      clearPanels();
       if (n.kind === 'place' && n.place) {
         setSelPlace(n.place);
-        setSelPerson(null);
-        setBookInfo(null);
       } else if (n.kind === 'person' && n.person) {
         setSelPerson(n.person.id);
-        setSelPlace(null);
-        setBookInfo(null);
+      } else if (n.kind === 'passage' && n.passage) {
+        setSelPassage(n.passage);
       } else if (n.kind === 'book' && n.bookOsis) {
         setBookInfo({ osis: n.bookOsis, label: n.label });
-        setSelPlace(null);
-        setSelPerson(null);
       }
     }
 
@@ -630,6 +670,7 @@ export default function GraphView({ places, lang }: Props) {
   const bookCount = graph.nodes.filter((n) => n.kind === 'book').length;
   const placeCount = graph.nodes.filter((n) => n.kind === 'place').length;
   const personCount = graph.nodes.filter((n) => n.kind === 'person').length;
+  const passageCount = graph.nodes.filter((n) => n.kind === 'passage').length;
 
   // connected places/people for a clicked book (the "where mentioned" list)
   const bookLinks = useMemo(() => {
@@ -638,13 +679,15 @@ export default function GraphView({ places, lang }: Props) {
     if (bi < 0) return null;
     const ps: Place[] = [];
     const people: Person[] = [];
+    const passages: Passage[] = [];
     for (const e of graph.edges) {
       if (e.b !== bi && e.a !== bi) continue;
       const other = graph.nodes[e.a === bi ? e.b : e.a];
       if (other.kind === 'place' && other.place) ps.push(other.place);
       else if (other.kind === 'person' && other.person) people.push(other.person);
+      else if (other.kind === 'passage' && other.passage) passages.push(other.passage);
     }
-    return { places: ps, people };
+    return { places: ps, people, passages };
   }, [bookInfo, graph]);
 
   const Toggle = ({ on, set, label, dot }: { on: boolean; set: (v: boolean) => void; label: string; dot: string }) => (
@@ -681,6 +724,7 @@ export default function GraphView({ places, lang }: Props) {
           <div className="flex flex-wrap items-center gap-1.5">
             <Toggle on={showPlaces} set={setShowPlaces} label={t('graphPlaces')} dot="#2f8f7f" />
             <Toggle on={showPeople} set={setShowPeople} label={t('graphPeople')} dot="#9a4ba0" />
+            <Toggle on={showPassages} set={setShowPassages} label={t('graphPassages')} dot={PASSAGE_COLOR} />
             <Toggle on={showBookLinks} set={setShowBookLinks} label={t('graphBookLinks')} dot="#c2812a" />
           </div>
           <label className="flex items-center gap-2 text-[11px] text-ink-soft">
@@ -700,7 +744,7 @@ export default function GraphView({ places, lang }: Props) {
           </label>
         </div>
         <div className="pointer-events-none self-start rounded-lg bg-cream/80 px-2.5 py-1 text-[11px] text-ink-soft shadow ring-1 ring-teal/10 backdrop-blur">
-          {t('graphHint')} · {bookCount} {t('graphBooks')} · {placeCount} {t('graphPlaces')} · {personCount} {t('graphPeople')}
+          {t('graphHint')} · {bookCount} {t('graphBooks')} · {placeCount} {t('graphPlaces')} · {personCount} {t('graphPeople')} · {passageCount} {t('graphPassages')}
           {showBookLinks && ` · ${t('graphBookLinks')}: ${xrefReal ? t('graphXrefReal') : t('graphXrefDerived')}`}
         </div>
       </div>
@@ -728,6 +772,49 @@ export default function GraphView({ places, lang }: Props) {
         </div>
       )}
 
+      {/* passage detail — title, reference, subtitle, explanation */}
+      {selPassage && (
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
+          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-cream/95 shadow-2xl ring-1 ring-teal/10 backdrop-blur">
+            <div className="animate-fade-in flex h-full flex-col">
+              <div className="relative px-4 pb-3 pt-4 text-cream" style={{ background: PASSAGE_COLOR }}>
+                <button
+                  onClick={() => setSelPassage(null)}
+                  aria-label={t('close')}
+                  className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/15 text-cream transition hover:bg-black/30"
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
+                </button>
+                <div className="text-[11px] font-medium uppercase tracking-wide text-cream/85">{t('graphPassages')}</div>
+                <h2 className="mt-0.5 font-display text-2xl font-semibold leading-tight">{lang === 'de' ? selPassage.de : selPassage.en}</h2>
+                <div className="mt-1 text-[13px] italic text-cream/90">{lang === 'de' ? selPassage.subDe : selPassage.subEn}</div>
+              </div>
+              <div className="scroll-soft flex-1 overflow-y-auto px-4 pb-5 pt-3">
+                <p className="text-sm leading-relaxed text-ink">{lang === 'de' ? selPassage.textDe : selPassage.textEn}</p>
+                <div className="mt-4 flex flex-wrap items-center gap-1.5">
+                  <a
+                    href={bibleRefUrl(selPassage.ref)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-cream transition hover:opacity-90"
+                    style={{ background: PASSAGE_COLOR }}
+                  >
+                    {selPassage.ref}
+                    <svg viewBox="0 0 24 24" className="h-3 w-3 opacity-80" fill="currentColor"><path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14zM5 5h5v2H7v10h10v-3h2v5H5z" /></svg>
+                  </a>
+                  <button
+                    onClick={() => { setBookInfo({ osis: selPassage.book, label: graph.nodes.find((n) => n.kind === 'book' && n.bookOsis === selPassage.book)?.label ?? selPassage.book }); setSelPassage(null); }}
+                    className="rounded-lg bg-cream-2 px-2.5 py-1.5 text-xs font-medium text-teal transition hover:bg-gold/30"
+                  >
+                    {graph.nodes.find((n) => n.kind === 'book' && n.bookOsis === selPassage.book)?.label ?? selPassage.book}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* book → mentioned places/people list */}
       {bookInfo && bookLinks && (
         <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[20rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
@@ -739,6 +826,18 @@ export default function GraphView({ places, lang }: Props) {
               </button>
             </div>
             <div className="scroll-soft flex-1 overflow-y-auto px-4 py-3">
+              {bookLinks.passages.length > 0 && (
+                <>
+                  <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{t('graphPassages')} · {bookLinks.passages.length}</div>
+                  <div className="mb-3 flex flex-wrap gap-1.5">
+                    {bookLinks.passages.map((psg) => (
+                      <button key={psg.id} onClick={() => { setSelPassage(psg); setBookInfo(null); }} className="rounded-md px-2 py-0.5 text-[11px] font-medium ring-1 ring-clay/30 hover:bg-clay/15" style={{ color: PASSAGE_COLOR }}>
+                        {lang === 'de' ? psg.de : psg.en}
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
               {bookLinks.places.length > 0 && (
                 <>
                   <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{t('graphPlaces')} · {bookLinks.places.length}</div>
