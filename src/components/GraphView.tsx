@@ -203,7 +203,7 @@ function buildGraph(places: Place[], placeLimit: number, xrefs: Xref[] | null) {
   const totals = { book: 0, place: 0, person: 0 } as Record<NodeKind, number>;
   for (const n of nodes) totals[n.kind]++;
   for (const n of nodes) {
-    const ring = n.kind === 'book' ? 160 : n.kind === 'place' ? 460 : 620;
+    const ring = n.kind === 'book' ? 300 : n.kind === 'place' ? 540 : 720;
     const idx = counts[n.kind]++;
     const a = (idx / Math.max(1, totals[n.kind])) * Math.PI * 2;
     n.x = Math.cos(a) * ring + (seeded(idx + (n.kind === 'place' ? 7 : 50)) - 0.5) * 80;
@@ -375,10 +375,18 @@ export default function GraphView({ places, lang }: Props) {
         n.vy += -n.y * 0.0015 * alpha;
         n.vx *= damping;
         n.vy *= damping;
+        // clamp speed so nodes never "shoot" across the canvas — this is what
+        // keeps the graph controllable instead of spinning out on open.
+        const sp = Math.hypot(n.vx, n.vy);
+        const MAX = 16;
+        if (sp > MAX) {
+          n.vx = (n.vx / sp) * MAX;
+          n.vy = (n.vy / sp) * MAX;
+        }
         n.x += n.vx;
         n.y += n.vy;
       }
-      if (alpha > 0.05) alpha *= 0.992;
+      if (alpha > 0.02) alpha *= 0.985;
 
       // handle a pending search-focus: pan to node
       if (focusReq.current != null) {
@@ -477,6 +485,28 @@ export default function GraphView({ places, lang }: Props) {
         }
       }
       ctx.globalAlpha = 1;
+    }
+
+    // Pre-settle the layout off-screen so the graph opens already calm instead
+    // of exploding into motion (the force sim is most violent in its first ~1s).
+    for (let i = 0; i < 180; i++) step();
+
+    // Frame the settled layout so it opens centered and fully in view.
+    {
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (const n of nodes) {
+        if (!nodeVisible(n)) continue;
+        minX = Math.min(minX, n.x - n.r);
+        minY = Math.min(minY, n.y - n.r);
+        maxX = Math.max(maxX, n.x + n.r);
+        maxY = Math.max(maxY, n.y + n.r);
+      }
+      if (Number.isFinite(minX)) {
+        const gw = maxX - minX || 1;
+        const gh = maxY - minY || 1;
+        const k = Math.min(1.4, Math.max(0.2, Math.min(W / (gw + 140), H / (gh + 140))));
+        view.current = { k, x: W / 2 - ((minX + maxX) / 2) * k, y: H / 2 - ((minY + maxY) / 2) * k };
+      }
     }
 
     function frame() {
