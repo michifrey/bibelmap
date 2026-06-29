@@ -45,6 +45,10 @@ export default function App() {
   // Cross-links between the time tree and the church-history map (shared data).
   const [treeFocus, setTreeFocus] = useState<string | null>(null);
   const [churchFocus, setChurchFocus] = useState<string | null>(null);
+  // Mobile-only: bottom-sheet (search/detail) and timeline are collapsible so
+  // the map stays usable on small screens. Desktop ignores these.
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [tlOpen, setTlOpen] = useState(false);
 
   function showPersonOnMap(id: string) {
     setChurchFocus(id);
@@ -86,6 +90,7 @@ export default function App() {
 
   function select(p: Place) {
     setSelected(p);
+    setSheetOpen(true); // reveal the detail sheet on mobile
     setFlyTo({ lat: p.lat, lon: p.lon, zoom: 9, key: Date.now() });
   }
 
@@ -123,20 +128,38 @@ export default function App() {
               flyTo={flyTo}
             />
 
-            {/* Left panel */}
-            <div className="pointer-events-none absolute inset-y-0 left-0 z-[1100] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
-              <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-3xl bg-cream/80 shadow-2xl ring-1 ring-white/40 backdrop-blur-xl">
-                {selected ? (
-                  <PlaceDetail place={selected} lang={lang} onClose={() => setSelected(null)} />
-                ) : (
-                  <SearchPanel
-                    query={query}
-                    onQuery={setQuery}
-                    results={results}
-                    topPlaces={topPlaces}
-                    onSelect={select}
-                  />
-                )}
+            {/* Search / detail — left rail on desktop, bottom sheet on mobile */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1110] flex flex-col p-2 sm:inset-y-0 sm:left-0 sm:right-auto sm:z-[1100] sm:w-full sm:max-w-[22rem] sm:p-4 sm:pt-24">
+              <div className="pointer-events-auto flex min-h-0 flex-col overflow-hidden rounded-2xl bg-cream/90 shadow-2xl ring-1 ring-white/40 backdrop-blur-xl sm:flex-1 sm:rounded-3xl">
+                {/* mobile peek / grab handle */}
+                <button
+                  onClick={() => setSheetOpen((v) => !v)}
+                  className="flex items-center gap-2 border-b border-teal/10 px-3 py-2 text-left sm:hidden"
+                  aria-label={tr(lang, 'search')}
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-teal" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
+                  </svg>
+                  <span className="flex-1 truncate text-sm text-ink-soft">
+                    {selected ? selected.name.replace(/ \d+$/, '') : tr(lang, 'search')}
+                  </span>
+                  <svg viewBox="0 0 24 24" className={`h-4 w-4 flex-none text-ink-soft transition-transform ${sheetOpen ? 'rotate-180' : ''}`} fill="currentColor">
+                    <path d="M7 14l5-5 5 5z" />
+                  </svg>
+                </button>
+                <div className={`min-h-0 flex-col overflow-hidden ${sheetOpen ? 'flex max-h-[58vh]' : 'hidden'} sm:flex sm:max-h-none sm:flex-1`}>
+                  {selected ? (
+                    <PlaceDetail place={selected} lang={lang} onClose={() => setSelected(null)} />
+                  ) : (
+                    <SearchPanel
+                      query={query}
+                      onQuery={setQuery}
+                      results={results}
+                      topPlaces={topPlaces}
+                      onSelect={select}
+                    />
+                  )}
+                </div>
               </div>
             </div>
 
@@ -164,7 +187,16 @@ export default function App() {
               ))}
             </div>
 
-            {!heat && <Timeline lang={lang} selected={era} counts={eraCounts} onSelect={setEra} />}
+            {!heat && (
+              <Timeline
+                lang={lang}
+                selected={era}
+                counts={eraCounts}
+                onSelect={setEra}
+                open={tlOpen}
+                onToggle={() => setTlOpen((v) => !v)}
+              />
+            )}
 
             {mode === 'present' && <Presentation places={places} lang={lang} onExit={() => setMode(null)} />}
             {mode === 'history' && <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />}
