@@ -107,6 +107,8 @@ const STRINGS: Dict = {
     de: 'Die biblische Stammlinie endet bei Jesus Christus. Danach folgen keine Blutsverwandten, sondern bedeutende Glaubenszeugen der Kirchengeschichte (gestrichelte Linien).',
     en: 'The biblical bloodline ends with Jesus Christ. What follows are not blood relatives but key faith witnesses of church history (dashed lines).',
   },
+  showOnMap: { de: 'Auf Karte zeigen', en: 'Show on map' },
+  openInTree: { de: 'Im Zeitbaum öffnen', en: 'Open in time tree' },
 };
 
 export const LangContext = createContext<Lang>('de');

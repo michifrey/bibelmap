@@ -15,9 +15,11 @@ interface Props {
   lang: Lang;
   onClose: () => void;
   onSelect: (id: string) => void;
+  /** Show a "show on map" action (church-history map) for located figures. */
+  onShowOnMap?: (id: string) => void;
 }
 
-export default function PersonDetail({ person, lang, onClose, onSelect }: Props) {
+export default function PersonDetail({ person, lang, onClose, onSelect, onShowOnMap }: Props) {
   const t = useT();
   const epoch = EPOCH_BY_ID[person.epoch];
   const name = lang === 'de' ? person.de : person.en;
@@ -67,6 +69,17 @@ export default function PersonDetail({ person, lang, onClose, onSelect }: Props)
         )}
 
         <p className="text-sm leading-relaxed text-ink">{text}</p>
+
+        {onShowOnMap && person.lat != null && person.lon != null && (
+          <button
+            onClick={() => onShowOnMap(person.id)}
+            className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-teal px-2.5 py-1.5 text-xs font-medium text-cream transition hover:bg-teal-2"
+          >
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 21s-6-5.7-6-10a6 6 0 1112 0c0 4.3-6 10-6 10z" /><circle cx="12" cy="11" r="2" /></svg>
+            {t('showOnMap')}
+            {person.city ? ` · ${person.city}` : ''}
+          </button>
+        )}
 
         {spouseName && (
           <div className="mt-4">

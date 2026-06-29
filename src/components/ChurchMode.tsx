@@ -9,16 +9,21 @@ import {
 interface Props {
   lang: Lang;
   onExit: () => void;
+  /** Open straight onto a church father (e.g. coming from the time tree). */
+  initialFatherId?: string | null;
+  /** Jump to this father in the time tree. */
+  onOpenInTree?: (personId: string) => void;
 }
 
 type Tab = 'paul' | 'fathers' | 'councils';
 
 const CARTO = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
-export default function ChurchMode({ lang, onExit }: Props) {
+export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree }: Props) {
   const t = useT();
-  const [tab, setTab] = useState<Tab>('paul');
-  const [sel, setSel] = useState<string | null>('j1');
+  const startFather = initialFatherId && FATHERS.some((f) => f.id === initialFatherId) ? initialFatherId : null;
+  const [tab, setTab] = useState<Tab>(startFather ? 'fathers' : 'paul');
+  const [sel, setSel] = useState<string | null>(startFather ?? 'j1');
 
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -83,7 +88,7 @@ export default function ChurchMode({ lang, onExit }: Props) {
           fillColor: TRADITION_COLOR[f.tradition],
           fillOpacity: 0.95,
         })
-          .bindTooltip(`${f.name} · ${f.city}`, { direction: 'top' })
+          .bindTooltip(`${lang === 'de' ? f.de : f.en} · ${f.city}`, { direction: 'top' })
           .on('click', () => setSel(f.id))
           .addTo(group);
       }
@@ -192,7 +197,7 @@ export default function ChurchMode({ lang, onExit }: Props) {
                     >
                       <span className="h-2.5 w-2.5 flex-none rounded-full" style={{ background: TRADITION_COLOR[f.tradition] }} />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium text-ink">{f.name}</span>
+                        <span className="block truncate text-sm font-medium text-ink">{lang === 'de' ? f.de : f.en}</span>
                         <span className="text-[11px] text-ink-soft">{f.city} · {f.years}</span>
                       </span>
                     </button>
@@ -231,9 +236,18 @@ export default function ChurchMode({ lang, onExit }: Props) {
                   </>
                 ) : 'years' in detail ? (
                   <>
-                    <div className="font-display text-base font-semibold text-teal">{detail.name}</div>
+                    <div className="font-display text-base font-semibold text-teal">{lang === 'de' ? detail.de : detail.en}</div>
                     <div className="text-[11px] text-ink-soft">{detail.city} · {detail.years} · {lang === 'de' ? TRADITION_LABEL[detail.tradition].de : TRADITION_LABEL[detail.tradition].en}</div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink">{lang === 'de' ? detail.de.note : detail.en.note}</p>
+                    <p className="mt-1.5 text-sm leading-relaxed text-ink">{lang === 'de' ? detail.deNote : detail.enNote}</p>
+                    {onOpenInTree && (
+                      <button
+                        onClick={() => onOpenInTree(detail.personId)}
+                        className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg bg-teal px-2.5 py-1.5 text-xs font-medium text-cream transition hover:bg-teal-2"
+                      >
+                        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3v18M5 9l7-6 7 6" /></svg>
+                        {t('openInTree')}
+                      </button>
+                    )}
                   </>
                 ) : (
                   <>
