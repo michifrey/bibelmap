@@ -7,15 +7,21 @@ interface Props {
   selected: string | null;
   counts: Record<string, number>;
   onSelect: (eraId: string | null) => void;
+  /** Mobile-only: collapsed by default; desktop always shows the era cards. */
+  open?: boolean;
+  onToggle?: () => void;
 }
 
-export default function Timeline({ lang, selected, counts, onSelect }: Props) {
+export default function Timeline({ lang, selected, counts, onSelect, open = false, onToggle }: Props) {
   const t = useT();
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1100] flex justify-center p-3 sm:p-4">
-      <div className="pointer-events-auto w-full max-w-5xl rounded-3xl bg-cream/80 p-3 shadow-2xl ring-1 ring-white/40 backdrop-blur-xl">
-        <div className="mb-2 flex items-center justify-between px-1">
-          <span className="font-display text-sm font-semibold tracking-wide text-teal">{t('timeline')}</span>
+    <div className="pointer-events-none absolute inset-x-0 bottom-[3.75rem] z-[1100] flex justify-center p-2 sm:bottom-0 sm:p-4">
+      <div className="pointer-events-auto w-full max-w-5xl rounded-2xl bg-cream/90 p-2 shadow-2xl ring-1 ring-white/40 backdrop-blur-xl sm:rounded-3xl sm:p-3">
+        <div className="flex items-center justify-between px-1 sm:mb-2">
+          <button onClick={onToggle} className="flex items-center gap-1.5 sm:pointer-events-none">
+            <span className="font-display text-sm font-semibold tracking-wide text-teal">{t('timeline')}</span>
+            <svg viewBox="0 0 24 24" className={`h-4 w-4 text-ink-soft transition-transform sm:hidden ${open ? '' : 'rotate-180'}`} fill="currentColor"><path d="M7 14l5-5 5 5z" /></svg>
+          </button>
           <button
             onClick={() => onSelect(null)}
             className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
@@ -25,7 +31,7 @@ export default function Timeline({ lang, selected, counts, onSelect }: Props) {
             {t('allEras')}
           </button>
         </div>
-        <div className="scroll-soft flex gap-1.5 overflow-x-auto pb-1">
+        <div className={`scroll-soft mt-2 gap-1.5 overflow-x-auto pb-1 sm:mt-0 sm:flex ${open ? 'flex' : 'hidden'}`}>
           {ERAS.map((e) => {
             const active = selected === e.id;
             const n = counts[e.id] ?? 0;

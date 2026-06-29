@@ -19,7 +19,7 @@ import {
 import PersonDetail from './PersonDetail';
 
 const PAD_X = 28;
-const PAD_TOP = 150;
+const PAD_TOP = 196;
 const RULER_H = 52;
 
 interface Props {
