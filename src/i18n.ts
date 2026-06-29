@@ -81,6 +81,7 @@ const STRINGS: Dict = {
   },
   graphPlaces: { de: 'Orte', en: 'Places' },
   graphPeople: { de: 'Personen', en: 'People' },
+  graphPassages: { de: 'Stellen', en: 'Passages' },
   graphBooks: { de: 'Bücher', en: 'books' },
   graphBookLinks: { de: 'Buch-Verweise', en: 'Book links' },
   graphSearch: { de: 'Suchen …', en: 'Search …' },
