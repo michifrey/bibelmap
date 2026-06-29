@@ -33,9 +33,61 @@ export default function TreeView({ lang }: Props) {
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(LINE_IDS));
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const didCenter = useRef(false);
+  const dragBar = useRef<{ x: number; left: number } | null>(null);
+  // horizontal scrollbar geometry (fractions of the scrollable width)
+  const [hbar, setHbar] = useState({ left: 0, width: 1, show: false });
 
   const layout = useMemo(() => computeLayout(expanded), [expanded]);
+
+  // keep the custom horizontal scrollbar in sync with the tree's scroll state
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const sync = () => {
+      const { scrollWidth, clientWidth, scrollLeft } = el;
+      setHbar({
+        show: scrollWidth > clientWidth + 2,
+        width: Math.min(1, clientWidth / scrollWidth),
+        left: scrollWidth > 0 ? scrollLeft / scrollWidth : 0,
+      });
+    };
+    sync();
+    el.addEventListener('scroll', sync, { passive: true });
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    return () => {
+      el.removeEventListener('scroll', sync);
+      ro.disconnect();
+    };
+  }, [layout]);
+
+  function onThumbDown(e: React.PointerEvent) {
+    const el = scrollRef.current;
+    if (!el) return;
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    dragBar.current = { x: e.clientX, left: el.scrollLeft };
+    e.preventDefault();
+  }
+  function onThumbMove(e: React.PointerEvent) {
+    const el = scrollRef.current;
+    const track = trackRef.current;
+    if (!dragBar.current || !el || !track) return;
+    const dx = e.clientX - dragBar.current.x;
+    el.scrollLeft = dragBar.current.left + (dx / track.clientWidth) * el.scrollWidth;
+  }
+  function onThumbUp() {
+    dragBar.current = null;
+  }
+  function onTrackDown(e: React.PointerEvent) {
+    const el = scrollRef.current;
+    const track = trackRef.current;
+    if (!el || !track || e.target !== track) return;
+    const rect = track.getBoundingClientRect();
+    const frac = (e.clientX - rect.left) / rect.width;
+    el.scrollTo({ left: frac * el.scrollWidth - el.clientWidth / 2, behavior: 'smooth' });
+  }
 
   // On first render, center the viewport vertically on the root (Adam).
   useEffect(() => {
@@ -188,6 +240,24 @@ export default function TreeView({ lang }: Props) {
         </div>
       </div>
 
+      {/* ---- horizontal scrollbar (sits just above the time ruler) ---- */}
+      {hbar.show && (
+        <div
+          ref={trackRef}
+          onPointerDown={onTrackDown}
+          className="absolute z-[1090] h-2.5 rounded-full bg-teal/10 ring-1 ring-teal/10"
+          style={{ left: 14, right: 14, bottom: RULER_H + 6 }}
+        >
+          <div
+            onPointerDown={onThumbDown}
+            onPointerMove={onThumbMove}
+            onPointerUp={onThumbUp}
+            className="absolute top-0 h-full min-w-[28px] cursor-grab touch-none rounded-full bg-teal/45 transition-colors hover:bg-teal/65 active:cursor-grabbing active:bg-teal/70"
+            style={{ left: `${hbar.left * 100}%`, width: `${hbar.width * 100}%` }}
+          />
+        </div>
+      )}
+
       {/* ---- header / toolbar ---- */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex flex-col gap-2 p-3 pt-20 sm:p-4 sm:pt-24">
         <div className="pointer-events-auto flex flex-wrap items-center gap-2 self-start rounded-2xl bg-cream/92 px-3 py-2 shadow-lg ring-1 ring-teal/10 backdrop-blur">
@@ -214,7 +284,7 @@ export default function TreeView({ lang }: Props) {
       </div>
 
       {/* ---- bloodline → faith note ---- */}
-      <div className="pointer-events-none absolute bottom-16 left-1/2 z-[1100] hidden -translate-x-1/2 sm:block">
+      <div className="pointer-events-none absolute bottom-24 left-1/2 z-[1100] hidden -translate-x-1/2 sm:block">
         <div className="pointer-events-auto max-w-xl rounded-xl bg-teal/95 px-3.5 py-2 text-center text-[11px] leading-snug text-cream/90 shadow-lg ring-1 ring-teal/20">
           {t('bloodlineNote')}
         </div>
