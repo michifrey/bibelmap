@@ -46,6 +46,9 @@ export const GEN_EPOCHS: Epoch[] = [
 
 export const EPOCH_BY_ID: Record<string, Epoch> = Object.fromEntries(GEN_EPOCHS.map((e) => [e.id, e]));
 
+/** Tradition of a church father — used by the church-history map overlay. */
+export type Tradition = 'west' | 'east' | 'orient';
+
 export interface Person {
   id: string;
   de: string;
@@ -69,6 +72,16 @@ export interface Person {
   refs: string[];
   deText: string;
   enText: string;
+  // --- optional geo / map link --------------------------------------------
+  // Church fathers carry a location + tradition so they appear on the
+  // church-history map AND in the time tree from the SAME record (no
+  // duplication). Persons with these fields get a "show on map" link.
+  lat?: number;
+  lon?: number;
+  city?: string;
+  tradition?: Tradition;
+  /** Life-range label for figures shown on the map, e.g. "≈ 296–373". */
+  years?: string;
 }
 
 export const GENEALOGY: Person[] = [
@@ -445,23 +458,63 @@ export const GENEALOGY: Person[] = [
 
   // ---------------------------------------------------------------- Kirchenväter
   { id: 'polykarp', de: 'Polykarp von Smyrna', en: 'Polycarp of Smyrna', parent: 'paulus', line: true, faith: true, born: 69, epoch: 'kirchenvater', refs: [],
+    city: 'Smyrna', lat: 38.42, lon: 27.14, tradition: 'east', years: '≈ 69–155',
     deText: 'Schüler des Apostels Johannes, Bischof von Smyrna; starb als Märtyrer für seinen Glauben.', enText: 'A disciple of the apostle John, bishop of Smyrna; died a martyr for his faith.' },
   { id: 'justin', de: 'Justin der Märtyrer', en: 'Justin Martyr', parent: 'polykarp', line: true, faith: true, born: 100, epoch: 'kirchenvater', refs: [],
     deText: 'Philosoph, der zum Christen wurde; verteidigte den Glauben vor den Gebildeten seiner Zeit.', enText: 'A philosopher turned Christian; defended the faith before the learned of his day.' },
   { id: 'irenaeus', de: 'Irenäus von Lyon', en: 'Irenaeus of Lyon', parent: 'justin', line: true, faith: true, born: 130, epoch: 'kirchenvater', refs: [],
+    city: 'Lyon', lat: 45.76, lon: 4.83, tradition: 'west', years: '≈ 130–202',
     deText: 'Bischof und Theologe; betonte die Einheit der Schrift gegen die Gnosis.', enText: 'Bishop and theologian; upheld the unity of Scripture against gnosticism.' },
   { id: 'origenes', de: 'Origenes', en: 'Origen', parent: 'irenaeus', faith: true, born: 184, epoch: 'kirchenvater', refs: [],
+    city: 'Alexandria', lat: 31.2, lon: 29.92, tradition: 'east', years: '≈ 184–253',
     deText: 'Gelehrter aus Alexandria; einer der ersten großen Bibelausleger.', enText: 'A scholar of Alexandria; one of the first great interpreters of the Bible.' },
   { id: 'athanasius', de: 'Athanasius', en: 'Athanasius', parent: 'irenaeus', line: true, faith: true, born: 296, epoch: 'kirchenvater', refs: [],
+    city: 'Alexandria', lat: 31.2, lon: 29.92, tradition: 'east', years: '≈ 296–373',
     deText: 'Bischof von Alexandria; verteidigte die Gottheit Christi und half, den Bibelkanon zu klären.', enText: 'Bishop of Alexandria; defended the deity of Christ and helped settle the biblical canon.' },
   { id: 'hieronymus', de: 'Hieronymus', en: 'Jerome', parent: 'athanasius', faith: true, born: 347, epoch: 'kirchenvater', refs: [],
+    city: 'Betlehem', lat: 31.7, lon: 35.2, tradition: 'west', years: '≈ 347–420',
     deText: 'Übersetzte die Bibel ins Lateinische (Vulgata) — über tausend Jahre die Bibel des Abendlandes.', enText: 'Translated the Bible into Latin (the Vulgate) — the Bible of the West for over a thousand years.' },
   { id: 'augustinus', de: 'Augustinus von Hippo', en: 'Augustine of Hippo', parent: 'athanasius', line: true, faith: true, born: 354, epoch: 'kirchenvater', refs: [],
+    city: 'Hippo', lat: 36.88, lon: 7.75, tradition: 'west', years: '354–430',
     deText: 'Bischof und einflussreichster Theologe der Alten Kirche; schrieb „Bekenntnisse" und „Gottesstaat".', enText: 'Bishop and most influential theologian of the early church; wrote the "Confessions" and "City of God".' },
+  // --- weitere Kirchenväter (erscheinen im Baum UND auf der Kirchengeschichte-Karte) ---
+  { id: 'clemens', de: 'Clemens von Rom', en: 'Clement of Rome', parent: 'petrus', faith: true, born: 35, epoch: 'urkirche', refs: [],
+    city: 'Rom', lat: 41.89, lon: 12.49, tradition: 'west', years: '≈ 35–99',
+    deText: 'Früher Bischof von Rom; sein Brief (1. Clemens) an die Gemeinde in Korinth ist erhalten.', enText: 'An early bishop of Rome; his letter (1 Clement) to the church in Corinth survives.' },
+  { id: 'ignatius', de: 'Ignatius von Antiochia', en: 'Ignatius of Antioch', parent: 'paulus', faith: true, born: 35, epoch: 'urkirche', refs: [],
+    city: 'Antiochia', lat: 36.2, lon: 36.16, tradition: 'east', years: '≈ 35–108',
+    deText: 'Märtyrerbischof; seine Briefe prägen das frühe Kirchen- und Bischofsamt.', enText: 'A martyr-bishop whose letters shaped early church and episcopal order.' },
+  { id: 'tertullian', de: 'Tertullian', en: 'Tertullian', parent: 'irenaeus', faith: true, born: 155, epoch: 'kirchenvater', refs: [],
+    city: 'Karthago', lat: 36.85, lon: 10.32, tradition: 'west', years: '≈ 155–220',
+    deText: 'Vater der lateinischen Theologie; prägte den Begriff „Trinitas".', enText: 'Father of Latin theology; coined the term "Trinitas".' },
+  { id: 'cyprian', de: 'Cyprian von Karthago', en: 'Cyprian of Carthage', parent: 'tertullian', faith: true, born: 210, epoch: 'kirchenvater', refs: [],
+    city: 'Karthago', lat: 36.85, lon: 10.32, tradition: 'west', years: '≈ 210–258',
+    deText: 'Bischof und Märtyrer; schrieb über die Einheit der Kirche.', enText: 'Bishop and martyr; wrote on the unity of the church.' },
+  { id: 'ephrem', de: 'Ephräm der Syrer', en: 'Ephrem the Syrian', parent: 'athanasius', faith: true, born: 306, epoch: 'kirchenvater', refs: [],
+    city: 'Nisibis / Edessa', lat: 37.07, lon: 41.21, tradition: 'orient', years: '≈ 306–373',
+    deText: 'Bedeutendster Dichter-Theologe der syrischen Kirche.', enText: 'The foremost poet-theologian of the Syriac church.' },
+  { id: 'basilius', de: 'Basilius der Große', en: 'Basil the Great', parent: 'athanasius', faith: true, born: 330, epoch: 'kirchenvater', refs: [],
+    city: 'Caesarea (Kappadokien)', lat: 38.73, lon: 35.48, tradition: 'east', years: '≈ 330–379',
+    deText: 'Einer der drei Kappadokier; Klosterregel und Trinitätslehre.', enText: 'One of the Cappadocians; monastic rule and Trinitarian theology.' },
+  { id: 'gregor_naz', de: 'Gregor von Nazianz', en: 'Gregory of Nazianzus', parent: 'basilius', faith: true, born: 329, epoch: 'kirchenvater', refs: [],
+    city: 'Nazianz', lat: 38.4, lon: 34.5, tradition: 'east', years: '≈ 329–390',
+    deText: 'Kappadokier, „der Theologe"; prägte die Trinitätssprache.', enText: 'A Cappadocian, "the Theologian"; shaped Trinitarian language.' },
+  { id: 'chrysostomus', de: 'Johannes Chrysostomus', en: 'John Chrysostom', parent: 'basilius', faith: true, born: 349, epoch: 'kirchenvater', refs: [],
+    city: 'Antiochia / Konstantinopel', lat: 41.01, lon: 28.98, tradition: 'east', years: '≈ 349–407',
+    deText: '„Goldmund"; berühmtester Prediger der Ostkirche.', enText: '"Golden-mouthed"; the greatest preacher of the Eastern church.' },
+  { id: 'ambrosius', de: 'Ambrosius von Mailand', en: 'Ambrose of Milan', parent: 'athanasius', faith: true, born: 340, epoch: 'kirchenvater', refs: [],
+    city: 'Mailand', lat: 45.46, lon: 9.19, tradition: 'west', years: '≈ 340–397',
+    deText: 'Bischof von Mailand, Lehrer und Wegbereiter Augustins.', enText: 'Bishop of Milan, teacher and mentor of Augustine.' },
+  { id: 'kyrill', de: 'Kyrill von Alexandria', en: 'Cyril of Alexandria', parent: 'athanasius', faith: true, born: 376, epoch: 'kirchenvater', refs: [],
+    city: 'Alexandria', lat: 31.2, lon: 29.92, tradition: 'east', years: '≈ 376–444',
+    deText: 'Führende Stimme beim Konzil von Ephesus (431).', enText: 'A leading voice at the Council of Ephesus (431).' },
 
   // ---------------------------------------------------------------- Mittelalter
   { id: 'benedikt', de: 'Benedikt von Nursia', en: 'Benedict of Nursia', parent: 'augustinus', line: true, faith: true, born: 480, epoch: 'mittelalter', refs: [],
     deText: 'Vater des abendländischen Mönchtums; seine Regel „bete und arbeite" prägte Europa.', enText: 'Father of Western monasticism; his rule "pray and work" shaped Europe.' },
+  { id: 'gregor_gross', de: 'Gregor der Große', en: 'Gregory the Great', parent: 'benedikt', faith: true, born: 540, epoch: 'mittelalter', refs: [],
+    city: 'Rom', lat: 41.89, lon: 12.49, tradition: 'west', years: '≈ 540–604',
+    deText: 'Papst; prägte Liturgie und Mission des lateinischen Westens.', enText: 'Pope; shaped the liturgy and mission of the Latin West.' },
   { id: 'rashi', de: 'Raschi', en: 'Rashi', parent: 'benedikt', faith: true, born: 1040, epoch: 'mittelalter', refs: [],
     deText: 'Jüdischer Gelehrter aus Troyes; sein Bibel- und Talmudkommentar ist bis heute grundlegend.', enText: 'Jewish scholar of Troyes; his commentary on the Bible and Talmud remains foundational.' },
   { id: 'anselm', de: 'Anselm von Canterbury', en: 'Anselm of Canterbury', parent: 'benedikt', line: true, faith: true, born: 1033, epoch: 'mittelalter', refs: [],

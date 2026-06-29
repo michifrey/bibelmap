@@ -2,7 +2,10 @@
 // fathers (West / East / Oriental) and the ecumenical councils. Coordinates are
 // approximate locations of the ancient cities. Notes are short and factual.
 
-export type Tradition = 'west' | 'east' | 'orient';
+import { GENEALOGY, formatYear, type Tradition } from './genealogy';
+
+// Re-exported so existing imports (`import { Tradition } from './church'`) keep working.
+export type { Tradition };
 
 export interface Stop {
   name: string;
@@ -22,14 +25,17 @@ export interface Journey {
 
 export interface Father {
   id: string;
-  name: string;
+  /** Linked genealogy person id — the SAME record powers the time tree. */
+  personId: string;
+  de: string; // display name
+  en: string;
   city: string;
   lat: number;
   lon: number;
   years: string;
   tradition: Tradition;
-  de: { note: string };
-  en: { note: string };
+  deNote: string;
+  enNote: string;
 }
 
 export interface Council {
@@ -109,42 +115,25 @@ export const JOURNEYS: Journey[] = [
   },
 ];
 
-export const FATHERS: Father[] = [
-  { id: 'clement', name: 'Clemens v. Rom', city: 'Rom', lat: 41.89, lon: 12.49, years: '~35–99', tradition: 'west',
-    de: { note: 'Frühester römischer Bischof mit erhaltenem Brief (1. Clemens) nach Korinth.' }, en: { note: 'Early bishop of Rome; his letter (1 Clement) to Corinth survives.' } },
-  { id: 'ignatius', name: 'Ignatius v. Antiochia', city: 'Antiochia', lat: 36.2, lon: 36.16, years: '~35–108', tradition: 'east',
-    de: { note: 'Märtyrerbischof; seine Briefe prägen das frühe Kirchen- und Bischofsamt.' }, en: { note: 'Martyr-bishop whose letters shape early church and episcopal order.' } },
-  { id: 'polycarp', name: 'Polykarp v. Smyrna', city: 'Smyrna', lat: 38.42, lon: 27.14, years: '~69–155', tradition: 'east',
-    de: { note: 'Schüler des Apostels Johannes, Märtyrer in Smyrna.' }, en: { note: 'Disciple of the apostle John, martyred at Smyrna.' } },
-  { id: 'irenaeus', name: 'Irenäus v. Lyon', city: 'Lyon', lat: 45.76, lon: 4.83, years: '~130–202', tradition: 'west',
-    de: { note: 'Brücke zwischen Ost und West; „Gegen die Häresien".' }, en: { note: 'A bridge between East and West; “Against Heresies”.' } },
-  { id: 'tertullian', name: 'Tertullian', city: 'Karthago', lat: 36.85, lon: 10.32, years: '~155–220', tradition: 'west',
-    de: { note: 'Vater der lateinischen Theologie; prägte den Begriff „Trinitas".' }, en: { note: 'Father of Latin theology; coined the term “Trinitas”.' } },
-  { id: 'origen', name: 'Origenes', city: 'Alexandria', lat: 31.2, lon: 29.92, years: '~184–253', tradition: 'east',
-    de: { note: 'Großer Bibelgelehrter und Theologe Alexandrias.' }, en: { note: 'Great biblical scholar and theologian of Alexandria.' } },
-  { id: 'cyprian', name: 'Cyprian v. Karthago', city: 'Karthago', lat: 36.85, lon: 10.32, years: '~210–258', tradition: 'west',
-    de: { note: 'Bischof und Märtyrer; Schriften zur Einheit der Kirche.' }, en: { note: 'Bishop and martyr; wrote on the unity of the church.' } },
-  { id: 'athanasius', name: 'Athanasius', city: 'Alexandria', lat: 31.2, lon: 29.92, years: '~296–373', tradition: 'east',
-    de: { note: 'Verteidiger der Gottheit Christi gegen den Arianismus.' }, en: { note: 'Defender of Christ’s divinity against Arianism.' } },
-  { id: 'ephrem', name: 'Ephräm der Syrer', city: 'Nisibis / Edessa', lat: 37.07, lon: 41.21, years: '~306–373', tradition: 'orient',
-    de: { note: 'Bedeutendster Dichter-Theologe der syrischen Kirche.' }, en: { note: 'The foremost poet-theologian of the Syriac church.' } },
-  { id: 'basil', name: 'Basilius d. Große', city: 'Caesarea (Kappadokien)', lat: 38.73, lon: 35.48, years: '~330–379', tradition: 'east',
-    de: { note: 'Einer der drei Kappadokier; Klosterregel und Trinitätslehre.' }, en: { note: 'One of the Cappadocians; monastic rule and Trinitarian theology.' } },
-  { id: 'gregory-naz', name: 'Gregor v. Nazianz', city: 'Nazianz', lat: 38.4, lon: 34.5, years: '~329–390', tradition: 'east',
-    de: { note: 'Kappadokier, „der Theologe"; prägte die Trinitätssprache.' }, en: { note: 'Cappadocian, “the Theologian”; shaped Trinitarian language.' } },
-  { id: 'ambrose', name: 'Ambrosius v. Mailand', city: 'Mailand', lat: 45.46, lon: 9.19, years: '~340–397', tradition: 'west',
-    de: { note: 'Bischof von Mailand, Lehrer und Wegbereiter Augustins.' }, en: { note: 'Bishop of Milan, teacher and mentor of Augustine.' } },
-  { id: 'chrysostom', name: 'Johannes Chrysostomus', city: 'Antiochia / Konstantinopel', lat: 41.01, lon: 28.98, years: '~349–407', tradition: 'east',
-    de: { note: '„Goldmund"; berühmtester Prediger der Ostkirche.' }, en: { note: '“Golden-mouthed”; the greatest preacher of the Eastern church.' } },
-  { id: 'jerome', name: 'Hieronymus', city: 'Betlehem', lat: 31.7, lon: 35.2, years: '~347–420', tradition: 'west',
-    de: { note: 'Übersetzte die Bibel ins Lateinische (Vulgata).' }, en: { note: 'Translated the Bible into Latin (the Vulgate).' } },
-  { id: 'augustine', name: 'Augustinus v. Hippo', city: 'Hippo', lat: 36.88, lon: 7.75, years: '354–430', tradition: 'west',
-    de: { note: 'Prägendster Theologe des Westens; „Bekenntnisse", „Gottesstaat".' }, en: { note: 'The most influential Western theologian; “Confessions”, “City of God”.' } },
-  { id: 'cyril', name: 'Kyrill v. Alexandria', city: 'Alexandria', lat: 31.2, lon: 29.92, years: '~376–444', tradition: 'east',
-    de: { note: 'Führende Stimme beim Konzil von Ephesus (431).' }, en: { note: 'Leading voice at the Council of Ephesus (431).' } },
-  { id: 'gregory-great', name: 'Gregor d. Große', city: 'Rom', lat: 41.89, lon: 12.49, years: '~540–604', tradition: 'west',
-    de: { note: 'Papst; prägte Liturgie und Mission des lateinischen Westens.' }, en: { note: 'Pope; shaped the liturgy and mission of the Latin West.' } },
-];
+// Church fathers are derived from the genealogy: every Person that carries a
+// `tradition` + coordinates appears here AND as a node in the time tree, from a
+// single source of truth (no more duplicated, drifting data). Sorted by birth.
+export const FATHERS: Father[] = GENEALOGY
+  .filter((p) => p.tradition && p.lat != null && p.lon != null)
+  .sort((a, b) => (a.born ?? 0) - (b.born ?? 0))
+  .map((p) => ({
+    id: p.id,
+    personId: p.id,
+    de: p.de,
+    en: p.en,
+    city: p.city ?? '',
+    lat: p.lat as number,
+    lon: p.lon as number,
+    years: p.years ?? (p.born != null ? formatYear(p.born, 'de') : ''),
+    tradition: p.tradition as Tradition,
+    deNote: p.deText,
+    enNote: p.enText,
+  }));
 
 export const COUNCILS: Council[] = [
   { id: 'jerusalem', name: 'Apostelkonzil', city: 'Jerusalem', lat: 31.78, lon: 35.23, year: '~49',

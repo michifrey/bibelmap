@@ -42,6 +42,30 @@ export default function App() {
   const [mode, setMode] = useState<Mode | null>(null);
   const [basemap, setBasemap] = useState<BasemapId>('light');
   const [view, setView] = useState<View>('map');
+  // Cross-links between the time tree and the church-history map (shared data).
+  const [treeFocus, setTreeFocus] = useState<string | null>(null);
+  const [churchFocus, setChurchFocus] = useState<string | null>(null);
+
+  function showPersonOnMap(id: string) {
+    setChurchFocus(id);
+    setMode('church');
+    setView('map');
+  }
+  function openPersonInTree(id: string) {
+    setTreeFocus(id);
+    setMode(null);
+    setView('tree');
+  }
+  // Opening a view/mode manually (header toggle, modes menu) clears any pending
+  // cross-link focus so it doesn't unexpectedly jump on the next visit.
+  function handleView(v: View) {
+    if (v === 'tree') setTreeFocus(null);
+    setView(v);
+  }
+  function handleMode(m: Mode) {
+    if (m === 'church') setChurchFocus(null);
+    setMode(m);
+  }
 
   useEffect(() => {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
@@ -84,7 +108,7 @@ export default function App() {
     <LangContext.Provider value={lang}>
       <div className="relative h-full w-full overflow-hidden">
         {view === 'tree' ? (
-          <TreeView lang={lang} />
+          <TreeView lang={lang} focusId={treeFocus} onShowOnMap={showPersonOnMap} />
         ) : view === 'graph' ? (
           <GraphView places={places} lang={lang} />
         ) : (
@@ -144,7 +168,17 @@ export default function App() {
 
             {mode === 'present' && <Presentation places={places} lang={lang} onExit={() => setMode(null)} />}
             {mode === 'history' && <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />}
-            {mode === 'church' && <ChurchMode lang={lang} onExit={() => setMode(null)} />}
+            {mode === 'church' && (
+              <ChurchMode
+                lang={lang}
+                onExit={() => {
+                  setMode(null);
+                  setChurchFocus(null);
+                }}
+                initialFatherId={churchFocus}
+                onOpenInTree={openPersonInTree}
+              />
+            )}
             {mode === 'compare' && <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />}
           </>
         )}
@@ -154,9 +188,9 @@ export default function App() {
           onLang={setLang}
           heat={heat}
           onHeat={setHeat}
-          onMode={setMode}
+          onMode={handleMode}
           view={view}
-          onView={setView}
+          onView={handleView}
         />
       </div>
     </LangContext.Provider>

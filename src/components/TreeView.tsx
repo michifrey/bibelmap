@@ -24,14 +24,19 @@ const RULER_H = 52;
 
 interface Props {
   lang: Lang;
+  /** Select + reveal this person (e.g. coming from the church-history map). */
+  focusId?: string | null;
+  /** Open the church-history map focused on this person. */
+  onShowOnMap?: (personId: string) => void;
 }
 
 const ALL_PARENT_IDS = GENEALOGY.filter((p) => hasChildren(p.id)).map((p) => p.id);
 
-export default function TreeView({ lang }: Props) {
+export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
   const t = useT();
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(LINE_IDS));
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const scrolledFocus = useRef<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const didCenter = useRef(false);
@@ -98,6 +103,35 @@ export default function TreeView({ lang }: Props) {
     el.scrollTop = Math.max(0, root.y + PAD_TOP + CARD_H / 2 - el.clientHeight / 2);
     didCenter.current = true;
   }, [layout]);
+
+  // Jump to a person requested from outside (church-history map): reveal it by
+  // expanding its ancestors, select it, and arm an auto-scroll.
+  useEffect(() => {
+    if (!focusId || !PERSON_BY_ID[focusId]) return;
+    const chain = new Set<string>();
+    let cur = PERSON_BY_ID[focusId];
+    while (cur?.parent) {
+      chain.add(cur.parent);
+      cur = PERSON_BY_ID[cur.parent];
+    }
+    setExpanded((prev) => new Set([...prev, ...chain]));
+    setSelectedId(focusId);
+    scrolledFocus.current = null;
+  }, [focusId]);
+
+  // Once the focused node is laid out, scroll it into view (once per focus).
+  useEffect(() => {
+    if (!focusId || scrolledFocus.current === focusId) return;
+    const node = layout.nodes.find((n) => n.person.id === focusId);
+    const el = scrollRef.current;
+    if (!node || !el) return;
+    el.scrollTo({
+      left: Math.max(0, node.x + PAD_X + CARD_W / 2 - el.clientWidth / 2),
+      top: Math.max(0, node.y + PAD_TOP + CARD_H / 2 - el.clientHeight / 2),
+      behavior: 'smooth',
+    });
+    scrolledFocus.current = focusId;
+  }, [layout, focusId]);
 
   function toggle(id: string) {
     setExpanded((prev) => {
@@ -299,6 +333,7 @@ export default function TreeView({ lang }: Props) {
               lang={lang}
               onClose={() => setSelectedId(null)}
               onSelect={setSelectedId}
+              onShowOnMap={onShowOnMap}
             />
           </div>
         </div>
