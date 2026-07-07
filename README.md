@@ -23,6 +23,13 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Kapitel für Kapitel durchgehen: links der **Bibeltext** (Luther 1912 / WEB) mit
   klickbaren Orts-Pins, rechts zoomt die Karte auf die erwähnten Orte
   (Tastatur ← / → blättert Kapitel).
+- **Stammbäume / Völkertafel** – die Abstammung der Völker nach **1. Chronik 1**
+  (mit Parallelen aus Genesis 5, 10, 11, 25, 36) als interaktiver, auf- und
+  zuklappbarer Baum: von Adam über Noahs drei Söhne (Sem, Ham, Jafet) bis zu
+  Abraham, Ismael, Ketura, Esau/Edom und den zwölf Stämmen Israels. Jeder
+  Stammvater ist – wo bekannt – dem historischen **Volk** und der **Region**
+  zugeordnet, mit Bibelstelle; ein Klick auf *Auf Karte* springt zum passenden
+  Ort. Eine Namenssuche klappt den betreffenden Zweig automatisch auf.
 - **Zweisprachig** – Oberfläche und Buchnamen auf Deutsch/Englisch.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
