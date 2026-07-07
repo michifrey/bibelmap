@@ -49,14 +49,14 @@ const STRINGS: Dict = {
   showing: { de: 'Sichtbar', en: 'Showing' },
   places: { de: 'Orte', en: 'places' },
   genealogy: { de: 'Stammbäume', en: 'Genealogies' },
-  genealogySub: { de: 'Abstammung der Völker – Völkertafel aus 1. Chronik 1', en: 'Descent of the nations – Table of Nations from 1 Chronicles 1' },
+  genealogySub: { de: 'Völker & Stämme – von Adam über die Völkertafel bis zu den Stämmen Israels', en: 'Nations & tribes – from Adam via the Table of Nations to the tribes of Israel' },
   genealogySearch: { de: 'Name suchen … (z. B. Jawan, Kanaan)', en: 'Search a name … (e.g. Javan, Canaan)' },
   expandAll: { de: 'Alle öffnen', en: 'Expand all' },
   collapseAll: { de: 'Alle schließen', en: 'Collapse all' },
   showOnMap: { de: 'Auf Karte', en: 'On map' },
   genealogyNote: {
-    de: 'Quelle: 1. Chronik 1 (mit Parallelen aus Genesis 5, 10, 11, 25 und 36). Die Zuordnung der Stammväter zu historischen Völkern und Regionen folgt einer verbreiteten, traditionellen Deutung und ist nicht in jedem Fall gesichert.',
-    en: 'Source: 1 Chronicles 1 (with parallels from Genesis 5, 10, 11, 25 and 36). The identification of the ancestors with historical peoples and regions follows a common, traditional reading and is not certain in every case.',
+    de: 'Quellen: 1. Chronik 1 (Völkertafel) und 1. Chronik 2–8 für die Stämme, ergänzt durch 4. Mose 26 und 1. Mose 46. Die Zuordnung der Stammväter zu historischen Völkern und Regionen folgt einer verbreiteten, traditionellen Deutung und ist nicht in jedem Fall gesichert.',
+    en: 'Sources: 1 Chronicles 1 (Table of Nations) and 1 Chronicles 2–8 for the tribes, with Numbers 26 and Genesis 46. The identification of the ancestors with historical peoples and regions follows a common, traditional reading and is not certain in every case.',
   },
 };
 
