@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 
-export type Mode = 'present' | 'history' | 'compare' | 'church';
+export type Mode = 'present' | 'history' | 'compare' | 'church' | 'nations';
 export type View = 'map' | 'tree' | 'graph';
 
 interface Props {
@@ -24,6 +24,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
     { id: 'history', label: t('historyMode'), hint: t('historyHint'), icon: 'M12 8v5l3 2' },
     { id: 'church', label: t('churchMode'), hint: t('churchHint'), icon: 'M12 3v18M7 8h10M5 21h14' },
     { id: 'compare', label: t('compareMode'), hint: t('compareIntro'), icon: 'M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z' },
+    { id: 'nations', label: t('genealogy'), hint: t('genealogySub'), icon: 'M12 3v4M6 21v-4a3 3 0 0 1 3-3h6a3 3 0 0 1 3 3v4M4 7h4M16 7h4' },
   ];
 
   const langToggle = (

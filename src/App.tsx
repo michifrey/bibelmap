@@ -14,6 +14,7 @@ import CompareMode from './components/CompareMode';
 import ChurchMode from './components/ChurchMode';
 import TreeView from './components/TreeView';
 import GraphView from './components/GraphView';
+import Genealogy from './components/Genealogy';
 
 function Loading() {
   const t = useT();
@@ -92,6 +93,16 @@ export default function App() {
     setSelected(p);
     setSheetOpen(true); // reveal the detail sheet on mobile
     setFlyTo({ lat: p.lat, lon: p.lon, zoom: 9, key: Date.now() });
+  }
+
+  // Jump from the genealogy overlay to a place: close the overlay, return to the
+  // map view and focus the place.
+  function showPlaceFromGenealogy(p: Place) {
+    setMode(null);
+    setView('map');
+    setEra(null);
+    setHeat(false);
+    select(p);
   }
 
   if (error) {
@@ -212,6 +223,14 @@ export default function App() {
               />
             )}
             {mode === 'compare' && <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />}
+            {mode === 'nations' && (
+              <Genealogy
+                places={places}
+                lang={lang}
+                onShowPlace={showPlaceFromGenealogy}
+                onExit={() => setMode(null)}
+              />
+            )}
           </>
         )}
 

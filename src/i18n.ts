@@ -110,6 +110,14 @@ const STRINGS: Dict = {
   },
   showOnMap: { de: 'Auf Karte zeigen', en: 'Show on map' },
   openInTree: { de: 'Im Zeitbaum öffnen', en: 'Open in time tree' },
+  // Stammbäume / Völkertafel (nations & tribes overview)
+  genealogy: { de: 'Stammbäume', en: 'Genealogies' },
+  genealogySub: { de: 'Völker & Stämme – von Adam über die Völkertafel bis zu den Stämmen Israels', en: 'Nations & tribes – from Adam via the Table of Nations to the tribes of Israel' },
+  genealogySearch: { de: 'Name suchen … (z. B. Jawan, Kanaan)', en: 'Search a name … (e.g. Javan, Canaan)' },
+  genealogyNote: {
+    de: 'Quellen: 1. Chronik 1 (Völkertafel) und 1. Chronik 2–9 für die Stämme, ergänzt durch 4. Mose 26 und 1. Mose 46. Die Zuordnung der Stammväter zu historischen Völkern und Regionen folgt einer verbreiteten, traditionellen Deutung und ist nicht in jedem Fall gesichert.',
+    en: 'Sources: 1 Chronicles 1 (Table of Nations) and 1 Chronicles 2–9 for the tribes, with Numbers 26 and Genesis 46. The identification of the ancestors with historical peoples and regions follows a common, traditional reading and is not certain in every case.',
+  },
 };
 
 export const LangContext = createContext<Lang>('de');
