@@ -9,6 +9,7 @@ import Timeline from './components/Timeline';
 import SearchPanel from './components/SearchPanel';
 import PlaceDetail from './components/PlaceDetail';
 import Presentation from './components/Presentation';
+import Genealogy from './components/Genealogy';
 
 function Loading() {
   const t = useT();
@@ -35,6 +36,7 @@ export default function App() {
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
   const [present, setPresent] = useState(false);
+  const [genealogy, setGenealogy] = useState(false);
 
   useEffect(() => {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
@@ -56,6 +58,13 @@ export default function App() {
   function select(p: Place) {
     setSelected(p);
     setFlyTo({ lat: p.lat, lon: p.lon, zoom: 9, key: Date.now() });
+  }
+
+  function showPlaceFromGenealogy(p: Place) {
+    setGenealogy(false);
+    setEra(null);
+    setHeat(false);
+    select(p);
   }
 
   if (error) {
@@ -84,7 +93,14 @@ export default function App() {
           flyTo={flyTo}
         />
 
-        <Header lang={lang} onLang={setLang} heat={heat} onHeat={setHeat} onPresent={() => setPresent(true)} />
+        <Header
+          lang={lang}
+          onLang={setLang}
+          heat={heat}
+          onHeat={setHeat}
+          onPresent={() => setPresent(true)}
+          onGenealogy={() => setGenealogy(true)}
+        />
 
         {/* Left panel */}
         <div className="pointer-events-none absolute inset-y-0 left-0 z-[1100] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
@@ -105,19 +121,39 @@ export default function App() {
 
         {!heat && <Timeline lang={lang} selected={era} counts={eraCounts} onSelect={setEra} />}
 
-        {/* mobile present button */}
-        <button
-          onClick={() => setPresent(true)}
-          className="absolute bottom-4 right-4 z-[1100] grid h-12 w-12 place-items-center rounded-full bg-teal text-cream shadow-xl ring-1 ring-teal/20 transition hover:bg-teal-2 sm:hidden"
-          aria-label="Präsentationsmodus"
-        >
-          <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-            <path d="M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z" />
-          </svg>
-        </button>
+        {/* mobile action buttons */}
+        <div className="absolute bottom-4 right-4 z-[1100] flex flex-col gap-2 sm:hidden">
+          <button
+            onClick={() => setGenealogy(true)}
+            className="grid h-12 w-12 place-items-center rounded-full bg-cream text-teal shadow-xl ring-1 ring-teal/15 transition hover:bg-gold/25"
+            aria-label="Stammbäume"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+              <path d="M12 2a2.5 2.5 0 0 0-1 4.8V9H6.5A1.5 1.5 0 0 0 5 10.5V13H3.2A2.5 2.5 0 1 0 5 13h0v-2.5h6.9V13H11a2.5 2.5 0 1 0 2 0v-2.5h6.9V13h0a2.5 2.5 0 1 0 1-2.5H13v-2.2A2.5 2.5 0 0 0 12 2z" />
+            </svg>
+          </button>
+          <button
+            onClick={() => setPresent(true)}
+            className="grid h-12 w-12 place-items-center rounded-full bg-teal text-cream shadow-xl ring-1 ring-teal/20 transition hover:bg-teal-2"
+            aria-label="Präsentationsmodus"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+              <path d="M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z" />
+            </svg>
+          </button>
+        </div>
 
         {present && (
           <Presentation places={places} lang={lang} onExit={() => setPresent(false)} />
+        )}
+
+        {genealogy && (
+          <Genealogy
+            places={places}
+            lang={lang}
+            onShowPlace={showPlaceFromGenealogy}
+            onExit={() => setGenealogy(false)}
+          />
         )}
       </div>
     </LangContext.Provider>
