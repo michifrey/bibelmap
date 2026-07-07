@@ -32,10 +32,41 @@ interface Props {
 
 const ALL_PARENT_IDS = GENEALOGY.filter((p) => hasChildren(p.id)).map((p) => p.id);
 
+function norm(s: string): string {
+  return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
+// parent chain of a person id (its ancestors), so a match can be revealed.
+function ancestorsOf(id: string): string[] {
+  const out: string[] = [];
+  let cur = PERSON_BY_ID[id];
+  while (cur?.parent) {
+    out.push(cur.parent);
+    cur = PERSON_BY_ID[cur.parent];
+  }
+  return out;
+}
+
 export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
   const t = useT();
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(LINE_IDS));
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [query, setQuery] = useState('');
+  const [epochFilter, setEpochFilter] = useState<string | null>(null);
+  const scrolledMatch = useRef<string | null>(null);
+
+  // Active filter: persons matching the name query AND the chosen epoch.
+  const matchSet = useMemo(() => {
+    const q = norm(query.trim());
+    if (!q && !epochFilter) return null;
+    const s = new Set<string>();
+    for (const p of GENEALOGY) {
+      const nameOk = !q || norm(p.de).includes(q) || norm(p.en).includes(q);
+      const epochOk = !epochFilter || p.epoch === epochFilter;
+      if (nameOk && epochOk) s.add(p.id);
+    }
+    return s;
+  }, [query, epochFilter]);
   const scrolledFocus = useRef<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -133,6 +164,36 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
     scrolledFocus.current = focusId;
   }, [layout, focusId]);
 
+  // Reveal all matches by expanding their ancestry when a filter is active.
+  useEffect(() => {
+    if (!matchSet || !matchSet.size) return;
+    const need = new Set<string>();
+    for (const id of matchSet) for (const a of ancestorsOf(id)) need.add(a);
+    setExpanded((prev) => {
+      let changed = false;
+      const next = new Set(prev);
+      for (const a of need) if (!next.has(a)) { next.add(a); changed = true; }
+      return changed ? next : prev;
+    });
+  }, [matchSet]);
+
+  // Scroll to the first match (once per filter change).
+  useEffect(() => {
+    const key = query.trim() + '|' + (epochFilter ?? '');
+    if (!matchSet || !matchSet.size) { scrolledMatch.current = null; return; }
+    if (scrolledMatch.current === key) return;
+    const el = scrollRef.current;
+    if (!el) return;
+    const node = layout.nodes.find((n) => matchSet.has(n.person.id));
+    if (!node) return;
+    el.scrollTo({
+      left: Math.max(0, node.x + PAD_X + CARD_W / 2 - el.clientWidth / 2),
+      top: Math.max(0, node.y + PAD_TOP + CARD_H / 2 - el.clientHeight / 2),
+      behavior: 'smooth',
+    });
+    scrolledMatch.current = key;
+  }, [layout, matchSet, query, epochFilter]);
+
   function toggle(id: string) {
     setExpanded((prev) => {
       const next = new Set(prev);
@@ -189,16 +250,18 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
               const expandable = hasChildren(p.id);
               const isOpen = expanded.has(p.id);
               const isSel = selectedId === p.id;
+              const isHit = matchSet ? matchSet.has(p.id) : false;
+              const isDim = matchSet ? !matchSet.has(p.id) : false;
               return (
                 <div
                   key={p.id}
-                  className="absolute"
-                  style={{ left: n.x, top: n.y, width: CARD_W, height: CARD_H }}
+                  className="absolute transition-opacity"
+                  style={{ left: n.x, top: n.y, width: CARD_W, height: CARD_H, opacity: isDim ? 0.25 : 1 }}
                 >
                   <button
                     onClick={() => setSelectedId(p.id)}
                     className={`group flex h-full w-full items-stretch overflow-hidden rounded-xl bg-white text-left shadow-sm ring-1 transition hover:shadow-md ${
-                      isSel ? 'ring-2 ring-gold' : 'ring-teal/15'
+                      isSel ? 'ring-2 ring-gold' : isHit ? 'ring-2 ring-gold-deep' : 'ring-teal/15'
                     }`}
                     style={p.faith ? { borderStyle: 'dashed' } : undefined}
                   >
@@ -311,6 +374,49 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
           >
             {t('collapseAll')}
           </button>
+
+          {/* filter: search a person */}
+          <div className="relative">
+            <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-soft" fill="currentColor">
+              <path d="M10 4a6 6 0 1 0 3.7 10.7l4.3 4.3 1.4-1.4-4.3-4.3A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" />
+            </svg>
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder={t('treeSearch')}
+              className="w-36 rounded-lg border border-teal/15 bg-cream px-2 py-1.5 pl-7 text-xs text-ink outline-none placeholder:text-ink-soft/60 focus:border-gold sm:w-44"
+            />
+            {query && (
+              <button
+                onClick={() => setQuery('')}
+                aria-label={t('reset')}
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 text-ink-soft hover:text-teal"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {/* filter: epoch */}
+          <select
+            value={epochFilter ?? ''}
+            onChange={(e) => setEpochFilter(e.target.value || null)}
+            className="rounded-lg border border-teal/15 bg-cream px-2 py-1.5 text-xs text-ink outline-none focus:border-gold"
+            title={t('filterEpoch')}
+          >
+            <option value="">{t('allEpochs')}</option>
+            {GEN_EPOCHS.map((e) => (
+              <option key={e.id} value={e.id}>
+                {lang === 'de' ? e.de : e.en}
+              </option>
+            ))}
+          </select>
+
+          {matchSet && (
+            <span className="rounded-full bg-gold/25 px-2 py-0.5 text-[11px] font-medium text-teal">
+              {matchSet.size} {t('results')}
+            </span>
+          )}
         </div>
         <div className="pointer-events-none self-start rounded-lg bg-cream/80 px-2.5 py-1 text-[11px] text-ink-soft shadow ring-1 ring-teal/10 backdrop-blur">
           {t('expandHint')}
@@ -344,12 +450,21 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
         <div className="pointer-events-auto max-w-[12rem] rounded-xl bg-cream/90 p-2.5 shadow-lg ring-1 ring-teal/10 backdrop-blur">
           <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-ink-soft">{t('epoch')}</div>
           <div className="flex flex-col gap-0.5">
-            {GEN_EPOCHS.map((e) => (
-              <div key={e.id} className="flex items-center gap-1.5 text-[10px] text-ink-soft">
-                <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: e.color }} />
-                <span className="truncate">{lang === 'de' ? e.de : e.en}</span>
-              </div>
-            ))}
+            {GEN_EPOCHS.map((e) => {
+              const active = epochFilter === e.id;
+              return (
+                <button
+                  key={e.id}
+                  onClick={() => setEpochFilter(active ? null : e.id)}
+                  className={`flex items-center gap-1.5 rounded px-1 py-0.5 text-left text-[10px] transition ${
+                    active ? 'bg-gold/30 text-teal' : 'text-ink-soft hover:bg-cream-2'
+                  } ${epochFilter && !active ? 'opacity-45' : ''}`}
+                >
+                  <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: e.color }} />
+                  <span className="truncate">{lang === 'de' ? e.de : e.en}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
