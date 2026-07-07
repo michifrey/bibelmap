@@ -2,8 +2,9 @@ import { useMemo, useState } from 'react';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
-import { GENEALOGY, LINES, LINE_COLOR, type GenNode } from '../data/nationsTribes';
+import { GENEALOGY, LINES, LINE_COLOR, NODE_BY_ID, type GenNode } from '../data/nationsTribes';
 import { searchPlaces } from '../lib/places';
+import TribesMap from './TribesMap';
 
 interface Props {
   places: Place[];
@@ -55,9 +56,17 @@ function ancestry(id: string): string[] {
 
 export default function Genealogy({ places, lang, onShowPlace, onExit }: Props) {
   const t = useT();
+  const [tab, setTab] = useState<'map' | 'tree'>('map');
   const [query, setQuery] = useState('');
   // start with the top two levels open
   const [open, setOpen] = useState<Set<string>>(() => new Set(['adam', 'noah']));
+
+  // Jump from the map into the tree, focused on the tapped tribe/people/person.
+  function openInTree(id: string) {
+    const n = NODE_BY_ID[id];
+    setQuery(n ? (lang === 'de' ? n.de : n.en) : '');
+    setTab('tree');
+  }
 
   const matches = useMemo(() => matchIds(query), [query]);
   // when searching, force-open the ancestry of every match
@@ -102,16 +111,39 @@ export default function Genealogy({ places, lang, onShowPlace, onExit }: Props) 
       <div className="flex flex-none items-center justify-between gap-3 border-b border-teal/10 bg-teal px-4 py-3 text-cream">
         <div>
           <div className="font-display text-lg font-semibold leading-tight">{t('genealogy')}</div>
-          <div className="text-[11px] text-cream/75">{t('genealogySub')}</div>
+          <div className="text-[11px] text-cream/75">{tab === 'map' ? t('ntMapHint') : t('genealogySub')}</div>
         </div>
-        <button
-          onClick={onExit}
-          className="rounded-lg bg-gold px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold-deep"
-        >
-          {t('exit')} ✕
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Karte ↔ Stammbaum */}
+          <div className="flex overflow-hidden rounded-lg ring-1 ring-cream/25">
+            <button
+              onClick={() => setTab('map')}
+              className={`px-3 py-1.5 text-sm font-medium transition ${tab === 'map' ? 'bg-gold text-teal' : 'bg-white/10 text-cream hover:bg-white/20'}`}
+            >
+              {t('ntMap')}
+            </button>
+            <button
+              onClick={() => setTab('tree')}
+              className={`px-3 py-1.5 text-sm font-medium transition ${tab === 'tree' ? 'bg-gold text-teal' : 'bg-white/10 text-cream hover:bg-white/20'}`}
+            >
+              {t('ntTree')}
+            </button>
+          </div>
+          <button
+            onClick={onExit}
+            className="rounded-lg bg-gold px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold-deep"
+          >
+            {t('exit')} ✕
+          </button>
+        </div>
       </div>
 
+      {tab === 'map' ? (
+        <div className="min-h-0 flex-1">
+          <TribesMap lang={lang} onOpenInTree={openInTree} />
+        </div>
+      ) : (
+        <>
       {/* toolbar */}
       <div className="flex flex-none flex-wrap items-center gap-2 border-b border-teal/10 bg-cream/95 px-4 py-2.5 backdrop-blur">
         <div className="relative min-w-[12rem] flex-1">
@@ -179,6 +211,8 @@ export default function Genealogy({ places, lang, onShowPlace, onExit }: Props) 
           {t('genealogyNote')}
         </p>
       </div>
+        </>
+      )}
     </div>
   );
 }

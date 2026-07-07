@@ -16,7 +16,8 @@ export type Line =
   | 'keturah'
   | 'esau'
   | 'seir'
-  | 'israel';
+  | 'israel'
+  | 'messiah';
 
 export interface BiText {
   de: string;
@@ -54,6 +55,7 @@ export const LINES: { id: Line; de: string; en: string; color: string }[] = [
   { id: 'esau', de: 'Esau – Edom', en: 'Esau – Edom', color: '#a0436b' },
   { id: 'seir', de: 'Seïr – Horiter', en: 'Seir – Horites', color: '#7a5c8a' },
   { id: 'israel', de: 'Israel (Jakob) – 12 Stämme', en: 'Israel (Jacob) – 12 tribes', color: '#9a4ba0' },
+  { id: 'messiah', de: 'Messianische Linie bis Jesus', en: 'Messianic line to Jesus', color: '#c2812a' },
 ];
 
 export const LINE_COLOR: Record<Line, string> = Object.fromEntries(
@@ -604,8 +606,36 @@ const TRIBE_JUDAH: GenNode = {
                                       children: [
                                         {
                                           id: 'zerubbabel', de: 'Serubbabel', en: 'Zerubbabel', ref: '1Chr 3:19', line: 'israel',
-                                          note: { de: 'Führt die Rückkehrer aus dem Exil und baut den Tempel wieder auf.', en: 'Leads the return from exile and rebuilds the temple.' },
+                                          note: { de: 'Führt die Rückkehrer aus dem Exil und baut den Tempel wieder auf. Über ihn läuft die messianische Linie weiter bis zu Jesus.', en: 'Leads the return from exile and rebuilds the temple. Through him the messianic line continues to Jesus.' },
                                           children: [
+                                            {
+                                              id: 'abihud', de: 'Abihud', en: 'Abiud', ref: 'Mt 1:13', line: 'messiah',
+                                              note: { de: 'Nachexilische Generationen nach Matthäus 1 bis zu Josef und Jesus.', en: 'Post-exilic generations per Matthew 1 down to Joseph and Jesus.' },
+                                              spine: [
+                                                { de: 'Eljakim', en: 'Eliakim', ref: 'Mt 1:13' },
+                                                { de: 'Asor', en: 'Azor', ref: 'Mt 1:13' },
+                                                { de: 'Zadok', en: 'Zadok', ref: 'Mt 1:14' },
+                                                { de: 'Achim', en: 'Achim', ref: 'Mt 1:14' },
+                                                { de: 'Eliud', en: 'Eliud', ref: 'Mt 1:14' },
+                                                { de: 'Eleasar', en: 'Eleazar', ref: 'Mt 1:15' },
+                                                { de: 'Mattan', en: 'Matthan', ref: 'Mt 1:15' },
+                                                { de: 'Jakob', en: 'Jacob', ref: 'Mt 1:15' },
+                                              ],
+                                              children: [
+                                                {
+                                                  id: 'joseph-mary', de: 'Josef', en: 'Joseph', ref: 'Mt 1:16', line: 'messiah',
+                                                  note: { de: 'Mann der Maria; gesetzlicher Vater Jesu.', en: 'Husband of Mary; legal father of Jesus.' },
+                                                  place: 'Nazareth',
+                                                  children: [
+                                                    {
+                                                      id: 'jesus', de: 'Jesus Christus', en: 'Jesus Christ', ref: 'Mt 1:16 · Lk 3:23', line: 'messiah',
+                                                      note: { de: 'Der Messias – Ziel der Verheißungslinie von Abraham und David (Mt 1:1). Geboren in Betlehem, aufgewachsen in Nazaret.', en: 'The Messiah – goal of the line of promise from Abraham and David (Mt 1:1). Born in Bethlehem, raised in Nazareth.' },
+                                                      place: 'Bethlehem',
+                                                    },
+                                                  ],
+                                                },
+                                              ],
+                                            },
                                             { id: 'z-meshullam', de: 'Meschullam', en: 'Meshullam', ref: '1Chr 3:19', line: 'israel' },
                                             { id: 'z-hananiah', de: 'Hananja', en: 'Hananiah', ref: '1Chr 3:19', line: 'israel' },
                                             { id: 'z-shelomith', de: 'Schelomit (Tochter)', en: 'Shelomith (daughter)', ref: '1Chr 3:19', line: 'israel' },
@@ -1005,3 +1035,14 @@ PELEG.spine = [
   { de: 'Terach', en: 'Terah', ref: '1Chr 1:26' },
 ];
 PELEG.children = [ABRAHAM];
+
+// Flat lookup of every node by id (for the map layer and cross-links).
+export const NODE_BY_ID: Record<string, GenNode> = (() => {
+  const map: Record<string, GenNode> = {};
+  const walk = (n: GenNode) => {
+    map[n.id] = n;
+    for (const c of n.children ?? []) walk(c);
+  };
+  walk(GENEALOGY);
+  return map;
+})();

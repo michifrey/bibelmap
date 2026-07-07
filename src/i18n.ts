@@ -115,9 +115,13 @@ const STRINGS: Dict = {
   genealogySub: { de: 'Völker & Stämme – von Adam über die Völkertafel bis zu den Stämmen Israels', en: 'Nations & tribes – from Adam via the Table of Nations to the tribes of Israel' },
   genealogySearch: { de: 'Name suchen … (z. B. Jawan, Kanaan)', en: 'Search a name … (e.g. Javan, Canaan)' },
   genealogyNote: {
-    de: 'Quellen: 1. Chronik 1 (Völkertafel) und 1. Chronik 2–9 für die Stämme, ergänzt durch 4. Mose 26 und 1. Mose 46. Die Zuordnung der Stammväter zu historischen Völkern und Regionen folgt einer verbreiteten, traditionellen Deutung und ist nicht in jedem Fall gesichert.',
-    en: 'Sources: 1 Chronicles 1 (Table of Nations) and 1 Chronicles 2–9 for the tribes, with Numbers 26 and Genesis 46. The identification of the ancestors with historical peoples and regions follows a common, traditional reading and is not certain in every case.',
+    de: 'Quellen: 1. Chronik 1 (Völkertafel) und 1. Chronik 2–9 für die Stämme, bis Jesus fortgeführt nach Matthäus 1; ergänzt durch 4. Mose 26 und 1. Mose 46. Die Zuordnung der Stammväter zu historischen Völkern und Regionen (und die Lage der Stammesgebiete) folgt einer verbreiteten, traditionellen Deutung und ist nicht in jedem Fall gesichert.',
+    en: 'Sources: 1 Chronicles 1 (Table of Nations) and 1 Chronicles 2–9 for the tribes, continued to Jesus per Matthew 1; with Numbers 26 and Genesis 46. The identification of the ancestors with peoples and regions (and the tribal territories) follows a common, traditional reading and is not certain in every case.',
   },
+  ntMap: { de: 'Karte', en: 'Map' },
+  ntTree: { de: 'Stammbaum', en: 'Family tree' },
+  ntMapHint: { de: 'Wo die Stämme und Völker lebten – tippe einen Punkt an.', en: 'Where the tribes and peoples lived – tap a point.' },
+  openInGenTree: { de: 'Im Stammbaum öffnen', en: 'Open in family tree' },
 };
 
 export const LangContext = createContext<Lang>('de');

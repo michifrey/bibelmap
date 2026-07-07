@@ -132,6 +132,21 @@ body {
   padding: 0;
   background: var(--color-cream);
 }
+
+/* Genealogy map: clean tribe / people labels */
+.leaflet-tooltip.geo-label {
+  background: rgba(247, 241, 230, 0.9);
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(31, 61, 58, 0.25);
+  color: #1f3d3a;
+  font-weight: 600;
+  font-size: 11px;
+  padding: 1px 6px;
+}
+.leaflet-tooltip.geo-label::before {
+  display: none;
+}
 .bm-popup .leaflet-popup-tip {
   background: var(--color-cream);
 }
