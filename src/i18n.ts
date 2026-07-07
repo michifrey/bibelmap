@@ -121,6 +121,7 @@ const STRINGS: Dict = {
   treeSearch: { de: 'Person suchen …', en: 'Find a person …' },
   filterEpoch: { de: 'Epoche filtern', en: 'Filter by epoch' },
   allEpochs: { de: 'Alle Epochen', en: 'All epochs' },
+  nationsTribes: { de: 'Völkertafel & Stämme', en: 'Nations & tribes' },
   ntMap: { de: 'Karte', en: 'Map' },
   ntTree: { de: 'Stammbaum', en: 'Family tree' },
   ntMapHint: { de: 'Wo die Stämme und Völker lebten – tippe einen Punkt an.', en: 'Where the tribes and peoples lived – tap a point.' },

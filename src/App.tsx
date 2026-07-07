@@ -124,7 +124,12 @@ export default function App() {
     <LangContext.Provider value={lang}>
       <div className="relative h-full w-full overflow-hidden">
         {view === 'tree' ? (
-          <TreeView lang={lang} focusId={treeFocus} onShowOnMap={showPersonOnMap} />
+          <TreeView
+            lang={lang}
+            focusId={treeFocus}
+            onShowOnMap={showPersonOnMap}
+            onOpenNations={() => setMode('nations')}
+          />
         ) : view === 'graph' ? (
           <GraphView places={places} lang={lang} />
         ) : (
@@ -223,15 +228,18 @@ export default function App() {
               />
             )}
             {mode === 'compare' && <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />}
-            {mode === 'nations' && (
-              <Genealogy
-                places={places}
-                lang={lang}
-                onShowPlace={showPlaceFromGenealogy}
-                onExit={() => setMode(null)}
-              />
-            )}
           </>
+        )}
+
+        {/* Völkertafel & Stämme + Stämme-Karte — reachable from the Zeitbaum, so
+            genealogy has a single home. Overlays whatever view is active. */}
+        {mode === 'nations' && (
+          <Genealogy
+            places={places}
+            lang={lang}
+            onShowPlace={showPlaceFromGenealogy}
+            onExit={() => setMode(null)}
+          />
         )}
 
         <Header

@@ -28,6 +28,8 @@ interface Props {
   focusId?: string | null;
   /** Open the church-history map focused on this person. */
   onShowOnMap?: (personId: string) => void;
+  /** Open the Table-of-Nations & tribes overview (with the tribes map). */
+  onOpenNations?: () => void;
 }
 
 const ALL_PARENT_IDS = GENEALOGY.filter((p) => hasChildren(p.id)).map((p) => p.id);
@@ -47,7 +49,7 @@ function ancestorsOf(id: string): string[] {
   return out;
 }
 
-export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
+export default function TreeView({ lang, focusId, onShowOnMap, onOpenNations }: Props) {
   const t = useT();
   const [expanded, setExpanded] = useState<Set<string>>(() => new Set(LINE_IDS));
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -374,6 +376,19 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
           >
             {t('collapseAll')}
           </button>
+
+          {onOpenNations && (
+            <button
+              onClick={onOpenNations}
+              className="flex items-center gap-1.5 rounded-lg bg-gold/25 px-2.5 py-1.5 text-xs font-medium text-teal transition hover:bg-gold/40"
+              title={t('nationsTribes')}
+            >
+              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
+                <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
+              </svg>
+              {t('nationsTribes')}
+            </button>
+          )}
 
           {/* filter: search a person */}
           <div className="relative">
