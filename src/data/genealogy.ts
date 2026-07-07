@@ -341,38 +341,77 @@ const SEIR: GenNode = {
   ],
 };
 
-// ---- The twelve tribes and their families (1 Chr 2–8 · Num 26 · Gen 46) ----
-// Each tribe lists its clan-heads and its best-known descendants, so one can see
-// "who belongs to which tribe" — e.g. Machir, Gilead, Gideon and Zelophehad’s
-// daughters under Manasseh, or David and the kings of Judah under Judah.
+// ---- The twelve tribes and their families (1 Chr 2–9 · Num 26 · Gen 46) ----
+// Each tribe lists its clan-heads and named descendants as recorded in the
+// genealogies of 1 Chronicles 2–9, so one can see "who belongs to which tribe" —
+// e.g. Machir, Gilead, Gideon and Zelophehad’s daughters under Manasseh; David,
+// the kings of Judah and Zerubbabel under Judah; Aaron’s priestly dynasty, Moses,
+// Samuel and the temple singers under Levi; the house of Saul under Benjamin.
 
 const TRIBE_REUBEN: GenNode = {
   id: 'reuben', de: 'Ruben', en: 'Reuben', ref: '1Chr 5:1–3', line: 'israel',
-  note: { de: 'Erstgeborener Jakobs; Ostjordanland.', en: 'Jacob’s firstborn; east of the Jordan.' },
+  note: { de: 'Erstgeborener Jakobs; Ostjordanland. Die Erstgeburt ging an Josef.', en: 'Jacob’s firstborn; east of the Jordan. The birthright passed to Joseph.' },
   children: [
     { id: 'r-hanoch', de: 'Henoch', en: 'Hanoch', ref: '1Chr 5:3', line: 'israel' },
     { id: 'r-pallu', de: 'Pallu', en: 'Pallu', ref: '1Chr 5:3', line: 'israel' },
     { id: 'r-hezron', de: 'Hezron', en: 'Hezron', ref: '1Chr 5:3', line: 'israel' },
     { id: 'r-carmi', de: 'Karmi', en: 'Carmi', ref: '1Chr 5:3', line: 'israel' },
+    {
+      id: 'r-joel', de: 'Joel', en: 'Joel', ref: '1Chr 5:4', line: 'israel',
+      note: { de: 'Fürstenlinie der Rubeniter.', en: 'The princely Reubenite line.' },
+      spine: [
+        { de: 'Schemaja', en: 'Shemaiah', ref: '1Chr 5:4' },
+        { de: 'Gog', en: 'Gog', ref: '1Chr 5:4' },
+        { de: 'Schimi', en: 'Shimei', ref: '1Chr 5:4' },
+        { de: 'Micha', en: 'Micah', ref: '1Chr 5:5' },
+        { de: 'Reaja', en: 'Reaiah', ref: '1Chr 5:5' },
+        { de: 'Baal', en: 'Baal', ref: '1Chr 5:5' },
+      ],
+      children: [
+        { id: 'r-beera', de: 'Beera', en: 'Beerah', ref: '1Chr 5:6', line: 'israel', note: { de: 'Fürst; von Tiglat-Pileser nach Assyrien weggeführt.', en: 'Prince; carried to Assyria by Tiglath-Pileser.' } },
+      ],
+    },
   ],
 };
 
 const TRIBE_SIMEON: GenNode = {
-  id: 'simeon', de: 'Simeon', en: 'Simeon', ref: '1Chr 4:24', line: 'israel',
+  id: 'simeon', de: 'Simeon', en: 'Simeon', ref: '1Chr 4:24–43', line: 'israel',
+  note: { de: 'Wohnte im Süden Judas (Beerscheba, Ziklag).', en: 'Settled in the south of Judah (Beersheba, Ziklag).' },
   children: [
     { id: 's-nemuel', de: 'Nemuel', en: 'Nemuel', ref: '1Chr 4:24', line: 'israel' },
     { id: 's-jamin', de: 'Jamin', en: 'Jamin', ref: '1Chr 4:24', line: 'israel' },
     { id: 's-jarib', de: 'Jarib', en: 'Jarib', ref: '1Chr 4:24', line: 'israel' },
     { id: 's-zerah', de: 'Serach', en: 'Zerah', ref: '1Chr 4:24', line: 'israel' },
-    { id: 's-shaul', de: 'Saul', en: 'Shaul', ref: '1Chr 4:24', line: 'israel' },
+    {
+      id: 's-shaul', de: 'Saul', en: 'Shaul', ref: '1Chr 4:24–27', line: 'israel',
+      note: { de: 'Sein Nachkomme Schimi hatte 16 Söhne und 6 Töchter.', en: 'His descendant Shimei had 16 sons and 6 daughters.' },
+      spine: [
+        { de: 'Schallum', en: 'Shallum', ref: '1Chr 4:25' },
+        { de: 'Mibsam', en: 'Mibsam', ref: '1Chr 4:25' },
+        { de: 'Mischma', en: 'Mishma', ref: '1Chr 4:25' },
+        { de: 'Hammuel', en: 'Hammuel', ref: '1Chr 4:26' },
+        { de: 'Sakkur', en: 'Zaccur', ref: '1Chr 4:26' },
+      ],
+      children: [
+        { id: 's-shimei', de: 'Schimi', en: 'Shimei', ref: '1Chr 4:26–27', line: 'israel' },
+      ],
+    },
   ],
 };
 
 const TRIBE_LEVI: GenNode = {
   id: 'levi', de: 'Levi', en: 'Levi', ref: '1Chr 6:1', line: 'israel',
-  note: { de: 'Priesterstamm; aus Kehat kommen Mose und Aaron.', en: 'The priestly tribe; from Kohath come Moses and Aaron.' },
+  note: { de: 'Priesterstamm. Aus Kehat kommen Aaron (Priester), Mose und Samuel; die Tempelsänger sind Heman, Asaph und Etan.', en: 'The priestly tribe. From Kohath come Aaron (priest), Moses and Samuel; the temple singers are Heman, Asaph and Ethan.' },
   children: [
-    { id: 'l-gershon', de: 'Gerschon', en: 'Gershon', ref: '1Chr 6:1', line: 'israel' },
+    {
+      id: 'l-gershon', de: 'Gerschon', en: 'Gershon', ref: '1Chr 6:1 · 6:17', line: 'israel',
+      note: { de: 'Aus seiner Linie der Sänger Asaph.', en: 'From his line the singer Asaph.' },
+      children: [
+        { id: 'l-libni', de: 'Libni', en: 'Libni', ref: '1Chr 6:17', line: 'israel' },
+        { id: 'l-shimei-g', de: 'Schimi', en: 'Shimei', ref: '1Chr 6:17', line: 'israel' },
+        { id: 'asaph', de: 'Asaph', en: 'Asaph', ref: '1Chr 6:39', line: 'israel', note: { de: 'Sänger zur Rechten Hemans; ihm werden Psalmen zugeschrieben.', en: 'Singer at Heman’s right; psalms are ascribed to him.' } },
+      ],
+    },
     {
       id: 'l-kohath', de: 'Kehat', en: 'Kohath', ref: '1Chr 6:2', line: 'israel',
       children: [
@@ -381,78 +420,75 @@ const TRIBE_LEVI: GenNode = {
           children: [
             {
               id: 'aaron', de: 'Aaron', en: 'Aaron', ref: '1Chr 6:3', line: 'israel',
-              note: { de: 'Der erste Hohepriester.', en: 'The first high priest.' },
+              note: { de: 'Der erste Hohepriester; seine Linie stellt die Priester.', en: 'The first high priest; his line supplies the priests.' },
               children: [
                 { id: 'nadab', de: 'Nadab', en: 'Nadab', ref: '1Chr 6:3', line: 'israel' },
                 { id: 'abihu', de: 'Abihu', en: 'Abihu', ref: '1Chr 6:3', line: 'israel' },
                 {
                   id: 'eleazar', de: 'Eleasar', en: 'Eleazar', ref: '1Chr 6:3–4', line: 'israel',
+                  note: { de: 'Hohepriesterlinie bis ins Exil.', en: 'High-priestly line down to the exile.' },
+                  spine: [
+                    { de: 'Pinhas', en: 'Phinehas', ref: '1Chr 6:4' },
+                    { de: 'Abischua', en: 'Abishua', ref: '1Chr 6:4' },
+                    { de: 'Bukki', en: 'Bukki', ref: '1Chr 6:5' },
+                    { de: 'Usi', en: 'Uzzi', ref: '1Chr 6:5' },
+                    { de: 'Serachja', en: 'Zerahiah', ref: '1Chr 6:6' },
+                    { de: 'Merajot', en: 'Meraioth', ref: '1Chr 6:6' },
+                    { de: 'Amarja', en: 'Amariah', ref: '1Chr 6:7' },
+                    { de: 'Ahitub', en: 'Ahitub', ref: '1Chr 6:7' },
+                  ],
                   children: [
-                    { id: 'phinehas', de: 'Pinhas', en: 'Phinehas', ref: '1Chr 6:4', line: 'israel' },
+                    {
+                      id: 'zadok', de: 'Zadok', en: 'Zadok', ref: '1Chr 6:8', line: 'israel',
+                      note: { de: 'Hoherpriester unter David und Salomo.', en: 'High priest under David and Solomon.' },
+                      spine: [
+                        { de: 'Ahimaaz', en: 'Ahimaaz', ref: '1Chr 6:8' },
+                        { de: 'Asarja', en: 'Azariah', ref: '1Chr 6:9' },
+                        { de: 'Johanan', en: 'Johanan', ref: '1Chr 6:9' },
+                        { de: 'Asarja', en: 'Azariah', ref: '1Chr 6:10' },
+                        { de: 'Amarja', en: 'Amariah', ref: '1Chr 6:11' },
+                        { de: 'Ahitub', en: 'Ahitub', ref: '1Chr 6:11' },
+                        { de: 'Zadok', en: 'Zadok', ref: '1Chr 6:12' },
+                        { de: 'Schallum', en: 'Shallum', ref: '1Chr 6:12' },
+                        { de: 'Hilkija', en: 'Hilkiah', ref: '1Chr 6:13' },
+                        { de: 'Asarja', en: 'Azariah', ref: '1Chr 6:13' },
+                        { de: 'Seraja', en: 'Seraiah', ref: '1Chr 6:14' },
+                      ],
+                      children: [
+                        { id: 'jozadak', de: 'Jozadak', en: 'Jehozadak', ref: '1Chr 6:15', line: 'israel', note: { de: 'Wurde beim Exil nach Babel weggeführt.', en: 'Carried into exile to Babylon.' } },
+                      ],
+                    },
                   ],
                 },
                 { id: 'ithamar', de: 'Itamar', en: 'Ithamar', ref: '1Chr 6:3', line: 'israel' },
               ],
             },
-            { id: 'moses', de: 'Mose', en: 'Moses', ref: '2Mo 6:20', line: 'israel', note: { de: 'Führer beim Auszug aus Ägypten.', en: 'Leader of the Exodus.' } },
-            { id: 'miriam', de: 'Mirjam', en: 'Miriam', ref: '2Mo 15:20', line: 'israel', note: { de: 'Prophetin, Schwester Moses.', en: 'Prophetess, sister of Moses.' } },
+            { id: 'moses', de: 'Mose', en: 'Moses', ref: '1Chr 6:3 · 2Mo 6:20', line: 'israel', note: { de: 'Führer beim Auszug aus Ägypten.', en: 'Leader of the Exodus.' } },
+            { id: 'miriam', de: 'Mirjam', en: 'Miriam', ref: '1Chr 6:3 · 2Mo 15:20', line: 'israel', note: { de: 'Prophetin, Schwester Moses.', en: 'Prophetess, sister of Moses.' } },
           ],
         },
         {
           id: 'l-izhar', de: 'Jizhar', en: 'Izhar', ref: '1Chr 6:2', line: 'israel',
           children: [
-            { id: 'korah-l', de: 'Korach', en: 'Korah', ref: '1Chr 6:22', line: 'israel', note: { de: 'Stammvater der Korachiter (Tempelsänger).', en: 'Ancestor of the Korahites (temple singers).' } },
+            { id: 'korah-l', de: 'Korach', en: 'Korah', ref: '1Chr 6:22', line: 'israel', note: { de: 'Stammvater der Korachiter (Sänger und Torhüter).', en: 'Ancestor of the Korahites (singers and gatekeepers).' } },
           ],
         },
-      ],
-    },
-    { id: 'l-merari', de: 'Merari', en: 'Merari', ref: '1Chr 6:1', line: 'israel' },
-  ],
-};
-
-const TRIBE_JUDAH: GenNode = {
-  id: 'judah', de: 'Juda', en: 'Judah', ref: '1Chr 2:1–4', line: 'israel',
-  note: { de: 'Aus ihm kommen David, die Könige und der Messias.', en: 'From him come David, the kings and the Messiah.' },
-  children: [
-    { id: 'j-er', de: 'Ger', en: 'Er', ref: '1Chr 2:3', line: 'israel' },
-    { id: 'j-onan', de: 'Onan', en: 'Onan', ref: '1Chr 2:3', line: 'israel' },
-    { id: 'j-shelah', de: 'Schela', en: 'Shelah', ref: '1Chr 2:3', line: 'israel' },
-    { id: 'j-zerah', de: 'Serach', en: 'Zerah', ref: '1Chr 2:4', line: 'israel' },
-    {
-      id: 'perez', de: 'Perez', en: 'Perez', ref: '1Chr 2:4–5', line: 'israel',
-      note: { de: 'Über acht Generationen bis zu David.', en: 'Eight generations to David.' },
-      spine: [
-        { de: 'Hezron', en: 'Hezron', ref: '1Chr 2:5' },
-        { de: 'Ram', en: 'Ram', ref: '1Chr 2:9–10' },
-        { de: 'Amminadab', en: 'Amminadab', ref: '1Chr 2:10' },
-        { de: 'Nachschon', en: 'Nahshon', ref: '1Chr 2:10' },
-        { de: 'Salma', en: 'Salmon', ref: '1Chr 2:11' },
-        { de: 'Boas', en: 'Boaz', ref: '1Chr 2:11' },
-        { de: 'Obed', en: 'Obed', ref: '1Chr 2:12' },
-        { de: 'Isai', en: 'Jesse', ref: '1Chr 2:12–13' },
-      ],
-      children: [
+        { id: 'l-hebron', de: 'Hebron', en: 'Hebron', ref: '1Chr 6:2', line: 'israel' },
+        { id: 'l-uzziel', de: 'Usiël', en: 'Uzziel', ref: '1Chr 6:2', line: 'israel' },
         {
-          id: 'david', de: 'David', en: 'David', ref: '1Chr 2:15 · 1Chr 3:1', line: 'israel',
-          note: { de: 'König über Israel; aus seiner Linie die Könige von Juda.', en: 'King of Israel; his line are the kings of Judah.' },
-          place: 'Bethlehem',
-          spine: [
-            { de: 'Salomo', en: 'Solomon', ref: '1Chr 3:5' },
-            { de: 'Rehabeam', en: 'Rehoboam', ref: '1Chr 3:10' },
-            { de: 'Abija', en: 'Abijah', ref: '1Chr 3:10' },
-            { de: 'Asa', en: 'Asa', ref: '1Chr 3:10' },
-            { de: 'Joschafat', en: 'Jehoshaphat', ref: '1Chr 3:10' },
-            { de: 'Joram', en: 'Joram', ref: '1Chr 3:11' },
-            { de: 'Usija', en: 'Uzziah', ref: '1Chr 3:12' },
-            { de: 'Hiskia', en: 'Hezekiah', ref: '1Chr 3:13' },
-            { de: 'Josia', en: 'Josiah', ref: '1Chr 3:14' },
-            { de: 'Jojachin', en: 'Jehoiachin', ref: '1Chr 3:16' },
-          ],
+          id: 'l-elkanah', de: 'Elkana', en: 'Elkanah', ref: '1Chr 6:27', line: 'israel',
+          note: { de: 'Kehatitische Linie der Sänger.', en: 'The Kohathite line of the singers.' },
           children: [
             {
-              id: 'shealtiel', de: 'Schealtiël', en: 'Shealtiel', ref: '1Chr 3:17', line: 'israel',
+              id: 'samuel', de: 'Samuel', en: 'Samuel', ref: '1Chr 6:27–28', line: 'israel',
+              note: { de: 'Prophet und letzter Richter; salbte Saul und David.', en: 'Prophet and last judge; anointed Saul and David.' },
               children: [
-                { id: 'zerubbabel', de: 'Serubbabel', en: 'Zerubbabel', ref: '1Chr 3:19', line: 'israel', note: { de: 'Führt die Rückkehrer aus dem Exil; baut den Tempel wieder auf.', en: 'Leads the return from exile; rebuilds the temple.' } },
+                {
+                  id: 's-joel-l', de: 'Joel', en: 'Joel', ref: '1Chr 6:33', line: 'israel',
+                  children: [
+                    { id: 'heman', de: 'Heman', en: 'Heman', ref: '1Chr 6:33', line: 'israel', note: { de: 'Oberster der Tempelsänger unter David.', en: 'Chief of the temple singers under David.' } },
+                  ],
+                },
               ],
             },
           ],
@@ -460,16 +496,190 @@ const TRIBE_JUDAH: GenNode = {
       ],
     },
     {
-      id: 'j-caleb', de: 'Kaleb', en: 'Caleb', ref: '1Chr 2:18 · 4Mo 13:6', line: 'israel',
-      note: { de: 'Der treue Kundschafter aus Juda.', en: 'The faithful spy from Judah.' },
+      id: 'l-merari', de: 'Merari', en: 'Merari', ref: '1Chr 6:1 · 6:19', line: 'israel',
+      note: { de: 'Aus seiner Linie der Sänger Etan.', en: 'From his line the singer Ethan.' },
+      children: [
+        { id: 'l-mahli', de: 'Machli', en: 'Mahli', ref: '1Chr 6:19', line: 'israel' },
+        { id: 'l-mushi', de: 'Muschi', en: 'Mushi', ref: '1Chr 6:19', line: 'israel' },
+        { id: 'ethan', de: 'Etan', en: 'Ethan', ref: '1Chr 6:44', line: 'israel', note: { de: 'Sänger zur Linken Hemans (auch Jedutun genannt).', en: 'Singer at Heman’s left (also called Jeduthun).' } },
+      ],
     },
   ],
 };
 
-const TRIBE_ISSACHAR: GenNode = {
-  id: 'issachar', de: 'Issachar', en: 'Issachar', ref: '1Chr 7:1', line: 'israel',
+const TRIBE_JUDAH: GenNode = {
+  id: 'judah', de: 'Juda', en: 'Judah', ref: '1Chr 2 – 4', line: 'israel',
+  note: { de: 'Aus ihm kommen David, die Könige von Juda und der Messias.', en: 'From him come David, the kings of Judah and the Messiah.' },
   children: [
-    { id: 'i-tola', de: 'Tola', en: 'Tola', ref: '1Chr 7:1', line: 'israel' },
+    { id: 'j-er', de: 'Ger', en: 'Er', ref: '1Chr 2:3', line: 'israel' },
+    { id: 'j-onan', de: 'Onan', en: 'Onan', ref: '1Chr 2:3', line: 'israel' },
+    {
+      id: 'j-shelah', de: 'Schela', en: 'Shelah', ref: '1Chr 2:3 · 4:21', line: 'israel',
+      note: { de: 'Sippen der Leinweber und Töpfer.', en: 'Clans of linen-workers and potters.' },
+      children: [
+        { id: 'j-er2', de: 'Ger (von Lecha)', en: 'Er of Lecah', ref: '1Chr 4:21', line: 'israel' },
+        { id: 'j-laadah', de: 'Laeda', en: 'Laadah', ref: '1Chr 4:21', line: 'israel' },
+      ],
+    },
+    {
+      id: 'j-zerah', de: 'Serach', en: 'Zerah', ref: '1Chr 2:4–8', line: 'israel',
+      children: [
+        { id: 'j-zimri', de: 'Simri', en: 'Zimri', ref: '1Chr 2:6', line: 'israel' },
+        { id: 'j-ethan', de: 'Etan', en: 'Ethan', ref: '1Chr 2:6', line: 'israel', note: { de: 'Sprichwörtlich weise (vgl. 1Kön 5:11).', en: 'Proverbially wise (cf. 1Kgs 4:31).' } },
+        { id: 'j-heman', de: 'Heman', en: 'Heman', ref: '1Chr 2:6', line: 'israel' },
+        { id: 'j-calcol', de: 'Chalkol', en: 'Calcol', ref: '1Chr 2:6', line: 'israel' },
+        { id: 'j-dara', de: 'Dara', en: 'Darda', ref: '1Chr 2:6', line: 'israel' },
+        { id: 'j-achan', de: 'Achan', en: 'Achan', ref: '1Chr 2:7 · Jos 7', line: 'israel', note: { de: '»Der Israel betrübte« – vergriff sich am Gebannten.', en: '“Troubler of Israel” – took what was devoted.' } },
+      ],
+    },
+    {
+      id: 'perez', de: 'Perez', en: 'Perez', ref: '1Chr 2:4–5', line: 'israel',
+      note: { de: 'Aus ihm die Linie bis David.', en: 'From him the line down to David.' },
+      children: [
+        { id: 'j-hamul', de: 'Hamul', en: 'Hamul', ref: '1Chr 2:5', line: 'israel' },
+        {
+          id: 'j-hezron', de: 'Hezron', en: 'Hezron', ref: '1Chr 2:5·9', line: 'israel',
+          children: [
+            {
+              id: 'j-ram', de: 'Ram', en: 'Ram', ref: '1Chr 2:9–10', line: 'israel',
+              spine: [
+                { de: 'Amminadab', en: 'Amminadab', ref: '1Chr 2:10' },
+                { de: 'Nachschon', en: 'Nahshon', ref: '1Chr 2:10' },
+                { de: 'Salma', en: 'Salmon', ref: '1Chr 2:11' },
+                { de: 'Boas', en: 'Boaz', ref: '1Chr 2:11' },
+                { de: 'Obed', en: 'Obed', ref: '1Chr 2:12' },
+              ],
+              children: [
+                {
+                  id: 'jesse', de: 'Isai', en: 'Jesse', ref: '1Chr 2:12–13', line: 'israel',
+                  note: { de: 'Vater Davids; seine Söhne und Töchter:', en: 'Father of David; his sons and daughters:' },
+                  children: [
+                    { id: 'j-eliab', de: 'Eliab', en: 'Eliab', ref: '1Chr 2:13', line: 'israel' },
+                    { id: 'j-abinadab', de: 'Abinadab', en: 'Abinadab', ref: '1Chr 2:13', line: 'israel' },
+                    { id: 'j-shimea', de: 'Simea', en: 'Shimea', ref: '1Chr 2:13', line: 'israel' },
+                    { id: 'j-nethanel', de: 'Netanel', en: 'Nethanel', ref: '1Chr 2:14', line: 'israel' },
+                    { id: 'j-raddai', de: 'Raddai', en: 'Raddai', ref: '1Chr 2:14', line: 'israel' },
+                    { id: 'j-ozem', de: 'Ozem', en: 'Ozem', ref: '1Chr 2:15', line: 'israel' },
+                    {
+                      id: 'david', de: 'David', en: 'David', ref: '1Chr 2:15 · 1Chr 3', line: 'israel',
+                      note: { de: 'Der siebte Sohn; König über Israel. Aus seiner Linie die Könige von Juda bis zum Exil und Serubbabel.', en: 'The seventh son; king of Israel. His line are the kings of Judah down to the exile and Zerubbabel.' },
+                      place: 'Bethlehem',
+                      children: [
+                        { id: 'd-amnon', de: 'Amnon', en: 'Amnon', ref: '1Chr 3:1', line: 'israel', note: { de: 'In Hebron geboren.', en: 'Born at Hebron.' } },
+                        { id: 'd-absalom', de: 'Absalom', en: 'Absalom', ref: '1Chr 3:2', line: 'israel', note: { de: 'Empörte sich gegen David.', en: 'Rebelled against David.' } },
+                        { id: 'd-adonijah', de: 'Adonija', en: 'Adonijah', ref: '1Chr 3:2', line: 'israel' },
+                        { id: 'd-nathan', de: 'Natan', en: 'Nathan', ref: '1Chr 3:5', line: 'israel', note: { de: 'In Jerusalem geboren; über ihn läuft Lukas’ Stammbaum Jesu.', en: 'Born at Jerusalem; Luke’s genealogy of Jesus runs through him.' } },
+                        {
+                          id: 'solomon', de: 'Salomo', en: 'Solomon', ref: '1Chr 3:5', line: 'israel',
+                          note: { de: 'König; baute den Tempel. Aus ihm die Königslinie:', en: 'King; built the temple. From him the royal line:' },
+                          place: 'Jerusalem',
+                          spine: [
+                            { de: 'Rehabeam', en: 'Rehoboam', ref: '1Chr 3:10' },
+                            { de: 'Abija', en: 'Abijah', ref: '1Chr 3:10' },
+                            { de: 'Asa', en: 'Asa', ref: '1Chr 3:10' },
+                            { de: 'Joschafat', en: 'Jehoshaphat', ref: '1Chr 3:10' },
+                            { de: 'Joram', en: 'Joram', ref: '1Chr 3:11' },
+                            { de: 'Ahasja', en: 'Ahaziah', ref: '1Chr 3:11' },
+                            { de: 'Joasch', en: 'Joash', ref: '1Chr 3:11' },
+                            { de: 'Amazja', en: 'Amaziah', ref: '1Chr 3:12' },
+                            { de: 'Asarja (Usija)', en: 'Azariah (Uzziah)', ref: '1Chr 3:12' },
+                            { de: 'Jotam', en: 'Jotham', ref: '1Chr 3:12' },
+                            { de: 'Ahas', en: 'Ahaz', ref: '1Chr 3:13' },
+                            { de: 'Hiskia', en: 'Hezekiah', ref: '1Chr 3:13' },
+                            { de: 'Manasse', en: 'Manasseh', ref: '1Chr 3:13' },
+                            { de: 'Amon', en: 'Amon', ref: '1Chr 3:14' },
+                            { de: 'Josia', en: 'Josiah', ref: '1Chr 3:14' },
+                            { de: 'Jojakim', en: 'Jehoiakim', ref: '1Chr 3:15–16' },
+                          ],
+                          children: [
+                            {
+                              id: 'jeconiah', de: 'Jojachin (Jechonja)', en: 'Jehoiachin (Jeconiah)', ref: '1Chr 3:16–17', line: 'israel',
+                              note: { de: 'Wurde ins Exil weggeführt.', en: 'Was carried into exile.' },
+                              children: [
+                                {
+                                  id: 'shealtiel', de: 'Schealtiël', en: 'Shealtiel', ref: '1Chr 3:17', line: 'israel',
+                                  children: [
+                                    {
+                                      id: 'pedaiah', de: 'Pedaja', en: 'Pedaiah', ref: '1Chr 3:18–19', line: 'israel',
+                                      children: [
+                                        {
+                                          id: 'zerubbabel', de: 'Serubbabel', en: 'Zerubbabel', ref: '1Chr 3:19', line: 'israel',
+                                          note: { de: 'Führt die Rückkehrer aus dem Exil und baut den Tempel wieder auf.', en: 'Leads the return from exile and rebuilds the temple.' },
+                                          children: [
+                                            { id: 'z-meshullam', de: 'Meschullam', en: 'Meshullam', ref: '1Chr 3:19', line: 'israel' },
+                                            { id: 'z-hananiah', de: 'Hananja', en: 'Hananiah', ref: '1Chr 3:19', line: 'israel' },
+                                            { id: 'z-shelomith', de: 'Schelomit (Tochter)', en: 'Shelomith (daughter)', ref: '1Chr 3:19', line: 'israel' },
+                                          ],
+                                        },
+                                      ],
+                                    },
+                                  ],
+                                },
+                              ],
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    { id: 'j-zeruiah', de: 'Zeruja (Schwester)', en: 'Zeruiah (sister)', ref: '1Chr 2:16', line: 'israel', note: { de: 'Mutter der Feldherren Abischai, Joab und Asaël.', en: 'Mother of the commanders Abishai, Joab and Asahel.' } },
+                    { id: 'j-abigail', de: 'Abigail (Schwester)', en: 'Abigail (sister)', ref: '1Chr 2:16–17', line: 'israel', note: { de: 'Mutter Amasas.', en: 'Mother of Amasa.' } },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 'j-caleb-h', de: 'Kaleb (Chelubai)', en: 'Caleb (Chelubai)', ref: '1Chr 2:9·18', line: 'israel',
+              note: { de: 'Sohn Hezrons; aus seiner Linie Bezalel.', en: 'Son of Hezron; from his line Bezalel.' },
+              children: [
+                {
+                  id: 'j-hur', de: 'Hur', en: 'Hur', ref: '1Chr 2:19–20', line: 'israel',
+                  spine: [{ de: 'Uri', en: 'Uri', ref: '1Chr 2:20' }],
+                  children: [
+                    { id: 'bezalel', de: 'Bezalel', en: 'Bezalel', ref: '1Chr 2:20 · 2Mo 31:2', line: 'israel', note: { de: 'Kunsthandwerker der Stiftshütte.', en: 'Master craftsman of the tabernacle.' } },
+                  ],
+                },
+              ],
+            },
+            {
+              id: 'j-jerahmeel', de: 'Jerachmeel', en: 'Jerahmeel', ref: '1Chr 2:9·25', line: 'israel',
+              note: { de: 'Erstgeborener Hezrons; die Jerachmeeliter.', en: 'Firstborn of Hezron; the Jerahmeelites.' },
+            },
+            {
+              id: 'j-segub', de: 'Segub', en: 'Segub', ref: '1Chr 2:21–22', line: 'israel',
+              children: [
+                { id: 'j-jair', de: 'Jair', en: 'Jair', ref: '1Chr 2:22', line: 'israel', note: { de: 'Hatte 23 Städte im Land Gilead.', en: 'Had 23 towns in the land of Gilead.' } },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'j-kenaz', de: 'Kenas (Kenisiter)', en: 'Kenaz (Kenizzites)', ref: '1Chr 4:13', line: 'israel',
+      note: { de: 'In Juda einverleibte Sippe.', en: 'A clan reckoned to Judah.' },
+      children: [
+        { id: 'othniel', de: 'Otniel', en: 'Othniel', ref: '1Chr 4:13 · Ri 3:9', line: 'israel', note: { de: 'Der erste Richter Israels.', en: 'The first judge of Israel.' } },
+      ],
+    },
+    { id: 'j-caleb-j', de: 'Kaleb, Sohn Jefunnes', en: 'Caleb son of Jephunneh', ref: '1Chr 4:15 · 4Mo 13:6', line: 'israel', note: { de: 'Der treue Kundschafter.', en: 'The faithful spy.' } },
+    { id: 'jabez', de: 'Jaebez', en: 'Jabez', ref: '1Chr 4:9–10', line: 'israel', note: { de: '»Ehrenwerter als seine Brüder«; für sein Gebet bekannt.', en: '“More honorable than his brothers”; known for his prayer.' } },
+  ],
+};
+
+const TRIBE_ISSACHAR: GenNode = {
+  id: 'issachar', de: 'Issachar', en: 'Issachar', ref: '1Chr 7:1–5', line: 'israel',
+  children: [
+    {
+      id: 'i-tola', de: 'Tola', en: 'Tola', ref: '1Chr 7:1–2', line: 'israel',
+      children: [
+        { id: 'i-uzzi', de: 'Usi', en: 'Uzzi', ref: '1Chr 7:2', line: 'israel' },
+        { id: 'i-rephaiah', de: 'Rephaja', en: 'Rephaiah', ref: '1Chr 7:2', line: 'israel' },
+        { id: 'i-jeriel', de: 'Jeriel', en: 'Jeriel', ref: '1Chr 7:2', line: 'israel' },
+        { id: 'i-jahmai', de: 'Jahemai', en: 'Jahmai', ref: '1Chr 7:2', line: 'israel' },
+        { id: 'i-ibsam', de: 'Jibsam', en: 'Ibsam', ref: '1Chr 7:2', line: 'israel' },
+        { id: 'i-shemuel', de: 'Samuel', en: 'Shemuel', ref: '1Chr 7:2', line: 'israel' },
+      ],
+    },
     { id: 'i-puah', de: 'Pua', en: 'Puah', ref: '1Chr 7:1', line: 'israel' },
     { id: 'i-jashub', de: 'Jaschub', en: 'Jashub', ref: '1Chr 7:1', line: 'israel' },
     { id: 'i-shimron', de: 'Schimron', en: 'Shimron', ref: '1Chr 7:1', line: 'israel' },
@@ -514,12 +724,20 @@ const TRIBE_MANASSEH: GenNode = {
             },
             { id: 'g-helek', de: 'Helek', en: 'Helek', ref: '4Mo 26:30', line: 'israel' },
             { id: 'g-shechem', de: 'Sichem', en: 'Shechem', ref: '4Mo 26:31', line: 'israel' },
-            { id: 'g-shemida', de: 'Schemida', en: 'Shemida', ref: '4Mo 26:32', line: 'israel' },
+            {
+              id: 'g-shemida', de: 'Schemida', en: 'Shemida', ref: '1Chr 7:19 · 4Mo 26:32', line: 'israel',
+              children: [
+                { id: 'g-ahian', de: 'Ahjan', en: 'Ahian', ref: '1Chr 7:19', line: 'israel' },
+                { id: 'g-shechem2', de: 'Sichem', en: 'Shechem', ref: '1Chr 7:19', line: 'israel' },
+                { id: 'g-likhi', de: 'Likhi', en: 'Likhi', ref: '1Chr 7:19', line: 'israel' },
+                { id: 'g-aniam', de: 'Aniam', en: 'Aniam', ref: '1Chr 7:19', line: 'israel' },
+              ],
+            },
             {
               id: 'g-hepher', de: 'Hefer', en: 'Hepher', ref: '4Mo 26:32', line: 'israel',
               children: [
                 {
-                  id: 'zelophehad', de: 'Zelofhad', en: 'Zelophehad', ref: '4Mo 26:33 · 4Mo 27:1', line: 'israel',
+                  id: 'zelophehad', de: 'Zelofhad', en: 'Zelophehad', ref: '1Chr 7:15 · 4Mo 27:1', line: 'israel',
                   note: { de: 'Hatte nur Töchter – die ein eigenes Erbrecht erhielten.', en: 'Had only daughters – who received their own inheritance right.' },
                   children: [
                     { id: 'zd-mahlah', de: 'Machla', en: 'Mahlah', ref: '4Mo 27:1', line: 'israel' },
@@ -535,6 +753,18 @@ const TRIBE_MANASSEH: GenNode = {
         },
       ],
     },
+    {
+      id: 'm-east', de: 'Halbstamm im Basan', en: 'Half-tribe in Bashan', ref: '1Chr 5:23–24', line: 'israel',
+      note: { de: 'Häupter im Ostjordanland.', en: 'Heads east of the Jordan.' },
+      children: [
+        { id: 'hm-epher', de: 'Epher', en: 'Epher', ref: '1Chr 5:24', line: 'israel' },
+        { id: 'hm-ishi', de: 'Jesei', en: 'Ishi', ref: '1Chr 5:24', line: 'israel' },
+        { id: 'hm-eliel', de: 'Eliel', en: 'Eliel', ref: '1Chr 5:24', line: 'israel' },
+        { id: 'hm-jeremiah', de: 'Jeremia', en: 'Jeremiah', ref: '1Chr 5:24', line: 'israel' },
+        { id: 'hm-hodaviah', de: 'Hodawja', en: 'Hodaviah', ref: '1Chr 5:24', line: 'israel' },
+        { id: 'hm-jahdiel', de: 'Jachdiel', en: 'Jahdiel', ref: '1Chr 5:24', line: 'israel' },
+      ],
+    },
   ],
 };
 
@@ -543,9 +773,15 @@ const TRIBE_EPHRAIM: GenNode = {
   note: { de: 'Aus seiner Linie kommt Josua, der Nachfolger Moses.', en: 'From his line comes Joshua, Moses’ successor.' },
   children: [
     {
+      id: 'e-shuthelah', de: 'Sutelach', en: 'Shuthelah', ref: '1Chr 7:20', line: 'israel',
+      note: { de: 'Eine seiner Linien; einige Söhne fielen bei Gat.', en: 'One of his lines; some sons fell at Gath.' },
+    },
+    {
       id: 'e-line', de: 'Beria', en: 'Beriah', ref: '1Chr 7:23', line: 'israel',
+      note: { de: 'Geboren, als es im Haus Ephraims Unglück gab; seine Tochter Scheera baute Bet-Horon.', en: 'Born amid misfortune in Ephraim’s house; his daughter Sheerah built Beth-horon.' },
       spine: [
         { de: 'Refach', en: 'Rephah', ref: '1Chr 7:25' },
+        { de: 'Reschef', en: 'Resheph', ref: '1Chr 7:25' },
         { de: 'Telach', en: 'Telah', ref: '1Chr 7:25' },
         { de: 'Tahan', en: 'Tahan', ref: '1Chr 7:25' },
         { de: 'Ladan', en: 'Ladan', ref: '1Chr 7:26' },
@@ -562,29 +798,65 @@ const TRIBE_EPHRAIM: GenNode = {
 
 const TRIBE_JOSEPH: GenNode = {
   id: 'joseph', de: 'Josef', en: 'Joseph', ref: '1Chr 5:1 · 1Mo 41:51–52', line: 'israel',
-  note: { de: 'Seine Söhne Ephraim und Manasse werden zu eigenen Stämmen.', en: 'His sons Ephraim and Manasseh become tribes of their own.' },
+  note: { de: 'Erhielt die Erstgeburt; seine Söhne Ephraim und Manasse werden zu eigenen Stämmen.', en: 'Received the birthright; his sons Ephraim and Manasseh become tribes of their own.' },
   children: [TRIBE_MANASSEH, TRIBE_EPHRAIM],
 };
 
 const TRIBE_BENJAMIN: GenNode = {
-  id: 'benjamin', de: 'Benjamin', en: 'Benjamin', ref: '1Chr 7:6 · 1Chr 8:1', line: 'israel',
+  id: 'benjamin', de: 'Benjamin', en: 'Benjamin', ref: '1Chr 7:6 · 1Chr 8', line: 'israel',
   note: { de: 'Aus ihm der erste König, Saul.', en: 'From him the first king, Saul.' },
   children: [
-    { id: 'b-bela', de: 'Bela', en: 'Bela', ref: '1Chr 7:6', line: 'israel' },
-    { id: 'b-becher', de: 'Becher', en: 'Becher', ref: '1Chr 7:6', line: 'israel' },
-    { id: 'b-jediael', de: 'Jediaël', en: 'Jediael', ref: '1Chr 7:6', line: 'israel' },
     {
-      id: 'kish', de: 'Kisch', en: 'Kish', ref: '1Chr 8:33', line: 'israel',
-      note: { de: 'Vater König Sauls.', en: 'Father of King Saul.' },
+      id: 'b-bela', de: 'Bela', en: 'Bela', ref: '1Chr 7:6–7', line: 'israel',
+      note: { de: 'Erstgeborener; fünf Söhne.', en: 'Firstborn; five sons.' },
+      children: [
+        { id: 'b-ezbon', de: 'Ezbon', en: 'Ezbon', ref: '1Chr 7:7', line: 'israel' },
+        { id: 'b-uzzi', de: 'Usi', en: 'Uzzi', ref: '1Chr 7:7', line: 'israel' },
+        { id: 'b-uzziel', de: 'Usiël', en: 'Uzziel', ref: '1Chr 7:7', line: 'israel' },
+        { id: 'b-jerimoth', de: 'Jerimot', en: 'Jerimoth', ref: '1Chr 7:7', line: 'israel' },
+        { id: 'b-iri', de: 'Iri', en: 'Iri', ref: '1Chr 7:7', line: 'israel' },
+      ],
+    },
+    { id: 'b-becher', de: 'Becher', en: 'Becher', ref: '1Chr 7:6·8', line: 'israel' },
+    {
+      id: 'b-jediael', de: 'Jediaël', en: 'Jediael', ref: '1Chr 7:6·10', line: 'israel',
+      children: [
+        { id: 'b-bilhan', de: 'Bilhan', en: 'Bilhan', ref: '1Chr 7:10', line: 'israel' },
+        { id: 'b-ehud', de: 'Ehud', en: 'Ehud', ref: '1Chr 8:6 · Ri 3:15', line: 'israel', note: { de: 'Der linkshändige Richter, der Eglon besiegte.', en: 'The left-handed judge who defeated Eglon.' } },
+      ],
+    },
+    {
+      id: 'b-ner', de: 'Ner', en: 'Ner', ref: '1Chr 8:33', line: 'israel',
+      note: { de: 'Die Königslinie Sauls (Sippe zu Gibeon).', en: 'The royal line of Saul (clan at Gibeon).' },
       children: [
         {
-          id: 'saul', de: 'Saul', en: 'Saul', ref: '1Chr 8:33', line: 'israel', place: 'Gibeah',
-          note: { de: 'Der erste König Israels.', en: 'The first king of Israel.' },
+          id: 'kish', de: 'Kisch', en: 'Kish', ref: '1Chr 8:33', line: 'israel',
+          note: { de: 'Vater König Sauls.', en: 'Father of King Saul.' },
           children: [
             {
-              id: 'jonathan', de: 'Jonatan', en: 'Jonathan', ref: '1Chr 8:33', line: 'israel', note: { de: 'Freund Davids.', en: 'Friend of David.' },
+              id: 'saul', de: 'Saul', en: 'Saul', ref: '1Chr 8:33', line: 'israel', place: 'Gibeah',
+              note: { de: 'Der erste König Israels.', en: 'The first king of Israel.' },
               children: [
-                { id: 'meribbaal', de: 'Merib-Baal (Mefi-Boschet)', en: 'Merib-baal (Mephibosheth)', ref: '1Chr 8:34', line: 'israel' },
+                {
+                  id: 'jonathan', de: 'Jonatan', en: 'Jonathan', ref: '1Chr 8:33', line: 'israel', note: { de: 'Freund Davids.', en: 'Friend of David.' },
+                  children: [
+                    {
+                      id: 'meribbaal', de: 'Merib-Baal (Mefi-Boschet)', en: 'Merib-baal (Mephibosheth)', ref: '1Chr 8:34', line: 'israel',
+                      spine: [
+                        { de: 'Micha', en: 'Micah', ref: '1Chr 8:34' },
+                        { de: 'Ahas', en: 'Ahaz', ref: '1Chr 8:35' },
+                        { de: 'Moza', en: 'Moza', ref: '1Chr 8:36–37' },
+                        { de: 'Binea', en: 'Binea', ref: '1Chr 8:37' },
+                      ],
+                      children: [
+                        { id: 'b-azel', de: 'Azel', en: 'Azel', ref: '1Chr 8:37–38', line: 'israel', note: { de: 'Hatte sechs Söhne.', en: 'Had six sons.' } },
+                      ],
+                    },
+                  ],
+                },
+                { id: 'b-malchishua', de: 'Malkischua', en: 'Malchishua', ref: '1Chr 8:33', line: 'israel' },
+                { id: 'b-abinadab', de: 'Abinadab', en: 'Abinadab', ref: '1Chr 8:33', line: 'israel' },
+                { id: 'b-eshbaal', de: 'Esch-Baal (Isch-Boschet)', en: 'Esh-baal (Ish-bosheth)', ref: '1Chr 8:33', line: 'israel' },
               ],
             },
           ],
@@ -596,6 +868,7 @@ const TRIBE_BENJAMIN: GenNode = {
 
 const TRIBE_NAPHTALI: GenNode = {
   id: 'naphtali', de: 'Naftali', en: 'Naphtali', ref: '1Chr 7:13', line: 'israel',
+  note: { de: 'Kinder von Bilha.', en: 'Sons of Bilhah.' },
   children: [
     { id: 'n-jahziel', de: 'Jachziel', en: 'Jahziel', ref: '1Chr 7:13', line: 'israel' },
     { id: 'n-guni', de: 'Guni', en: 'Guni', ref: '1Chr 7:13', line: 'israel' },
@@ -605,9 +878,10 @@ const TRIBE_NAPHTALI: GenNode = {
 };
 
 const TRIBE_GAD: GenNode = {
-  id: 'gad', de: 'Gad', en: 'Gad', ref: '1Mo 46:16 · 4Mo 26:15', line: 'israel',
+  id: 'gad', de: 'Gad', en: 'Gad', ref: '1Mo 46:16 · 1Chr 5:11–16', line: 'israel',
+  note: { de: 'Wohnte im Basan; Häupter u. a. Joel und Schafam.', en: 'Settled in Bashan; chiefs included Joel and Shapham.' },
   children: [
-    { id: 'gd-zephon', de: 'Zifjon', en: 'Zephon', ref: '4Mo 26:15', line: 'israel' },
+    { id: 'gd-zephon', de: 'Zifjon', en: 'Zephon', ref: '1Mo 46:16 · 4Mo 26:15', line: 'israel' },
     { id: 'gd-haggi', de: 'Haggi', en: 'Haggi', ref: '4Mo 26:15', line: 'israel' },
     { id: 'gd-shuni', de: 'Schuni', en: 'Shuni', ref: '4Mo 26:15', line: 'israel' },
     { id: 'gd-ozni', de: 'Osni (Ezbon)', en: 'Ozni (Ezbon)', ref: '4Mo 26:16', line: 'israel' },
@@ -618,12 +892,25 @@ const TRIBE_GAD: GenNode = {
 };
 
 const TRIBE_ASHER: GenNode = {
-  id: 'asher', de: 'Asser', en: 'Asher', ref: '1Chr 7:30', line: 'israel',
+  id: 'asher', de: 'Asser', en: 'Asher', ref: '1Chr 7:30–40', line: 'israel',
   children: [
     { id: 'a-imnah', de: 'Jimna', en: 'Imnah', ref: '1Chr 7:30', line: 'israel' },
     { id: 'a-ishvah', de: 'Jischwa', en: 'Ishvah', ref: '1Chr 7:30', line: 'israel' },
     { id: 'a-ishvi', de: 'Jischwi', en: 'Ishvi', ref: '1Chr 7:30', line: 'israel' },
-    { id: 'a-beriah', de: 'Beria', en: 'Beriah', ref: '1Chr 7:30', line: 'israel' },
+    {
+      id: 'a-beriah', de: 'Beria', en: 'Beriah', ref: '1Chr 7:30–31', line: 'israel',
+      children: [
+        {
+          id: 'a-heber', de: 'Heber', en: 'Heber', ref: '1Chr 7:31–32', line: 'israel',
+          children: [
+            { id: 'a-japhlet', de: 'Japhlet', en: 'Japhlet', ref: '1Chr 7:32–33', line: 'israel' },
+            { id: 'a-shomer', de: 'Semer', en: 'Shomer', ref: '1Chr 7:32', line: 'israel' },
+            { id: 'a-hotham', de: 'Hotam', en: 'Hotham', ref: '1Chr 7:32', line: 'israel' },
+          ],
+        },
+        { id: 'a-malchiel', de: 'Malkiël', en: 'Malchiel', ref: '1Chr 7:31', line: 'israel' },
+      ],
+    },
     { id: 'a-serah', de: 'Serach (Schwester)', en: 'Serah (sister)', ref: '1Chr 7:30', line: 'israel' },
   ],
 };
@@ -635,7 +922,7 @@ const ISRAEL: GenNode = {
   en: 'Israel (Jacob)',
   ref: '1Chr 2:1 · Gen 35:23',
   line: 'israel',
-  note: { de: 'Aus seinen zwölf Söhnen werden die zwölf Stämme – mit ihren Sippen und bekanntesten Nachkommen.', en: 'From his twelve sons come the twelve tribes – with their clans and best-known descendants.' },
+  note: { de: 'Aus seinen zwölf Söhnen werden die zwölf Stämme – hier mit ihren Sippen und namentlichen Nachkommen aus 1. Chronik 2–9.', en: 'From his twelve sons come the twelve tribes – here with their clans and named descendants from 1 Chronicles 2–9.' },
   children: [
     TRIBE_REUBEN,
     TRIBE_SIMEON,
