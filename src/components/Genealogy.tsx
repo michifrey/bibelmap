@@ -5,13 +5,19 @@ import { useT } from '../i18n';
 import { GENEALOGY, LINES, LINE_COLOR, NODE_BY_ID, type GenNode } from '../data/nationsTribes';
 import { searchPlaces } from '../lib/places';
 import TribesMap from './TribesMap';
+import TreeView from './TreeView';
 
 interface Props {
   places: Place[];
   lang: Lang;
   onShowPlace: (place: Place) => void;
-  onExit: () => void;
+  /** For the Zeitstrahl tab: reveal a person coming from the church-history map. */
+  focusId?: string | null;
+  /** For the Zeitstrahl tab: open the church-history map on a person. */
+  onShowOnMap?: (personId: string) => void;
 }
+
+type Tab = 'timeline' | 'tree' | 'map';
 
 function norm(s: string): string {
   return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -54,9 +60,9 @@ function ancestry(id: string): string[] {
   return out;
 }
 
-export default function Genealogy({ places, lang, onShowPlace, onExit }: Props) {
+export default function Genealogy({ places, lang, onShowPlace, focusId, onShowOnMap }: Props) {
   const t = useT();
-  const [tab, setTab] = useState<'map' | 'tree'>('map');
+  const [tab, setTab] = useState<Tab>('timeline');
   const [query, setQuery] = useState('');
   // start with the top two levels open
   const [open, setOpen] = useState<Set<string>>(() => new Set(['adam', 'noah']));
@@ -105,113 +111,116 @@ export default function Genealogy({ places, lang, onShowPlace, onExit }: Props) 
     return searchPlaces(places, term, 1)[0] ?? null;
   }
 
+  const TABS: { id: Tab; label: string }[] = [
+    { id: 'timeline', label: t('tree') /* Zeitbaum */ },
+    { id: 'tree', label: t('ntTree') /* Stammbaum */ },
+    { id: 'map', label: t('ntMap') /* Karte */ },
+  ];
+
   return (
-    <div className="fixed inset-0 z-[2000] flex flex-col bg-cream">
-      {/* top bar */}
-      <div className="flex flex-none items-center justify-between gap-3 border-b border-teal/10 bg-teal px-4 py-3 text-cream">
-        <div>
-          <div className="font-display text-lg font-semibold leading-tight">{t('genealogy')}</div>
-          <div className="text-[11px] text-cream/75">{tab === 'map' ? t('ntMapHint') : t('genealogySub')}</div>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* Karte ↔ Stammbaum */}
-          <div className="flex overflow-hidden rounded-lg ring-1 ring-cream/25">
+    <div className="absolute inset-0 bg-cream">
+      {/* sub-tab switcher (floats top-centre so it clears the app header) */}
+      <div className="pointer-events-none absolute inset-x-0 top-2 z-[1160] flex justify-center px-2 sm:top-3">
+        <div className="pointer-events-auto flex overflow-hidden rounded-xl bg-cream/92 shadow-lg ring-1 ring-teal/15 backdrop-blur">
+          {TABS.map((tb) => (
             <button
-              onClick={() => setTab('map')}
-              className={`px-3 py-1.5 text-sm font-medium transition ${tab === 'map' ? 'bg-gold text-teal' : 'bg-white/10 text-cream hover:bg-white/20'}`}
+              key={tb.id}
+              onClick={() => setTab(tb.id)}
+              className={`px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
+                tab === tb.id ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'
+              }`}
             >
-              {t('ntMap')}
+              {tb.label}
             </button>
-            <button
-              onClick={() => setTab('tree')}
-              className={`px-3 py-1.5 text-sm font-medium transition ${tab === 'tree' ? 'bg-gold text-teal' : 'bg-white/10 text-cream hover:bg-white/20'}`}
-            >
-              {t('ntTree')}
-            </button>
-          </div>
-          <button
-            onClick={onExit}
-            className="rounded-lg bg-gold px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold-deep"
-          >
-            {t('exit')} ✕
-          </button>
+          ))}
         </div>
       </div>
 
-      {tab === 'map' ? (
-        <div className="min-h-0 flex-1">
+      {/* ---- Zeitstrahl (timeline) ---- */}
+      {tab === 'timeline' && (
+        <div className="absolute inset-0">
+          <TreeView lang={lang} focusId={focusId} onShowOnMap={onShowOnMap} />
+        </div>
+      )}
+
+      {/* ---- Karte (tribes map) ---- */}
+      {tab === 'map' && (
+        <div className="absolute inset-0">
           <TribesMap lang={lang} onOpenInTree={openInTree} />
         </div>
-      ) : (
-        <>
-      {/* toolbar */}
-      <div className="flex flex-none flex-wrap items-center gap-2 border-b border-teal/10 bg-cream/95 px-4 py-2.5 backdrop-blur">
-        <div className="relative min-w-[12rem] flex-1">
-          <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" fill="currentColor">
-            <path d="M10 4a6 6 0 1 0 3.7 10.7l4.3 4.3 1.4-1.4-4.3-4.3A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" />
-          </svg>
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder={t('genealogySearch')}
-            className="w-full rounded-lg border border-teal/15 bg-cream px-3 py-1.5 pl-8 text-sm text-ink outline-none placeholder:text-ink-soft/60 focus:border-gold"
-          />
-          {query && (
+      )}
+
+      {/* ---- Stammbaum (nations & tribes tree) ---- */}
+      {tab === 'tree' && (
+        <div className="absolute inset-0 flex flex-col pt-14 sm:pt-16">
+          {/* toolbar */}
+          <div className="flex flex-none flex-wrap items-center gap-2 border-b border-teal/10 bg-cream/95 px-4 py-2.5 backdrop-blur">
+            <div className="relative min-w-[10rem] flex-1">
+              <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" fill="currentColor">
+                <path d="M10 4a6 6 0 1 0 3.7 10.7l4.3 4.3 1.4-1.4-4.3-4.3A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" />
+              </svg>
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t('genealogySearch')}
+                className="w-full rounded-lg border border-teal/15 bg-cream px-3 py-1.5 pl-8 text-sm text-ink outline-none placeholder:text-ink-soft/60 focus:border-gold"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-ink-soft hover:text-teal"
+                  aria-label={t('reset')}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
             <button
-              onClick={() => setQuery('')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-ink-soft hover:text-teal"
-              aria-label={t('reset')}
+              onClick={expandAll}
+              disabled={!!forcedOpen}
+              className="rounded-lg bg-cream-2 px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold/30 disabled:opacity-40"
             >
-              ✕
+              {t('expandAll')}
             </button>
-          )}
+            <button
+              onClick={collapseAll}
+              disabled={!!forcedOpen}
+              className="rounded-lg bg-cream-2 px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold/30 disabled:opacity-40"
+            >
+              {t('collapseAll')}
+            </button>
+          </div>
+
+          {/* legend */}
+          <div className="scroll-soft flex flex-none gap-2 overflow-x-auto border-b border-teal/10 bg-cream-2/40 px-4 py-2">
+            {LINES.map((l) => (
+              <span key={l.id} className="flex flex-none items-center gap-1.5 text-[11px] text-ink-soft">
+                <span className="h-2.5 w-2.5 rounded-full" style={{ background: l.color }} />
+                {lang === 'de' ? l.de : l.en}
+              </span>
+            ))}
+          </div>
+
+          {/* tree */}
+          <div className="scroll-soft mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-3 py-4 sm:px-6">
+            {query && !matches.size && (
+              <p className="mb-3 rounded-xl bg-cream-2/50 px-4 py-3 text-center text-sm text-ink-soft">{t('noResults')}</p>
+            )}
+            <TreeNode
+              node={GENEALOGY}
+              depth={0}
+              lang={lang}
+              open={effectiveOpen}
+              matches={matches}
+              onToggle={toggle}
+              resolvePlace={resolvePlace}
+              onShowPlace={onShowPlace}
+            />
+            <p className="mt-6 border-t border-teal/10 pt-3 text-[11px] leading-relaxed text-ink-soft">
+              {t('genealogyNote')}
+            </p>
+          </div>
         </div>
-        <button
-          onClick={expandAll}
-          disabled={!!forcedOpen}
-          className="rounded-lg bg-cream-2 px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold/30 disabled:opacity-40"
-        >
-          {t('expandAll')}
-        </button>
-        <button
-          onClick={collapseAll}
-          disabled={!!forcedOpen}
-          className="rounded-lg bg-cream-2 px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold/30 disabled:opacity-40"
-        >
-          {t('collapseAll')}
-        </button>
-      </div>
-
-      {/* legend */}
-      <div className="scroll-soft flex flex-none gap-2 overflow-x-auto border-b border-teal/10 bg-cream-2/40 px-4 py-2">
-        {LINES.map((l) => (
-          <span key={l.id} className="flex flex-none items-center gap-1.5 text-[11px] text-ink-soft">
-            <span className="h-2.5 w-2.5 rounded-full" style={{ background: l.color }} />
-            {lang === 'de' ? l.de : l.en}
-          </span>
-        ))}
-      </div>
-
-      {/* tree */}
-      <div className="scroll-soft mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-3 py-4 sm:px-6">
-        {query && !matches.size && (
-          <p className="mb-3 rounded-xl bg-cream-2/50 px-4 py-3 text-center text-sm text-ink-soft">{t('noResults')}</p>
-        )}
-        <TreeNode
-          node={GENEALOGY}
-          depth={0}
-          lang={lang}
-          open={effectiveOpen}
-          matches={matches}
-          onToggle={toggle}
-          resolvePlace={resolvePlace}
-          onShowPlace={onShowPlace}
-        />
-        <p className="mt-6 border-t border-teal/10 pt-3 text-[11px] leading-relaxed text-ink-soft">
-          {t('genealogyNote')}
-        </p>
-      </div>
-        </>
       )}
     </div>
   );

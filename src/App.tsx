@@ -12,7 +12,6 @@ import Presentation from './components/Presentation';
 import HistoryMode from './components/HistoryMode';
 import CompareMode from './components/CompareMode';
 import ChurchMode from './components/ChurchMode';
-import TreeView from './components/TreeView';
 import GraphView from './components/GraphView';
 import Genealogy from './components/Genealogy';
 
@@ -124,11 +123,12 @@ export default function App() {
     <LangContext.Provider value={lang}>
       <div className="relative h-full w-full overflow-hidden">
         {view === 'tree' ? (
-          <TreeView
+          <Genealogy
+            places={places}
             lang={lang}
             focusId={treeFocus}
             onShowOnMap={showPersonOnMap}
-            onOpenNations={() => setMode('nations')}
+            onShowPlace={showPlaceFromGenealogy}
           />
         ) : view === 'graph' ? (
           <GraphView places={places} lang={lang} />
@@ -231,16 +231,6 @@ export default function App() {
           </>
         )}
 
-        {/* Völkertafel & Stämme + Stämme-Karte — reachable from the Zeitbaum, so
-            genealogy has a single home. Overlays whatever view is active. */}
-        {mode === 'nations' && (
-          <Genealogy
-            places={places}
-            lang={lang}
-            onShowPlace={showPlaceFromGenealogy}
-            onExit={() => setMode(null)}
-          />
-        )}
 
         <Header
           lang={lang}
