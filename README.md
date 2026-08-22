@@ -111,6 +111,32 @@ deutschen Namen zeigen weiter den englischen.
 `scripts/build-data.mjs` mischt `data/names-de.json` beim Neubau wieder ein, ein
 `npm run data` wirft die Namen also nicht weg.
 
+### Podcasts & Videos zu Orten
+
+Jede Ortskarte zeigt unter **Hören & Sehen**, welche Podcast-Folgen und Videos
+eine Bibelstelle behandeln, in der dieser Ort vorkommt:
+
+```bash
+npm run media            # baut aus data/media/raw/*.xml
+npm run media -- --fetch # holt die Feeds vorher
+npm run media -- --dry   # nur Bericht, schreibt nichts
+```
+
+Die Zuordnung braucht keine Handarbeit: `scripts/build-media.mjs` liest die
+Bibelstelle aus dem Folgentitel (`scripts/lib/bibleref.mjs` versteht deutsche
+und englische Notation - `Markus 6,30-44` wie `Mark 6:30-44`) und löst sie über
+`places.json` in Orte auf. **Örtlich** über die Verse, **thematisch** über die
+Epoche des Buches. Folgen ohne Bibelstelle im Titel - bei thematischen
+Predigten häufig - fallen aus der Ortszuordnung heraus; das ist beabsichtigt.
+
+Quellen stehen in `data/media/sources.json`, die Feeds werden als XML unter
+`data/media/raw/` zwischengespeichert, damit der Build offline und
+reproduzierbar läuft. **BibleProject** braucht keinen Feed: je Buch eine
+Übersichtsseite, deren URL sich aus dem Buchkürzel baut.
+
+`public/data/media.json` wird erst geladen, wenn jemand eine Ortskarte öffnet -
+der Index wächst mit jeder Staffel und gehört nicht in den Startpfad.
+
 ### Epochen & Zeitleiste
 
 Die Zuordnung von Büchern zu historischen Epochen (`src/data/books.ts`,

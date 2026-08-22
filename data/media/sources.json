@@ -1,0 +1,55 @@
+{
+  "_comment": [
+    "Quellen für scripts/build-media.mjs.",
+    "",
+    "'feed' ist die RSS-Adresse. Eine Quelle ohne 'feed' wird übersprungen, bis",
+    "die XML-Datei unter data/media/raw/<id>.xml liegt — entweder von Hand",
+    "dorthin gelegt oder mit `npm run media -- --fetch` geholt.",
+    "",
+    "Feed-Adressen, die nicht überprüft werden konnten, stehen bewusst auf null,",
+    "statt geraten zu werden: eine falsche URL erzeugt still einen leeren Index."
+  ],
+  "sources": [
+    {
+      "id": "bibletunes",
+      "title": "bibletunes.de – Die Bibel im Ohr!",
+      "author": "Detlef Kühlein",
+      "homepage": "https://bibletunes.de/",
+      "feed": "https://bibletunes.de/bt/feed/main.rss",
+      "lang": "de",
+      "kind": "podcast",
+      "note": "Nach Bibelbüchern gegliederte Staffeln — der Folgentitel nennt die Stelle, das trägt die Zuordnung."
+    },
+    {
+      "id": "bibleproject",
+      "title": "BibleProject",
+      "author": "Tim Mackie & Jon Collins",
+      "homepage": "https://bibleproject.com/",
+      "feed": null,
+      "lang": "en",
+      "kind": "generated",
+      "urlPattern": "https://bibleproject.com/guides/{slug}/",
+      "note": "Braucht keinen Feed: je Buch eine Übersichtsseite, die URL baut sich aus dem Buchkürzel (siehe BP_GUIDE_OVERRIDE in src/data/books.ts)."
+    },
+    {
+      "id": "comer",
+      "title": "John Mark Comer",
+      "author": "John Mark Comer",
+      "homepage": null,
+      "feed": null,
+      "lang": "en",
+      "kind": "podcast",
+      "note": "Feed-Adresse noch offen. Überwiegend thematisch (Formation, Sabbat, Stille); Folgen ohne Bibelstelle im Titel fallen aus der Ortszuordnung heraus."
+    },
+    {
+      "id": "keller",
+      "title": "Timothy Keller",
+      "author": "Timothy Keller",
+      "homepage": null,
+      "feed": null,
+      "lang": "en",
+      "kind": "podcast",
+      "note": "Feed-Adresse noch offen. Überwiegend auslegend, die Stelle steht meist im Titel — daher gute Ortsausbeute zu erwarten."
+    }
+  ]
+}

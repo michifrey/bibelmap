@@ -6,6 +6,7 @@ import { booksForPlace, erasForPlace, placeName, placeNames } from '../lib/place
 import { usePlaceImage } from '../lib/wikidataImage';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { ERA_BY_ID, ERAS } from '../data/eras';
+import PlaceMedia from './PlaceMedia';
 
 interface Props {
   place: Place;
@@ -169,6 +170,8 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
             })}
           </div>
         </div>
+
+        <PlaceMedia place={place} />
 
         {/* sources */}
         <div className="mt-5">
