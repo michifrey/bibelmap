@@ -58,7 +58,29 @@ function ModeFallback() {
 }
 
 export default function App() {
-  const [lang, setLang] = useState<Lang>('de');
+  /**
+   * Sprache: die einmal getroffene Wahl gilt weiter. Ohne gespeicherte Wahl
+   * entscheidet die Browsersprache – wer Englisch eingestellt hat, sollte nicht
+   * erst auf EN klicken müssen.
+   */
+  const [lang, setLang] = useState<Lang>(() => {
+    try {
+      const saved = localStorage.getItem('bibelmap:lang');
+      if (saved === 'de' || saved === 'en') return saved;
+    } catch {
+      // Kein Speicher – dann eben die Browsersprache.
+    }
+    return navigator.language?.toLowerCase().startsWith('en') ? 'en' : 'de';
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('bibelmap:lang', lang);
+      document.documentElement.lang = lang;
+    } catch {
+      // Nicht schlimm: die Wahl gilt dann nur für diesen Besuch.
+    }
+  }, [lang]);
   const [places, setPlaces] = useState<Place[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { enableMarkerKeyboard } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
@@ -131,6 +132,8 @@ export default function MapView({
   const markerById = useRef<Map<string, L.Marker>>(new Map());
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const placesRef = useRef(places);
+  placesRef.current = places;
   const langRef = useRef(lang);
   langRef.current = lang;
 
@@ -151,7 +154,23 @@ export default function MapView({
     map.createPane('bmBorderLabels').style.zIndex = '380';
     map.getPane('bmBorderLabels')!.style.pointerEvents = 'none';
     mapRef.current = map;
+    const offKeys = enableMarkerKeyboard(map.getContainer(), (el) => {
+      // Ein Ortsmarker: denselben Weg gehen wie ein Klick.
+      for (const [id, marker] of markerById.current) {
+        if (marker.getElement() === el) {
+          const place = placesRef.current.find((p) => p.id === id);
+          if (place) onSelectRef.current(place);
+          return;
+        }
+      }
+      // Sonst ein Cluster: an dieser Stelle hineinzoomen.
+      const box = el.getBoundingClientRect();
+      const frame = map.getContainer().getBoundingClientRect();
+      const point = L.point(box.left - frame.left + box.width / 2, box.top - frame.top + box.height / 2);
+      map.setZoomAround(map.containerPointToLatLng(point), map.getZoom() + 2);
+    });
     return () => {
+      offKeys();
       map.remove();
       mapRef.current = null;
     };

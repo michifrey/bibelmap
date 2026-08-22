@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { enableMarkerKeyboard } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 
 /** Ein Punkt auf der Weltkarte: Reisestation oder Ereignis der Ausbreitung. */
@@ -82,6 +83,8 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
   const layerRef = useRef<L.LayerGroup | null>(null);
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  /** Welches Symbol gehört zu welchem Eintrag – für die Tastaturbedienung. */
+  const keyTargets = useRef<{ el: HTMLElement; id: string }[]>([]);
 
   useEffect(() => {
     if (!el.current || mapRef.current) return;
@@ -100,7 +103,12 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
     }).addTo(map);
     layerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
+    const offKeys = enableMarkerKeyboard(map.getContainer(), (el) => {
+      const hit = keyTargets.current.find((t) => t.el === el);
+      if (hit) onSelectRef.current(hit.id);
+    });
     return () => {
+      offKeys();
       map.remove();
       mapRef.current = null;
       layerRef.current = null;
@@ -112,6 +120,7 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
     const layer = layerRef.current;
     if (!layer) return;
     layer.clearLayers();
+    keyTargets.current = [];
 
     for (const r of routes) {
       L.polyline(r.points, {
@@ -137,6 +146,8 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
       const marker = L.marker([m.lat, m.lon], { icon: icon(m), title: m.label, riseOnHover: true });
       marker.on('click', () => onSelectRef.current(m.id));
       marker.addTo(layer);
+      const el = marker.getElement();
+      if (el) keyTargets.current.push({ el, id: m.id });
       if (m.tone === 'active') {
         marker
           .bindTooltip(m.label, { direction: 'top', offset: [0, -16], className: 'bm-mtip' })

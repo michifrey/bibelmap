@@ -79,7 +79,9 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 **Akzeptanzkriterien**
 - [x] Alle gefilterten Orte werden gerendert, ohne spürbares Ruckeln (≤1.335 Marker).
 - [x] Klick auf Marker selektiert den Ort und fliegt ihn an.
-- [ ] *(v0.2)* Tastatur-Fokus auf Marker möglich (a11y).
+- [x] **Tastaturbedienung**: Marker sind fokussierbar (Leaflet), Enter und
+      Leertaste lösen sie jetzt auch aus – auf der Hauptkarte, in den Reisen
+      und in der Ausbreitung; Cluster zoomen hinein. Sichtbarer goldener Ring.
 
 ### 4.2 Zeitleiste — P0 ✅
 
@@ -211,7 +213,8 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 ### 4.10 Zweisprachigkeit DE/EN — P0 ✅
 
 - [x] Oberfläche, Buchnamen, Bibeltext und Lese-Links wechseln zwischen DE/EN.
-- [ ] *(v0.3)* Sprachwahl wird in der URL/LocalStorage gemerkt.
+- [x] Sprachwahl wird gemerkt (LocalStorage); ohne gespeicherte Wahl
+      entscheidet die Browsersprache. `<html lang>` läuft mit.
 
 ### 4.11 Deployment & Betrieb — P0 ✅ *(Workflow steht; Pages-Aktivierung durch Nutzer)*
 
@@ -318,7 +321,8 @@ Startseite und Seite „Projekte unterstützen".
 - **Barrierefreiheit:** `prefers-reduced-motion` wird beachtet (Karte setzt statt
   zu fliegen, Reisender springt statt zu gleiten, Pulsringe stehen still);
   Escape schließt von außen nach innen; ← / → und Leertaste in den Reisen.
-  Offen: Tastatur-Fokus auf Kartenmarker, durchgängige Alt-Texte.
+  Kartenmarker sind mit Tabulator erreichbar und mit Enter/Leertaste
+  auslösbar. Offen: durchgängige Alt-Texte.
 - **i18n:** DE/EN vollständig; Architektur erlaubt weitere Sprachen.
 - **Lizenz-Compliance:** Attribution für Daten (CC-BY), Bilder (je Bild) und
   Kartenkacheln stets sichtbar.
@@ -353,7 +357,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v1.0** | **Bibeltext eingebettet** (4.7) inkl. Ort-im-Text-Verknüpfung, Tastatur | ✅ erledigt |
 | **v0.3** | Suche über Referenzen (4.3/4.15), State in URL (4.15), reduzierte Bewegung + Escape | ✅ erledigt |
 | **v0.4** | Reisen & Geschichten (4.12), Mission & Ausbreitung (4.13), Bibelquiz (4.14), Offline (4.16), Handout (4.17), Nachbarorte (4.18), Code-Splitting | ✅ erledigt |
-| **offen** | kumulative biblische Zeitleiste, Tastatur-Fokus auf Marker, Sprachwahl merken, 3-D-Gelände (MapLibre) | ⬜ offen |
+| **offen** | kumulative biblische Zeitleiste, durchgängige Alt-Texte, 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
 
@@ -382,8 +386,6 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
   einzelne selten gruppierte Bücher könnten ins Leere zeigen → bei Bedarf in
   `bibleProjectUrl` nachpflegen.
 - Kumulative **biblische** Zeitleiste weiterhin offen.
-- Tastatur-Fokus auf Kartenmarker (Leaflet-Marker sind nicht fokussierbar).
-- Sprachwahl wird noch nicht gemerkt (weder URL noch LocalStorage).
 - **3-D-Gelände**: Leaflet kann die Karte nicht kippen. Ein Umstieg auf MapLibre
   würde Terrain und Neigung erlauben, betrifft aber alle fünf Kartenansichten –
   bewusst zurückgestellt.
