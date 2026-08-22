@@ -200,6 +200,11 @@ const STRINGS: Dict = {
     de: 'Orte im Umkreis von 25 km – Luftlinie, so weit eine Tagesreise trug.',
     en: 'Places within 25 km – as the crow flies, about one day’s journey.',
   },
+  beamer: { de: 'Beamer', en: 'Projector' },
+  beamerHint: {
+    de: 'Text groß, Karte aus – zum Vortragen. Die Einstellung bleibt gemerkt.',
+    en: 'Large text, no map – for presenting. The setting is remembered.',
+  },
   allJourneys: { de: 'Alle Reisen', en: 'All journeys' },
   stations: { de: 'Stationen', en: 'stations' },
   replay: { de: 'Noch einmal', en: 'Replay' },
