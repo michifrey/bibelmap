@@ -65,3 +65,23 @@ export function formatKm(km: number, lang: 'de' | 'en'): string {
       : Math.round(km).toLocaleString(lang === 'de' ? 'de-DE' : 'en-US');
   return `${value} km`;
 }
+
+/** Kurs von a nach b in Grad (0 = Norden). */
+export function bearing(a: LatLon, b: LatLon): number {
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const [lat1, lon1] = a.map(toRad) as LatLon;
+  const [lat2, lon2] = b.map(toRad) as LatLon;
+  const dLon = lon2 - lon1;
+  const y = Math.sin(dLon) * Math.cos(lat2);
+  const x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+  return (((Math.atan2(y, x) * 180) / Math.PI) + 360) % 360;
+}
+
+const COMPASS_DE = ['N', 'NO', 'O', 'SO', 'S', 'SW', 'W', 'NW'];
+const COMPASS_EN = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+
+/** Himmelsrichtung in acht Schritten – genauer wird es auf dieser Karte nicht. */
+export function compass(deg: number, lang: 'de' | 'en'): string {
+  const i = Math.round(deg / 45) % 8;
+  return (lang === 'de' ? COMPASS_DE : COMPASS_EN)[i];
+}

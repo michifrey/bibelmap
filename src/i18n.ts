@@ -195,6 +195,11 @@ const STRINGS: Dict = {
   },
   on: { de: 'An', en: 'On' },
   off: { de: 'Aus', en: 'Off' },
+  withinWalk: { de: 'An einem Tag zu Fuß', en: 'Within a day’s walk' },
+  withinWalkNote: {
+    de: 'Orte im Umkreis von 25 km – Luftlinie, so weit eine Tagesreise trug.',
+    en: 'Places within 25 km – as the crow flies, about one day’s journey.',
+  },
   allJourneys: { de: 'Alle Reisen', en: 'All journeys' },
   stations: { de: 'Stationen', en: 'stations' },
   replay: { de: 'Noch einmal', en: 'Replay' },

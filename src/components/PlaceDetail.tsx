@@ -3,6 +3,7 @@ import type { Place, PlaceImage, VerseRef } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { booksForPlace, erasForPlace, placeName, placeNames } from '../lib/places';
+import { formatKm } from '../lib/route';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { ERA_BY_ID, ERAS } from '../data/eras';
 import PlaceThumb from './PlaceThumb';
@@ -12,6 +13,9 @@ import ShareLink from './ShareLink';
 interface Props {
   place: Place;
   lang: Lang;
+  /** Orte in Gehweite, schon sortiert – berechnet in App.tsx. */
+  neighbours?: { place: Place; km: number; dir: string }[];
+  onSelectPlace?: (p: Place) => void;
   onClose: () => void;
 }
 
@@ -42,7 +46,7 @@ function SourceLink({ href, children }: { href: string; children: React.ReactNod
   );
 }
 
-export default function PlaceDetail({ place, lang, onClose }: Props) {
+export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlace, onClose }: Props) {
   const t = useT();
   const [img, setImg] = useState<PlaceImage | null>(place.img);
   const grouped = useMemo(() => groupByBook(place.verses), [place]);
@@ -178,6 +182,29 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
         </div>
 
         <PlaceMedia place={place} />
+
+        {/* Nachbarorte: was an einem Tag zu Fuß erreichbar war */}
+        {neighbours.length > 0 && onSelectPlace && (
+          <div className="border-t border-white/10 px-4 py-3.5">
+            <div className="bm-eyebrow mb-2">{t('withinWalk')}</div>
+            <div className="flex flex-wrap gap-1.5">
+              {neighbours.map((n) => (
+                <button
+                  key={n.place.id}
+                  onClick={() => onSelectPlace(n.place)}
+                  className="bg-white/8 px-2.5 py-1.5 text-[11.5px] font-bold text-white transition hover:bg-gold/30"
+                  title={`${formatKm(n.km, lang)} ${n.dir}`}
+                >
+                  {placeName(n.place, lang)}
+                  <span className="ml-1.5 font-medium text-white/50">
+                    {formatKm(n.km, lang)} {n.dir}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-[11px] text-white/40">{t('withinWalkNote')}</p>
+          </div>
+        )}
 
         {/* sources */}
         <div className="mt-5">

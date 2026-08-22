@@ -12,6 +12,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 
 ## Funktionen
 
+- **Nachbarorte** – jede Ortskarte zeigt, was von dort aus **an einem Tag zu
+  Fuß** zu erreichen war: bis 25 km Luftlinie, mit Entfernung und
+  Himmelsrichtung (von Jerusalem: Bethlehem 8 km S, Gibeon 9 km NW, Jericho
+  23 km NO). Ein Klick wechselt zum Nachbarn.
 - **Karte & Marker** – ~1.335 kartierte Orte; Marker sind nach Epoche eingefärbt
   und nach Häufigkeit der Erwähnung größer. Klick öffnet eine Infokarte mit Bild,
   Bibelstellen, alternativen Schreibweisen und Quellen.
