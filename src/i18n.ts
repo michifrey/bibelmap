@@ -132,6 +132,18 @@ const STRINGS: Dict = {
   genealogy: { de: 'Stammbäume', en: 'Genealogies' },
   genealogySub: { de: 'Völker & Stämme – von Adam über die Völkertafel bis zu den Stämmen Israels', en: 'Nations & tribes – from Adam via the Table of Nations to the tribes of Israel' },
   genealogySearch: { de: 'Name suchen … (z. B. Jawan, Kanaan)', en: 'Search a name … (e.g. Javan, Canaan)' },
+  journeys: { de: 'Reisen & Geschichten', en: 'Journeys & stories' },
+  journeysHint: {
+    de: 'Die großen Wege der Bibel als erzählte Reise: Route abspielen, Station für Station mitlesen – jede mit Bibelstelle und Ort auf der Karte.',
+    en: 'The great journeys of the Bible as a told story: play the route and follow it station by station – each with its passage and its place on the map.',
+  },
+  journeysSub: {
+    de: 'Abraham, der Exodus, David auf der Flucht, Jesu Wege – Route abspielen und mitlesen.',
+    en: 'Abraham, the Exodus, David on the run, Jesus’ roads – play the route and read along.',
+  },
+  allJourneys: { de: 'Alle Reisen', en: 'All journeys' },
+  stations: { de: 'Stationen', en: 'stations' },
+  replay: { de: 'Noch einmal', en: 'Replay' },
   mission: { de: 'Mission & Ausbreitung', en: 'Mission & spread' },
   missionSub: {
     de: 'Von Jerusalem bis ans Ende der Erde – die Reisen des Paulus und der Weg des Evangeliums um die Welt',
