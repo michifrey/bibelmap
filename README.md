@@ -1,7 +1,7 @@
 # Bibelmap
 
 Eine interaktive Karte biblischer Orte – mit **Zeitleiste**, **Suche**,
-**Heatmap** und einem **Präsentationsmodus**, der ein Bibelbuch Kapitel für
+**Heatmap** und einem **Entdeckermodus**, der ein Bibelbuch Kapitel für
 Kapitel durchläuft (links die Orte/Stellen, rechts die Karte).
 
 > An interactive map of biblical places – with a timeline, search, heatmap and a
@@ -25,7 +25,7 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 - **Suche** – z. B. `Goschen`: zeigt *wo* (Karte) und *wann* (Epochen/Bücher) ein Ort
   vorkommt, inkl. aller Bibelstellen.
 - **Heatmap** – die am häufigsten erwähnten Orte als Wärmebild.
-- **Präsentationsmodus** – ein Buch wählen (z. B. *2. Könige*) und chronologisch
+- **Entdeckermodus** – ein Buch wählen (z. B. *2. Könige*) und chronologisch
   Kapitel für Kapitel durchgehen: links der **Bibeltext** (Luther 1912 / WEB) mit
   klickbaren Orts-Pins, rechts zoomt die Karte auf die erwähnten Orte
   (Tastatur ← / → blättert Kapitel). **BibleProject-Videos** sind eingebettet,
@@ -97,7 +97,7 @@ Das Skript (`scripts/build-data.mjs`) extrahiert pro Ort: Koordinaten, Namen +
 Schreibvarianten, Bibelstellen (mit kanonischer Sortierung `BBCCCVVV`), ein
 Wikimedia-Vorschaubild sowie Links zu Wikidata und Biblia.
 
-**Bibeltext** (`public/data/text/<Buch>.json`) für den Präsentationsmodus stammt aus
+**Bibeltext** (`public/data/text/<Buch>.json`) für den Entdeckermodus stammt aus
 [seven1m/open-bibles](https://github.com/seven1m/open-bibles) – **Lutherbibel 1912**
 (OSIS) und **World English Bible** (USFX), beide gemeinfrei:
 

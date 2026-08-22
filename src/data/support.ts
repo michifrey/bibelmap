@@ -119,7 +119,7 @@ export const SUPPORT_PROJECTS: SupportProject[] = [
     by: 'Tim Morgan',
     kind: 'data',
     role: {
-      de: 'Der Bibeltext im Präsentationsmodus: Lutherbibel 1912 (OSIS) und World English Bible (USFX), aufbereitet und gepflegt.',
+      de: 'Der Bibeltext im Entdeckermodus: Lutherbibel 1912 (OSIS) und World English Bible (USFX), aufbereitet und gepflegt.',
       en: 'The Bible text in presentation mode: Luther 1912 (OSIS) and the World English Bible (USFX), prepared and maintained.',
     },
     credit: {
@@ -139,7 +139,7 @@ export const SUPPORT_PROJECTS: SupportProject[] = [
     by: 'Michael Paul Johnson',
     kind: 'data',
     role: {
-      de: 'Die englische Übersetzung, die im Präsentationsmodus neben dem Luthertext steht.',
+      de: 'Die englische Übersetzung, die im Entdeckermodus neben dem Luthertext steht.',
       en: 'The English translation shown beside the Luther text in presentation mode.',
     },
     credit: {
