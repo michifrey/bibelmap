@@ -36,16 +36,16 @@ export default function PersonDetail({ person, lang, onClose, onSelect, onShowOn
         <button
           onClick={onClose}
           aria-label={t('close')}
-          className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/15 text-white transition hover:bg-black/30"
+          className="absolute right-0 top-0 grid h-9 w-9 place-items-center bg-black/25 text-white transition hover:bg-black/45"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
             <path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" />
           </svg>
         </button>
-        <div className="text-[11px] font-medium uppercase tracking-wide text-white/75">
+        <div className="bm-eyebrow" style={{ color: 'rgba(255,255,255,.75)' }}>
           {epoch ? (lang === 'de' ? epoch.de : epoch.en) : ''}
         </div>
-        <h2 className="mt-0.5 font-display text-2xl font-semibold leading-tight">{name}</h2>
+        <h2 className="mt-1.5 font-display text-3xl uppercase leading-none">{name}</h2>
         <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[12px] text-white/75">
           {person.born !== undefined && (
             <span>
@@ -63,17 +63,17 @@ export default function PersonDetail({ person, lang, onClose, onSelect, onShowOn
 
       <div className="scroll-soft flex-1 overflow-y-auto px-4 pb-5 pt-3">
         {person.faith && (
-          <div className="mb-3 bg-surface/70 px-2.5 py-1.5 text-[11px] font-medium text-white/60 ring-1 ring-white/10">
+          <div className="mb-3 border-l-4 border-gold bg-surface/70 px-3 py-2 text-[11px] font-medium text-white/70">
             ✦ {t('faithWitness')}
           </div>
         )}
 
-        <p className="text-sm leading-relaxed text-white">{text}</p>
+        <p className="text-sm leading-relaxed text-white/80">{text}</p>
 
         {onShowOnMap && person.lat != null && person.lon != null && (
           <button
             onClick={() => onShowOnMap(person.id)}
-            className="mt-3 inline-flex items-center gap-1.5 bg-signal px-2.5 py-1.5 text-xs font-medium text-white transition hover:bg-signal"
+            className="bm-btn bm-btn-signal mt-4"
           >
             <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 21s-6-5.7-6-10a6 6 0 1112 0c0 4.3-6 10-6 10z" /><circle cx="12" cy="11" r="2" /></svg>
             {t('showOnMap')}
@@ -83,7 +83,7 @@ export default function PersonDetail({ person, lang, onClose, onSelect, onShowOn
 
         {spouseName && (
           <div className="mt-4">
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-white/60">{t('spouse')}</div>
+            <div className="bm-eyebrow">{t('spouse')}</div>
             <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
               {spouseName.split(' & ').map((wife) => (
                 <a
@@ -102,7 +102,7 @@ export default function PersonDetail({ person, lang, onClose, onSelect, onShowOn
 
         {parent && (
           <div className="mt-4">
-            <div className="text-[11px] font-semibold uppercase tracking-wide text-white/60">
+            <div className="bm-eyebrow">
               {person.faith ? (lang === 'de' ? 'Folgt auf' : 'Follows') : lang === 'de' ? 'Kind von' : 'Child of'}
             </div>
             <button
