@@ -106,6 +106,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   zeigt alle 1.335 Orte und die bereits besuchten Kartenausschnitte. Über das
   Browser-Menü lässt sie sich als App installieren (Manifest + Symbole).
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
+  Ohne eigene Wahl entscheidet die Browsersprache; wer einmal umschaltet, bekommt
+  seine Sprache beim nächsten Besuch wieder.
+- **Tastatur** – Marker lassen sich mit Tabulator ansteuern und mit Enter oder
+  Leertaste öffnen (Cluster zoomen hinein); Escape schließt von außen nach innen.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
 - **Projekte unterstützen** – eine eigene Seite (Startseite, Modi-Menü, Direktlink

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { enableMarkerKeyboard } from '../lib/mapKeyboard';
 import { flyOptions, useReducedMotion } from '../lib/motion';
 import { pointAt, traveled, type LatLon } from '../lib/route';
 
@@ -83,7 +84,12 @@ export default function RouteMap({
       subdomains: 'abcd',
     }).addTo(map);
     mapRef.current = map;
+    const offKeys = enableMarkerKeyboard(map.getContainer(), (el) => {
+      const i = markersRef.current.findIndex((m) => m.getElement() === el);
+      if (i >= 0) cb.current.onSelect(i);
+    });
     return () => {
+      offKeys();
       map.remove();
       mapRef.current = null;
     };

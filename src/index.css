@@ -728,6 +728,14 @@ body {
   }
 }
 
+/* Kartensymbole per Tastatur: der Ring muss auf dunklem Grund stehen */
+.leaflet-marker-icon:focus-visible,
+.leaflet-marker-icon:focus {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 3px;
+  z-index: 1200;
+}
+
 /* Ortskenntnis: der gesetzte Tipp */
 .bm-quiz-guess {
   width: 14px;
