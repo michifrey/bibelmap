@@ -8,6 +8,7 @@
 //   node scripts/build-media.mjs            # build from data/media/raw/*.xml
 //   node scripts/build-media.mjs --fetch    # download the feeds first
 //   node scripts/build-media.mjs --dry      # report only, write nothing
+//   node scripts/build-media.mjs --fixtures # use data/media/fixtures/ instead of raw/
 //
 // Feeds are cached under data/media/raw/ so the build works offline and the
 // result is reproducible. Sources live in data/media/sources.json.
@@ -21,11 +22,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const MEDIA = path.join(ROOT, 'data', 'media');
 const RAW = path.join(MEDIA, 'raw');
+// Fixtures are for exercising the parser, never for the published index — a
+// handful of sample episodes would look like a broken feed to a visitor.
+const FIXTURES = path.join(MEDIA, 'fixtures');
 const PLACES = path.join(ROOT, 'public', 'data', 'places.json');
 const OUT = path.join(ROOT, 'public', 'data', 'media.json');
 
 const DRY = process.argv.includes('--dry');
 const FETCH = process.argv.includes('--fetch');
+const USE_FIXTURES = process.argv.includes('--fixtures');
 
 function fail(msg) {
   console.error('ERROR:', msg);
@@ -117,7 +122,7 @@ async function resolveFeed(appleId) {
 }
 
 async function loadFeed(source) {
-  const cache = path.join(RAW, `${source.id}.xml`);
+  const cache = path.join(USE_FIXTURES ? FIXTURES : RAW, `${source.id}.xml`);
   let feed = source.feed;
   if (FETCH && !feed && source.appleId) {
     try {
@@ -146,6 +151,8 @@ async function loadFeed(source) {
   return fs.readFileSync(cache, 'utf8');
 }
 
+const cacheDirLabel = () => (USE_FIXTURES ? FIXTURES : RAW);
+
 // --- build -----------------------------------------------------------------
 
 /** Expand a reference to the verse keys it covers. */
@@ -171,7 +178,7 @@ for (const source of sources) {
   if (source.kind === 'generated') continue; // handled below
   const xml = await loadFeed(source);
   if (!xml) {
-    report.push({ id: source.id, items: 0, withRef: 0, note: 'kein Feed (data/media/raw fehlt)' });
+    report.push({ id: source.id, items: 0, withRef: 0, note: `kein Feed (${path.relative(ROOT, cacheDirLabel())}/${source.id}.xml fehlt)` });
     continue;
   }
   const items = parseFeed(xml);
