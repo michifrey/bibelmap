@@ -10,6 +10,10 @@ import SearchPanel from './components/SearchPanel';
 import PlaceDetail from './components/PlaceDetail';
 import Presentation from './components/Presentation';
 import Genealogy from './components/Genealogy';
+import Support from './components/Support';
+
+/** The support page is worth linking to from outside, so it lives on a hash. */
+const SUPPORT_HASH = '#unterstuetzen';
 
 function Loading() {
   const t = useT();
@@ -37,10 +41,42 @@ export default function App() {
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
   const [present, setPresent] = useState(false);
   const [genealogy, setGenealogy] = useState(false);
+  const [support, setSupport] = useState(() => window.location.hash === SUPPORT_HASH);
 
   useEffect(() => {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
   }, []);
+
+  // Keep the hash and the panel in step: the back button closes the page, a
+  // shared link opens it. popstate covers back/forward, hashchange a hand-edited
+  // address.
+  useEffect(() => {
+    const sync = () => setSupport(window.location.hash === SUPPORT_HASH);
+    window.addEventListener('popstate', sync);
+    window.addEventListener('hashchange', sync);
+    return () => {
+      window.removeEventListener('popstate', sync);
+      window.removeEventListener('hashchange', sync);
+    };
+  }, []);
+
+  function openSupport() {
+    if (window.location.hash !== SUPPORT_HASH) {
+      window.history.pushState(null, '', SUPPORT_HASH);
+    }
+    setSupport(true);
+  }
+
+  /**
+   * Replace rather than go back: someone may have opened the link directly, and
+   * `back()` would then walk them off the site instead of closing the page.
+   */
+  function closeSupport() {
+    if (window.location.hash === SUPPORT_HASH) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    setSupport(false);
+  }
 
   const visible = useMemo(() => (places ? placesInEra(places, era) : []), [places, era]);
   const results = useMemo(() => (places ? searchPlaces(places, query) : []), [places, query]);
@@ -101,6 +137,7 @@ export default function App() {
           onHeat={setHeat}
           onPresent={() => setPresent(true)}
           onGenealogy={() => setGenealogy(true)}
+          onSupport={openSupport}
         />
 
         {/* Left panel */}
@@ -125,6 +162,15 @@ export default function App() {
         {/* mobile action buttons */}
         <div className="absolute bottom-4 right-4 z-[1100] flex flex-col gap-2 sm:hidden">
           <button
+            onClick={openSupport}
+            className="grid h-12 w-12 place-items-center rounded-full bg-cream text-clay shadow-xl ring-1 ring-teal/15 transition hover:bg-gold/25"
+            aria-label="Projekte unterstützen"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+              <path d="M12 20.3 4.6 13a4.7 4.7 0 0 1 0-6.7 4.7 4.7 0 0 1 6.7 0l.7.7.7-.7a4.7 4.7 0 0 1 6.7 0 4.7 4.7 0 0 1 0 6.7z" />
+            </svg>
+          </button>
+          <button
             onClick={() => setGenealogy(true)}
             className="grid h-12 w-12 place-items-center rounded-full bg-cream text-teal shadow-xl ring-1 ring-teal/15 transition hover:bg-gold/25"
             aria-label="Stammbäume"
@@ -147,6 +193,8 @@ export default function App() {
         {present && (
           <Presentation places={places} lang={lang} onExit={() => setPresent(false)} />
         )}
+
+        {support && <Support lang={lang} onExit={closeSupport} />}
 
         {genealogy && (
           <Genealogy
