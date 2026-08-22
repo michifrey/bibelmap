@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 
-export type Mode = 'present' | 'history' | 'mission' | 'compare' | 'church' | 'nations';
+export type Mode = 'present' | 'history' | 'mission' | 'compare' | 'church' | 'nations' | 'support';
 export type View = 'map' | 'tree' | 'graph';
 
 interface Props {
@@ -27,6 +27,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
     { id: 'mission', label: t('mission'), hint: t('missionHint'), icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18' },
     { id: 'church', label: t('churchMode'), hint: t('churchHint'), icon: 'M12 3v18M7 8h10M5 21h14' },
     { id: 'compare', label: t('compareMode'), hint: t('compareIntro'), icon: 'M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z' },
+    { id: 'support', label: t('support'), hint: t('supportSub'), icon: 'M12 20.3 4.6 13a4.7 4.7 0 0 1 0-6.7 4.7 4.7 0 0 1 6.7 0l.7.7.7-.7a4.7 4.7 0 0 1 6.7 0 4.7 4.7 0 0 1 0 6.7z' },
   ];
 
   const langToggle = (
@@ -117,7 +118,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
                       className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-surface"
                     >
                       <span className="mt-0.5 grid h-8 w-8 flex-none place-items-center bg-white/10 text-white">
-                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d={m.icon} stroke="currentColor" strokeWidth="1.6" fill={m.id === 'present' ? 'currentColor' : 'none'} /></svg>
+                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d={m.icon} stroke="currentColor" strokeWidth="1.6" fill={m.id === 'present' || m.id === 'support' ? 'currentColor' : 'none'} /></svg>
                       </span>
                       <span className="min-w-0">
                         <span className="block text-sm font-semibold text-white">{m.label}</span>
