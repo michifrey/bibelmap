@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import type { Place } from './types';
 import { LangContext, type Lang, useT, t as tr } from './i18n';
 import { loadPlaces, placesInEra, placesInChapter, searchPlaces, erasForPlace, placeName } from './lib/places';
@@ -9,21 +9,21 @@ import Timeline from './components/Timeline';
 import YearSlider from './components/YearSlider';
 import SearchPanel from './components/SearchPanel';
 import PlaceDetail from './components/PlaceDetail';
-import Presentation from './components/Presentation';
-import HistoryMode from './components/HistoryMode';
-import Mission from './components/Mission';
-import JourneyMode from './components/JourneyMode';
-import QuizMode from './components/QuizMode';
+const Presentation = lazy(() => import('./components/Presentation'));
+const HistoryMode = lazy(() => import('./components/HistoryMode'));
+const Mission = lazy(() => import('./components/Mission'));
+const JourneyMode = lazy(() => import('./components/JourneyMode'));
+const QuizMode = lazy(() => import('./components/QuizMode'));
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
-import { searchStories, type SearchHit } from './lib/globalSearch';
+import type { SearchHit } from './lib/globalSearch';
 import { parseRef } from './lib/parseRef';
 import { bearing, compass, distanceKm, KM_PER_DAY } from './lib/route';
-import CompareMode from './components/CompareMode';
-import ChurchMode from './components/ChurchMode';
-import GraphView from './components/GraphView';
-import Genealogy from './components/Genealogy';
+const CompareMode = lazy(() => import('./components/CompareMode'));
+const ChurchMode = lazy(() => import('./components/ChurchMode'));
+const GraphView = lazy(() => import('./components/GraphView'));
+const Genealogy = lazy(() => import('./components/Genealogy'));
 import Landing, { type LandingTarget } from './components/Landing';
-import Support from './components/Support';
+const Support = lazy(() => import('./components/Support'));
 
 /** The support page is worth linking to from outside, so it lives on a hash. */
 const SUPPORT_HASH = '#unterstuetzen';
@@ -41,6 +41,18 @@ function Loading() {
         </svg>
         <span className="font-display text-sm">{t('loading')}</span>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Während eine Ansicht nachgeladen wird, steht schon ihre Bühne da – so
+ * flackert die Karte darunter nicht weg.
+ */
+function ModeFallback() {
+  return (
+    <div className="fixed inset-0 z-[2000] grid place-items-center bg-deepest">
+      <div className="h-8 w-8 animate-pulse rounded-full bg-gold/60" />
     </div>
   );
 }
@@ -150,6 +162,42 @@ export default function App() {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
   }, []);
 
+  /*
+   * Die Ansichten liegen in eigenen Dateien und kommen erst, wenn sie
+   * gebraucht werden – der Start bleibt so leicht. Sobald der Browser Ruhe
+   * hat, werden sie trotzdem geholt: dann liegen sie im Cache des Service
+   * Workers, und die App bleibt auch ohne Netz vollständig.
+   */
+  useEffect(() => {
+    const prefetch = () => {
+      void import('./components/Presentation');
+      void import('./components/JourneyMode');
+      void import('./components/Mission');
+      void import('./components/HistoryMode');
+      void import('./components/QuizMode');
+      void import('./components/Genealogy');
+      void import('./components/ChurchMode');
+      void import('./components/CompareMode');
+      void import('./lib/globalSearch');
+    };
+    // Erst wenn der Service Worker steht: sonst laufen die Dateien an ihm
+    // vorbei und fehlen später im Cache, obwohl sie längst geholt wurden.
+    let cancel = () => {};
+    const start = () => {
+      const idle = window.requestIdleCallback;
+      if (idle) {
+        const id = idle(prefetch, { timeout: 8000 });
+        cancel = () => window.cancelIdleCallback?.(id);
+      } else {
+        const t = window.setTimeout(prefetch, 3000);
+        cancel = () => window.clearTimeout(t);
+      }
+    };
+    if ('serviceWorker' in navigator) navigator.serviceWorker.ready.then(start).catch(start);
+    else start();
+    return () => cancel();
+  }, []);
+
   // Die Adresse schreibt mit, wo man steht – ohne Verlaufseinträge zu häufen.
   useEffect(() => {
     const hash = atStart
@@ -208,7 +256,22 @@ export default function App() {
 
   const visible = useMemo(() => (places ? placesInEra(places, era) : []), [places, era]);
   const results = useMemo(() => (places ? searchPlaces(places, query) : []), [places, query]);
-  const stories = useMemo(() => searchStories(query, lang), [query, lang]);
+  // Der Index über Reisen und Ausbreitung hängt an den großen Datendateien.
+  // Er wird geladen, sobald jemand tippt – nicht schon beim Start.
+  const [stories, setStories] = useState<SearchHit[]>([]);
+  useEffect(() => {
+    if (query.trim().length < 2) {
+      setStories([]);
+      return;
+    }
+    let alive = true;
+    import('./lib/globalSearch')
+      .then((m) => alive && setStories(m.searchStories(query, lang)))
+      .catch(() => alive && setStories([]));
+    return () => {
+      alive = false;
+    };
+  }, [query, lang]);
 
   // „Apg 13" ist keine Ortssuche, sondern eine Bibelstelle: dann zeigt die
   // Liste die Orte dieses Kapitels und führt auf Wunsch in den Text.
@@ -328,6 +391,7 @@ export default function App() {
     <LangContext.Provider value={lang}>
       <div className="relative h-full w-full overflow-hidden">
         {view === 'tree' ? (
+          <Suspense fallback={<ModeFallback />}>
           <Genealogy
             places={places}
             lang={lang}
@@ -335,8 +399,11 @@ export default function App() {
             onShowOnMap={showPersonOnMap}
             onShowPlace={showPlaceFromGenealogy}
           />
+          </Suspense>
         ) : view === 'graph' ? (
-          <GraphView places={places} lang={lang} />
+          <Suspense fallback={<ModeFallback />}>
+            <GraphView places={places} lang={lang} />
+          </Suspense>
         ) : (
           <>
             <MapView
@@ -458,7 +525,8 @@ export default function App() {
             )}
 
             {mode === 'present' && (
-              <Presentation
+              <Suspense fallback={<ModeFallback />}>
+                <Presentation
                 key={`present-${navEpoch}`}
                 places={places}
                 lang={lang}
@@ -467,11 +535,21 @@ export default function App() {
                 onNavigate={setReadingNav}
                 onExit={() => setMode(null)}
               />
+              </Suspense>
             )}
-            {mode === 'history' && <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />}
-            {mode === 'quiz' && <QuizMode places={places} lang={lang} onExit={() => setMode(null)} />}
+            {mode === 'history' && (
+              <Suspense fallback={<ModeFallback />}>
+                <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />
+              </Suspense>
+            )}
+            {mode === 'quiz' && (
+              <Suspense fallback={<ModeFallback />}>
+                <QuizMode places={places} lang={lang} onExit={() => setMode(null)} />
+              </Suspense>
+            )}
             {mode === 'journeys' && (
-              <JourneyMode
+              <Suspense fallback={<ModeFallback />}>
+                <JourneyMode
                 key={`journeys-${navEpoch}`}
                 places={places}
                 lang={lang}
@@ -481,9 +559,11 @@ export default function App() {
                 onOpenMission={() => setMode('mission')}
                 onExit={() => setMode(null)}
               />
+              </Suspense>
             )}
             {mode === 'mission' && (
-              <Mission
+              <Suspense fallback={<ModeFallback />}>
+                <Mission
                 key={`mission-${navEpoch}`}
                 places={places}
                 lang={lang}
@@ -492,9 +572,11 @@ export default function App() {
                 onNavigate={setMissionNav}
                 onExit={() => setMode(null)}
               />
+              </Suspense>
             )}
             {mode === 'church' && (
-              <ChurchMode
+              <Suspense fallback={<ModeFallback />}>
+                <ChurchMode
                 lang={lang}
                 onExit={() => {
                   setMode(null);
@@ -504,9 +586,18 @@ export default function App() {
                 onOpenInTree={openPersonInTree}
                 onOpenMission={() => setMode('mission')}
               />
+              </Suspense>
             )}
-            {mode === 'compare' && <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />}
-            {mode === 'support' && <Support lang={lang} onLang={setLang} onExit={closeSupport} />}
+            {mode === 'compare' && (
+              <Suspense fallback={<ModeFallback />}>
+                <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />
+              </Suspense>
+            )}
+            {mode === 'support' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Support lang={lang} onLang={setLang} onExit={closeSupport} />
+              </Suspense>
+            )}
           </>
         )}
 
