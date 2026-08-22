@@ -8,9 +8,10 @@ interface Props {
   onHeat: (v: boolean) => void;
   onPresent: () => void;
   onGenealogy: () => void;
+  onSupport: () => void;
 }
 
-export default function Header({ lang, onLang, heat, onHeat, onPresent, onGenealogy }: Props) {
+export default function Header({ lang, onLang, heat, onHeat, onPresent, onGenealogy, onSupport }: Props) {
   const t = useT();
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex items-start justify-between gap-3 p-3 sm:p-4">
@@ -27,6 +28,16 @@ export default function Header({ lang, onLang, heat, onHeat, onPresent, onGeneal
       </div>
 
       <div className="pointer-events-auto flex items-center gap-2">
+        <button
+          onClick={onSupport}
+          title={t('support')}
+          aria-label={t('support')}
+          className="hidden h-[42px] w-[42px] place-items-center rounded-xl bg-cream/85 text-clay shadow-lg ring-1 ring-teal/10 backdrop-blur transition hover:bg-gold/25 sm:grid"
+        >
+          <svg viewBox="0 0 24 24" className="h-4.5 w-4.5" fill="currentColor">
+            <path d="M12 20.3 4.6 13a4.7 4.7 0 0 1 0-6.7 4.7 4.7 0 0 1 6.7 0l.7.7.7-.7a4.7 4.7 0 0 1 6.7 0 4.7 4.7 0 0 1 0 6.7z" />
+          </svg>
+        </button>
         <button
           onClick={onGenealogy}
           className="hidden items-center gap-1.5 rounded-xl bg-cream/85 px-3.5 py-2.5 text-sm font-medium text-teal shadow-lg ring-1 ring-teal/10 backdrop-blur transition hover:bg-gold/25 sm:flex"

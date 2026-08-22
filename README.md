@@ -34,6 +34,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   historischen **Volk** und der **Region** zugeordnet, mit Bibelstelle; ein Klick
   auf *Auf Karte* springt zum passenden Ort, und eine Namenssuche klappt den
   betreffenden Zweig automatisch auf.
+- **Projekte unterstützen** – eine eigene Seite (Herz-Symbol oben rechts, Direktlink
+  `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
+  selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
+  aus deren Arbeit die Seite besteht – jeweils mit Angabe, was sie hier
+  beitragen und wie sie zu nennen sind.
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
@@ -158,5 +163,15 @@ CARTO/OpenStreetMap-Kartenkacheln.
 ## Lizenzen / Attribution
 
 - Ortsdaten: © OpenBible.info, CC-BY 4.0
+- Bibeltext: Lutherbibel 1912 & World English Bible (gemeinfrei), aufbereitet in
+  [seven1m/open-bibles](https://github.com/seven1m/open-bibles) (MIT)
 - Kartenkacheln: © OpenStreetMap-Mitwirkende, © CARTO
 - Bilder: Wikimedia Commons (Lizenz je Bild, siehe Bildnachweis)
+- Podcasts & Videos: bibletunes.de, BibleProject, Practicing the Way, Gospel in Life –
+  verlinkt, nicht gehostet
+
+Die vollständige Liste mit Beitrag, Nennung und **Spendenlink** je Projekt steht in
+`src/data/support.ts` und wird in der App unter *Projekte unterstützen* angezeigt.
+Bibelmap selbst nimmt kein Geld ein und sammelt keines: keine Werbung, kein
+Tracking, keine Bezahlschranke. Wer ein neues Projekt einbindet, trägt es dort
+ein – Beitrag, Lizenz-/Nennungshinweis und, wenn vorhanden, die Spendenseite.
