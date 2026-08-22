@@ -240,6 +240,18 @@ Die Zuordnung von Büchern zu historischen Epochen (`src/data/books.ts`,
 Struktur zu geben – kein Anspruch auf wissenschaftliche Datierung. Die Datums-
 angaben folgen einer gängigen konservativen Chronologie.
 
+### Ladezeit
+
+Die Ansichten (Präsentation, Reisen, Mission, Kirchengeschichte, Vergleich,
+Quiz, Stammbaum, Graph) liegen in eigenen Dateien und werden erst geladen,
+wenn sie geöffnet werden – ebenso der Suchindex über Reisen und Ausbreitung,
+der an den großen Datendateien hängt. Das erste Bündel schrumpft damit von
+855 kB auf 462 kB (gzip: 267 → 136 kB).
+
+Sobald der Browser Ruhe hat **und** der Service Worker steht, werden die
+Ansichten im Hintergrund nachgeholt. So bleibt der Start leicht und die App
+trotzdem vollständig offline benutzbar.
+
 ### Offline
 
 `public/sw.js` pflegt zwei Caches: die App samt Ortsdaten und – getrennt und auf
