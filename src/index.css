@@ -91,6 +91,21 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Outlined display type — the signature move of the start page. The third line
+   of a headline is cut out of the page instead of set on it. */
+.bm-outline {
+  /* The stroke takes its colour from `color`, so the fill has to be cleared
+     separately — setting `color: transparent` would erase the stroke too. */
+  -webkit-text-stroke: 2px currentColor;
+  -webkit-text-fill-color: transparent;
+}
+@supports not (-webkit-text-stroke: 2px currentColor) {
+  .bm-outline {
+    -webkit-text-fill-color: currentColor;
+    opacity: 0.55;
+  }
+}
+
 /* Numbers are the graphic. */
 .bm-num {
   font-weight: 900;

@@ -15,6 +15,7 @@ import CompareMode from './components/CompareMode';
 import ChurchMode from './components/ChurchMode';
 import GraphView from './components/GraphView';
 import Genealogy from './components/Genealogy';
+import Landing, { type LandingTarget } from './components/Landing';
 
 function Loading() {
   const t = useT();
@@ -43,6 +44,9 @@ export default function App() {
   const [mode, setMode] = useState<Mode | null>(null);
   const [basemap, setBasemap] = useState<BasemapId>('dark');
   const [view, setView] = useState<View>('map');
+  // The start page is the front door: it is what the app opens on, and the
+  // wordmark in the header is the way back to it.
+  const [atStart, setAtStart] = useState(true);
   // Cross-links between the time tree and the church-history map (shared data).
   const [treeFocus, setTreeFocus] = useState<string | null>(null);
   const [churchFocus, setChurchFocus] = useState<string | null>(null);
@@ -62,6 +66,12 @@ export default function App() {
   function handleBasemap(id: BasemapId) {
     setBasemap(id);
     if (id === 'antique' && borderYear === null) setBorderYear(-1000);
+  }
+
+  function enterFromStart(target: LandingTarget) {
+    setAtStart(false);
+    setView(target === 'tree' ? 'tree' : 'map');
+    setMode(target === 'present' ? 'present' : null);
   }
 
   function showPersonOnMap(id: string) {
@@ -129,6 +139,20 @@ export default function App() {
     return (
       <LangContext.Provider value={lang}>
         <Loading />
+      </LangContext.Provider>
+    );
+  }
+
+  if (atStart) {
+    return (
+      <LangContext.Provider value={lang}>
+        <Landing
+          lang={lang}
+          onLang={setLang}
+          placeCount={places.length}
+          eraCounts={eraCounts}
+          onEnter={enterFromStart}
+        />
       </LangContext.Provider>
     );
   }
@@ -282,6 +306,7 @@ export default function App() {
           onMode={handleMode}
           view={view}
           onView={handleView}
+          onHome={() => setAtStart(true)}
         />
       </div>
     </LangContext.Provider>

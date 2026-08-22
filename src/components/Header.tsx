@@ -13,9 +13,11 @@ interface Props {
   onMode: (m: Mode) => void;
   view: View;
   onView: (v: View) => void;
+  /** Back to the start page — the wordmark is the way home. */
+  onHome: () => void;
 }
 
-export default function Header({ lang, onLang, heat, onHeat, onMode, view, onView }: Props) {
+export default function Header({ lang, onLang, heat, onHeat, onMode, view, onView, onHome }: Props) {
   const t = useT();
   const [open, setOpen] = useState(false);
 
@@ -46,7 +48,11 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
     <header className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex flex-col gap-2 p-2 sm:flex-row sm:items-start sm:justify-between sm:p-4">
       {/* top row on mobile: brand + language */}
       <div className="flex items-center justify-between gap-2 sm:justify-start">
-        <div className="pointer-events-auto flex items-center gap-2 bg-deepest/95 px-3 py-2 ring-1 ring-white/10 backdrop-blur-xl sm:gap-3 sm:px-4 sm:py-2.5">
+        <button
+          onClick={onHome}
+          title={t('lStart')}
+          className="pointer-events-auto flex items-center gap-2 bg-deepest/95 px-3 py-2 text-left ring-1 ring-white/10 backdrop-blur-xl transition hover:bg-deepest sm:gap-3 sm:px-4 sm:py-2.5"
+        >
           <div className="grid h-8 w-8 place-items-center bg-gradient-to-br from-signal to-deepest text-gold shadow-inner sm:h-9 sm:w-9">
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
               <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
@@ -56,7 +62,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
             <div className="font-display text-base font-semibold text-white sm:text-xl">{t('appTitle')}</div>
             <div className="hidden text-[11px] text-white/60 sm:block">{t('tagline')}</div>
           </div>
-        </div>
+        </button>
         {/* language: top-right on mobile only */}
         <div className="pointer-events-auto sm:hidden">{langToggle}</div>
       </div>
