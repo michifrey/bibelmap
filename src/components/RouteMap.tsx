@@ -11,6 +11,8 @@ export interface RouteStop {
 interface Props {
   stops: RouteStop[];
   color: string;
+  /** Weitere Routen, blass im Hintergrund – zeigt, wo diese Reise liegt. */
+  context?: { points: LatLon[]; color: string }[];
   /** Station, auf der die Erzählung steht. */
   activeIndex: number;
   playing: boolean;
@@ -47,6 +49,7 @@ function stopIcon(i: number, active: boolean, color: string): L.DivIcon {
 export default function RouteMap({
   stops,
   color,
+  context,
   activeIndex,
   playing,
   legSeconds = 3.5,
@@ -61,6 +64,7 @@ export default function RouteMap({
   const trailRef = useRef<L.Polyline | null>(null);
   const travellerRef = useRef<L.Marker | null>(null);
   const markersRef = useRef<L.Marker[]>([]);
+  const contextRef = useRef<L.Polyline[]>([]);
   const tRef = useRef(0);
 
   const cb = useRef({ onArrive, onFinish, onSelect });
@@ -88,11 +92,24 @@ export default function RouteMap({
     const map = mapRef.current;
     if (!map || points.length === 0) return;
 
+    for (const c of contextRef.current) c.remove();
+    contextRef.current = [];
     baseRef.current?.remove();
     trailRef.current?.remove();
     travellerRef.current?.remove();
     for (const m of markersRef.current) m.remove();
     markersRef.current = [];
+
+    for (const c of context ?? []) {
+      const line = L.polyline(c.points, {
+        color: c.color,
+        weight: 1.5,
+        opacity: 0.22,
+        dashArray: '1 7',
+        interactive: false,
+      }).addTo(map);
+      contextRef.current.push(line);
+    }
 
     baseRef.current = L.polyline(points, {
       color,
@@ -124,7 +141,7 @@ export default function RouteMap({
 
     map.flyToBounds(L.latLngBounds(points).pad(0.25), { duration: 0.8, maxZoom: 9 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stops, color]);
+  }, [stops, color, context]);
 
   /** Stand der Erzählung zeichnen (Klick auf eine Station, Reise gewechselt). */
   useEffect(() => {

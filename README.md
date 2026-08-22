@@ -54,8 +54,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Phasen von der apostolischen Zeit über Armenien, Äthiopien und die Seidenstraße
   bis zu Pfingstbewegung, Bibelübersetzung und den Kirchen des globalen Südens.
   Bögen auf der Weltkarte zeigen, von wo nach wo; **Abspielen** läuft die ganze
-  Geschichte Station für Station ab (Tastatur ← / →). Ein Klick auf *Auf Karte*
-  springt von einer Reisestation zur Ortskarte.
+  Geschichte ab – die Reisen als Bewegung entlang der Route, die Ausbreitung
+  Ereignis für Ereignis (Tastatur ← / →). Jede Reisestation nennt Entfernung
+  und Tagesmärsche zur vorigen, ein Klick auf *Auf Karte* springt zur Ortskarte.
 - **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
   robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
 - **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
