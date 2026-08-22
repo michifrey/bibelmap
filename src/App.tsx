@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Place } from './types';
 import { LangContext, type Lang, useT, t as tr } from './i18n';
-import { loadPlaces, placesInEra, searchPlaces, erasForPlace, placeName } from './lib/places';
+import { loadPlaces, placesInEra, placesInChapter, searchPlaces, erasForPlace, placeName } from './lib/places';
 import { ERAS } from './data/eras';
 import MapView, { type BasemapId } from './components/MapView';
 import Header, { type Mode, type View } from './components/Header';
@@ -16,6 +16,7 @@ import JourneyMode from './components/JourneyMode';
 import QuizMode from './components/QuizMode';
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
 import { searchStories, type SearchHit } from './lib/globalSearch';
+import { parseRef } from './lib/parseRef';
 import CompareMode from './components/CompareMode';
 import ChurchMode from './components/ChurchMode';
 import GraphView from './components/GraphView';
@@ -208,6 +209,21 @@ export default function App() {
   const results = useMemo(() => (places ? searchPlaces(places, query) : []), [places, query]);
   const stories = useMemo(() => searchStories(query, lang), [query, lang]);
 
+  // „Apg 13" ist keine Ortssuche, sondern eine Bibelstelle: dann zeigt die
+  // Liste die Orte dieses Kapitels und führt auf Wunsch in den Text.
+  const ref = useMemo(() => parseRef(query, lang), [query, lang]);
+  const refPlaces = useMemo(
+    () => (ref && places ? placesInChapter(places, ref.osis, ref.chapter).map((x) => x.place) : []),
+    [ref, places],
+  );
+
+  function openRef() {
+    if (!ref) return;
+    setReadingNav({ osis: ref.osis, chapter: ref.chapter });
+    setMode('present');
+    setNavEpoch((n) => n + 1);
+  }
+
   /** Ein Treffer aus Reisen oder Ausbreitung: Modus öffnen, Stand setzen. */
   function openStory(hit: SearchHit) {
     setAtStart(false);
@@ -329,11 +345,13 @@ export default function App() {
                     <SearchPanel
                       query={query}
                       onQuery={setQuery}
-                      results={results}
+                      results={ref ? refPlaces : results}
                       topPlaces={topPlaces}
                       onSelect={select}
                       stories={stories}
                       onOpenStory={openStory}
+                      refHit={ref ? { label: ref.label, count: refPlaces.length } : null}
+                      onOpenRef={openRef}
                     />
                   )}
                 </div>
