@@ -1,4 +1,5 @@
 import type { Place } from '../types';
+import type { SearchHit } from '../lib/globalSearch';
 import { useLang, useT } from '../i18n';
 import { erasForPlace, placeName } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
@@ -9,6 +10,9 @@ interface Props {
   results: Place[];
   topPlaces: Place[];
   onSelect: (p: Place) => void;
+  /** Treffer in den Reisen und in der Ausbreitung. */
+  stories?: SearchHit[];
+  onOpenStory?: (hit: SearchHit) => void;
 }
 
 function EraDots({ place }: { place: Place }) {
@@ -64,7 +68,30 @@ function Row({ p, onSelect, t }: { p: Place; onSelect: (p: Place) => void; t: (k
   );
 }
 
-export default function SearchPanel({ query, onQuery, results, topPlaces, onSelect }: Props) {
+function StoryRow({ hit, onOpen }: { hit: SearchHit; onOpen: (h: SearchHit) => void }) {
+  return (
+    <button onClick={() => onOpen(hit)} className="bm-row group">
+      <span className="h-8 w-1 flex-none" style={{ background: hit.color }} />
+      <span className="min-w-0 flex-1">
+        <span className="block truncate text-[14px] font-bold text-white">{hit.title}</span>
+        <span className="mt-0.5 block truncate text-[11px] text-white/45">{hit.subtitle}</span>
+      </span>
+      <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white/30 transition group-hover:text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  );
+}
+
+export default function SearchPanel({
+  query,
+  onQuery,
+  results,
+  topPlaces,
+  onSelect,
+  stories = [],
+  onOpenStory,
+}: Props) {
   const t = useT();
   const showResults = query.trim().length > 0;
   const list = showResults ? results : topPlaces;
@@ -96,13 +123,25 @@ export default function SearchPanel({ query, onQuery, results, topPlaces, onSele
         </div>
       </div>
 
-      <div className="px-4 pb-1 text-[11px] font-semibold uppercase tracking-wide text-white/60">
-        {showResults ? `${results.length} ${t('results')}` : t('topPlaces')}
-      </div>
-
       <div className="scroll-soft min-h-0 flex-1 overflow-y-auto px-1 pb-3">
+        {showResults && stories.length > 0 && onOpenStory && (
+          <>
+            <div className="px-3 pb-1 pt-1 text-[11px] font-semibold uppercase tracking-wide text-gold">
+              {t('storyResults')}
+            </div>
+            {stories.map((h) => (
+              <StoryRow key={h.key} hit={h} onOpen={onOpenStory} />
+            ))}
+          </>
+        )}
+
+        <div className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wide text-white/60">
+          {showResults ? `${results.length} ${t('results')}` : t('topPlaces')}
+        </div>
         {list.length === 0 ? (
-          <div className="px-4 py-8 text-center text-sm text-white/60">{t('noResults')}</div>
+          <div className="px-4 py-8 text-center text-sm text-white/60">
+            {stories.length > 0 ? t('noPlaceResults') : t('noResults')}
+          </div>
         ) : (
           list.map((p) => <Row key={p.id} p={p} onSelect={onSelect} t={t} />)
         )}

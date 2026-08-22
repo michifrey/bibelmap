@@ -152,6 +152,8 @@ const STRINGS: Dict = {
   share: { de: 'Link', en: 'Link' },
   copyLink: { de: 'Link zu dieser Ansicht kopieren', en: 'Copy a link to this view' },
   copied: { de: 'Kopiert', en: 'Copied' },
+  storyResults: { de: 'In Reisen & Ausbreitung', en: 'In journeys & spread' },
+  noPlaceResults: { de: 'Kein Ort mit diesem Namen', en: 'No place by that name' },
   allJourneys: { de: 'Alle Reisen', en: 'All journeys' },
   stations: { de: 'Stationen', en: 'stations' },
   replay: { de: 'Noch einmal', en: 'Replay' },

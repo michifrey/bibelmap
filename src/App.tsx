@@ -14,6 +14,7 @@ import HistoryMode from './components/HistoryMode';
 import Mission from './components/Mission';
 import JourneyMode from './components/JourneyMode';
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
+import { searchStories, type SearchHit } from './lib/globalSearch';
 import CompareMode from './components/CompareMode';
 import ChurchMode from './components/ChurchMode';
 import GraphView from './components/GraphView';
@@ -204,6 +205,21 @@ export default function App() {
 
   const visible = useMemo(() => (places ? placesInEra(places, era) : []), [places, era]);
   const results = useMemo(() => (places ? searchPlaces(places, query) : []), [places, query]);
+  const stories = useMemo(() => searchStories(query, lang), [query, lang]);
+
+  /** Ein Treffer aus Reisen oder Ausbreitung: Modus öffnen, Stand setzen. */
+  function openStory(hit: SearchHit) {
+    setAtStart(false);
+    setView('map');
+    if (hit.target.mode === 'journeys') {
+      setJourneyNav(hit.target.journey);
+      setMode('journeys');
+    } else {
+      setMissionNav(hit.target.mission);
+      setMode('mission');
+    }
+    setNavEpoch((n) => n + 1);
+  }
   const topPlaces = useMemo(() => (places ? places.slice(0, 30) : []), [places]);
 
   const eraCounts = useMemo(() => {
@@ -315,6 +331,8 @@ export default function App() {
                       results={results}
                       topPlaces={topPlaces}
                       onSelect={select}
+                      stories={stories}
+                      onOpenStory={openStory}
                     />
                   )}
                 </div>
