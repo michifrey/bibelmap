@@ -12,20 +12,13 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 
 ## Funktionen
 
-- **Nachbarorte** – jede Ortskarte zeigt, was von dort aus **an einem Tag zu
-  Fuß** zu erreichen war: bis 25 km Luftlinie, mit Entfernung und
-  Himmelsrichtung (von Jerusalem: Bethlehem 8 km S, Gibeon 9 km NW, Jericho
-  23 km NO). Ein Klick wechselt zum Nachbarn.
+### Karte & Orte
+
 - **Karte & Marker** – ~1.335 kartierte Orte; Marker sind nach Epoche eingefärbt
   und nach Häufigkeit der Erwähnung größer. Klick öffnet eine Infokarte mit Bild,
   Bibelstellen, alternativen Schreibweisen und Quellen.
 - **Zeitleiste** – filtert die Orte nach biblischer Epoche (Erzväter → Frühe Kirche).
-- **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
-  (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
-  Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
-  Calvin, Spurgeon, Bonhoeffer …). Verlauf von links nach rechts mit einer
-  **Zeitschiene** unten; Knoten lassen sich aufklappen und zeigen per Klick
-  Lebensdaten, Bibelstellen und eine Kurzbeschreibung. Umschalter **Karte ↔ Zeitbaum**.
+- **Heatmap** – die am häufigsten erwähnten Orte als Wärmebild.
 - **Suche** – z. B. `Goschen`: zeigt *wo* (Karte) und *wann* (Epochen/Bücher) ein Ort
   vorkommt, inkl. aller Bibelstellen. Gesucht wird auch in den **Reisen und in
   der Ausbreitung**: `Emmaus` findet den Ort *und* die Station im Weg nach
@@ -33,7 +26,17 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Stelle im jeweiligen Modus. Wer eine **Bibelstelle** eintippt (`Apg 13`,
   `Mk 6,30`, `1. Mose 12`, `Acts 27`), bekommt die Orte dieses Kapitels und
   einen Weg direkt in den Bibeltext.
-- **Heatmap** – die am häufigsten erwähnten Orte als Wärmebild.
+- **Nachbarorte** – jede Ortskarte zeigt, was von dort aus **an einem Tag zu
+  Fuß** zu erreichen war: bis 25 km Luftlinie, mit Entfernung und
+  Himmelsrichtung (von Jerusalem: Bethlehem 8 km S, Gibeon 9 km NW, Jericho
+  23 km NO). Ein Klick wechselt zum Nachbarn.
+- **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
+  robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
+- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
+  Imagery) und **Relief/„historisch"** (Esri Shaded Relief).
+
+### Erzählen
+
 - **Entdeckermodus** – ein Buch wählen (z. B. *2. Könige*) und chronologisch
   Kapitel für Kapitel durchgehen: links der **Bibeltext** (Luther 1912 / WEB) mit
   klickbaren Orts-Pins, rechts zoomt die Karte auf die erwähnten Orte
@@ -42,13 +45,6 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 - **Heilsgeschichte-Modus** – geführte chronologische Reise von der Schöpfung bis
   zur neuen Welt (Schöpfung, Abraham, Exodus, Exil, Jesus, frühe Kirche …) mit
   Karte, Bibelstelle und Video je Station.
-- **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
-  Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
-  Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
-- **Kirchengeschichte-Modus** – **Kirchenväter** (westlich/lateinisch ·
-  östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
-  7 ökumenischen) auf der Karte. Paulus’ Reisen stehen nicht hier, sondern in
-  *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
 - **Reisen & Geschichten** – die großen Wege der Bibel als erzählte Reise:
   Abraham von Ur nach Kanaan, Jakobs Flucht, Josef nach Ägypten, der Auszug und
   die vierzig Jahre Wüste, die Landnahme, David auf der Flucht, Elia zum Horeb,
@@ -67,19 +63,22 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   **Zeitraffer**: ein Jahresregler von 30 bis heute, die Karte füllt sich mit
   jedem Jahrhundert, die Phase wechselt von selbst mit (Tastatur ← / →). Jede Reisestation nennt Entfernung
   und Tagesmärsche zur vorigen, ein Klick auf *Auf Karte* springt zur Ortskarte.
-- **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
-  robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
-- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
-  Imagery) und **Relief/„historisch"** (Esri Shaded Relief).
-- **Projekte unterstützen** – eine eigene Seite (Startseite, Modi-Menü, Direktlink
-  `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
-  selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
-  aus deren Arbeit die Seite besteht – je Projekt mit Beitrag und Nennung.
-- **Teilen & Deep-Links** – jede Ansicht hat eine Adresse: `#ort=a15257a`
-  (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
-  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`. Der Hash läuft beim
-  Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
-  Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
+- **Kirchengeschichte-Modus** – **Kirchenväter** (westlich/lateinisch ·
+  östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
+  7 ökumenischen) auf der Karte. Paulus’ Reisen stehen nicht hier, sondern in
+  *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
+- **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
+  Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
+  Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
+- **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
+  (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
+  Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
+  Calvin, Spurgeon, Bonhoeffer …). Verlauf von links nach rechts mit einer
+  **Zeitschiene** unten; Knoten lassen sich aufklappen und zeigen per Klick
+  Lebensdaten, Bibelstellen und eine Kurzbeschreibung. Umschalter **Karte ↔ Zeitbaum**.
+
+### Lernen & weitergeben
+
 - **Bibelquiz** – ein Lernmodus: „Wo liegt Kapernaum?" Der Klick auf eine
   **unbeschriftete** Karte ist die Antwort, die Entfernung gibt die Punkte
   (bis 25 km Volltreffer). Drei Stufen nach Bekanntheit der Orte – ab 50, ab 15
@@ -90,16 +89,28 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Bibelstelle, Gesamtstrecke und alle Stationen mit Stelle, Text und Entfernung
   – ohne Karte, Knöpfe und dunklen Hintergrund. Für den Hauskreis, der lieber
   Papier in der Hand hat.
+- **Teilen & Deep-Links** – jede Ansicht hat eine Adresse: `#ort=a15257a`
+  (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
+  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`. Der Hash läuft beim
+  Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
+  Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
+- **Hören & Sehen** – zu jedem Ort die Podcast-Folgen und Videos, die eine
+  Bibelstelle behandeln, in der der Ort vorkommt.
+
+### Drumherum
+
 - **Offline & installierbar** – die App meldet einen Service Worker an: Einstieg,
   Programmdateien und die Ortsdaten liegen nach dem ersten Besuch im Cache,
   einmal angesehene Kartenkacheln ebenso. Ohne Netz startet Bibelmap weiter,
   zeigt alle 1.335 Orte und die bereits besuchten Kartenausschnitte. Über das
   Browser-Menü lässt sie sich als App installieren (Manifest + Symbole).
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
-- **Hören & Sehen** – zu jedem Ort die Podcast-Folgen und Videos, die eine
-  Bibelstelle behandeln, in der der Ort vorkommt.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
+- **Projekte unterstützen** – eine eigene Seite (Startseite, Modi-Menü, Direktlink
+  `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
+  selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
+  aus deren Arbeit die Seite besteht – je Projekt mit Beitrag und Nennung.
 
 ## Entwicklung
 
