@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
+import { flyOptions } from '../lib/motion';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import {
@@ -90,7 +91,7 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
       }
     }
 
-    if (bounds) map.flyToBounds((bounds as L.LatLngBounds).pad(0.25), { duration: 0.7, maxZoom: 8 });
+    if (bounds) map.flyToBounds((bounds as L.LatLngBounds).pad(0.25), flyOptions({ duration: 0.7, maxZoom: 8 }));
   }, [tab, sel]);
 
   function switchTab(tb: Tab) {

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { flyOptions } from '../lib/motion';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 import type { Place } from '../types';
@@ -324,14 +325,14 @@ export default function MapView({
     const map = mapRef.current;
     if (!map || !fitPlaces || fitPlaces.length === 0) return;
     const bounds = L.latLngBounds(fitPlaces.map((p) => [p.lat, p.lon] as [number, number]));
-    map.flyToBounds(bounds.pad(0.35), { maxZoom: 9, duration: 0.8 });
+    map.flyToBounds(bounds.pad(0.35), flyOptions({ maxZoom: 9, duration: 0.8 }));
   }, [fitPlaces]);
 
   // fly to single point (search)
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !flyTo) return;
-    map.flyTo([flyTo.lat, flyTo.lon], flyTo.zoom ?? 9, { duration: 0.8 });
+    map.flyTo([flyTo.lat, flyTo.lon], flyTo.zoom ?? 9, flyOptions({ duration: 0.8 }));
     // open the cluster spiderfy / highlight after the fly
     const id = selectedId;
     const t = window.setTimeout(() => {

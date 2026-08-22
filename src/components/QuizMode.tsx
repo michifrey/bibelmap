@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
+import { flyOptions } from '../lib/motion';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
@@ -116,7 +117,7 @@ export default function QuizMode({ places, lang, onExit }: Props) {
         [guess.lat, guess.lon],
         [target.lat, target.lon],
       ]).pad(0.5),
-      { maxZoom: 9, duration: 0.7 },
+      flyOptions({ maxZoom: 9, duration: 0.7 }),
     );
   }, [guess, target, lang]);
 
@@ -134,7 +135,7 @@ export default function QuizMode({ places, lang, onExit }: Props) {
     setGuess(null);
     setPicked(null);
     setI((v) => v + 1);
-    mapRef.current?.flyTo([31.8, 35.2], 7, { duration: 0.6 });
+    mapRef.current?.flyTo([31.8, 35.2], 7, flyOptions({ duration: 0.6 }));
   }
 
   /** Antwort auf eine Wissensfrage: werten, Ort zeigen. */
@@ -156,7 +157,7 @@ export default function QuizMode({ places, lang, onExit }: Props) {
         .bindTooltip(question.subject, { direction: 'top', offset: [0, -14], className: 'bm-mtip' })
         .addTo(layer)
         .openTooltip();
-      map.flyTo(question.at, 6, { duration: 0.8 });
+      map.flyTo(question.at, 6, flyOptions({ duration: 0.8 }));
     }
   }
 
