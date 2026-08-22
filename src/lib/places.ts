@@ -1,6 +1,7 @@
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { BOOK_BY_OSIS } from '../data/books';
+import { ERA_BY_ID } from '../data/eras';
 
 let cache: Promise<Place[]> | null = null;
 
@@ -41,6 +42,22 @@ export function booksForPlace(place: Place): string[] {
 export function placesInEra(places: Place[], eraId: string | null): Place[] {
   if (!eraId) return places;
   return places.filter((p) => erasForPlace(p).includes(eraId));
+}
+
+/**
+ * Orte bis einschließlich dieser Epoche – „alles, was bis hierhin vorkam".
+ * Die Reihenfolge der Epochen steht in eras.ts (`order`).
+ */
+export function placesUpToEra(places: Place[], eraId: string | null): Place[] {
+  if (!eraId) return places;
+  const limit = ERA_BY_ID[eraId]?.order;
+  if (limit === undefined) return places;
+  return places.filter((p) =>
+    erasForPlace(p).some((id) => {
+      const order = ERA_BY_ID[id]?.order;
+      return order !== undefined && order <= limit;
+    }),
+  );
 }
 
 /** Places mentioned in a specific book + chapter, with the matching verse refs. */

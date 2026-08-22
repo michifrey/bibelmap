@@ -25,6 +25,11 @@ interface Props {
   flyTo?: { lat: number; lon: number; zoom?: number; key: number } | null;
   /** Draw the empires of this year underneath the places; null = off. */
   borderYear?: number | null;
+  /**
+   * Kumulative Zeitleiste: Orte, die in der gewählten Epoche neu vorkommen.
+   * Alles andere ist „schon vorher da" und tritt zurück.
+   */
+  newIds?: Set<string> | null;
 }
 
 export type BasemapId = 'dark' | 'light' | 'satellite' | 'relief' | 'antique';
@@ -99,13 +104,18 @@ function markerSize(p: Place): number {
   return 12;
 }
 
-function makeIcon(p: Place, focused: boolean): L.DivIcon {
-  const size = markerSize(p);
+/**
+ * `earlier` heißt: in der kumulativen Ansicht war der Ort schon vorher da. Er
+ * bleibt sichtbar, tritt aber zurück – neu Hinzugekommenes soll auffallen.
+ */
+function makeIcon(p: Place, focused: boolean, earlier = false): L.DivIcon {
+  const full = markerSize(p);
+  const size = earlier ? Math.max(9, Math.round(full * 0.65)) : full;
   const color = primaryEraColor(p);
-  const label = p.mentionCount >= 20 ? `<span>${p.mentionCount}</span>` : '';
+  const label = !earlier && p.mentionCount >= 20 ? `<span>${p.mentionCount}</span>` : '';
   return L.divIcon({
     className: '',
-    html: `<div class="bm-marker ${focused ? 'bm-marker--focus' : ''}" style="background:${color};width:${size}px;height:${size}px">${label}</div>`,
+    html: `<div class="bm-marker ${focused ? 'bm-marker--focus' : ''} ${earlier ? 'bm-marker--earlier' : ''}" style="background:${color};width:${size}px;height:${size}px">${label}</div>`,
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
   });
@@ -113,6 +123,7 @@ function makeIcon(p: Place, focused: boolean): L.DivIcon {
 
 export default function MapView({
   places,
+  newIds,
   heat,
   selectedId,
   lang,
@@ -239,7 +250,7 @@ export default function MapView({
     });
     for (const p of places) {
       const marker = L.marker([p.lat, p.lon], {
-        icon: makeIcon(p, p.id === selectedId),
+        icon: makeIcon(p, p.id === selectedId, newIds ? !newIds.has(p.id) : false),
         title: placeName(p, lang),
       });
       // Rich on-map popup (thumbnail, passages, links) – built lazily on open so
@@ -258,7 +269,7 @@ export default function MapView({
     }
     cluster.addTo(map);
     clusterRef.current = cluster;
-  }, [places, heat, selectedId]);
+  }, [places, heat, selectedId, newIds]);
 
   // empire overlay for the selected year
   useEffect(() => {
