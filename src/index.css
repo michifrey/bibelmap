@@ -91,6 +91,21 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Outlined display type — the signature move of the start page. The third line
+   of a headline is cut out of the page instead of set on it. */
+.bm-outline {
+  /* The stroke takes its colour from `color`, so the fill has to be cleared
+     separately — setting `color: transparent` would erase the stroke too. */
+  -webkit-text-stroke: 2px currentColor;
+  -webkit-text-fill-color: transparent;
+}
+@supports not (-webkit-text-stroke: 2px currentColor) {
+  .bm-outline {
+    -webkit-text-fill-color: currentColor;
+    opacity: 0.55;
+  }
+}
+
 /* Numbers are the graphic. */
 .bm-num {
   font-weight: 900;
@@ -357,6 +372,93 @@ body {
 }
 .leaflet-tooltip.geo-label::before {
   display: none;
+}
+
+/* ---- Reiche & Grenzen: the empire overlay ---- */
+
+/* Territory names sit straight on the map like an atlas plate: letterspaced
+   caps in the territory's own colour, with a dark halo so they survive both
+   the night basemap and the beige antique one. */
+.bm-polity-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c, #ffffff);
+  text-shadow:
+    0 0 3px rgba(2, 31, 30, 0.95),
+    0 0 8px rgba(2, 31, 30, 0.8);
+  pointer-events: none;
+}
+
+.leaflet-tooltip.bm-polity-tip {
+  background: var(--color-deepest);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0;
+  box-shadow: none;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+}
+.leaflet-tooltip.bm-polity-tip::before {
+  display: none;
+}
+
+/* The year slider. Native range input, restyled — the track is drawn by the
+   panel behind it (with the snapshot ticks), so the input itself is only the
+   thumb and a hit area. */
+.bm-year-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 28px;
+  background: transparent;
+  cursor: pointer;
+}
+.bm-year-range::-webkit-slider-runnable-track {
+  height: 28px;
+  background: transparent;
+}
+.bm-year-range::-moz-range-track {
+  height: 28px;
+  background: transparent;
+}
+.bm-year-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 28px;
+  background: var(--color-gold);
+  border: none;
+  cursor: grab;
+}
+.bm-year-range::-moz-range-thumb {
+  width: 14px;
+  height: 28px;
+  background: var(--color-gold);
+  border: none;
+  border-radius: 0;
+  cursor: grab;
+}
+.bm-year-range:active::-webkit-slider-thumb {
+  cursor: grabbing;
+  background: var(--color-gold-deep);
+}
+.bm-year-range:focus-visible {
+  outline: none;
+}
+.bm-year-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 2px var(--color-deepest), 0 0 0 4px var(--color-gold-deep);
+}
+.bm-year-range:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 2px var(--color-deepest), 0 0 0 4px var(--color-gold-deep);
 }
 
 /* ---- Rich place popup ---- */

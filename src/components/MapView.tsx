@@ -7,6 +7,7 @@ import { erasForPlace, placeName } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
 import { buildPlacePopup } from '../lib/placePopup';
 import type { Lang } from '../i18n';
+import { loadBorders, politiesAt, polityColor, polityName } from '../lib/borders';
 
 interface Props {
   places: Place[];
@@ -20,6 +21,8 @@ interface Props {
   fitPlaces?: Place[] | null;
   /** Fly to a single coordinate (search focus). */
   flyTo?: { lat: number; lon: number; zoom?: number; key: number } | null;
+  /** Draw the empires of this year underneath the places; null = off. */
+  borderYear?: number | null;
 }
 
 export type BasemapId = 'dark' | 'light' | 'satellite' | 'relief' | 'antique';
@@ -106,12 +109,24 @@ function makeIcon(p: Place, focused: boolean): L.DivIcon {
   });
 }
 
-export default function MapView({ places, heat, selectedId, lang, onSelect, basemap = 'light', fitPlaces, flyTo }: Props) {
+export default function MapView({
+  places,
+  heat,
+  selectedId,
+  lang,
+  onSelect,
+  basemap = 'light',
+  fitPlaces,
+  flyTo,
+  borderYear = null,
+}: Props) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const tileRef = useRef<L.TileLayer | null>(null);
   const clusterRef = useRef<L.MarkerClusterGroup | null>(null);
   const heatRef = useRef<L.Layer | null>(null);
+  const borderRef = useRef<L.LayerGroup | null>(null);
+  const borderLabels = useRef<{ marker: L.Marker; area: number }[]>([]);
   const markerById = useRef<Map<string, L.Marker>>(new Map());
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
@@ -129,6 +144,11 @@ export default function MapView({ places, heat, selectedId, lang, onSelect, base
       zoomControl: true,
       worldCopyJump: true,
     });
+    // The empire overlay lives between the tiles (200) and the place markers
+    // (600): territory is background for the places, never on top of them.
+    map.createPane('bmBorders').style.zIndex = '350';
+    map.createPane('bmBorderLabels').style.zIndex = '380';
+    map.getPane('bmBorderLabels')!.style.pointerEvents = 'none';
     mapRef.current = map;
     return () => {
       map.remove();
@@ -219,6 +239,85 @@ export default function MapView({ places, heat, selectedId, lang, onSelect, base
     cluster.addTo(map);
     clusterRef.current = cluster;
   }, [places, heat, selectedId]);
+
+  // empire overlay for the selected year
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    /**
+     * Zoomed out to the whole Near East, "Partherreich" and "Kuschanreich" land
+     * on top of each other. A name is only written once its territory is at
+     * least ~60 px across on screen — at world zoom that leaves Rome and
+     * Parthia named and drops the rest; the tooltip still names everything.
+     */
+    function applyLabelZoom() {
+      const pxPerDegree = (256 * Math.pow(2, map!.getZoom())) / 360;
+      for (const { marker, area } of borderLabels.current) {
+        marker.setOpacity(Math.sqrt(area) * pxPerDegree >= 60 ? 1 : 0);
+      }
+    }
+
+    if (borderYear === null) {
+      if (borderRef.current) {
+        map.removeLayer(borderRef.current);
+        borderRef.current = null;
+        borderLabels.current = [];
+      }
+      return;
+    }
+
+    let live = true;
+    loadBorders().then((data) => {
+      if (!live || !mapRef.current) return;
+      if (borderRef.current) map.removeLayer(borderRef.current);
+      borderLabels.current = [];
+
+      const group = L.layerGroup();
+      for (const polity of politiesAt(data, borderYear)) {
+        const color = polityColor(polity.name);
+        const label = polityName(polity, langRef.current);
+
+        const shape = L.geoJSON(polity.geometry as never, {
+          pane: 'bmBorders',
+          style: { color, weight: 1.5, opacity: 0.9, fillColor: color, fillOpacity: 0.16 },
+        });
+        shape.on('mouseover', () => shape.setStyle({ fillOpacity: 0.32, weight: 2.5 }));
+        shape.on('mouseout', () => shape.setStyle({ fillOpacity: 0.16, weight: 1.5 }));
+        shape.bindTooltip(
+          polity.subjectTo ? `${label} <span style="opacity:.6">· ${polity.subjectTo}</span>` : label,
+          { sticky: true, className: 'bm-polity-tip' },
+        );
+        group.addLayer(shape);
+
+        if (polity.at) {
+          // Big territories carry a bigger name, the way an atlas plate does.
+          const size = polity.area >= 60 ? 13 : polity.area >= 12 ? 11.5 : 10;
+          const marker = L.marker([polity.at[1], polity.at[0]], {
+            pane: 'bmBorderLabels',
+            interactive: false,
+            keyboard: false,
+            icon: L.divIcon({
+              className: '',
+              html: `<span class="bm-polity-label" style="--c:${color};font-size:${size}px">${label}</span>`,
+              iconSize: [0, 0],
+            }),
+          });
+          borderLabels.current.push({ marker, area: polity.area });
+          group.addLayer(marker);
+        }
+      }
+      group.addTo(map);
+      borderRef.current = group;
+      applyLabelZoom();
+    });
+
+    map.on('zoomend', applyLabelZoom);
+    return () => {
+      live = false;
+      map.off('zoomend', applyLabelZoom);
+    };
+  }, [borderYear, lang]);
 
   // fit to a set of places (presentation)
   useEffect(() => {
