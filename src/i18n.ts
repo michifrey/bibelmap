@@ -184,6 +184,7 @@ const STRINGS: Dict = {
     de: 'Diese Reise als Blatt drucken – Stationen, Bibelstellen und Entfernungen, ohne Karte und Bedienelemente',
     en: 'Print this journey as a handout – stations, passages and distances, without map and controls',
   },
+  wholePhase: { de: 'Ganze Phase', en: 'Whole phase' },
   allJourneys: { de: 'Alle Reisen', en: 'All journeys' },
   stations: { de: 'Stationen', en: 'stations' },
   replay: { de: 'Noch einmal', en: 'Replay' },
