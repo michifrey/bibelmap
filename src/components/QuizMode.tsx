@@ -7,6 +7,7 @@ import { placeName } from '../lib/places';
 import { distanceKm, formatKm } from '../lib/route';
 import { ERA_BY_ID } from '../data/eras';
 import { erasForPlace } from '../lib/places';
+import { buildRound, type Level, type Question } from '../lib/quiz';
 
 interface Props {
   places: Place[];
@@ -14,13 +15,8 @@ interface Props {
   onExit: () => void;
 }
 
-/** Wie schwer die Runde ist – gemessen daran, wie oft ein Ort vorkommt. */
-type Level = 'easy' | 'normal' | 'hard';
-
 const ROUNDS = 8;
 const TILES = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
-
-const LEVEL_MIN: Record<Level, number> = { easy: 50, normal: 15, hard: 3 };
 
 /** Punkte nach Entfernung – nah dran zählt, auf den Meter genau muss niemand. */
 function scoreFor(km: number): number {
@@ -31,23 +27,15 @@ function scoreFor(km: number): number {
   return 0;
 }
 
-function pickRound(places: Place[], level: Level): Place[] {
-  // Nur Siedlungen: bei Regionen wie „Moab" wäre der eine Punkt willkürlich.
-  const pool = places.filter((p) => p.types.includes('settlement') && p.mentionCount >= LEVEL_MIN[level]);
-  const shuffled = [...pool];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled.slice(0, ROUNDS);
-}
-
 export default function QuizMode({ places, lang, onExit }: Props) {
   const t = useT();
   const [level, setLevel] = useState<Level | null>(null);
-  const [round, setRound] = useState<Place[]>([]);
+  const [mix, setMix] = useState(true);
+  const [round, setRound] = useState<Question[]>([]);
   const [i, setI] = useState(0);
   const [guess, setGuess] = useState<{ lat: number; lon: number; km: number; points: number } | null>(null);
+  /** Antwort auf eine Wissensfrage: welche Möglichkeit, und stimmte sie. */
+  const [picked, setPicked] = useState<number | null>(null);
   const [points, setPoints] = useState<number[]>([]);
 
   const el = useRef<HTMLDivElement>(null);
@@ -55,8 +43,10 @@ export default function QuizMode({ places, lang, onExit }: Props) {
   const layerRef = useRef<L.LayerGroup | null>(null);
   const guessRef = useRef(guess);
   guessRef.current = guess;
-
-  const target = round[i] ?? null;
+  const question = round[i] ?? null;
+  const target = question?.kind === 'where' ? question.place : null;
+  const whereRef = useRef(false);
+  whereRef.current = question?.kind === 'where';
   const done = level !== null && i >= round.length;
   const total = points.reduce((a, b) => a + b, 0);
 
@@ -77,7 +67,7 @@ export default function QuizMode({ places, lang, onExit }: Props) {
     }).addTo(map);
     layerRef.current = L.layerGroup().addTo(map);
     map.on('click', (e: L.LeafletMouseEvent) => {
-      if (guessRef.current) return; // Runde ist schon aufgelöst
+      if (guessRef.current || !whereRef.current) return; // aufgelöst oder Wissensfrage
       setGuess({ lat: e.latlng.lat, lon: e.latlng.lng, km: 0, points: 0 });
     });
     mapRef.current = map;
@@ -132,17 +122,42 @@ export default function QuizMode({ places, lang, onExit }: Props) {
 
   function start(l: Level) {
     setLevel(l);
-    setRound(pickRound(places, l));
+    setRound(buildRound(places, l, mix, lang, ROUNDS));
     setI(0);
     setPoints([]);
     setGuess(null);
+    setPicked(null);
   }
 
   function next() {
     layerRef.current?.clearLayers();
     setGuess(null);
+    setPicked(null);
     setI((v) => v + 1);
     mapRef.current?.flyTo([31.8, 35.2], 7, { duration: 0.6 });
+  }
+
+  /** Antwort auf eine Wissensfrage: werten, Ort zeigen. */
+  function answer(index: number) {
+    if (picked !== null || question?.kind !== 'choice') return;
+    setPicked(index);
+    setPoints((p) => [...p, index === question.answer ? 100 : 0]);
+    const map = mapRef.current;
+    const layer = layerRef.current;
+    if (map && layer) {
+      L.marker(question.at, {
+        icon: L.divIcon({
+          className: '',
+          html: `<div class="bm-mspot bm-mspot--active" style="--c:#e0a449;width:22px;height:22px"></div>`,
+          iconSize: [22, 22],
+          iconAnchor: [11, 11],
+        }),
+      })
+        .bindTooltip(question.subject, { direction: 'top', offset: [0, -14], className: 'bm-mtip' })
+        .addTo(layer)
+        .openTooltip();
+      map.flyTo(question.at, 6, { duration: 0.8 });
+    }
   }
 
   const levels: { id: Level; label: string; hint: string }[] = useMemo(
@@ -161,6 +176,19 @@ export default function QuizMode({ places, lang, onExit }: Props) {
         <Bar title={t('quiz')} onExit={onExit} />
         <div className="scroll-soft mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-5 py-8">
           <p className="mb-6 max-w-prose text-sm leading-relaxed text-white/70">{t('quizHint')}</p>
+          <button
+            onClick={() => setMix((v) => !v)}
+            className={`mb-4 flex w-full items-center justify-between gap-4 px-4 py-3 text-left transition ${mix ? 'bg-signal/25 ring-1 ring-signal' : 'bg-white/5 hover:bg-white/10'}`}
+          >
+            <span>
+              <span className="block text-[13.5px] font-bold text-white">{t('quizMix')}</span>
+              <span className="mt-0.5 block text-[12px] text-white/60">{t('quizMixHint')}</span>
+            </span>
+            <span className={`text-[12px] font-bold ${mix ? 'text-mint' : 'text-white/40'}`}>
+              {mix ? t('on') : t('off')}
+            </span>
+          </button>
+
           <div className="space-y-2">
             {levels.map((l) => (
               <button
@@ -209,6 +237,7 @@ export default function QuizMode({ places, lang, onExit }: Props) {
 
   /* ---- Runde -------------------------------------------------------- */
   const resolved = guess && guess.km > 0;
+  const choice = question?.kind === 'choice' ? question : null;
   return (
     <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
       <Bar
@@ -222,7 +251,44 @@ export default function QuizMode({ places, lang, onExit }: Props) {
         {/* Frage / Auflösung */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-[1200] flex justify-center p-3">
           <div className="bm-panel pointer-events-auto max-w-md px-5 py-3 text-center">
-            {resolved ? (
+            {choice ? (
+              <>
+                <div className="bm-eyebrow bm-eyebrow-dim">{choice.prompt}</div>
+                <div className="mt-1 font-display text-lg uppercase leading-tight text-white">{choice.subject}</div>
+                <div className="mt-2.5 grid gap-1.5">
+                  {choice.options.map((opt, idx) => {
+                    const isRight = idx === choice.answer;
+                    const shown = picked !== null;
+                    return (
+                      <button
+                        key={opt}
+                        onClick={() => answer(idx)}
+                        disabled={shown}
+                        className={`px-3 py-2 text-left text-[13px] font-medium transition ${
+                          shown
+                            ? isRight
+                              ? 'bg-signal text-white'
+                              : idx === picked
+                                ? 'bg-clay/60 text-white'
+                                : 'bg-white/5 text-white/40'
+                            : 'bg-white/8 text-white hover:bg-white/16'
+                        }`}
+                      >
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+                {picked !== null && (
+                  <>
+                    <p className="mt-2.5 text-[12.5px] leading-relaxed text-white/70">{choice.explain}</p>
+                    <button onClick={next} className="bm-btn bm-btn-gold mt-3">
+                      {i + 1 >= ROUNDS ? t('quizResult') : t('next')} ›
+                    </button>
+                  </>
+                )}
+              </>
+            ) : resolved ? (
               <>
                 <div className="bm-eyebrow" style={{ color: guess.points >= 70 ? '#7fe3d5' : '#e0a449' }}>
                   {guess.points === 100 ? t('quizBullseye') : guess.points > 0 ? t('quizClose') : t('quizMiss')}

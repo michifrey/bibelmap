@@ -76,10 +76,12 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`. Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
-- **Ortskenntnis** – ein Lernmodus: „Wo liegt Kapernaum?" Acht Orte, der Klick
-  auf eine **unbeschriftete** Karte ist die Antwort, die Entfernung gibt die
-  Punkte (bis 25 km Volltreffer). Drei Stufen nach Bekanntheit der Orte –
-  ab 50, ab 15 oder ab 3 Erwähnungen.
+- **Bibelquiz** – ein Lernmodus: „Wo liegt Kapernaum?" Der Klick auf eine
+  **unbeschriftete** Karte ist die Antwort, die Entfernung gibt die Punkte
+  (bis 25 km Volltreffer). Drei Stufen nach Bekanntheit der Orte – ab 50, ab 15
+  oder ab 3 Erwähnungen. Dazwischen **Wissensfragen** aus den Reisen und der
+  Ausbreitung („Zu welcher Reise gehört diese Station?", „In welche Zeit gehört
+  das?"), die nach der Antwort die Stelle auf der Karte zeigen; abschaltbar.
 - **Handout drucken** – jede Reise lässt sich als Blatt ausgeben: Titel, Epoche,
   Bibelstelle, Gesamtstrecke und alle Stationen mit Stelle, Text und Entfernung
   – ohne Karte, Knöpfe und dunklen Hintergrund. Für den Hauskreis, der lieber
