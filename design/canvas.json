@@ -1,0 +1,48 @@
+{
+  "pages": [
+    { "id": "screens", "name": "Screens" },
+    { "id": "system", "name": "System & Review" },
+    { "id": "richtungen", "name": "Richtungen" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html", "page": "screens", "x": 0, "y": 0, "w": 1440, "h": 900, "title": "Karte · Desktop" },
+    { "file": "PlaceDetail.dc.html", "page": "screens", "x": 1560, "y": 0, "w": 880, "h": 860, "title": "Ortskarte" },
+    { "file": "Mobile.dc.html", "page": "screens", "x": 2560, "y": 0, "w": 390, "h": 844, "title": "Karte · Mobil" },
+    { "file": "Presentation.dc.html", "page": "screens", "x": 0, "y": 1080, "w": 1440, "h": 900, "title": "Präsentationsmodus" },
+    { "file": "Genealogy.dc.html", "page": "screens", "x": 1560, "y": 1080, "w": 1440, "h": 900, "title": "Stammbäume" },
+
+    { "file": "Foundations.dc.html", "page": "system", "x": 0, "y": 0, "w": 1200, "h": 1560, "title": "Grundlagen", "print": "flow" },
+    { "file": "Artwork.dc.html", "page": "system", "x": 1320, "y": 0, "w": 1200, "h": 1120, "title": "Bildsprache", "print": "flow" },
+    { "file": "Review.dc.html", "page": "system", "x": 2640, "y": 0, "w": 1200, "h": 1400, "title": "Review", "print": "flow" },
+
+    { "file": "DirectionDark.dc.html", "page": "richtungen", "x": 0, "y": 0, "w": 760, "h": 520, "title": "B · Dunkler Atlas" },
+    { "file": "DirectionEditorial.dc.html", "page": "richtungen", "x": 880, "y": 0, "w": 760, "h": 520, "title": "C · Editorial" }
+  ],
+  "annotations": [
+    {
+      "id": "note-namen",
+      "page": "screens",
+      "x": 0,
+      "y": -250,
+      "w": 420,
+      "text": "Ortsnamen stehen bewusst so da, wie die App sie heute zeigt: englisch (Egypt, Babylon, Assyria), weil die OpenBible-Daten keine deutsche Spalte haben.\n\nAlle Zahlen sind echt – 1.335 Orte, die Epochenzahlen und der Kanonstreifen kommen aus places.json und books.ts."
+    },
+    {
+      "id": "note-mobil",
+      "page": "screens",
+      "x": 2560,
+      "y": 920,
+      "w": 390,
+      "text": "Kein aufgemalter Status-Balken und keine Fake-Tastatur: beides zeichnet das Gerät selbst über die Seite. Aktionen sind 48 px, das Sheet lässt oben genug Karte stehen."
+    },
+    {
+      "id": "note-richtungen",
+      "page": "richtungen",
+      "x": 0,
+      "y": -230,
+      "w": 560,
+      "text": "Richtung A ist gebaut – sie liegt als fertige Screens auf der ersten Seite.\n\nB und C sind absichtlich grob: sie sollen nur die Entscheidung tragen, nicht schon die Ausführung. Wenn eine davon gewinnt, wandert sie in die Screens und A verschwindet."
+    }
+  ],
+  "launch": { "view": "canvas", "page": "screens" }
+}

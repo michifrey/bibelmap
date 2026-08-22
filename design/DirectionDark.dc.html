@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Instrument Sans', 'Inter', system-ui, sans-serif; color: #e7ded0; background: #14201f; -webkit-font-smoothing: antialiased; }
+    .disp { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-optical-sizing: auto; }
+    a { color: #e0a449; text-decoration: none; }
+    a:hover { color: #f0c079; }
+    .lbl { font-size: 9.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: rgba(231,222,208,.5); }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 760px; height: 520px; overflow: hidden; background: #14201f">
+
+  <svg style="position: absolute; inset: 0" width="760" height="520" viewBox="0 0 760 520" aria-hidden="true">
+    <defs>
+      <radialGradient id="gD" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e0a449" stop-opacity=".45"></stop><stop offset="100%" stop-color="#e0a449" stop-opacity="0"></stop></radialGradient>
+    </defs>
+    <rect width="760" height="520" fill="#14201f"></rect>
+    <g stroke="rgba(231,222,208,.05)" stroke-width="1"><path d="M0 130H760M0 260H760M0 390H760"></path><path d="M190 0V520M380 0V520M570 0V520"></path></g>
+    <path d="M0 0H210C186 100 140 240 96 360C64 444 40 480 26 520H0Z" fill="#0e1a1a"></path>
+    <path d="M210 0C186 100 140 240 96 360C64 444 40 480 26 520" fill="none" stroke="rgba(224,164,73,.25)" stroke-width="1.4"></path>
+    <g fill="none" stroke="rgba(224,164,73,.10)" stroke-width="1">
+      <path d="M280 90C378 84 424 160 418 254C412 348 372 420 352 490"></path>
+      <path d="M306 128C390 122 404 188 398 268C392 348 362 414 346 486"></path>
+    </g>
+    <ellipse cx="392" cy="150" rx="16" ry="26" fill="#16302e" stroke="rgba(143,179,171,.4)" stroke-width="1.2"></ellipse>
+    <path d="M392 176C386 216 402 246 388 284" fill="none" stroke="rgba(143,179,171,.45)" stroke-width="2.2" stroke-linecap="round"></path>
+    <ellipse cx="384" cy="356" rx="14" ry="52" fill="#16302e" stroke="rgba(143,179,171,.4)" stroke-width="1.2"></ellipse>
+    <circle cx="360" cy="300" r="46" fill="url(#gD)"></circle>
+    <g stroke="#14201f" stroke-width="2">
+      <circle cx="470" cy="118" r="9" fill="#4d9dd8"></circle>
+      <circle cx="330" cy="200" r="10" fill="#3fc0aa"></circle>
+      <circle cx="440" cy="272" r="8" fill="#d3bb3f"></circle>
+      <circle cx="300" cy="392" r="8" fill="#e08f45"></circle>
+      <circle cx="360" cy="300" r="15" fill="#3fc0aa"></circle>
+    </g>
+    <circle cx="360" cy="300" r="21" fill="none" stroke="#e0a449" stroke-width="2.6"></circle>
+    <g font-family="'Instrument Sans', sans-serif" font-weight="600" fill="#e7ded0">
+      <text x="360" y="338" text-anchor="middle" font-size="12">Jerusalem</text>
+      <text x="348" y="204" font-size="10.5" fill="rgba(231,222,208,.6)">Samaria</text>
+    </g>
+    <text transform="translate(70 250) rotate(-66)" font-family="'Instrument Sans', sans-serif" font-size="9.5" font-weight="600" letter-spacing="4" fill="rgba(231,222,208,.28)">MITTELMEER</text>
+  </svg>
+
+  <div style="position: absolute; left: 16px; top: 16px; right: 16px; height: 46px; display: flex; align-items: center; gap: 11px; padding: 0 8px 0 12px; border-radius: 13px; background: rgba(24,38,36,.86); border: 1px solid rgba(231,222,208,.10); backdrop-filter: blur(12px)">
+    <div style="display: grid; place-items: center; width: 28px; height: 28px; border-radius: 9px; background: rgba(224,164,73,.18)">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#e0a449" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s6.5-7.2 6.5-12A6.5 6.5 0 0 0 5.5 9c0 4.8 6.5 12 6.5 12Z"></path><circle cx="12" cy="9" r="2.4"></circle></svg>
+    </div>
+    <span class="disp" style="font-size: 17px; font-weight: 600; color: #f2e9da">Bibelmap</span>
+    <div style="width: 1px; height: 20px; background: rgba(231,222,208,.12)"></div>
+    <div style="display: flex; gap: 2px; padding: 2px; border-radius: 9px; background: rgba(231,222,208,.07)">
+      <span style="padding: 5px 10px; border-radius: 7px; background: #e0a449; color: #14201f; font-size: 11.5px; font-weight: 700">Marker</span>
+      <span style="padding: 5px 10px; border-radius: 7px; color: rgba(231,222,208,.65); font-size: 11.5px; font-weight: 500">Heatmap</span>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <span style="padding: 7px 12px; border-radius: 9px; background: rgba(231,222,208,.08); font-size: 11.5px; font-weight: 600; color: #e7ded0">Stammbäume</span>
+    <span style="padding: 7px 12px; border-radius: 9px; background: #e0a449; color: #14201f; font-size: 11.5px; font-weight: 700">Präsentation</span>
+  </div>
+
+  <div style="position: absolute; left: 16px; top: 74px; width: 214px; bottom: 108px; padding: 12px; border-radius: 15px; background: rgba(24,38,36,.9); border: 1px solid rgba(231,222,208,.10); backdrop-filter: blur(12px)">
+    <div style="display: flex; align-items: center; gap: 8px; padding: 9px 11px; border-radius: 10px; background: rgba(231,222,208,.06); border: 1px solid rgba(231,222,208,.10)">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="rgba(231,222,208,.5)" stroke-width="1.9" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 20 20"></path></svg>
+      <span style="font-size: 12px; color: rgba(231,222,208,.5)">Ort suchen …</span>
+    </div>
+    <div class="lbl" style="margin: 14px 4px 8px">Häufigste Orte</div>
+    <div style="display: flex; flex-direction: column; gap: 3px">
+      <div style="display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 10px; background: rgba(231,222,208,.07)">
+        <span style="display: block; width: 26px; height: 26px; border-radius: 8px; background: rgba(63,192,170,.18)"></span>
+        <div style="flex-grow: 1"><div style="font-size: 12px; font-weight: 600; color: #f2e9da">Jerusalem</div><div style="font-size: 10px; color: rgba(231,222,208,.5)">955 ×</div></div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 10px">
+        <span style="display: block; width: 26px; height: 26px; border-radius: 8px; background: rgba(224,143,69,.18)"></span>
+        <div style="flex-grow: 1"><div style="font-size: 12px; font-weight: 600; color: #e7ded0">Egypt</div><div style="font-size: 10px; color: rgba(231,222,208,.5)">658 ×</div></div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 9px; padding: 7px 8px; border-radius: 10px">
+        <span style="display: block; width: 26px; height: 26px; border-radius: 8px; background: rgba(77,157,216,.18)"></span>
+        <div style="flex-grow: 1"><div style="font-size: 12px; font-weight: 600; color: #e7ded0">Babylon</div><div style="font-size: 10px; color: rgba(231,222,208,.5)">296 ×</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 246px; right: 16px; bottom: 16px; padding: 11px 13px 13px; border-radius: 15px; background: rgba(24,38,36,.9); border: 1px solid rgba(231,222,208,.10); backdrop-filter: blur(12px)">
+    <div style="display: flex; align-items: center; gap: 9px; margin-bottom: 10px">
+      <span class="disp" style="font-size: 13px; font-weight: 600; color: #f2e9da">Zeitleiste</span>
+      <span style="font-size: 10.5px; color: rgba(231,222,208,.55)">Geteiltes Königreich · 345 Orte</span>
+    </div>
+    <div style="display: flex; align-items: flex-end; gap: 4px; height: 34px">
+      <div style="flex: 191 1 0; height: 8px; border-radius: 9px; background: #e08f45"></div>
+      <div style="flex: 54 1 0; height: 8px; border-radius: 9px; background: #e0a449"></div>
+      <div style="flex: 161 1 0; height: 8px; border-radius: 9px; background: #d3bb3f"></div>
+      <div style="flex: 94 1 0; height: 8px; border-radius: 9px; background: #7fb85c"></div>
+      <div style="flex: 158 1 0; height: 26px; border-radius: 9px; background: #3fc0aa; box-shadow: 0 0 22px rgba(63,192,170,.55)"></div>
+      <div style="flex: 59 1 0; height: 8px; border-radius: 9px; background: #4d9dd8"></div>
+      <div style="flex: 100 1 0; height: 8px; border-radius: 9px; background: #8285d6"></div>
+      <div style="flex: 53 1 0; height: 8px; border-radius: 9px; background: #c56fcb"></div>
+      <div style="flex: 70 1 0; height: 8px; border-radius: 9px; background: #d96a92"></div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 16px; bottom: 16px; width: 214px; padding: 10px 12px; border-radius: 13px; background: rgba(224,164,73,.14); border: 1px solid rgba(224,164,73,.28)">
+    <div class="lbl" style="color: #e0a449; margin-bottom: 3px">Richtung B</div>
+    <div style="font-size: 11.5px; color: rgba(231,222,208,.8); line-height: 1.5">Dunkler Atlas: Epochenfarben leuchten, Karte tritt zurück. Braucht eine zweite Kachelkarte und ein zweites Token-Set.</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
