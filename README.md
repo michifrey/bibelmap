@@ -193,13 +193,23 @@ angaben folgen einer gängigen konservativen Chronologie.
 Vite · React · TypeScript · Tailwind CSS · Leaflet (+ markercluster, heat) ·
 CARTO/OpenStreetMap-Kartenkacheln.
 
-## Lizenzen / Attribution
+## Lizenz
+
+Bibelmap steht unter der **GNU General Public License v3.0** (siehe `LICENSE`).
+
+Der Grund ist `public/data/borders.json`: die Datei ist aus
+[aourednik/historical-basemaps](https://github.com/aourednik/historical-basemaps)
+abgeleitet, das unter GPL-3.0 steht. Wer die Grenzebene aus dem Projekt
+entfernt, ist an diese Wahl nicht mehr gebunden.
+
+## Attribution
 
 - Ortsdaten: © OpenBible.info, CC-BY 4.0
 - Bibeltext: Lutherbibel 1912 & World English Bible (gemeinfrei), aufbereitet in
   [seven1m/open-bibles](https://github.com/seven1m/open-bibles) (MIT)
 - Reichsgrenzen: [aourednik/historical-basemaps](https://github.com/aourednik/historical-basemaps) (GPL-3.0)
-- Kartenkacheln: © OpenStreetMap-Mitwirkende, © CARTO
+- Kartenkacheln: © OpenStreetMap-Mitwirkende, © CARTO; „Antike Welt“
+  © [DARE / Imperium](https://imperium.ahlfeldt.se/) (Univ. Göteborg, CC-BY)
 - Bilder: Wikimedia Commons (Lizenz je Bild, siehe Bildnachweis)
 - Podcasts & Videos: bibletunes.de, BibleProject, Practicing the Way, Gospel in
   Life – verlinkt, nicht gehostet

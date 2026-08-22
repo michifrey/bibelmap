@@ -616,10 +616,19 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
           >
             {t('lFooterSource')}
           </a>
+          <a
+            href="https://github.com/michifrey/bibelmap/blob/main/LICENSE"
+            target="_blank"
+            rel="noreferrer"
+            className="text-[12.5px] font-medium text-white/60 transition hover:text-white"
+          >
+            GPL-3.0
+          </a>
         </div>
         <div className="flex-1" />
         <span className="text-[11.5px] font-medium text-white/40">
-          Orte © OpenBible.info, CC-BY 4.0 · Kacheln © OpenStreetMap, © CARTO
+          Orte © OpenBible.info, CC-BY 4.0 · Grenzen © historical-basemaps, GPL-3.0 · Kacheln ©
+          OpenStreetMap, © CARTO
         </span>
       </div>
     </div>
