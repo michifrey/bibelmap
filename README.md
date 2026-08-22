@@ -82,6 +82,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Bibelstelle, Gesamtstrecke und alle Stationen mit Stelle, Text und Entfernung
   – ohne Karte, Knöpfe und dunklen Hintergrund. Für den Hauskreis, der lieber
   Papier in der Hand hat.
+- **Offline & installierbar** – die App meldet einen Service Worker an: Einstieg,
+  Programmdateien und die Ortsdaten liegen nach dem ersten Besuch im Cache,
+  einmal angesehene Kartenkacheln ebenso. Ohne Netz startet Bibelmap weiter,
+  zeigt alle 1.335 Orte und die bereits besuchten Kartenausschnitte. Über das
+  Browser-Menü lässt sie sich als App installieren (Manifest + Symbole).
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
 - **Hören & Sehen** – zu jedem Ort die Podcast-Folgen und Videos, die eine
   Bibelstelle behandeln, in der der Ort vorkommt.
@@ -226,6 +231,18 @@ Die Zuordnung von Büchern zu historischen Epochen (`src/data/books.ts`,
 `src/data/eras.ts`) ist eine bewusste Vereinfachung, um der Zeitleiste eine
 Struktur zu geben – kein Anspruch auf wissenschaftliche Datierung. Die Datums-
 angaben folgen einer gängigen konservativen Chronologie.
+
+### Offline
+
+`public/sw.js` pflegt zwei Caches: die App samt Ortsdaten und – getrennt und auf
+600 Einträge begrenzt – die Kartenkacheln. Weil Vite an jeden Dateinamen einen
+Hash hängt, pflegt der Worker keine Liste, sondern liest die gebauten Dateien
+beim Einbau aus `index.html` heraus. Seitenaufrufe gehen erst ans Netz und
+fallen auf den gespeicherten Einstieg zurück, eigene Dateien kommen sofort aus
+dem Cache und werden im Hintergrund erneuert.
+
+Im Dev-Server wird nichts angemeldet – dort würde der Worker den Hot-Reload
+aushebeln.
 
 ## Technik
 
