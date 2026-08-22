@@ -40,6 +40,14 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
   7 ökumenischen) auf der Karte. Paulus’ Reisen stehen nicht hier, sondern in
   *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
+- **Reisen & Geschichten** – die großen Wege der Bibel als erzählte Reise:
+  Abraham von Ur nach Kanaan, Jakobs Flucht, Josef nach Ägypten, der Auszug und
+  die vierzig Jahre Wüste, die Landnahme, David auf der Flucht, Elia zum Horeb,
+  Jona in die falsche Richtung, das Exil und die Rückkehr, die Flucht nach
+  Ägypten, Jesu Wege in Galiläa und der Weg nach Jerusalem. **Abspielen** lässt
+  die Route mitwachsen und einen Punkt die Etappen abgehen, während links die
+  Station mit Bibelstelle und kurzem Text mitläuft (← / → blättern, Leertaste
+  startet). Jede Station verlinkt auf ihre Ortskarte.
 - **Mission & Ausbreitung** – wie das Evangelium in die Welt kam: die vier
   Reisen des Paulus (plus die Wege vor ihm, Apg 1–11) als Route mit nummerierten
   Stationen und Bibelstellen – und danach die Ausbreitung bis heute, in sieben
@@ -166,6 +174,19 @@ reproduzierbar läuft. **BibleProject** braucht keinen Feed: je Buch eine
 
 `public/data/media.json` wird erst geladen, wenn jemand eine Ortskarte öffnet -
 der Index wächst mit jeder Staffel und gehört nicht in den Startpfad.
+
+### Reisen & Geschichten
+
+Die Stationen stehen in `src/data/journeys.ts`: je Station Name, Bibelstelle,
+ein bis zwei Sätze Erzählung und – wo vorhanden – die `placeId` aus
+`public/data/places.json`, also dieselben Koordinaten wie auf der Hauptkarte.
+Die Farbe einer Route kommt aus der Epoche (`src/data/eras.ts`).
+
+Die Reihenfolge folgt dem biblischen Bericht, nicht einer Rekonstruktion der
+tatsächlichen Marschrouten; einige Orte sind nicht sicher lokalisiert (Sinai,
+Kadesch, Emmaus). Die Animation (`src/components/RouteMap.tsx`) läuft
+imperativ über `requestAnimationFrame` und fasst nur die Leaflet-Ebenen an –
+React rendert währenddessen nicht mit.
 
 ### Mission & Ausbreitung
 
