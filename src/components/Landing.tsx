@@ -2,7 +2,7 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { ERAS } from '../data/eras';
 
-export type LandingTarget = 'map' | 'tree' | 'present';
+export type LandingTarget = 'map' | 'tree' | 'present' | 'support';
 
 interface Props {
   lang: Lang;
@@ -537,6 +537,20 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
           ))}
         </div>
         <p className="mt-7 max-w-[760px] text-xs font-medium leading-[1.7] text-ink-soft">{t('lSourcesNote')}</p>
+
+        <div className="mt-8 flex flex-col gap-5 border-t-4 border-gold bg-paper px-7 py-7 sm:flex-row sm:items-center sm:gap-8">
+          <div className="min-w-0 flex-1">
+            <div className="bm-eyebrow text-signal">{t('lSupportKicker')}</div>
+            <p className="mt-2.5 text-[13px] font-medium leading-[1.7] text-[#5c6b69]">{t('supportBody3')}</p>
+          </div>
+          <button
+            onClick={() => onEnter('support')}
+            className="inline-flex flex-none items-center gap-3 self-start bg-gold px-6 py-4 text-[12px] font-extrabold uppercase tracking-[0.1em] text-deep transition hover:bg-[#eab662] sm:self-center"
+          >
+            {t('lSupportCta')}
+            <Arrow className="text-deep" />
+          </button>
+        </div>
       </div>
 
       {/* ============================================================ FINAL CTA */}
@@ -588,6 +602,12 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
               {n.label}
             </button>
           ))}
+          <button
+            onClick={() => onEnter('support')}
+            className="text-[12.5px] font-medium text-white/60 transition hover:text-white"
+          >
+            {t('lSupportCta')}
+          </button>
           <a
             href="https://github.com/michifrey/bibelmap"
             target="_blank"

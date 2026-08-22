@@ -62,8 +62,8 @@ const STRINGS: Dict = {
   compareIntro: { de: 'Gemeinsame Gestalten von Judentum, Christentum und Islam – mit den Stellen, an denen die Schriften auf sie Bezug nehmen, betrachtet aus jüdisch-christlich-biblischer Sicht.', en: 'Figures shared by Judaism, Christianity and Islam — with the passages where each scripture refers to them, seen from a Jewish–Christian–biblical perspective.' },
   compareDisclaimer: { de: 'Die Angaben dienen als Lese-Wegweiser und behaupten keine Gleichsetzung der Texte. Unterschiede sind im jeweiligen Text nachzulesen.', en: 'References are reading pointers and do not claim the texts are equivalent. Differences are found in the texts themselves.' },
   churchMode: { de: 'Kirchengeschichte', en: 'Church history' },
-  churchHint: { de: 'Paulus’ Reisen, Kirchenväter und die Konzilien.', en: 'Paul’s journeys, church fathers and the councils.' },
-  paulJourneys: { de: 'Paulus’ Reisen', en: 'Paul’s journeys' },
+  churchHint: { de: 'Kirchenväter und die Konzilien auf der Karte.', en: 'Church fathers and the councils on the map.' },
+  paulJourneysMoved: { de: 'Paulus’ Reisen stehen jetzt hier:', en: 'Paul’s journeys now live here:' },
   churchFathers: { de: 'Kirchenväter', en: 'Church fathers' },
   councils: { de: 'Konzilien', en: 'Councils' },
   modes: { de: 'Modi', en: 'Modes' },
@@ -240,6 +240,56 @@ const STRINGS: Dict = {
   lFinal2: { de: 'die Karte', en: 'the map' },
   lFinalCta: { de: 'Jetzt losgehen', en: 'Set off' },
   lFooterSource: { de: 'Quellcode', en: 'Source code' },
+
+  support: { de: 'Projekte unterstützen', en: 'Support the projects' },
+  supportSub: {
+    de: 'Woher alles hier stammt – und wo man den Projekten etwas zurückgeben kann',
+    en: 'Where all of this comes from – and where to give something back',
+  },
+  supportLead1: { de: 'Diese Seite lebt', en: 'This site lives off' },
+  supportLead2: { de: 'von fremder Arbeit', en: 'other people’s work' },
+  supportBody1: {
+    de: 'Bibelmap verdient nichts. Keine Werbung, kein Tracking, keine Bezahlschranke, kein Newsletter – und es wird hier auch kein Geld für die Seite selbst gesammelt. Sie ist ein freies Projekt und liegt offen einsehbar auf GitHub.',
+    en: 'Bibelmap earns nothing. No ads, no tracking, no paywall, no newsletter – and no money is collected here for the site itself. It is a free project and its source is open on GitHub.',
+  },
+  supportBody2: {
+    de: 'Fast alles, was du hier siehst, gehört jemand anderem: die Koordinaten jedes Ortes, der Bibeltext, die Fotos, die Landkarte darunter, die Podcast-Folgen und Videos. Bibelmap ordnet dieses Material an – geschaffen hat es nichts davon.',
+    en: 'Almost everything you see here belongs to someone else: the coordinates of every place, the Bible text, the photos, the map underneath, the podcast episodes and videos. Bibelmap arranges that material – it created none of it.',
+  },
+  supportBody3: {
+    de: 'Ohne diese Projekte gäbe es diese Seite schlicht nicht. Wer etwas geben möchte, gibt darum bitte dort und nicht hier – so kommt jeder Betrag direkt bei denen an, die die Arbeit tun.',
+    en: 'Without these projects this site would simply not exist. So if you want to give something, give it there and not here – that way every gift reaches the people doing the work.',
+  },
+  supportStatAds: { de: 'Werbung & Tracker', en: 'Ads & trackers' },
+  supportStatMoney: { de: 'Euro für diese Seite', en: 'Euros for this site' },
+  supportStatProjects: { de: 'Projekte tragen sie', en: 'Projects carry it' },
+  supportStatGiving: { de: 'nehmen Spenden an', en: 'take donations' },
+  supportBack: { de: 'Zurück zur Karte', en: 'Back to the map' },
+  supportGroupContent: { de: 'Inhalte, die hier verlinkt sind', en: 'Content linked from here' },
+  supportGroupContentSub: {
+    de: 'Podcasts, Videos und Auslegung – sie stehen auf den Ortskarten unter „Hören & Sehen“.',
+    en: 'Podcasts, videos and teaching – they show up on the place cards under “Listen & watch”.',
+  },
+  supportGroupData: { de: 'Daten, auf denen die Karte steht', en: 'The data the map stands on' },
+  supportGroupDataSub: {
+    de: 'Ohne diese Datensätze bliebe die Karte leer: Orte, Bibeltext, Bilder, Kartenmaterial.',
+    en: 'Without these datasets the map would stay empty: places, Bible text, images, cartography.',
+  },
+  supportAlsoUsed: { de: 'Außerdem verlinkt und verwendet', en: 'Also linked and used' },
+  supportAlsoUsedSub: {
+    de: 'Dienste und freie Software, die Bibelmap nutzt oder verlinkt. Sie bitten hier um nichts, gehören aber genannt.',
+    en: 'Services and free software Bibelmap uses or links to. They ask for nothing here, but they belong in the list.',
+  },
+  supportDonate: { de: 'Spenden', en: 'Give' },
+  supportVisit: { de: 'Zur Seite', en: 'Visit' },
+  supportOutro: {
+    de: 'Danke an alle, die ihre Arbeit frei zugänglich machen. Bibelmap ist nur die Karte, die darüber liegt.',
+    en: 'Thank you to everyone who makes their work freely available. Bibelmap is only the map laid over it.',
+  },
+
+  // Landing: the way into the support page.
+  lSupportKicker: { de: 'Ohne sie gäbe es diese Seite nicht', en: 'Without them this site would not exist' },
+  lSupportCta: { de: 'Projekte unterstützen', en: 'Support the projects' },
 };
 
 export const LangContext = createContext<Lang>('de');

@@ -36,9 +36,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 - **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
   Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
   Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
-- **Kirchengeschichte-Modus** – **Paulus’ Missionsreisen** als eingezeichnete
-  Routen, **Kirchenväter** (westlich/lateinisch · östlich/griechisch · orientalisch)
-  und die **Konzilien** (Apostelkonzil + die 7 ökumenischen) auf der Karte.
+- **Kirchengeschichte-Modus** – **Kirchenväter** (westlich/lateinisch ·
+  östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
+  7 ökumenischen) auf der Karte. Paulus’ Reisen stehen nicht hier, sondern in
+  *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
 - **Mission & Ausbreitung** – wie das Evangelium in die Welt kam: die vier
   Reisen des Paulus (plus die Wege vor ihm, Apg 1–11) als Route mit nummerierten
   Stationen und Bibelstellen – und danach die Ausbreitung bis heute, in sieben
@@ -51,6 +52,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
 - **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
   Imagery) und **Relief/„historisch"** (Esri Shaded Relief).
+- **Projekte unterstützen** – eine eigene Seite (Startseite, Modi-Menü, Direktlink
+  `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
+  selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
+  aus deren Arbeit die Seite besteht – je Projekt mit Beitrag und Nennung.
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
 - **Hören & Sehen** – zu jedem Ort die Podcast-Folgen und Videos, die eine
   Bibelstelle behandeln, in der der Ort vorkommt.
@@ -200,8 +205,17 @@ entfernt, ist an diese Wahl nicht mehr gebunden.
 ## Attribution
 
 - Ortsdaten: © OpenBible.info, CC-BY 4.0
-- Historische Grenzen: aourednik/historical-basemaps, GPL-3.0
+- Bibeltext: Lutherbibel 1912 & World English Bible (gemeinfrei), aufbereitet in
+  [seven1m/open-bibles](https://github.com/seven1m/open-bibles) (MIT)
+- Reichsgrenzen: [aourednik/historical-basemaps](https://github.com/aourednik/historical-basemaps) (GPL-3.0)
 - Kartenkacheln: © OpenStreetMap-Mitwirkende, © CARTO; „Antike Welt“
-  © DARE / Imperium (Univ. Göteborg), CC-BY
-- Bibeltext: Lutherbibel 1912 und World English Bible, gemeinfrei
+  © [DARE / Imperium](https://imperium.ahlfeldt.se/) (Univ. Göteborg, CC-BY)
 - Bilder: Wikimedia Commons (Lizenz je Bild, siehe Bildnachweis)
+- Podcasts & Videos: bibletunes.de, BibleProject, Practicing the Way, Gospel in
+  Life – verlinkt, nicht gehostet
+
+Die vollständige Liste mit Beitrag, Nennung und **Spendenlink** je Projekt steht in
+`src/data/support.ts` und wird in der App unter *Projekte unterstützen* angezeigt.
+Bibelmap selbst nimmt kein Geld ein und sammelt keines: keine Werbung, kein
+Tracking, keine Bezahlschranke. Wer eine neue Quelle einbindet, trägt sie dort
+ein – Beitrag, Lizenz-/Nennungshinweis und, wenn vorhanden, die Spendenseite.

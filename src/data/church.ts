@@ -1,27 +1,15 @@
-// Early church history overlay: Paul's missionary journeys (routes), church
-// fathers (West / East / Oriental) and the ecumenical councils. Coordinates are
-// approximate locations of the ancient cities. Notes are short and factual.
+// Early church history overlay: church fathers (West / East / Oriental) and the
+// ecumenical councils. Coordinates are approximate locations of the ancient
+// cities. Notes are short and factual.
+//
+// Paul's missionary journeys used to live here as a third tab. They are now in
+// `mission.ts` / the Mission & spread view, which tells the same routes with a
+// passage per stop and a link into the place data — one place, not two.
 
 import { GENEALOGY, formatYear, type Tradition } from './genealogy';
 
 // Re-exported so existing imports (`import { Tradition } from './church'`) keep working.
 export type { Tradition };
-
-export interface Stop {
-  name: string;
-  lat: number;
-  lon: number;
-}
-
-export interface Journey {
-  id: string;
-  color: string;
-  date: string;
-  de: { title: string; text: string };
-  en: { title: string; text: string };
-  ref: string;
-  stops: Stop[];
-}
 
 export interface Father {
   id: string;
@@ -60,61 +48,6 @@ export const TRADITION_LABEL: Record<Tradition, { de: string; en: string }> = {
   east: { de: 'Östlich (griechisch)', en: 'Eastern (Greek)' },
   orient: { de: 'Orientalisch / syrisch', en: 'Oriental / Syriac' },
 };
-
-export const JOURNEYS: Journey[] = [
-  {
-    id: 'j1', color: '#c2812a', date: '~46–48 n. Chr.', ref: 'Apg 13–14',
-    de: { title: '1. Missionsreise', text: 'Von Antiochia über Zypern nach Kleinasien: Paulus und Barnabas gründen Gemeinden in Pisidien und Lykaonien.' },
-    en: { title: 'First journey', text: 'From Antioch via Cyprus into Asia Minor: Paul and Barnabas plant churches in Pisidia and Lycaonia.' },
-    stops: [
-      { name: 'Antiochia', lat: 36.2, lon: 36.16 }, { name: 'Seleucia', lat: 36.12, lon: 35.93 },
-      { name: 'Salamis', lat: 35.18, lon: 33.9 }, { name: 'Paphos', lat: 34.77, lon: 32.42 },
-      { name: 'Perge', lat: 36.96, lon: 30.85 }, { name: 'Antiochia (Pisidien)', lat: 38.3, lon: 31.19 },
-      { name: 'Ikonion', lat: 37.87, lon: 32.49 }, { name: 'Lystra', lat: 37.58, lon: 32.45 },
-      { name: 'Derbe', lat: 37.35, lon: 33.28 }, { name: 'Attalia', lat: 36.88, lon: 30.7 },
-      { name: 'Antiochia', lat: 36.2, lon: 36.16 },
-    ],
-  },
-  {
-    id: 'j2', color: '#2f8f7f', date: '~49–52 n. Chr.', ref: 'Apg 15,36–18,22',
-    de: { title: '2. Missionsreise', text: 'Über Kleinasien nach Europa: Philippi, Thessalonich, Athen und das anderthalb Jahre währende Wirken in Korinth.' },
-    en: { title: 'Second journey', text: 'Across Asia Minor into Europe: Philippi, Thessalonica, Athens and eighteen months in Corinth.' },
-    stops: [
-      { name: 'Antiochia', lat: 36.2, lon: 36.16 }, { name: 'Tarsus', lat: 36.92, lon: 34.89 },
-      { name: 'Derbe', lat: 37.35, lon: 33.28 }, { name: 'Lystra', lat: 37.58, lon: 32.45 },
-      { name: 'Troas', lat: 39.75, lon: 26.16 }, { name: 'Neapolis', lat: 40.94, lon: 24.41 },
-      { name: 'Philippi', lat: 41.01, lon: 24.29 }, { name: 'Thessalonich', lat: 40.64, lon: 22.94 },
-      { name: 'Beröa', lat: 40.52, lon: 22.2 }, { name: 'Athen', lat: 37.98, lon: 23.73 },
-      { name: 'Korinth', lat: 37.91, lon: 22.88 }, { name: 'Ephesus', lat: 37.94, lon: 27.34 },
-      { name: 'Caesarea', lat: 32.5, lon: 34.89 }, { name: 'Antiochia', lat: 36.2, lon: 36.16 },
-    ],
-  },
-  {
-    id: 'j3', color: '#3a6ea8', date: '~53–57 n. Chr.', ref: 'Apg 18,23–21,17',
-    de: { title: '3. Missionsreise', text: 'Drei Jahre in Ephesus, erneut durch Mazedonien und Griechenland; am Ende die Reise hinauf nach Jerusalem.' },
-    en: { title: 'Third journey', text: 'Three years in Ephesus, again through Macedonia and Greece, ending with the journey up to Jerusalem.' },
-    stops: [
-      { name: 'Antiochia', lat: 36.2, lon: 36.16 }, { name: 'Ikonion', lat: 37.87, lon: 32.49 },
-      { name: 'Ephesus', lat: 37.94, lon: 27.34 }, { name: 'Philippi', lat: 41.01, lon: 24.29 },
-      { name: 'Korinth', lat: 37.91, lon: 22.88 }, { name: 'Troas', lat: 39.75, lon: 26.16 },
-      { name: 'Milet', lat: 37.53, lon: 27.28 }, { name: 'Tyrus', lat: 33.27, lon: 35.2 },
-      { name: 'Caesarea', lat: 32.5, lon: 34.89 }, { name: 'Jerusalem', lat: 31.78, lon: 35.23 },
-    ],
-  },
-  {
-    id: 'j4', color: '#9a4ba0', date: '~59–60 n. Chr.', ref: 'Apg 27–28',
-    de: { title: 'Reise nach Rom', text: 'Als Gefangener segelt Paulus über Kreta, erleidet Schiffbruch bei Malta und erreicht schließlich Rom.' },
-    en: { title: 'Voyage to Rome', text: 'As a prisoner Paul sails past Crete, is shipwrecked on Malta and finally reaches Rome.' },
-    stops: [
-      { name: 'Caesarea', lat: 32.5, lon: 34.89 }, { name: 'Sidon', lat: 33.56, lon: 35.37 },
-      { name: 'Myra', lat: 36.26, lon: 29.98 }, { name: 'Kreta (Guthafen)', lat: 34.91, lon: 24.8 },
-      { name: 'Malta', lat: 35.9, lon: 14.51 }, { name: 'Syrakus', lat: 37.07, lon: 15.29 },
-      { name: 'Rhegium', lat: 38.11, lon: 15.65 }, { name: 'Puteoli', lat: 40.82, lon: 14.12 },
-      { name: 'Rom', lat: 41.89, lon: 12.49 },
-    ],
-  },
-];
-
 // Church fathers are derived from the genealogy: every Person that carries a
 // `tradition` + coordinates appears here AND as a node in the time tree, from a
 // single source of truth (no more duplicated, drifting data). Sorted by birth.
