@@ -148,6 +148,13 @@ async function loadFeed(source) {
 
 // --- build -----------------------------------------------------------------
 
+/** A feed date as YYYY-MM-DD, or null — feeds do ship unparsable pubDates. */
+function isoDate(value) {
+  if (!value) return null;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
+}
+
 /** Expand a reference to the verse keys it covers. */
 function verseKeys(ref) {
   const book = bookByOsis.get(ref.osis);
@@ -194,7 +201,7 @@ for (const source of sources) {
       src: source.id,
       title: item.title,
       url: item.link || source.homepage,
-      date: item.date ? new Date(item.date).toISOString().slice(0, 10) : null,
+      date: isoDate(item.date),
       refs: refs.map((r) => ({ ...r, label: formatRef(r, books, source.lang ?? 'de') })),
       places: [...placeIds],
       eras: [...eras],
