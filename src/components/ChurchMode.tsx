@@ -3,7 +3,7 @@ import L from 'leaflet';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import {
-  JOURNEYS, FATHERS, COUNCILS, TRADITION_COLOR, TRADITION_LABEL, type Tradition,
+  FATHERS, COUNCILS, TRADITION_COLOR, TRADITION_LABEL, type Tradition,
 } from '../data/church';
 
 interface Props {
@@ -13,17 +13,19 @@ interface Props {
   initialFatherId?: string | null;
   /** Jump to this father in the time tree. */
   onOpenInTree?: (personId: string) => void;
+  /** Paul's journeys live in the Mission & spread view — send people there. */
+  onOpenMission?: () => void;
 }
 
-type Tab = 'paul' | 'fathers' | 'councils';
+type Tab = 'fathers' | 'councils';
 
 const CARTO = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
-export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree }: Props) {
+export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree, onOpenMission }: Props) {
   const t = useT();
   const startFather = initialFatherId && FATHERS.some((f) => f.id === initialFatherId) ? initialFatherId : null;
-  const [tab, setTab] = useState<Tab>(startFather ? 'fathers' : 'paul');
-  const [sel, setSel] = useState<string | null>(startFather ?? 'j1');
+  const [tab, setTab] = useState<Tab>('fathers');
+  const [sel, setSel] = useState<string | null>(startFather ?? FATHERS[0].id);
 
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -34,7 +36,7 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
     if (!mapEl.current || mapRef.current) return;
     const map = L.map(mapEl.current, { center: [38, 26], zoom: 5, minZoom: 3, maxZoom: 12, worldCopyJump: true });
     L.tileLayer(CARTO, {
-      attribution: '&copy; OpenStreetMap &copy; CARTO · Routen & Konzilien: schematisch',
+      attribution: '&copy; OpenStreetMap &copy; CARTO · Orte der Kirchenväter & Konzilien: schematisch',
       subdomains: 'abcd',
     }).addTo(map);
     overlayRef.current = L.layerGroup().addTo(map);
@@ -56,28 +58,7 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
       bounds = bounds ? bounds.extend(ll) : L.latLngBounds([ll, ll]);
     };
 
-    if (tab === 'paul') {
-      for (const j of JOURNEYS) {
-        const active = j.id === sel;
-        const latlngs = j.stops.map((s) => [s.lat, s.lon] as [number, number]);
-        L.polyline(latlngs, {
-          color: j.color,
-          weight: active ? 4 : 2,
-          opacity: active ? 0.95 : 0.25,
-          dashArray: active ? undefined : '4 6',
-        }).addTo(group);
-        if (active) {
-          latlngs.forEach((ll) => extend(ll));
-          j.stops.forEach((s, idx) => {
-            L.circleMarker([s.lat, s.lon], {
-              radius: 5, color: '#fff', weight: 2, fillColor: j.color, fillOpacity: 1,
-            })
-              .bindTooltip(`${idx + 1}. ${s.name}`, { direction: 'top' })
-              .addTo(group);
-          });
-        }
-      }
-    } else if (tab === 'fathers') {
+    if (tab === 'fathers') {
       for (const f of FATHERS) {
         const active = f.id === sel;
         extend([f.lat, f.lon]);
@@ -114,17 +95,15 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
 
   function switchTab(tb: Tab) {
     setTab(tb);
-    setSel(tb === 'paul' ? 'j1' : tb === 'fathers' ? FATHERS[0].id : COUNCILS[0].id);
+    setSel(tb === 'fathers' ? FATHERS[0].id : COUNCILS[0].id);
   }
 
   const detail = useMemo(() => {
-    if (tab === 'paul') return JOURNEYS.find((j) => j.id === sel) ?? null;
     if (tab === 'fathers') return FATHERS.find((f) => f.id === sel) ?? null;
     return COUNCILS.find((c) => c.id === sel) ?? null;
   }, [tab, sel]);
 
   const tabs: { id: Tab; label: string }[] = [
-    { id: 'paul', label: t('paulJourneys') },
     { id: 'fathers', label: t('churchFathers') },
     { id: 'councils', label: t('councils') },
   ];
@@ -156,26 +135,18 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
             ))}
           </div>
 
+          {onOpenMission && (
+            <button
+              onClick={onOpenMission}
+              className="flex items-center justify-between gap-2 border-b border-white/10 px-4 py-2.5 text-left transition hover:bg-white/6"
+            >
+              <span className="text-[12px] text-white/60">{t('paulJourneysMoved')}</span>
+              <span className="text-[12px] font-bold text-gold">{t('mission')} →</span>
+            </button>
+          )}
+
           <div className="p-3">
             {/* list */}
-            {tab === 'paul' && (
-              <div className="space-y-1.5">
-                {JOURNEYS.map((j) => (
-                  <button
-                    key={j.id}
-                    onClick={() => setSel(j.id)}
-                    className={`flex w-full items-center gap-3 border-l-4 px-3 py-2.5 text-left transition ${sel === j.id ? 'border-gold bg-surface' : 'border-transparent hover:bg-white/6'}`}
-                  >
-                    <span className="h-3 w-3 flex-none" style={{ background: j.color }} />
-                    <span className="min-w-0">
-                      <span className="block text-sm font-bold text-white">{lang === 'de' ? j.de.title : j.en.title}</span>
-                      <span className="text-[11px] text-white/60">{j.date} · {j.ref}</span>
-                    </span>
-                  </button>
-                ))}
-              </div>
-            )}
-
             {tab === 'fathers' && (
               <>
                 <div className="mb-2 flex flex-wrap gap-2 px-1">
@@ -225,14 +196,7 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
             {/* detail */}
             {detail && (
               <div className="mt-4 bg-surface/50 p-3">
-                {'stops' in detail ? (
-                  <>
-                    <div className="font-display text-base font-semibold text-white">{lang === 'de' ? detail.de.title : detail.en.title}</div>
-                    <div className="text-[11px] text-white/60">{detail.date} · {detail.ref}</div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-white">{lang === 'de' ? detail.de.text : detail.en.text}</p>
-                    <div className="mt-2 text-[11px] text-white/60">{detail.stops.map((s) => s.name).join(' → ')}</div>
-                  </>
-                ) : 'years' in detail ? (
+                {'years' in detail ? (
                   <>
                     <div className="font-display text-base font-semibold text-white">{lang === 'de' ? detail.de : detail.en}</div>
                     <div className="text-[11px] text-white/60">{detail.city} · {detail.years} · {lang === 'de' ? TRADITION_LABEL[detail.tradition].de : TRADITION_LABEL[detail.tradition].en}</div>
