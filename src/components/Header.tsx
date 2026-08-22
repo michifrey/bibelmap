@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 
-export type Mode = 'present' | 'history' | 'journeys' | 'mission' | 'compare' | 'church' | 'nations' | 'support';
+export type Mode = 'present' | 'history' | 'journeys' | 'mission' | 'compare' | 'church' | 'quiz' | 'nations' | 'support';
 export type View = 'map' | 'tree' | 'graph';
 
 interface Props {
@@ -27,6 +27,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
     { id: 'journeys', label: t('journeys'), hint: t('journeysSub'), icon: 'M5 20c4-10 10-10 14-16M5 20h.01M19 4h.01M9 15l1.5 1.5' },
     { id: 'mission', label: t('mission'), hint: t('missionHint'), icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18' },
     { id: 'church', label: t('churchMode'), hint: t('churchHint'), icon: 'M12 3v18M7 8h10M5 21h14' },
+    { id: 'quiz', label: t('quiz'), hint: t('quizSub'), icon: 'M12 17h.01M9.5 9a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1 1-1.1 1.8M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z' },
     { id: 'compare', label: t('compareMode'), hint: t('compareIntro'), icon: 'M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z' },
     { id: 'support', label: t('support'), hint: t('supportSub'), icon: 'M12 20.3 4.6 13a4.7 4.7 0 0 1 0-6.7 4.7 4.7 0 0 1 6.7 0l.7.7.7-.7a4.7 4.7 0 0 1 6.7 0 4.7 4.7 0 0 1 0 6.7z' },
   ];

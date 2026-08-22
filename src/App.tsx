@@ -13,6 +13,7 @@ import Presentation from './components/Presentation';
 import HistoryMode from './components/HistoryMode';
 import Mission from './components/Mission';
 import JourneyMode from './components/JourneyMode';
+import QuizMode from './components/QuizMode';
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
 import { searchStories, type SearchHit } from './lib/globalSearch';
 import CompareMode from './components/CompareMode';
@@ -413,6 +414,7 @@ export default function App() {
               />
             )}
             {mode === 'history' && <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />}
+            {mode === 'quiz' && <QuizMode places={places} lang={lang} onExit={() => setMode(null)} />}
             {mode === 'journeys' && (
               <JourneyMode
                 key={`journeys-${navEpoch}`}

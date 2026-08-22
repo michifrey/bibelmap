@@ -26,6 +26,7 @@ export interface Route {
 const MODE_KEYS: Record<string, Mode> = {
   unterstuetzen: 'support',
   heilsgeschichte: 'history',
+  quiz: 'quiz',
   kirche: 'church',
   vergleich: 'compare',
 };

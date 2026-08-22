@@ -638,6 +638,16 @@ body {
   background: #eab662;
 }
 
+/* Ortskenntnis: der gesetzte Tipp */
+.bm-quiz-guess {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: transparent;
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.5);
+}
+
 /* Reisen & Geschichten: der Punkt, der die Route abgeht */
 .bm-traveller {
   width: 18px;
