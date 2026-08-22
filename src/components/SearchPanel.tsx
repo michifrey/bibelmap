@@ -5,6 +5,9 @@ import { erasForPlace, placeName } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
 
 interface Props {
+  /** Erkannte Bibelstelle im Suchfeld – führt ins Kapitel. */
+  refHit?: { label: string; count: number } | null;
+  onOpenRef?: () => void;
   query: string;
   onQuery: (q: string) => void;
   results: Place[];
@@ -84,6 +87,8 @@ function StoryRow({ hit, onOpen }: { hit: SearchHit; onOpen: (h: SearchHit) => v
 }
 
 export default function SearchPanel({
+  refHit,
+  onOpenRef,
   query,
   onQuery,
   results,
@@ -124,6 +129,23 @@ export default function SearchPanel({
       </div>
 
       <div className="scroll-soft min-h-0 flex-1 overflow-y-auto px-1 pb-3">
+        {refHit && onOpenRef && (
+          <button onClick={onOpenRef} className="bm-row group border-l-4 border-gold">
+            <svg viewBox="0 0 24 24" className="h-5 w-5 flex-none text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5zM19 18v3H6.5" />
+            </svg>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-[15px] font-bold text-white">{refHit.label}</span>
+              <span className="mt-0.5 block truncate text-[11px] text-white/45">
+                {refHit.count} {refHit.count === 1 ? t('place') : t('places')} · {t('readChapter')}
+              </span>
+            </span>
+            <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white/30 transition group-hover:text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
+
         {showResults && stories.length > 0 && onOpenStory && (
           <>
             <div className="px-3 pb-1 pt-1 text-[11px] font-semibold uppercase tracking-wide text-gold">
@@ -136,7 +158,7 @@ export default function SearchPanel({
         )}
 
         <div className="px-3 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wide text-white/60">
-          {showResults ? `${results.length} ${t('results')}` : t('topPlaces')}
+          {refHit ? `${t('placesIn')} ${refHit.label}` : showResults ? `${results.length} ${t('results')}` : t('topPlaces')}
         </div>
         {list.length === 0 ? (
           <div className="px-4 py-8 text-center text-sm text-white/60">
