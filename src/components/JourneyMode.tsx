@@ -5,6 +5,7 @@ import { useT } from '../i18n';
 import { JOURNEYS, JOURNEY_BY_ID, type BibleJourney } from '../data/journeys';
 import { ERAS, ERA_BY_ID } from '../data/eras';
 import { passageUrl } from '../data/mission';
+import { formatKm, legDistances, walkingDays, type LatLon } from '../lib/route';
 import RouteMap from './RouteMap';
 
 interface Props {
@@ -14,6 +15,11 @@ interface Props {
   /** Paulus’ Reisen stehen im Missionsmodus – dorthin verweisen statt doppeln. */
   onOpenMission?: () => void;
   onExit: () => void;
+}
+
+/** Luftlinie der ganzen Route – für die Auswahlkarten. */
+function journeyKm(j: BibleJourney): number {
+  return legDistances(j.stops.map((s) => [s.lat, s.lon] as LatLon)).reduce((a, b) => a + b, 0);
 }
 
 export default function JourneyMode({ places, lang, onShowPlace, onOpenMission, onExit }: Props) {
@@ -27,6 +33,12 @@ export default function JourneyMode({ places, lang, onShowPlace, onOpenMission, 
   const era = journey ? ERA_BY_ID[journey.era] : null;
   const color = era?.color ?? '#e0a449';
   const placeById = useMemo(() => new Map(places.map((p) => [p.id, p])), [places]);
+
+  const legs = useMemo(
+    () => (journey ? legDistances(journey.stops.map((s) => [s.lat, s.lon] as LatLon)) : []),
+    [journey],
+  );
+  const totalKm = useMemo(() => legs.reduce((a, b) => a + b, 0), [legs]);
 
   const stops = useMemo(
     () => (journey ? journey.stops.map((s) => ({ lat: s.lat, lon: s.lon, label: lang === 'de' ? s.de : s.en })) : []),
@@ -99,7 +111,7 @@ export default function JourneyMode({ places, lang, onShowPlace, onOpenMission, 
                     </div>
                     <p className="mt-1.5 text-[13px] leading-relaxed text-white/65">{lang === 'de' ? j.lead.de : j.lead.en}</p>
                     <div className="mt-2 text-[11px] font-bold text-gold">
-                      {j.stops.length} {t('stations')} · {lang === 'de' ? j.passage.de : j.passage.en}
+                      {j.stops.length} {t('stations')} · {formatKm(journeyKm(j), lang)} · {lang === 'de' ? j.passage.de : j.passage.en}
                     </div>
                   </button>
                 ))}
@@ -146,14 +158,19 @@ export default function JourneyMode({ places, lang, onShowPlace, onOpenMission, 
             <p className="hidden max-w-prose text-[14px] leading-relaxed text-white/70 md:block">
               {lang === 'de' ? journey.lead.de : journey.lead.en}
             </p>
-            <a
-              href={passageUrl(lang === 'de' ? journey.passage.de : journey.passage.en, lang)}
-              target="_blank"
-              rel="noreferrer"
-              className="bm-btn bm-btn-signal md:mt-3"
-            >
-              {lang === 'de' ? journey.passage.de : journey.passage.en}
-            </a>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 md:mt-3">
+              <a
+                href={passageUrl(lang === 'de' ? journey.passage.de : journey.passage.en, lang)}
+                target="_blank"
+                rel="noreferrer"
+                className="bm-btn bm-btn-signal"
+              >
+                {lang === 'de' ? journey.passage.de : journey.passage.en}
+              </a>
+              <span className="text-[12px] text-white/55" title={t('distanceNote')}>
+                {t('totalDistance')} {formatKm(totalKm, lang)} · {walkingDays(totalKm)} {t('dayWalks')}
+              </span>
+            </div>
           </div>
 
           <ol className="px-4 py-3">
@@ -162,6 +179,14 @@ export default function JourneyMode({ places, lang, onShowPlace, onOpenMission, 
               return (
                 <li key={`${s.de}-${i}`} data-stop={i} className="relative pl-7">
                   <span className="absolute left-[11px] top-0 h-full w-px bg-white/12" aria-hidden />
+                  {i > 0 && (
+                    <div className="py-1 pl-3 text-[11px] text-white/40" title={t('distanceNote')}>
+                      ↓ {formatKm(legs[i - 1], lang)}
+                      {s.sea
+                        ? ` · ${t('bySea')}`
+                        : ` · ${walkingDays(legs[i - 1])} ${walkingDays(legs[i - 1]) === 1 ? t('dayWalk') : t('dayWalks')}`}
+                    </div>
+                  )}
                   <span
                     style={{ background: active ? color : 'transparent', borderColor: color }}
                     className="bm-num absolute left-0 top-3 grid h-[22px] w-[22px] place-items-center rounded-full border-2 text-[10px] text-white"
@@ -191,6 +216,9 @@ export default function JourneyMode({ places, lang, onShowPlace, onOpenMission, 
                 </li>
               );
             })}
+            <li className="pl-7 pt-2">
+              <p className="px-3 text-[11px] leading-relaxed text-white/40">{t('distanceNote')}</p>
+            </li>
           </ol>
 
           {/* Steuerung */}

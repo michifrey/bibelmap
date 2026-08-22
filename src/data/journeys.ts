@@ -19,6 +19,8 @@ export interface JourneyStop {
   /** Ort in places.json – erlaubt den Sprung auf die Hauptkarte. */
   placeId?: string;
   ref?: Bilingual;
+  /** Der Weg *zu* dieser Station führt über Wasser – kein Fußmarsch. */
+  sea?: boolean;
   /** Was hier geschieht – eine, höchstens zwei Sätze. */
   text: Bilingual;
 }
@@ -235,8 +237,8 @@ export const JOURNEYS: BibleJourney[] = [
     stops: [
       { de: 'Gat-Hefer / Der Auftrag', en: 'Gath-hepher / the call', lat: 32.702, lon: 35.298, placeId: 'af5884f', ref: { de: 'Jona 1,1-2', en: 'Jonah 1:1-2' }, text: { de: '„Mach dich auf und geh nach Ninive“ – in die Hauptstadt der Großmacht, die Israel bedroht.', en: '"Arise, go to Nineveh" – to the capital of the empire threatening Israel.' } },
       { de: 'Joppe', en: 'Joppa', lat: 32.054, lon: 34.753, placeId: 'ae023a9', ref: { de: 'Jona 1,3', en: 'Jonah 1:3' }, text: { de: 'Im Hafen findet er ein Schiff – und bezahlt für die Fahrt in die Gegenrichtung.', en: 'At the harbour he finds a ship – and pays the fare in the opposite direction.' } },
-      { de: 'Nach Tarsis', en: 'Toward Tarshish', lat: 36.500, lon: 25.000, ref: { de: 'Jona 1,4-16', en: 'Jonah 1:4-16' }, text: { de: 'Sturm auf dem Mittelmeer; der Prophet schläft unter Deck, bis die heidnischen Seeleute beten.', en: 'A storm on the Mediterranean; the prophet sleeps below deck until the pagan sailors pray.' } },
-      { de: 'Im Bauch des Fisches', en: 'In the belly of the fish', lat: 34.000, lon: 32.500, ref: { de: 'Jona 2', en: 'Jonah 2' }, text: { de: 'Drei Tage im Dunkeln – ein Psalm aus der Tiefe, den Jesus später auf sich selbst bezieht.', en: 'Three days in the dark – a psalm from the depths that Jesus later applies to himself.' } },
+      { de: 'Nach Tarsis', en: 'Toward Tarshish', lat: 36.500, lon: 25.000, sea: true, ref: { de: 'Jona 1,4-16', en: 'Jonah 1:4-16' }, text: { de: 'Sturm auf dem Mittelmeer; der Prophet schläft unter Deck, bis die heidnischen Seeleute beten.', en: 'A storm on the Mediterranean; the prophet sleeps below deck until the pagan sailors pray.' } },
+      { de: 'Im Bauch des Fisches', en: 'In the belly of the fish', lat: 34.000, lon: 32.500, sea: true, ref: { de: 'Jona 2', en: 'Jonah 2' }, text: { de: 'Drei Tage im Dunkeln – ein Psalm aus der Tiefe, den Jesus später auf sich selbst bezieht.', en: 'Three days in the dark – a psalm from the depths that Jesus later applies to himself.' } },
       { de: 'Ninive', en: 'Nineveh', lat: 36.359, lon: 43.153, placeId: 'a70fd5d', ref: { de: 'Jona 3', en: 'Jonah 3' }, text: { de: 'Fünf Worte Predigt, und die ganze Stadt kehrt um – bis hinauf zum König und hinunter zum Vieh.', en: 'A five-word sermon, and the whole city repents – up to the king and down to the cattle.' } },
       { de: 'Östlich der Stadt', en: 'East of the city', lat: 36.359, lon: 43.400, ref: { de: 'Jona 4', en: 'Jonah 4' }, text: { de: 'Jona ärgert sich über die Gnade, unter einer Rizinusstaude. Das Buch endet mit einer Frage an ihn – und an uns.', en: 'Jonah sulks over the mercy, under a plant. The book ends with a question to him – and to us.' } },
     ],
