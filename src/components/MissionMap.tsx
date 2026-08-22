@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
-import { enableMarkerKeyboard } from '../lib/mapKeyboard';
+import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 
 /** Ein Punkt auf der Weltkarte: Reisestation oder Ereignis der Ausbreitung. */
@@ -154,6 +154,7 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
           .openTooltip();
       }
     }
+    if (mapRef.current) markVectorsDecorative(mapRef.current.getContainer());
   }, [markers, routes]);
 
   // auf eine Menge von Punkten zoomen (Phase / Reise gewechselt)

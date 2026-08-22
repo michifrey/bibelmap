@@ -323,7 +323,9 @@ Startseite und Seite „Projekte unterstützen".
   zu fliegen, Reisender springt statt zu gleiten, Pulsringe stehen still);
   Escape schließt von außen nach innen; ← / → und Leertaste in den Reisen.
   Kartenmarker sind mit Tabulator erreichbar und mit Enter/Leertaste
-  auslösbar. Offen: durchgängige Alt-Texte.
+  auslösbar. Jedes Bedienelement trägt einen Namen, jede Grafik ist benannt
+  oder als Beiwerk gekennzeichnet – geprüft mit `scripts/a11y-audit.mjs` über
+  alle zwölf Ansichten.
 - **i18n:** DE/EN vollständig; Architektur erlaubt weitere Sprachen.
 - **Lizenz-Compliance:** Attribution für Daten (CC-BY), Bilder (je Bild) und
   Kartenkacheln stets sichtbar.
@@ -358,7 +360,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v1.0** | **Bibeltext eingebettet** (4.7) inkl. Ort-im-Text-Verknüpfung, Tastatur | ✅ erledigt |
 | **v0.3** | Suche über Referenzen (4.3/4.15), State in URL (4.15), reduzierte Bewegung + Escape | ✅ erledigt |
 | **v0.4** | Reisen & Geschichten (4.12), Mission & Ausbreitung (4.13), Bibelquiz (4.14), Offline (4.16), Handout (4.17), Nachbarorte (4.18), Code-Splitting | ✅ erledigt |
-| **offen** | durchgängige Alt-Texte, 3-D-Gelände (MapLibre) | ⬜ offen |
+| **offen** | 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
 

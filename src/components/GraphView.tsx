@@ -717,6 +717,7 @@ export default function GraphView({ places, lang }: Props) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('graphSearch')}
+            aria-label={t('graphSearch')}
             className="bm-input w-36 px-2.5 py-1.5 text-[12px]"
           />
           <div className="flex flex-wrap items-center gap-1.5">
@@ -729,6 +730,7 @@ export default function GraphView({ places, lang }: Props) {
             {t('graphPlaces')}
             <input
               type="range"
+              aria-label={t('graphPlaces')}
               min={30}
               max={250}
               step={10}
@@ -781,7 +783,7 @@ export default function GraphView({ places, lang }: Props) {
                   aria-label={t('close')}
                   className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/15 text-white transition hover:bg-black/30"
                 >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
                 </button>
                 <div className="text-[11px] font-medium uppercase tracking-wide text-white/75">{t('graphPassages')}</div>
                 <h2 className="mt-0.5 font-display text-2xl font-semibold leading-tight">{lang === 'de' ? selPassage.de : selPassage.en}</h2>
@@ -798,7 +800,7 @@ export default function GraphView({ places, lang }: Props) {
                     style={{ background: PASSAGE_COLOR }}
                   >
                     {selPassage.ref}
-                    <svg viewBox="0 0 24 24" className="h-3 w-3 opacity-80" fill="currentColor"><path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14zM5 5h5v2H7v10h10v-3h2v5H5z" /></svg>
+                    <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3 opacity-80" fill="currentColor"><path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14zM5 5h5v2H7v10h10v-3h2v5H5z" /></svg>
                   </a>
                   <button
                     onClick={() => { setBookInfo({ osis: selPassage.book, label: graph.nodes.find((n) => n.kind === 'book' && n.bookOsis === selPassage.book)?.label ?? selPassage.book }); setSelPassage(null); }}
@@ -820,7 +822,7 @@ export default function GraphView({ places, lang }: Props) {
             <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
               <div className="font-display text-lg font-semibold text-white">{bookInfo.label}</div>
               <button onClick={() => setBookInfo(null)} aria-label={t('close')} className="grid h-7 w-7 place-items-center rounded-full bg-surface text-white hover:bg-gold/30">
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
               </button>
             </div>
             <div className="scroll-soft flex-1 overflow-y-auto px-4 py-3">

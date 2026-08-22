@@ -27,7 +27,7 @@ const weight = (id: string) => Math.sqrt(YEARS[id] ?? 100);
 function PlayDot({ bg, fill }: { bg: string; fill: string }) {
   return (
     <span className="grid h-7 w-7 flex-none place-items-center rounded-full" style={{ background: bg }}>
-      <svg viewBox="0 0 24 24" className="h-3 w-3" fill={fill}>
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3" fill={fill}>
         <path d="M8 5.5v13l11-6.5Z" />
       </svg>
     </span>
@@ -36,7 +36,7 @@ function PlayDot({ bg, fill }: { bg: string; fill: string }) {
 
 function Arrow({ className = '' }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 flex-none ${className}`} fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+    <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-3.5 w-3.5 flex-none ${className}`} fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
       <path d="M5 12h13M13 6l6 6-6 6" />
     </svg>
   );

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
-import { enableMarkerKeyboard } from '../lib/mapKeyboard';
+import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions, useReducedMotion } from '../lib/motion';
 import { pointAt, traveled, type LatLon } from '../lib/route';
 
@@ -147,6 +147,7 @@ export default function RouteMap({
       zIndexOffset: 1000,
     }).addTo(map);
 
+    markVectorsDecorative(map.getContainer());
     map.flyToBounds(L.latLngBounds(points).pad(0.25), flyOptions({ duration: 0.8, maxZoom: 9 }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stops, color, context]);

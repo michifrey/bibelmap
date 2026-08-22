@@ -58,7 +58,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
           className="pointer-events-auto flex items-center gap-2 bg-deepest/95 px-3 py-2 text-left ring-1 ring-white/10 backdrop-blur-xl transition hover:bg-deepest sm:gap-3 sm:px-4 sm:py-2.5"
         >
           <div className="grid h-8 w-8 place-items-center bg-gradient-to-br from-signal to-deepest text-gold shadow-inner sm:h-9 sm:w-9">
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
               <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
             </svg>
           </div>
@@ -102,9 +102,9 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
               onClick={() => setOpen((v) => !v)}
               className="flex items-center gap-1.5 bg-signal px-2.5 py-2 text-xs font-medium text-white ring-1 ring-white/10 transition hover:bg-signal sm:px-3.5 sm:py-2.5 sm:text-sm"
             >
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2"/></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2"/></svg>
               <span className="hidden sm:inline">{t('modes')}</span>
-              <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
             </button>
             {open && (
               <>
@@ -120,7 +120,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
                       className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-surface"
                     >
                       <span className="mt-0.5 grid h-8 w-8 flex-none place-items-center bg-white/10 text-white">
-                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d={m.icon} stroke="currentColor" strokeWidth="1.6" fill={m.id === 'present' || m.id === 'support' ? 'currentColor' : 'none'} /></svg>
+                        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d={m.icon} stroke="currentColor" strokeWidth="1.6" fill={m.id === 'present' || m.id === 'support' ? 'currentColor' : 'none'} /></svg>
                       </span>
                       <span className="min-w-0">
                         <span className="block text-sm font-semibold text-white">{m.label}</span>

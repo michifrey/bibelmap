@@ -305,7 +305,7 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
       {/* Kopfzeile */}
       <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
         <div className="flex items-center gap-2">
-          <svg viewBox="0 0 24 24" className="h-5 w-5 flex-none text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 flex-none text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
             <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18" />
           </svg>
           <div>
@@ -317,9 +317,9 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
           <ShareLink className="bm-btn hidden sm:inline-flex" />
           <button onClick={() => setPlaying((p) => !p)} className="bm-btn">
             {playing ? (
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>
             ) : (
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M7 4v16l13-8z" /></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M7 4v16l13-8z" /></svg>
             )}
             {playing ? t('pause') : t('play')}
           </button>

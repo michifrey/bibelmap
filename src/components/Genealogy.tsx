@@ -154,13 +154,14 @@ export default function Genealogy({ places, lang, onShowPlace, focusId, onShowOn
           {/* toolbar */}
           <div className="flex flex-none flex-wrap items-center gap-2 border-b border-white/10 bg-deepest/95 px-4 py-2.5 backdrop-blur">
             <div className="relative min-w-[10rem] flex-1">
-              <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" fill="currentColor">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" fill="currentColor">
                 <path d="M10 4a6 6 0 1 0 3.7 10.7l4.3 4.3 1.4-1.4-4.3-4.3A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" />
               </svg>
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t('genealogySearch')}
+                aria-label={t('genealogySearch')}
                 className="w-full border border-white/10 bg-deepest px-3 py-1.5 pl-8 text-sm text-white outline-none placeholder:text-white/45 focus:border-gold"
               />
               {query && (
@@ -261,7 +262,7 @@ function TreeNode({ node, depth, lang, open, matches, onToggle, resolvePlace, on
               style={{ background: color }}
               aria-label={isOpen ? t('collapseAll') : t('expandAll')}
             >
-              <svg viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${isOpen ? 'rotate-90' : ''}`} fill="currentColor">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-3.5 w-3.5 transition-transform ${isOpen ? 'rotate-90' : ''}`} fill="currentColor">
                 <path d="M9 6l6 6-6 6z" />
               </svg>
             </button>
@@ -292,7 +293,7 @@ function TreeNode({ node, depth, lang, open, matches, onToggle, resolvePlace, on
               title={t('showOnMap')}
               className="ml-auto inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-white opacity-80 transition hover:bg-signal hover:text-white"
             >
-              <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor">
                 <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
               </svg>
               {t('showOnMap')}

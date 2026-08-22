@@ -321,7 +321,7 @@ function Bar({ title, subtitle, onExit }: { title: string; subtitle?: string; on
   return (
     <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
       <div className="flex items-center gap-2">
-        <svg viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
           <path d="M12 17h.01M9.5 9a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1 1-1.1 1.8" />
           <circle cx="12" cy="12" r="9" />
         </svg>

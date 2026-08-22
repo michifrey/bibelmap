@@ -39,7 +39,7 @@ function SourceLink({ href, children }: { href: string; children: React.ReactNod
       className="inline-flex items-center gap-1 bg-surface px-2.5 py-1.5 text-xs font-medium text-white transition hover:bg-gold/30"
     >
       {children}
-      <svg viewBox="0 0 24 24" className="h-3 w-3 opacity-60" fill="currentColor">
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3 opacity-60" fill="currentColor">
         <path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14zM5 5h5v2H7v10h10v-3h2v5H5z" />
       </svg>
     </a>
@@ -75,7 +75,7 @@ export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlac
           onResolved={setImg}
           placeholder={
             <div className="flex h-28 w-full items-center justify-center bg-gradient-to-br from-signal to-deepest">
-              <svg viewBox="0 0 24 24" className="h-10 w-10 text-gold/70" fill="currentColor">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-10 w-10 text-gold/70" fill="currentColor">
                 <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
               </svg>
             </div>
@@ -88,7 +88,7 @@ export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlac
             aria-label={t('close')}
             className="grid h-8 w-8 place-items-center rounded-full bg-deepest/95 text-white ring-1 ring-white/10 transition hover:bg-deepest"
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
               <path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" />
             </svg>
           </button>

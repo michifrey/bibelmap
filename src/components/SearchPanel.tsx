@@ -64,7 +64,7 @@ function Row({ p, onSelect, t }: { p: Place; onSelect: (p: Place) => void; t: (k
           {p.types[0] ? ` · ${p.types[0]}` : ''}
         </span>
       </span>
-      <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white/30 transition group-hover:text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white/30 transition group-hover:text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 5l7 7-7 7" />
       </svg>
     </button>
@@ -79,7 +79,7 @@ function StoryRow({ hit, onOpen }: { hit: SearchHit; onOpen: (h: SearchHit) => v
         <span className="block truncate text-[14px] font-bold text-white">{hit.title}</span>
         <span className="mt-0.5 block truncate text-[11px] text-white/45">{hit.subtitle}</span>
       </span>
-      <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white/30 transition group-hover:text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white/30 transition group-hover:text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 5l7 7-7 7" />
       </svg>
     </button>
@@ -105,13 +105,14 @@ export default function SearchPanel({
     <div className="flex h-full flex-col">
       <div className="p-3">
         <div className="relative">
-          <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" fill="currentColor">
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" fill="currentColor">
             <path d="M10 4a6 6 0 104.47 10l4.27 4.26 1.42-1.42-4.26-4.27A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z" />
           </svg>
           <input
             value={query}
             onChange={(e) => onQuery(e.target.value)}
             placeholder={t('search')}
+            aria-label={t('search')}
             className="w-full border border-white/10 bg-deepest py-2.5 pl-9 pr-9 text-sm text-white outline-none transition placeholder:text-white/45 focus:border-gold focus:ring-2 focus:ring-gold/30"
           />
           {query && (
@@ -120,7 +121,7 @@ export default function SearchPanel({
               aria-label={t('reset')}
               className="absolute right-2 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-white/60 hover:bg-surface"
             >
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
                 <path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" />
               </svg>
             </button>
@@ -131,7 +132,7 @@ export default function SearchPanel({
       <div className="scroll-soft min-h-0 flex-1 overflow-y-auto px-1 pb-3">
         {refHit && onOpenRef && (
           <button onClick={onOpenRef} className="bm-row group border-l-4 border-gold">
-            <svg viewBox="0 0 24 24" className="h-5 w-5 flex-none text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 flex-none text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5zM19 18v3H6.5" />
             </svg>
             <span className="min-w-0 flex-1">
@@ -140,7 +141,7 @@ export default function SearchPanel({
                 {refHit.count} {refHit.count === 1 ? t('place') : t('places')} · {t('readChapter')}
               </span>
             </span>
-            <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white/30 transition group-hover:text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white/30 transition group-hover:text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 5l7 7-7 7" />
             </svg>
           </button>

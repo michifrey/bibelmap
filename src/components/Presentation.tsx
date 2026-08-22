@@ -208,6 +208,7 @@ export default function Presentation({ places, lang, initialBook, initialChapter
             </div>
             <input
               type="range"
+              aria-label={`${t('chapter')} ${chapter} / ${meta.chapters}`}
               min={1}
               max={meta.chapters}
               value={chapter}
@@ -231,7 +232,7 @@ export default function Presentation({ places, lang, initialBook, initialChapter
                   onClick={() => setShowVideo(true)}
                   className="inline-flex items-center gap-1 bg-deep px-3 py-1.5 text-[11px] font-extrabold tracking-wide text-white transition hover:bg-signal"
                 >
-                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
                   {t('video')}
                 </button>
               ) : (
@@ -295,7 +296,7 @@ export default function Presentation({ places, lang, initialBook, initialChapter
                           title={placeName(p, lang)}
                           className={`ml-1 inline-flex translate-y-[1px] items-center rounded-full px-1 align-middle text-[10px] font-sans transition ${ selected?.id === p.id ? 'bg-signal text-white' : 'bg-gold/30 text-white hover:bg-gold/55' }`}
                         >
-                          <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" /></svg>
+                          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" /></svg>
                           {placeName(p, lang)}
                         </button>
                       ))}
@@ -340,7 +341,7 @@ export default function Presentation({ places, lang, initialBook, initialChapter
                 className="grid h-8 w-8 place-items-center rounded-full bg-surface text-white transition hover:bg-gold/30"
                 aria-label={t('close')}
               >
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
               </button>
             </div>
             <YouTubeEmbed ids={bibleProjectVideoIds(meta.osis)} title={lang === 'de' ? meta.de : meta.en} />
@@ -387,7 +388,7 @@ function PresentationBar({
             title={t('beamerHint')}
             className={`flex items-center gap-1.5 px-3 py-1.5 text-sm transition ${beamer ? 'bg-white text-signal' : 'bg-white/10 hover:bg-white/20'}`}
           >
-            <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M3 6h18v10H3zM8 20h8M12 16v4" />
             </svg>
             {t('beamer')}
