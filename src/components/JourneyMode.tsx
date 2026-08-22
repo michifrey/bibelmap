@@ -152,12 +152,13 @@ export default function JourneyMode({ places, lang, onShowPlace, initial, onNavi
   const place = stop.placeId ? placeById.get(stop.placeId) : undefined;
 
   return (
-    <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
+    <div className="bm-print-root fixed inset-0 z-[2000] flex flex-col bg-deepest">
       <Bar
         title={lang === 'de' ? journey.de : journey.en}
         subtitle={`${lang === 'de' ? era?.de : era?.en} · ${lang === 'de' ? journey.when.de : journey.when.en}`}
         onBack={() => setId(null)}
         backLabel={t('allJourneys')}
+        onPrint={() => window.print()}
         onExit={onExit}
       />
 
@@ -165,14 +166,25 @@ export default function JourneyMode({ places, lang, onShowPlace, initial, onNavi
         {/* Erzählung */}
         <div
           ref={panelRef}
-          className="scroll-soft flex w-full flex-col overflow-y-auto border-b border-white/10 md:w-[26rem] md:flex-none md:border-b-0 md:border-r"
+          className="bm-print-sheet scroll-soft flex w-full flex-col overflow-y-auto border-b border-white/10 md:w-[26rem] md:flex-none md:border-b-0 md:border-r"
         >
+          <div className="bm-print-only mb-4 border-b px-5 pb-3 pt-1">
+            <div className="text-[10px] uppercase tracking-widest">
+              {lang === 'de' ? era?.de : era?.en} · {lang === 'de' ? journey.when.de : journey.when.en}
+            </div>
+            <h1 className="font-display text-2xl uppercase">{lang === 'de' ? journey.de : journey.en}</h1>
+            <div className="text-[11px]">
+              {lang === 'de' ? journey.passage.de : journey.passage.en} · {formatKm(totalKm, lang)} ·{' '}
+              {walkingDays(totalKm)} {t('dayWalks')} · bibelmap
+            </div>
+          </div>
+
           <div className="border-b border-white/10 px-5 py-3 md:py-4">
             {/* Auf dem Telefon zählt jede Zeile – der Anriss stand schon in der Auswahl. */}
             <p className="hidden max-w-prose text-[14px] leading-relaxed text-white/70 md:block">
               {lang === 'de' ? journey.lead.de : journey.lead.en}
             </p>
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 md:mt-3">
+            <div className="bm-noprint flex flex-wrap items-center gap-x-3 gap-y-1 md:mt-3">
               <a
                 href={passageUrl(lang === 'de' ? journey.passage.de : journey.passage.en, lang)}
                 target="_blank"
@@ -223,7 +235,7 @@ export default function JourneyMode({ places, lang, onShowPlace, initial, onNavi
                     </span>
                   </button>
                   {active && place && (
-                    <button onClick={() => onShowPlace(place)} className="bm-btn bm-btn-ghost ml-3 mb-2 mt-1">
+                    <button onClick={() => onShowPlace(place)} className="bm-noprint bm-btn bm-btn-ghost ml-3 mb-2 mt-1">
                       {t('showOnMap')} →
                     </button>
                   )}
@@ -236,7 +248,7 @@ export default function JourneyMode({ places, lang, onShowPlace, initial, onNavi
           </ol>
 
           {/* Steuerung */}
-          <div className="sticky bottom-0 mt-auto border-t border-white/10 bg-abyss px-4 py-3">
+          <div className="bm-noprint sticky bottom-0 mt-auto border-t border-white/10 bg-abyss px-4 py-3">
             <div className="flex items-center justify-between gap-2">
               <button onClick={() => go(-1)} disabled={index === 0} className="bm-btn bm-btn-ghost">
                 ‹ {t('prev')}
@@ -268,7 +280,7 @@ export default function JourneyMode({ places, lang, onShowPlace, initial, onNavi
         </div>
 
         {/* Karte */}
-        <div className="relative min-h-[45vh] flex-1">
+        <div className="bm-noprint relative min-h-[45vh] flex-1">
           <RouteMap
             stops={stops}
             color={color}
@@ -292,17 +304,19 @@ function Bar({
   subtitle,
   onBack,
   backLabel,
+  onPrint,
   onExit,
 }: {
   title: string;
   subtitle?: string;
   onBack?: () => void;
   backLabel?: string;
+  onPrint?: () => void;
   onExit: () => void;
 }) {
   const t = useT();
   return (
-    <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
+    <div className="bm-noprint flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
       <div className="flex min-w-0 items-center gap-3">
         {onBack && (
           <button onClick={onBack} className="bm-btn bm-btn-ghost flex-none">
@@ -314,7 +328,15 @@ function Bar({
           {subtitle && <div className="mt-1 truncate text-[11px] text-white/55">{subtitle}</div>}
         </div>
       </div>
-      <div className="flex flex-none items-center gap-2">
+      <div className="bm-noprint flex flex-none items-center gap-2">
+        {onPrint && (
+          <button onClick={onPrint} className="bm-btn hidden sm:inline-flex" title={t('printHint')}>
+            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M7 9V4h10v5M7 19H5v-6h14v6h-2M8 15h8v5H8z" />
+            </svg>
+            {t('print')}
+          </button>
+        )}
         <ShareLink className="bm-btn hidden sm:inline-flex" />
         <button onClick={onExit} className="bm-btn bm-btn-gold">
           {t('exit')} ✕

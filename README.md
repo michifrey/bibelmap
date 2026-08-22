@@ -77,6 +77,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   auf eine **unbeschriftete** Karte ist die Antwort, die Entfernung gibt die
   Punkte (bis 25 km Volltreffer). Drei Stufen nach Bekanntheit der Orte –
   ab 50, ab 15 oder ab 3 Erwähnungen.
+- **Handout drucken** – jede Reise lässt sich als Blatt ausgeben: Titel, Epoche,
+  Bibelstelle, Gesamtstrecke und alle Stationen mit Stelle, Text und Entfernung
+  – ohne Karte, Knöpfe und dunklen Hintergrund. Für den Hauskreis, der lieber
+  Papier in der Hand hat.
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
 - **Hören & Sehen** – zu jedem Ort die Podcast-Folgen und Videos, die eine
   Bibelstelle behandeln, in der der Ort vorkommt.
