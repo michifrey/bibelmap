@@ -17,6 +17,10 @@ import ChurchMode from './components/ChurchMode';
 import GraphView from './components/GraphView';
 import Genealogy from './components/Genealogy';
 import Landing, { type LandingTarget } from './components/Landing';
+import Support from './components/Support';
+
+/** The support page is worth linking to from outside, so it lives on a hash. */
+const SUPPORT_HASH = '#unterstuetzen';
 
 function Loading() {
   const t = useT();
@@ -42,12 +46,14 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
-  const [mode, setMode] = useState<Mode | null>(null);
+  const [mode, setMode] = useState<Mode | null>(() =>
+    window.location.hash === SUPPORT_HASH ? 'support' : null,
+  );
   const [basemap, setBasemap] = useState<BasemapId>('dark');
   const [view, setView] = useState<View>('map');
   // The start page is the front door: it is what the app opens on, and the
   // wordmark in the header is the way back to it.
-  const [atStart, setAtStart] = useState(true);
+  const [atStart, setAtStart] = useState(() => window.location.hash !== SUPPORT_HASH);
   // Cross-links between the time tree and the church-history map (shared data).
   const [treeFocus, setTreeFocus] = useState<string | null>(null);
   const [churchFocus, setChurchFocus] = useState<string | null>(null);
@@ -70,9 +76,33 @@ export default function App() {
   }
 
   function enterFromStart(target: LandingTarget) {
+    if (target === 'support') {
+      openSupport();
+      return;
+    }
     setAtStart(false);
     setView(target === 'tree' ? 'tree' : 'map');
     setMode(target === 'present' ? 'present' : null);
+  }
+
+  function openSupport() {
+    if (window.location.hash !== SUPPORT_HASH) {
+      window.history.pushState(null, '', SUPPORT_HASH);
+    }
+    setAtStart(false);
+    setView('map');
+    setMode('support');
+  }
+
+  /**
+   * Replace rather than go back: someone may have opened the link directly, and
+   * `back()` would then walk them off the site instead of closing the page.
+   */
+  function closeSupport() {
+    if (window.location.hash === SUPPORT_HASH) {
+      window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    setMode(null);
   }
 
   function showPersonOnMap(id: string) {
@@ -92,12 +122,35 @@ export default function App() {
     setView(v);
   }
   function handleMode(m: Mode) {
+    if (m === 'support') {
+      openSupport();
+      return;
+    }
     if (m === 'church') setChurchFocus(null);
     setMode(m);
   }
 
   useEffect(() => {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
+  }, []);
+
+  // Keep the hash and the support page in step. popstate covers back/forward,
+  // hashchange a hand-edited address.
+  useEffect(() => {
+    const sync = () => {
+      if (window.location.hash === SUPPORT_HASH) {
+        setAtStart(false);
+        setMode('support');
+      } else {
+        setMode((m) => (m === 'support' ? null : m));
+      }
+    };
+    window.addEventListener('popstate', sync);
+    window.addEventListener('hashchange', sync);
+    return () => {
+      window.removeEventListener('popstate', sync);
+      window.removeEventListener('hashchange', sync);
+    };
   }, []);
 
   const visible = useMemo(() => (places ? placesInEra(places, era) : []), [places, era]);
@@ -303,6 +356,7 @@ export default function App() {
               />
             )}
             {mode === 'compare' && <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />}
+            {mode === 'support' && <Support lang={lang} onLang={setLang} onExit={closeSupport} />}
           </>
         )}
 
