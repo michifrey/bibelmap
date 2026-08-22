@@ -17,7 +17,16 @@ export interface PlaceImage {
 
 export interface Place {
   id: string;
+  /** English name from the OpenBible dataset, e.g. "Babylon 1". */
   name: string;
+  /**
+   * German name, recovered from the Lutherbibel 1912 by
+   * `scripts/build-names-de.mjs`. Missing where the derivation was not
+   * confident enough — see data/names-de-review.json.
+   */
+  nameDe?: string;
+  /** German inflections and compounds ("Ägyptenland"), for text highlighting. */
+  variantsDe?: string[];
   slug: string;
   article: string | null;
   types: string[];

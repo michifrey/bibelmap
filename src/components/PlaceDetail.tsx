@@ -2,10 +2,11 @@ import { useMemo, useState } from 'react';
 import type { Place, PlaceImage, VerseRef } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
-import { booksForPlace, erasForPlace } from '../lib/places';
+import { booksForPlace, erasForPlace, placeName, placeNames } from '../lib/places';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { ERA_BY_ID, ERAS } from '../data/eras';
 import PlaceThumb from './PlaceThumb';
+import PlaceMedia from './PlaceMedia';
 
 interface Props {
   place: Place;
@@ -49,6 +50,12 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
     return ERAS.filter((e) => ids.has(e.id));
   }, [place]);
   const books = booksForPlace(place);
+  const title = placeName(place, lang);
+  // Every other spelling we know, in both languages, minus the one in the heading.
+  const alsoCalled = useMemo(
+    () => [...new Set(placeNames(place, lang))].filter((n) => n !== title),
+    [place, lang, title],
+  );
 
   const obUrl = `https://www.openbible.info/geo/ancient/${place.id}/${place.slug}`;
   const wikiUrl = place.wikidata ? `https://www.wikidata.org/wiki/${place.wikidata}` : null;
@@ -91,7 +98,7 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
       </div>
 
       <div className="scroll-soft flex-1 overflow-y-auto px-4 pb-5 pt-3">
-        <h2 className="font-display text-2xl font-semibold text-teal">{place.name.replace(/ \d+$/, '')}</h2>
+        <h2 className="font-display text-2xl font-semibold text-teal">{title}</h2>
         <div className="mt-1 flex flex-wrap gap-1.5">
           {place.types.map((ty) => (
             <span key={ty} className="rounded-full bg-cream-2 px-2 py-0.5 text-[11px] capitalize text-ink-soft">
@@ -119,10 +126,10 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
           </div>
         </div>
 
-        {place.variants.length > 1 && (
+        {alsoCalled.length > 0 && (
           <div className="mt-4">
             <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{t('alsoCalled')}</div>
-            <div className="text-sm text-ink">{place.variants.join(' · ')}</div>
+            <div className="text-sm text-ink">{alsoCalled.join(' · ')}</div>
           </div>
         )}
 
@@ -160,6 +167,8 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
             })}
           </div>
         </div>
+
+        <PlaceMedia place={place} />
 
         {/* sources */}
         <div className="mt-5">

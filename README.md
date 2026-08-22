@@ -43,7 +43,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
 - **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
   Imagery) und **Relief/„historisch"** (Esri Shaded Relief).
-- **Zweisprachig** – Oberfläche und Buchnamen auf Deutsch/Englisch.
+- **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
+- **Hören & Sehen** – zu jedem Ort die Podcast-Folgen und Videos, die eine
+  Bibelstelle behandeln, in der der Ort vorkommt.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
 
@@ -93,6 +95,64 @@ OPEN_BIBLES=/tmp/open-bibles npm run text
 
 **Ortsbilder:** Orte ohne OpenBible-Foto, die eine Wikidata-ID haben, laden ihr Bild
 zur Laufzeit aus Wikidata (P18) → Wikimedia Commons nach (`src/lib/wikidataImage.ts`).
+
+### Deutsche Ortsnamen
+
+Der OpenBible-Datensatz kennt nur englische Namen (`Egypt`, `Babylon 1`), die
+deutsche Oberfläche zeigte sie deshalb unübersetzt an. Die deutschen Namen werden
+aus Daten hergeleitet, die ohnehin im Projekt liegen – nicht von Hand gepflegt:
+
+```bash
+npm run names
+```
+
+Zu jedem Ort ist bekannt, in welchen Versen er vorkommt, und der vollständige
+Luther-Text 1912 liegt bereits unter `public/data/text/`. Der deutsche Name ist
+das Wort, das in fast allen Versen eines Ortes steht und sonst kaum irgendwo –
+gemessen als F1 aus Precision und Recall, abgesichert über die Ähnlichkeit zum
+englischen Namen (`Damascus` → `Damaskus`, `Shechem` → `Sichem`). Übersetzte
+Namen ohne Schreibähnlichkeit (`Red Sea` → `Schilfmeer`) müssen ihre Statistik
+allein tragen.
+
+Das deckt **1.015 der 1.335 Orte** ab. Was das Verfahren nicht sicher entscheiden
+kann, landet in `data/names-de-review.json`; wer einen Fall klärt, trägt ihn in
+`data/names-de-overrides.json` ein – Handeinträge gewinnen immer. Orte ohne
+deutschen Namen zeigen weiter den englischen.
+
+`scripts/build-data.mjs` mischt `data/names-de.json` beim Neubau wieder ein, ein
+`npm run data` wirft die Namen also nicht weg.
+
+### Podcasts & Videos zu Orten
+
+Jede Ortskarte zeigt unter **Hören & Sehen**, welche Podcast-Folgen und Videos
+eine Bibelstelle behandeln, in der dieser Ort vorkommt:
+
+```bash
+npm run media            # baut aus data/media/raw/*.xml
+npm run media -- --fetch # holt die Feeds vorher
+npm run media -- --dry   # nur Bericht, schreibt nichts
+```
+
+Die Zuordnung braucht keine Handarbeit: `scripts/build-media.mjs` liest die
+Bibelstelle aus dem Folgentitel (`scripts/lib/bibleref.mjs` versteht deutsche
+und englische Notation - `Markus 6,30-44` wie `Mark 6:30-44`) und löst sie über
+`places.json` in Orte auf. **Örtlich** über die Verse, **thematisch** über die
+Epoche des Buches. Folgen ohne Bibelstelle im Titel - bei thematischen
+Predigten häufig - fallen aus der Ortszuordnung heraus; das ist beabsichtigt.
+
+Feed-Adressen, die nicht von Hand geprüft sind, stehen in
+`data/media/sources.json` auf `null` – eine geratene URL erzeugt still einen
+leeren Index. Steht stattdessen eine `appleId` da, löst `--fetch` die Adresse
+über die iTunes-Lookup-API auf und meldet sie zum Eintragen. Ohne Netzzugriff
+genügt es, die RSS-XML von Hand nach `data/media/raw/<id>.xml` zu legen.
+
+Quellen stehen in `data/media/sources.json`, die Feeds werden als XML unter
+`data/media/raw/` zwischengespeichert, damit der Build offline und
+reproduzierbar läuft. **BibleProject** braucht keinen Feed: je Buch eine
+Übersichtsseite, deren URL sich aus dem Buchkürzel baut.
+
+`public/data/media.json` wird erst geladen, wenn jemand eine Ortskarte öffnet -
+der Index wächst mit jeder Staffel und gehört nicht in den Startpfad.
 
 ### Epochen & Zeitleiste
 

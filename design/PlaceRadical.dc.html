@@ -1,0 +1,281 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Montserrat', system-ui, sans-serif; color: #10201f; background: #06403c; -webkit-font-smoothing: antialiased; }
+    .fr { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-optical-sizing: auto; }
+    a { color: #0d7f78; text-decoration: none; }
+    a:hover { color: #0a5f5a; }
+    .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+    .navi { display: grid; place-items: center; width: 56px; height: 56px; color: rgba(255,255,255,.5); }
+    .navi-on { background: #0d7f78; color: #ffffff; }
+    .vs { display: inline-block; padding: 4px 8px; background: rgba(255,255,255,.08); font-size: 11px; font-weight: 600; color: rgba(255,255,255,.75); }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1440px; height: 900px; overflow: hidden; background: #06403c; display: flex">
+
+  <!-- icon rail -->
+  <div style="flex-shrink: 0; width: 88px; display: flex; flex-direction: column; align-items: center; padding: 22px 0; background: #03302f">
+    <svg viewBox="0 0 40 40" width="36" height="36" aria-hidden="true">
+      <path d="M20 3 34 11v18L20 37 6 29V11Z" fill="none" stroke="#e0a449" stroke-width="2.4" stroke-linejoin="round"></path>
+      <path d="M20 27s6-6.6 6-10.4A6 6 0 0 0 14 16.6C14 20.4 20 27 20 27Z" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"></path>
+      <circle cx="20" cy="16.4" r="2.3" fill="#e0a449"></circle>
+    </svg>
+    <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 34px">
+      <div class="navi navi-on"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="2.6"></circle><path d="M12 20s6-6.6 6-10a6 6 0 1 0-12 0c0 3.4 6 10 6 10Z"></path></svg></div>
+      <div class="navi"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 16c2-4 5-4 7 0s5 4 8-1"></path><path d="M4 20c2-4 5-4 7 0s5 4 8-1"></path><circle cx="13" cy="7" r="3"></circle></svg></div>
+      <div class="navi"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1"></rect><path d="M8 20h8M10.5 9.2v3.6l3.2-1.8Z"></path></svg></div>
+      <div class="navi"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2.4"></circle><circle cx="5" cy="19.5" r="2.4"></circle><circle cx="19" cy="19.5" r="2.4"></circle><path d="M12 7v4M5 17v-2.5a1.5 1.5 0 0 1 1.5-1.5h11a1.5 1.5 0 0 1 1.5 1.5V17"></path></svg></div>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <div style="display: flex; flex-direction: column; gap: 2px; padding: 3px; background: rgba(255,255,255,.08)">
+      <span style="padding: 6px 9px; background: #e0a449; font-size: 10px; font-weight: 800; color: #06403c; text-align: center">DE</span>
+      <span style="padding: 6px 9px; font-size: 10px; font-weight: 700; color: rgba(255,255,255,.6); text-align: center">EN</span>
+    </div>
+  </div>
+
+  <!-- ============================ PLACE PANEL ============================ -->
+  <div style="flex-shrink: 0; width: 452px; display: flex; flex-direction: column; background: #06403c; border-right: 1px solid rgba(255,255,255,.1)">
+
+    <!-- illustrated header -->
+    <div style="position: relative; height: 236px; flex-shrink: 0">
+      <svg width="452" height="236" viewBox="0 0 452 236" style="display: block" aria-hidden="true">
+        <defs>
+          <linearGradient id="skyR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d7f78"></stop><stop offset="100%" stop-color="#053e3c"></stop></linearGradient>
+        </defs>
+        <rect width="452" height="236" fill="url(#skyR)"></rect>
+        <circle cx="366" cy="60" r="34" fill="#e0a449" fill-opacity=".16"></circle>
+        <circle cx="366" cy="60" r="17" fill="#e0a449" fill-opacity=".32"></circle>
+        <g fill="none" stroke="#a9e4dc" stroke-opacity=".2" stroke-width="1.4">
+          <path d="M0 172c50-12 86 8 136-2s86-20 136-10 86 22 180 6"></path>
+          <path d="M0 190c50-12 86 8 136-2s86-20 136-10 86 22 180 6"></path>
+        </g>
+        <g fill="none" stroke="#e0a449" stroke-opacity=".9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M46 206v-58h360v58"></path>
+          <path d="M46 148v-10h18v10M80 148v-10h18v10M114 148v-10h18v10M148 148v-10h18v10M182 148v-10h18v10M216 148v-10h18v10M250 148v-10h18v10M284 148v-10h18v10M318 148v-10h18v10M352 148v-10h18v10M386 148v-10h20v10"></path>
+          <path d="M200 206v-32a26 26 0 0 1 52 0v32"></path>
+          <path d="M98 138v-34h38v34M98 116h38"></path>
+          <path d="M310 138v-42h44v42M310 110h44"></path>
+          <path d="M172 138V88h108v50"></path>
+          <path d="M172 88 226 56l54 32"></path>
+          <path d="M226 56V42"></path>
+          <path d="M194 138v-28h18v28M240 138v-28h18v28"></path>
+        </g>
+      </svg>
+      <div style="position: absolute; left: 0; bottom: 0; padding: 6px 12px; background: #e0a449">
+        <span class="eyebrow" style="color: #06403c">Illustration · kein Foto hinterlegt</span>
+      </div>
+      <div style="position: absolute; right: 0; top: 0; display: grid; place-items: center; width: 44px; height: 44px; background: rgba(3,48,47,.8); color: #ffffff">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+      </div>
+    </div>
+
+    <!-- title block: the number is the graphic -->
+    <div style="flex-shrink: 0; display: flex; align-items: flex-end; gap: 18px; padding: 26px 28px 22px; background: #03302f">
+      <div style="flex-grow: 1">
+        <div class="eyebrow" style="color: #7fe3d5; margin-bottom: 10px">Siedlung · Meistgenannter Ort</div>
+        <div style="font-size: 46px; font-weight: 900; line-height: .94; letter-spacing: -.035em; color: #ffffff">JERUSALEM</div>
+      </div>
+      <div style="text-align: right">
+        <div style="font-size: 42px; font-weight: 900; line-height: .9; letter-spacing: -.04em; color: #e0a449">955</div>
+        <div class="eyebrow" style="color: rgba(255,255,255,.5); margin-top: 6px">Stellen</div>
+      </div>
+    </div>
+
+    <div style="flex-grow: 1; padding: 26px 28px 0; overflow: hidden">
+
+      <!-- canon strip -->
+      <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px">
+        <span class="eyebrow" style="color: #7fe3d5">Verteilung über die Bibel</span>
+        <div style="flex-grow: 1"></div>
+        <span style="font-size: 11px; font-weight: 600; color: rgba(255,255,255,.45)">37 von 66 Büchern</span>
+      </div>
+      <div style="display: flex; align-items: flex-end; gap: 2px; height: 46px">
+        <i title="1. Mose (Genesis) · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="2. Mose (Exodus) · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="3. Mose (Levitikus) · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="4. Mose (Numeri) · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="5. Mose (Deuteronomium) · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Josua · 9" style="display: block; width: 4px; height: 18px; background: #a89321"></i>
+          <i title="Richter · 4" style="display: block; width: 4px; height: 15px; background: #a89321"></i>
+          <i title="Rut · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="1. Samuel · 1" style="display: block; width: 4px; height: 11px; background: #5c8a3a"></i>
+          <i title="2. Samuel · 37" style="display: block; width: 4px; height: 28px; background: #5c8a3a"></i>
+          <i title="1. Könige · 30" style="display: block; width: 4px; height: 26px; background: #5c8a3a"></i>
+          <i title="2. Könige · 61" style="display: block; width: 4px; height: 34px; background: #2f8f7f"></i>
+          <i title="1. Chronik · 28" style="display: block; width: 4px; height: 25px; background: #5c8a3a"></i>
+          <i title="2. Chronik · 122" style="display: block; width: 4px; height: 44px; background: #2f8f7f"></i>
+          <i title="Esra · 51" style="display: block; width: 4px; height: 32px; background: #5a5ca8"></i>
+          <i title="Nehemia · 35" style="display: block; width: 4px; height: 27px; background: #5a5ca8"></i>
+          <i title="Ester · 1" style="display: block; width: 4px; height: 11px; background: #5a5ca8"></i>
+          <i title="Hiob · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Psalmen · 38" style="display: block; width: 4px; height: 28px; background: #5c8a3a"></i>
+          <i title="Sprüche · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Prediger · 5" style="display: block; width: 4px; height: 15px; background: #5c8a3a"></i>
+          <i title="Hoheslied · 8" style="display: block; width: 4px; height: 17px; background: #5c8a3a"></i>
+          <i title="Jesaja · 73" style="display: block; width: 4px; height: 36px; background: #2f8f7f"></i>
+          <i title="Jeremia · 133" style="display: block; width: 4px; height: 46px; background: #2f8f7f"></i>
+          <i title="Klagelieder · 15" style="display: block; width: 4px; height: 21px; background: #3a6ea8"></i>
+          <i title="Hesekiel · 44" style="display: block; width: 4px; height: 30px; background: #3a6ea8"></i>
+          <i title="Daniel · 10" style="display: block; width: 4px; height: 18px; background: #3a6ea8"></i>
+          <i title="Hosea · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Joel · 6" style="display: block; width: 4px; height: 16px; background: #2f8f7f"></i>
+          <i title="Amos · 2" style="display: block; width: 4px; height: 13px; background: #2f8f7f"></i>
+          <i title="Obadja · 3" style="display: block; width: 4px; height: 14px; background: #3a6ea8"></i>
+          <i title="Jona · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Micha · 12" style="display: block; width: 4px; height: 19px; background: #2f8f7f"></i>
+          <i title="Nahum · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Habakuk · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Zefanja · 7" style="display: block; width: 4px; height: 17px; background: #2f8f7f"></i>
+          <i title="Haggai · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Sacharja · 42" style="display: block; width: 4px; height: 29px; background: #5a5ca8"></i>
+          <i title="Maleachi · 2" style="display: block; width: 4px; height: 13px; background: #5a5ca8"></i>
+          <i title="Matthäus · 15" style="display: block; width: 4px; height: 21px; background: #9a4ba0"></i>
+          <i title="Markus · 14" style="display: block; width: 4px; height: 20px; background: #9a4ba0"></i>
+          <i title="Lukas · 38" style="display: block; width: 4px; height: 28px; background: #9a4ba0"></i>
+          <i title="Johannes · 18" style="display: block; width: 4px; height: 22px; background: #9a4ba0"></i>
+          <i title="Apostelgeschichte · 70" style="display: block; width: 4px; height: 36px; background: #b0436b"></i>
+          <i title="Römer · 5" style="display: block; width: 4px; height: 15px; background: #b0436b"></i>
+          <i title="1. Korinther · 2" style="display: block; width: 4px; height: 13px; background: #b0436b"></i>
+          <i title="2. Korinther · 4" style="display: block; width: 4px; height: 15px; background: #b0436b"></i>
+          <i title="Galater · 5" style="display: block; width: 4px; height: 15px; background: #b0436b"></i>
+          <i title="Epheser · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Philipper · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Kolosser · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="1. Thessalonicher · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="2. Thessalonicher · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="1. Timotheus · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="2. Timotheus · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Titus · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Philemon · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Hebräer · 1" style="display: block; width: 4px; height: 11px; background: #b0436b"></i>
+          <i title="Jakobus · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="1. Petrus · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="2. Petrus · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="1. Johannes · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="2. Johannes · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="3. Johannes · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Judas · 0" style="display: block; width: 4px; height: 4px; background: rgba(255,255,255,.14)"></i>
+          <i title="Offenbarung · 4" style="display: block; width: 4px; height: 15px; background: #b0436b"></i>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,.12)">
+        <span style="font-size: 10px; font-weight: 600; color: rgba(255,255,255,.4)">1. MOSE</span>
+        <span style="font-size: 10px; font-weight: 700; color: #e0a449">JEREMIA · 133 ×</span>
+        <span style="font-size: 10px; font-weight: 600; color: rgba(255,255,255,.4)">OFFENBARUNG</span>
+      </div>
+
+      <!-- eras -->
+      <div class="eyebrow" style="color: #7fe3d5; margin: 28px 0 12px">Erscheint in</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 4px">
+        <span style="padding: 6px 11px; background: #a89321; font-size: 11.5px; font-weight: 700; color: #ffffff">Landnahme</span>
+        <span style="padding: 6px 11px; background: #5c8a3a; font-size: 11.5px; font-weight: 700; color: #ffffff">Vereintes Kgr.</span>
+        <span style="padding: 6px 11px; background: #2f8f7f; font-size: 11.5px; font-weight: 700; color: #ffffff">Geteiltes Kgr.</span>
+        <span style="padding: 6px 11px; background: #3a6ea8; font-size: 11.5px; font-weight: 700; color: #ffffff">Exil</span>
+        <span style="padding: 6px 11px; background: #5a5ca8; font-size: 11.5px; font-weight: 700; color: #ffffff">Rückkehr</span>
+        <span style="padding: 6px 11px; background: #9a4ba0; font-size: 11.5px; font-weight: 700; color: #ffffff">Jesus</span>
+        <span style="padding: 6px 11px; background: #b0436b; font-size: 11.5px; font-weight: 700; color: #ffffff">Kirche</span>
+      </div>
+
+      <!-- top books -->
+      <div style="display: flex; align-items: baseline; gap: 10px; margin: 28px 0 12px">
+        <span class="eyebrow" style="color: #7fe3d5">Bibelstellen</span>
+        <div style="flex-grow: 1"></div>
+        <span style="font-size: 11px; font-weight: 700; color: #e0a449">ALLE 955</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px; padding: 12px 14px; background: rgba(255,255,255,.06); border-left: 4px solid #2f8f7f">
+        <span style="font-size: 22px; font-weight: 900; letter-spacing: -.03em; color: #ffffff; width: 44px">133</span>
+        <span style="flex-grow: 1; font-size: 13.5px; font-weight: 700; color: #ffffff">Jeremia</span>
+        <span class="vs">1:3</span><span class="vs">1:15</span><span class="vs">2:2</span>
+        <span style="font-size: 11px; font-weight: 600; color: rgba(255,255,255,.45)">+130</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px; margin-top: 4px; padding: 12px 14px; background: rgba(255,255,255,.06); border-left: 4px solid #2f8f7f">
+        <span style="font-size: 22px; font-weight: 900; letter-spacing: -.03em; color: #ffffff; width: 44px">122</span>
+        <span style="flex-grow: 1; font-size: 13.5px; font-weight: 700; color: #ffffff">2. Chronik</span>
+        <span class="vs">1:4</span><span class="vs">1:13</span><span class="vs">2:7</span>
+        <span style="font-size: 11px; font-weight: 600; color: rgba(255,255,255,.45)">+119</span>
+      </div>
+      <div style="display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 4px; padding: 12px; border: 1px dashed rgba(255,255,255,.2)">
+        <span style="font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: rgba(255,255,255,.6)">35 WEITERE BÜCHER</span>
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="3" stroke-linecap="round"><path d="M6 9l6 6 6-6"></path></svg>
+      </div>
+    </div>
+
+    <div style="flex-shrink: 0; display: flex; gap: 1px; margin-top: 22px; background: rgba(255,255,255,.1)">
+      <div style="flex: 1 1 0; padding: 16px 10px; background: #03302f; text-align: center"><span style="font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: rgba(255,255,255,.75)">OPENBIBLE</span></div>
+      <div style="flex: 1 1 0; padding: 16px 10px; background: #03302f; text-align: center"><span style="font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: rgba(255,255,255,.75)">BIBLIA</span></div>
+      <div style="flex: 1 1 0; padding: 16px 10px; background: #03302f; text-align: center"><span style="font-size: 10.5px; font-weight: 700; letter-spacing: .06em; color: rgba(255,255,255,.75)">WIKIDATA</span></div>
+      <div style="flex: 1 1 0; padding: 16px 10px; background: #e0a449; text-align: center"><span style="font-size: 10.5px; font-weight: 800; letter-spacing: .06em; color: #06403c">VIDEO</span></div>
+    </div>
+  </div>
+
+  <!-- ============================ MAP ============================ -->
+  <div style="position: relative; flex-grow: 1">
+    <svg style="position: absolute; inset: 0" width="900" height="900" viewBox="0 0 900 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="seaP" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0b7a72"></stop><stop offset="60%" stop-color="#085e5a"></stop><stop offset="100%" stop-color="#043634"></stop></linearGradient>
+        <linearGradient id="landP" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#094c48"></stop><stop offset="100%" stop-color="#106b63"></stop></linearGradient>
+        <pattern id="stippleP" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.4" fill="#0d7f78" fill-opacity=".5"></circle><circle cx="11" cy="10" r="1.1" fill="#14a093" fill-opacity=".3"></circle></pattern>
+        <radialGradient id="focusP" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e0a449" stop-opacity=".42"></stop><stop offset="100%" stop-color="#e0a449" stop-opacity="0"></stop></radialGradient>
+      </defs>
+      <rect width="900" height="900" fill="url(#seaP)"></rect>
+      <g stroke="#2ec2b0" stroke-opacity=".1" stroke-width="1"><path d="M0 180H900M0 360H900M0 540H900M0 720H900"></path><path d="M180 0V900M360 0V900M540 0V900M720 0V900"></path></g>
+      <path d="M170 900C230 700 350 540 520 420C660 322 790 268 900 236V0H900V900Z" fill="url(#landP)"></path>
+      <path d="M170 900C230 700 350 540 520 420C660 322 790 268 900 236" fill="none" stroke="#a9e4dc" stroke-opacity=".45" stroke-width="8"></path>
+      <path d="M230 900C290 716 400 574 566 458C692 370 806 318 900 288V0H900V900Z" fill="url(#stippleP)"></path>
+      <g fill="none" stroke="#8ee0d4" stroke-opacity=".14" stroke-width="1.5">
+        <path d="M350 900C410 748 510 622 660 528C766 462 850 428 900 412"></path>
+        <path d="M500 900C550 770 640 664 762 588C836 542 880 522 900 514"></path>
+      </g>
+      <path d="M900 320C812 358 744 418 692 492C636 570 604 656 570 742C546 802 528 858 518 900" fill="none" stroke="#063f3c" stroke-opacity=".6" stroke-width="11" stroke-linecap="round"></path>
+      <path d="M900 320C812 358 744 418 692 492C636 570 604 656 570 742C546 802 528 858 518 900" fill="none" stroke="#4fd8c4" stroke-opacity=".35" stroke-width="4" stroke-linecap="round"></path>
+      <text transform="translate(96 450) rotate(-64)" font-family="'Montserrat', sans-serif" font-size="12" font-weight="700" letter-spacing="7" fill="rgba(169,228,220,.3)">MITTELMEER</text>
+      <text x="400" y="800" font-family="'Montserrat', sans-serif" font-size="12" font-weight="700" letter-spacing="7" fill="rgba(169,228,220,.3)">JUDÄA</text>
+
+      <circle cx="530" cy="546" r="88" fill="url(#focusP)"></circle>
+      <g stroke="#e9fbf8" stroke-width="2.6">
+        <circle cx="628" cy="424" r="9" fill="#a89321"></circle>
+        <circle cx="470" cy="640" r="8" fill="#b8742e"></circle>
+        <circle cx="448" cy="452" r="8" fill="#b8742e"></circle>
+        <circle cx="700" cy="330" r="8" fill="#c98a2b"></circle>
+        <circle cx="530" cy="546" r="26" fill="#2f8f7f"></circle>
+      </g>
+      <circle cx="530" cy="546" r="37" fill="none" stroke="#e0a449" stroke-width="5"></circle>
+      <text x="530" y="553" text-anchor="middle" font-family="'Montserrat', sans-serif" font-size="15" font-weight="900" fill="#ffffff">955</text>
+      <g font-family="'Montserrat', sans-serif" fill="#ffffff">
+        <text x="530" y="612" text-anchor="middle" font-size="17" font-weight="800">Jerusalem</text>
+        <text x="646" y="429" font-size="12.5" font-weight="600" fill="rgba(255,255,255,.85)">Jericho</text>
+        <text x="486" y="645" font-size="12.5" font-weight="600" fill="rgba(255,255,255,.85)">Hebron</text>
+        <text x="464" y="457" font-size="12.5" font-weight="600" fill="rgba(255,255,255,.85)">Bethel</text>
+      </g>
+    </svg>
+
+    <div style="position: absolute; left: 26px; top: 26px; display: flex; align-items: center; gap: 12px; height: 46px; padding: 0 8px 0 18px; background: #2f8f7f">
+      <span class="eyebrow" style="color: rgba(255,255,255,.75)">Epoche</span>
+      <span style="font-size: 13.5px; font-weight: 800; color: #ffffff">Geteiltes Königreich</span>
+      <span style="display: grid; place-items: center; width: 30px; height: 30px; background: rgba(0,0,0,.2)">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+      </span>
+    </div>
+
+    <div style="position: absolute; right: 26px; top: 26px; display: flex; flex-direction: column">
+      <div style="display: grid; place-items: center; width: 46px; height: 46px; background: rgba(3,48,47,.86); color: #ffffff"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></div>
+      <span style="height: 1px; background: rgba(255,255,255,.16)"></span>
+      <div style="display: grid; place-items: center; width: 46px; height: 46px; background: rgba(3,48,47,.86); color: #ffffff"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14"></path></svg></div>
+    </div>
+
+    <div style="position: absolute; left: 26px; bottom: 26px; padding: 14px 20px; background: rgba(3,48,47,.9)">
+      <span style="font-size: 10.5px; font-weight: 600; color: rgba(255,255,255,.5)">Ortsdaten © OpenBible.info · CC-BY 4.0 · Kacheln © OpenStreetMap, © CARTO</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

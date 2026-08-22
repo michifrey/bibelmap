@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Instrument Sans', 'Inter', system-ui, sans-serif; color: #20302e; background: #fbf8f1; -webkit-font-smoothing: antialiased; }
+    .disp { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-optical-sizing: auto; }
+    a { color: #2f6f66; text-decoration: none; }
+    a:hover { color: #1f3d3a; }
+    .lbl { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #7c8785; }
+    .node { position: absolute; width: 150px; box-sizing: border-box; padding: 8px 10px 8px 12px; border-radius: 11px; background: #fbf8f1; border: 1px solid rgba(31,61,58,.12); box-shadow: 0 1px 2px rgba(20,32,31,.05), 0 6px 14px -8px rgba(20,32,31,.30); }
+    .nm { font-size: 13px; font-weight: 600; color: #20302e; line-height: 1.2; }
+    .sub { margin-top: 2px; font-size: 10.5px; color: #7c8785; line-height: 1.3; }
+    .legrow { display: flex; align-items: center; gap: 9px; padding: 6px 8px; border-radius: 9px; }
+  </style>
+</helmet>
+
+<div style="position: relative; width: 1440px; height: 900px; overflow: hidden; background: #fbf8f1; display: flex; flex-direction: column">
+
+  <!-- ===================== TOP BAR ===================== -->
+  <div style="flex-shrink: 0; height: 64px; display: flex; align-items: center; gap: 14px; padding: 0 20px; background: #1f3d3a; color: #f7f1e6">
+    <div style="display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: rgba(224,164,73,.18)">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#e0a449" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2.4"></circle><circle cx="5" cy="19.5" r="2.4"></circle><circle cx="19" cy="19.5" r="2.4"></circle><path d="M12 7v4M5 17v-2.5a1.5 1.5 0 0 1 1.5-1.5h11A1.5 1.5 0 0 1 19 14.5V17"></path></svg>
+    </div>
+    <div style="line-height: 1.2">
+      <div class="disp" style="font-size: 19px; font-weight: 600">Stammbäume</div>
+      <div style="font-size: 11px; color: rgba(247,241,230,.65)">Völker &amp; Stämme – von Adam über die Völkertafel bis zu den Stämmen Israels</div>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <div style="display: flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 10px; background: #e0a449; color: #1f3d3a; font-size: 13px; font-weight: 700">
+      Beenden
+      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+    </div>
+  </div>
+
+  <!-- ===================== TOOLBAR ===================== -->
+  <div style="flex-shrink: 0; height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 20px; background: #f4ecdd; border-bottom: 1px solid rgba(31,61,58,.10)">
+    <div style="display: flex; align-items: center; gap: 9px; width: 330px; padding: 8px 12px; border-radius: 10px; background: #fbf8f1; border: 1px solid rgba(31,61,58,.14)">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#7c8785" stroke-width="1.9" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 20 20"></path></svg>
+      <span style="font-size: 13px; color: #20302e">Jawan</span>
+      <div style="flex-grow: 1"></div>
+      <span style="padding: 2px 7px; border-radius: 999px; background: rgba(47,143,127,.16); font-size: 10.5px; font-weight: 600; color: #1f3d3a">1 Treffer</span>
+    </div>
+    <div style="display: flex; gap: 2px; padding: 3px; border-radius: 10px; background: #efe6d6">
+      <span style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; background: #1f3d3a; color: #f7f1e6; font-size: 12.5px; font-weight: 600">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6" cy="12" r="2.2"></circle><circle cx="18" cy="6" r="2.2"></circle><circle cx="18" cy="18" r="2.2"></circle><path d="M8 11l8-4M8 13l8 4"></path></svg>
+        Baum
+      </span>
+      <span style="display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 8px; color: #4a5754; font-size: 12.5px; font-weight: 500">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M8 12h11M11 17h8"></path></svg>
+        Liste
+      </span>
+    </div>
+    <span style="padding: 7px 13px; border-radius: 10px; border: 1px solid rgba(31,61,58,.14); font-size: 12.5px; font-weight: 600; color: #1f3d3a">Alle öffnen</span>
+    <span style="padding: 7px 13px; border-radius: 10px; border: 1px solid rgba(31,61,58,.14); font-size: 12.5px; font-weight: 600; color: #1f3d3a">Alle schließen</span>
+    <div style="flex-grow: 1"></div>
+    <span style="font-size: 11.5px; color: #7c8785">Quelle: 1. Chronik 1–9 · Genesis 5, 10, 11, 25, 36 · 4. Mose 26</span>
+  </div>
+
+  <div style="flex-grow: 1; display: flex; min-height: 0">
+
+    <!-- ===================== LINES LEGEND ===================== -->
+    <div style="flex-shrink: 0; width: 200px; padding: 16px 10px; background: #f4ecdd; border-right: 1px solid rgba(31,61,58,.10)">
+      <div class="lbl" style="margin: 0 8px 10px">Linien</div>
+      <div class="legrow" style="background: rgba(31,61,58,.06)"><i style="display: block; width: 4px; height: 22px; border-radius: 3px; background: #8a7a5c"></i><span style="flex-grow: 1; font-size: 12px; font-weight: 600; color: #20302e">Adam bis Noah</span><span style="font-size: 10.5px; color: #7c8785">10</span></div>
+      <div class="legrow"><i style="display: block; width: 4px; height: 22px; border-radius: 3px; background: #3a6ea8"></i><span style="flex-grow: 1; font-size: 12px; font-weight: 600; color: #20302e">Jafet</span><span style="font-size: 10.5px; color: #7c8785">15</span></div>
+      <div class="legrow"><i style="display: block; width: 4px; height: 22px; border-radius: 3px; background: #b8742e"></i><span style="flex-grow: 1; font-size: 12px; font-weight: 600; color: #20302e">Ham</span><span style="font-size: 10.5px; color: #7c8785">31</span></div>
+      <div class="legrow"><i style="display: block; width: 4px; height: 22px; border-radius: 3px; background: #2f8f7f"></i><span style="flex-grow: 1; font-size: 12px; font-weight: 600; color: #20302e">Sem</span><span style="font-size: 10.5px; color: #7c8785">24</span></div>
+      <div class="legrow"><i style="display: block; width: 4px; height: 22px; border-radius: 3px; background: #c2812a"></i><span style="flex-grow: 1; font-size: 12px; font-weight: 600; color: #20302e">Abraham</span><span style="font-size: 10.5px; color: #7c8785">3</span></div>
+      <div class="legrow"><i style="display: block; width: 4px; height: 22px; border-radius: 3px; background: #a89321"></i><span style="flex-grow: 1; font-size: 12px; font-weight: 600; color: #20302e">Ismael</span><span style="font-size: 10.5px; color: #7c8785">13</span></div>
+      <div class="legrow"><i style="display: block; width: 4px; height: 22px; border-radius: 3px; background: #9a8a3a"></i><span style="flex-grow: 1; font-size: 12px; font-weight: 600; color: #20302e">Ketura</span><span style="font-size: 10.5px; color: #7c8785">14</span></div>
+      <div class="legrow"><i style="display: block; width: 4px; height: 22px; border-radius: 3px; background: #a0436b"></i><span style="flex-grow: 1; font-size: 12px; font-weight: 600; color: #20302e">Esau / Edom</span><span style="font-size: 10.5px; color: #7c8785">17</span></div>
+      <div class="legrow"><i style="display: block; width: 4px; height: 22px; border-radius: 3px; background: #7a5c8a"></i><span style="flex-grow: 1; font-size: 12px; font-weight: 600; color: #20302e">Seïr / Horiter</span><span style="font-size: 10.5px; color: #7c8785">8</span></div>
+      <div class="legrow"><i style="display: block; width: 4px; height: 22px; border-radius: 3px; background: #9a4ba0"></i><span style="flex-grow: 1; font-size: 12px; font-weight: 600; color: #20302e">Israel · 12 Stämme</span><span style="font-size: 10.5px; color: #7c8785">185</span></div>
+
+      <div style="margin: 16px 8px 0; padding-top: 14px; border-top: 1px solid rgba(31,61,58,.12)">
+        <div class="lbl" style="margin-bottom: 8px">Auf der Karte</div>
+        <div style="font-size: 11px; color: #4a5754; line-height: 1.55">Punkte mit einem Ortssymbol lassen sich direkt auf der Karte zeigen.</div>
+      </div>
+    </div>
+
+    <!-- ===================== TREE CANVAS ===================== -->
+    <div style="position: relative; flex-grow: 1; overflow: hidden; background: #fbf8f1">
+      <svg style="position: absolute; inset: 0" width="940" height="780" viewBox="0 0 940 780" aria-hidden="true">
+        <defs>
+          <pattern id="dots" width="26" height="26" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1.1" fill="rgba(31,61,58,.07)"></circle></pattern>
+        </defs>
+        <rect width="940" height="780" fill="url(#dots)"></rect>
+        <g fill="none" stroke-width="1.8" stroke-linecap="round">
+          <path d="M170 387C182 387 183 387 195 387" stroke="#8a7a5c"></path>
+          <path d="M345 387C358 387 358 207 370 207" stroke="#3a6ea8"></path>
+          <path d="M345 387C358 387 358 387 370 387" stroke="#b8742e"></path>
+          <path d="M345 387C358 387 358 567 370 567" stroke="#2f8f7f"></path>
+          <path d="M520 207C532 207 532 47 545 47" stroke="#3a6ea8" stroke-opacity=".55"></path>
+          <path d="M520 207C532 207 532 121 545 121" stroke="#3a6ea8" stroke-opacity=".55"></path>
+          <path d="M520 207C532 207 532 195 545 195" stroke="#3a6ea8" stroke-opacity=".55"></path>
+          <path d="M520 207C532 207 532 269 545 269" stroke="#3a6ea8" stroke-width="2.6"></path>
+          <path d="M520 207C532 207 532 343 545 343" stroke="#3a6ea8" stroke-opacity=".55"></path>
+          <path d="M520 207C532 207 532 417 545 417" stroke="#3a6ea8" stroke-opacity=".55"></path>
+          <path d="M520 207C532 207 532 491 545 491" stroke="#3a6ea8" stroke-opacity=".55"></path>
+          <path d="M695 269C716 269 716 158 730 158" stroke="#3a6ea8" stroke-opacity=".8"></path>
+          <path d="M695 269C716 269 716 232 730 232" stroke="#3a6ea8" stroke-opacity=".8"></path>
+          <path d="M695 269C716 269 716 306 730 306" stroke="#3a6ea8" stroke-opacity=".8"></path>
+          <path d="M695 269C716 269 716 380 730 380" stroke="#3a6ea8" stroke-opacity=".8"></path>
+        </g>
+      </svg>
+
+      <!-- Adam -->
+      <div class="node" style="left: 20px; top: 360px; border-left: 4px solid #8a7a5c">
+        <div class="nm">Adam</div>
+        <div class="sub">1Chr 1:1 · Gen 5</div>
+      </div>
+      <div style="position: absolute; left: 20px; top: 424px; width: 150px; box-sizing: border-box; padding: 5px 10px; border-radius: 9px; border: 1px dashed rgba(31,61,58,.24); font-size: 10.5px; color: #7c8785; text-align: center">Set · Enosch · … · Lamech</div>
+
+      <!-- Noah -->
+      <div class="node" style="left: 195px; top: 360px; border-left: 4px solid #8a7a5c">
+        <div class="nm">Noah</div>
+        <div class="sub">1Chr 1:4 · Gen 5:32</div>
+      </div>
+
+      <!-- three sons -->
+      <div class="node" style="left: 370px; top: 180px; border-left: 4px solid #3a6ea8; box-shadow: 0 1px 2px rgba(20,32,31,.05), 0 10px 22px -10px rgba(58,110,168,.55)">
+        <div class="nm">Jafet</div>
+        <div class="sub">Nördliche &amp; Küstenvölker</div>
+      </div>
+      <div class="node" style="left: 370px; top: 360px; border-left: 4px solid #b8742e; display: flex; align-items: center; gap: 8px">
+        <div style="flex-grow: 1"><div class="nm">Ham</div><div class="sub">Afrika, Arabien, Kanaan</div></div>
+        <span style="flex-shrink: 0; padding: 2px 6px; border-radius: 7px; background: rgba(184,116,46,.16); font-size: 10px; font-weight: 700; color: #8a5a17">+31</span>
+      </div>
+      <div class="node" style="left: 370px; top: 540px; border-left: 4px solid #2f8f7f; display: flex; align-items: center; gap: 8px">
+        <div style="flex-grow: 1"><div class="nm">Sem</div><div class="sub">Semitische Völker</div></div>
+        <span style="flex-shrink: 0; padding: 2px 6px; border-radius: 7px; background: rgba(47,143,127,.16); font-size: 10px; font-weight: 700; color: #1f3d3a">+24</span>
+      </div>
+
+      <!-- sons of Japheth -->
+      <div class="node" style="left: 545px; top: 20px; border-left: 4px solid #3a6ea8"><div class="nm">Gomer</div><div class="sub">Kimmerier · nördl. Schwarzmeer</div></div>
+      <div class="node" style="left: 545px; top: 94px; border-left: 4px solid #3a6ea8"><div class="nm">Magog</div><div class="sub">Skythen</div></div>
+      <div class="node" style="left: 545px; top: 168px; border-left: 4px solid #3a6ea8"><div class="nm">Madai</div><div class="sub">Meder · Medien (Iran)</div></div>
+      <div class="node" style="left: 545px; top: 242px; border-left: 4px solid #3a6ea8; background: #1f3d3a; box-shadow: 0 2px 4px rgba(20,32,31,.12), 0 14px 30px -10px rgba(31,61,58,.7)">
+        <div class="nm" style="color: #f7f1e6">Jawan</div>
+        <div class="sub" style="color: rgba(247,241,230,.72)">Griechen / Ionier</div>
+      </div>
+      <div class="node" style="left: 545px; top: 316px; border-left: 4px solid #3a6ea8"><div class="nm">Tubal</div><div class="sub">Anatolien (Tabal)</div></div>
+      <div class="node" style="left: 545px; top: 390px; border-left: 4px solid #3a6ea8"><div class="nm">Meschech</div><div class="sub">Anatolien</div></div>
+      <div class="node" style="left: 545px; top: 464px; border-left: 4px solid #3a6ea8"><div class="nm">Tiras</div><div class="sub">Ägäis / Thrakien</div></div>
+
+      <!-- sons of Javan -->
+      <div class="node" style="left: 730px; top: 131px; border-left: 4px solid #3a6ea8"><div class="nm">Elischa</div><div class="sub">Zypern (Alaschija)</div></div>
+      <div class="node" style="left: 730px; top: 205px; border-left: 4px solid #3a6ea8"><div class="nm">Tarschisch</div><div class="sub">Westl. Mittelmeer</div></div>
+      <div class="node" style="left: 730px; top: 279px; border-left: 4px solid #3a6ea8"><div class="nm">Kittäer</div><div class="sub">Zypern (Kition)</div></div>
+      <div class="node" style="left: 730px; top: 353px; border-left: 4px solid #3a6ea8"><div class="nm">Rodaniter</div><div class="sub">Rhodos</div></div>
+
+      <!-- canvas controls -->
+      <div style="position: absolute; right: 18px; bottom: 18px; display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: rgba(251,248,241,.94); border: 1px solid rgba(31,61,58,.10); box-shadow: 0 1px 2px rgba(20,32,31,.06), 0 10px 24px -12px rgba(20,32,31,.3)">
+        <div style="display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; color: #1f3d3a"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></div>
+        <div style="display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; color: #1f3d3a"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"></path></svg></div>
+        <div style="display: grid; place-items: center; width: 34px; height: 34px; border-radius: 9px; color: #4a5754"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V5.5A1.5 1.5 0 0 1 5.5 4H9M15 4h3.5A1.5 1.5 0 0 1 20 5.5V9M20 15v3.5a1.5 1.5 0 0 1-1.5 1.5H15M9 20H5.5A1.5 1.5 0 0 1 4 18.5V15"></path></svg></div>
+      </div>
+    </div>
+
+    <!-- ===================== DETAIL CARD ===================== -->
+    <div style="flex-shrink: 0; width: 300px; padding: 18px; background: #f4ecdd; border-left: 1px solid rgba(31,61,58,.10)">
+      <div style="padding: 16px; border-radius: 14px; background: #fbf8f1; border: 1px solid rgba(31,61,58,.10); box-shadow: 0 1px 2px rgba(20,32,31,.05), 0 12px 28px -16px rgba(20,32,31,.4)">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <i style="display: block; width: 4px; height: 26px; border-radius: 3px; background: #3a6ea8"></i>
+          <div>
+            <div class="disp" style="font-size: 24px; font-weight: 600; color: #1f3d3a; line-height: 1.1">Jawan</div>
+            <div style="font-size: 11px; color: #7c8785">Javan · Sohn Jafets</div>
+          </div>
+        </div>
+
+        <svg viewBox="0 0 268 96" width="268" height="96" style="display: block; margin: 16px 0 4px" aria-hidden="true">
+          <rect width="268" height="96" rx="10" fill="rgba(58,110,168,.08)"></rect>
+          <g fill="none" stroke="rgba(58,110,168,.55)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 76c16-6 26 4 42 0s26-10 42-6 26 12 42 8 26-10 42-6 20 4 26 2"></path>
+            <path d="M60 62V30l16-8 16 8v32"></path>
+            <path d="M60 40h32M68 62V44h4v18M84 62V44h4v18"></path>
+            <path d="M132 62V26l18-9 18 9v36"></path>
+            <path d="M132 36h36M142 62V40h6v22M158 62V40h6v22"></path>
+            <path d="M196 62V34l14-7 14 7v28M196 42h28"></path>
+          </g>
+          <text x="18" y="26" font-family="'Instrument Sans', sans-serif" font-size="10" font-weight="600" letter-spacing="2" fill="rgba(58,110,168,.8)">IONISCHE KÜSTE</text>
+        </svg>
+
+        <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 11px">
+          <div>
+            <div class="lbl" style="margin-bottom: 3px">Volk</div>
+            <div style="font-size: 13.5px; color: #20302e">Griechen / Ionier</div>
+          </div>
+          <div>
+            <div class="lbl" style="margin-bottom: 3px">Bibelstelle</div>
+            <div style="font-size: 13.5px; color: #20302e">1. Chronik 1:5 · 1. Mose 10:4</div>
+          </div>
+          <div>
+            <div class="lbl" style="margin-bottom: 5px">Nachkommen</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px">
+              <span style="padding: 3px 9px; border-radius: 999px; background: rgba(58,110,168,.13); font-size: 11.5px; font-weight: 600; color: #20302e">Elischa</span>
+              <span style="padding: 3px 9px; border-radius: 999px; background: rgba(58,110,168,.13); font-size: 11.5px; font-weight: 600; color: #20302e">Tarschisch</span>
+              <span style="padding: 3px 9px; border-radius: 999px; background: rgba(58,110,168,.13); font-size: 11.5px; font-weight: 600; color: #20302e">Kittäer</span>
+              <span style="padding: 3px 9px; border-radius: 999px; background: rgba(58,110,168,.13); font-size: 11.5px; font-weight: 600; color: #20302e">Rodaniter</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 16px; padding: 11px; border-radius: 11px; background: #1f3d3a; color: #f7f1e6; font-size: 13px; font-weight: 600">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="10" r="2.6"></circle><path d="M12 20s6-6.6 6-10a6 6 0 1 0-12 0c0 3.4 6 10 6 10Z"></path></svg>
+          Auf Karte zeigen
+        </div>
+      </div>
+
+      <div style="margin-top: 14px; padding: 13px 14px; border-radius: 12px; background: rgba(224,164,73,.14); border: 1px solid rgba(194,129,42,.25)">
+        <div style="display: flex; gap: 8px">
+          <svg viewBox="0 0 24 24" width="15" height="15" style="flex-shrink: 0; margin-top: 1px" fill="none" stroke="#8a5a17" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 7.6v.6"></path></svg>
+          <div style="font-size: 11px; color: #6b4a13; line-height: 1.55">Die Zuordnung der Stammväter zu historischen Völkern und Regionen folgt einer verbreiteten, traditionellen Deutung und ist nicht in jedem Fall gesichert.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

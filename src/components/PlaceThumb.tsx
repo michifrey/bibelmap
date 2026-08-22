@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import type { Place, PlaceImage } from '../types';
 import { resolveWikidataImage } from '../lib/wikidataImage';
+import { useLang } from '../i18n';
+import { placeName } from '../lib/places';
 
 interface Props {
   place: Place;
@@ -20,6 +22,7 @@ interface Props {
  * advance to the Wikidata-resolved Commons image whenever a source fails.
  */
 export default function PlaceThumb({ place, className = '', iconClassName = 'h-5 w-5', placeholder, onResolved }: Props) {
+  const lang = useLang();
   const [src, setSrc] = useState<string | null>(place.img?.url ?? null);
   const triedWikidata = useRef(false);
   const dead = useRef(false);
@@ -81,7 +84,7 @@ export default function PlaceThumb({ place, className = '', iconClassName = 'h-5
   return (
     <img
       src={src}
-      alt={place.name}
+      alt={placeName(place, lang)}
       onError={handleError}
       loading="lazy"
       referrerPolicy="no-referrer"

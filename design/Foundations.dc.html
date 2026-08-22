@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Instrument Sans', 'Inter', system-ui, sans-serif; color: #20302e; background: #f7f1e6; -webkit-font-smoothing: antialiased; }
+    .disp { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-optical-sizing: auto; }
+    a { color: #2f6f66; text-decoration: none; }
+    a:hover { color: #1f3d3a; }
+    .lbl { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #7c8785; }
+    .card { padding: 20px; border-radius: 16px; background: #fbf8f1; border: 1px solid rgba(31,61,58,.10); box-shadow: 0 1px 2px rgba(20,32,31,.05); }
+    .h { font-family: 'Fraunces', Georgia, serif; font-size: 17px; font-weight: 600; color: #1f3d3a; margin-bottom: 3px; }
+    .note { font-size: 11.5px; color: #7c8785; line-height: 1.5; }
+    .hex { font-size: 10px; color: #7c8785; letter-spacing: .02em; }
+    .sw { height: 46px; border-radius: 9px; }
+  </style>
+</helmet>
+
+<div style="width: 1200px; min-height: 1000px; box-sizing: border-box; padding: 40px 40px 44px; background: #f7f1e6">
+
+  <div style="display: flex; align-items: flex-end; gap: 16px; margin-bottom: 8px">
+    <div>
+      <div class="lbl">Bibelmap · Designstudie</div>
+      <h1 class="disp" style="margin: 6px 0 0; font-size: 40px; font-weight: 600; color: #1f3d3a; letter-spacing: -.02em">Grundlagen</h1>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <div class="note" style="max-width: 420px; text-align: right">Aufgebaut auf den vorhandenen Tokens aus <span style="font-weight: 600; color: #4a5754">src/index.css</span> und <span style="font-weight: 600; color: #4a5754">src/data/eras.ts</span>. Neu sind nur die hell markierten Werte.</div>
+  </div>
+  <div style="height: 1px; margin: 22px 0 26px; background: rgba(31,61,58,.14)"></div>
+
+  <!-- colours -->
+  <div class="card" style="margin-bottom: 18px">
+    <div class="h">Farbe</div>
+    <div class="note" style="margin-bottom: 18px">Papier und Tinte bleiben unverändert. Ergänzt: eine hellere Trägerfläche für schwebende Panels und eine Haarlinien-Farbe, damit Karten nicht mehr nur über Schatten getrennt werden.</div>
+
+    <div class="lbl" style="margin-bottom: 8px">Papier &amp; Tinte</div>
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px">
+      <div><div class="sw" style="background: #fbf8f1; border: 1px solid rgba(31,61,58,.12)"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">paper <span style="color: #c2812a">neu</span></div><div class="hex">#fbf8f1</div></div>
+      <div><div class="sw" style="background: #f7f1e6"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">cream</div><div class="hex">#f7f1e6</div></div>
+      <div><div class="sw" style="background: #efe6d6"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">cream-2</div><div class="hex">#efe6d6</div></div>
+      <div><div class="sw" style="background: #e3d8c4"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">edge <span style="color: #c2812a">neu</span></div><div class="hex">#e3d8c4</div></div>
+      <div><div class="sw" style="background: #7c8785"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">ink-faint <span style="color: #c2812a">neu</span></div><div class="hex">#7c8785</div></div>
+      <div><div class="sw" style="background: #4a5754"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">ink-soft</div><div class="hex">#4a5754</div></div>
+      <div><div class="sw" style="background: #20302e"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">ink</div><div class="hex">#20302e</div></div>
+    </div>
+
+    <div class="lbl" style="margin-bottom: 8px">Marke</div>
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px">
+      <div><div class="sw" style="background: #1f3d3a"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">teal</div><div class="hex">#1f3d3a</div></div>
+      <div><div class="sw" style="background: #2f6f66"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">teal-2</div><div class="hex">#2f6f66</div></div>
+      <div><div class="sw" style="background: #e0a449"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">gold</div><div class="hex">#e0a449</div></div>
+      <div><div class="sw" style="background: #c2812a"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">gold-deep</div><div class="hex">#c2812a</div></div>
+      <div><div class="sw" style="background: #b8742e"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">clay</div><div class="hex">#b8742e</div></div>
+      <div><div class="sw" style="background: #14201f"></div><div style="margin-top: 6px; font-size: 11.5px; font-weight: 600">deep <span style="color: #c2812a">neu</span></div><div class="hex">#14201f</div></div>
+      <div style="display: flex; align-items: center"><div class="note">deep trägt die dunkle Variante (Präsentation, Nachtkarte).</div></div>
+    </div>
+
+    <div class="lbl" style="margin-bottom: 8px">Epochen · unverändert aus eras.ts</div>
+    <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 8px">
+      <div><div class="sw" style="background: #b8742e"></div><div style="margin-top: 6px; font-size: 11px; font-weight: 600">Erzväter</div><div class="hex">#b8742e</div></div>
+      <div><div class="sw" style="background: #c98a2b"></div><div style="margin-top: 6px; font-size: 11px; font-weight: 600">Exodus</div><div class="hex">#c98a2b</div></div>
+      <div><div class="sw" style="background: #a89321"></div><div style="margin-top: 6px; font-size: 11px; font-weight: 600">Landnahme</div><div class="hex">#a89321</div></div>
+      <div><div class="sw" style="background: #5c8a3a"></div><div style="margin-top: 6px; font-size: 11px; font-weight: 600">Vereintes Kgr.</div><div class="hex">#5c8a3a</div></div>
+      <div><div class="sw" style="background: #2f8f7f"></div><div style="margin-top: 6px; font-size: 11px; font-weight: 600">Geteiltes Kgr.</div><div class="hex">#2f8f7f</div></div>
+      <div><div class="sw" style="background: #3a6ea8"></div><div style="margin-top: 6px; font-size: 11px; font-weight: 600">Exil</div><div class="hex">#3a6ea8</div></div>
+      <div><div class="sw" style="background: #5a5ca8"></div><div style="margin-top: 6px; font-size: 11px; font-weight: 600">Rückkehr</div><div class="hex">#5a5ca8</div></div>
+      <div><div class="sw" style="background: #9a4ba0"></div><div style="margin-top: 6px; font-size: 11px; font-weight: 600">Jesus</div><div class="hex">#9a4ba0</div></div>
+      <div><div class="sw" style="background: #b0436b"></div><div style="margin-top: 6px; font-size: 11px; font-weight: 600">Kirche</div><div class="hex">#b0436b</div></div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-bottom: 18px">
+
+    <!-- type -->
+    <div class="card">
+      <div class="h">Typografie</div>
+      <div class="note" style="margin-bottom: 18px">Fraunces bleibt die Display-Schrift. Für die Oberfläche schlägt die Studie <span style="font-weight: 600; color: #4a5754">Instrument Sans</span> statt Inter vor – etwas mehr Charakter, engere Ziffern, gleiche Lesbarkeit in kleinen Größen.</div>
+
+      <div class="disp" style="font-size: 40px; font-weight: 600; color: #1f3d3a; letter-spacing: -.02em; line-height: 1.1">Bibelmap</div>
+      <div class="hex" style="margin-top: 4px">Fraunces 40 / 600 / -2 % · Titel</div>
+
+      <div class="disp" style="margin-top: 16px; font-size: 26px; font-weight: 600; color: #1f3d3a; letter-spacing: -.015em">Jerusalem</div>
+      <div class="hex" style="margin-top: 4px">Fraunces 26 / 600 · Ortsname, Kapitel</div>
+
+      <div class="disp" style="margin-top: 16px; font-size: 18px; line-height: 1.82; color: #20302e">Naeman, der Feldhauptmann des Königs von Syrien, war ein trefflicher Mann vor seinem Herrn.</div>
+      <div class="hex" style="margin-top: 4px">Fraunces 18 / 1.82 · Bibeltext</div>
+
+      <div style="height: 1px; margin: 18px 0; background: rgba(31,61,58,.12)"></div>
+
+      <div style="font-size: 15px; font-weight: 600">Präsentationsmodus</div>
+      <div class="hex" style="margin-top: 3px">Instrument Sans 15 / 600 · Button, Listentitel</div>
+      <div style="margin-top: 12px; font-size: 13px">955 Erwähnungen · Siedlung</div>
+      <div class="hex" style="margin-top: 3px">Instrument Sans 13 / 400 · Fließtext UI</div>
+      <div class="lbl" style="margin-top: 14px">Häufigste Orte</div>
+      <div class="hex" style="margin-top: 3px">Instrument Sans 10 / 600 / +14 % Laufweite · Rubriken</div>
+    </div>
+
+    <!-- radii, elevation, spacing -->
+    <div class="card">
+      <div class="h">Form, Tiefe, Raster</div>
+      <div class="note" style="margin-bottom: 18px">Radien und Abstände bleiben beim bestehenden 8-px-Raster. Neu ist die Elevation: statt eines einzelnen weichen Schattens zwei Ebenen – eine harte 1-px-Kante plus ein weiter, sehr weicher Abwurf.</div>
+
+      <div style="display: flex; gap: 12px; margin-bottom: 20px">
+        <div style="flex: 1 1 0; height: 60px; border-radius: 18px; background: #f7f1e6; border: 1px solid rgba(31,61,58,.12); display: grid; place-items: center; font-size: 11.5px; font-weight: 600">18 · Panel</div>
+        <div style="flex: 1 1 0; height: 60px; border-radius: 16px; background: #f7f1e6; border: 1px solid rgba(31,61,58,.12); display: grid; place-items: center; font-size: 11.5px; font-weight: 600">16 · Karte</div>
+        <div style="flex: 1 1 0; height: 60px; border-radius: 11px; background: #f7f1e6; border: 1px solid rgba(31,61,58,.12); display: grid; place-items: center; font-size: 11.5px; font-weight: 600">11 · Control</div>
+        <div style="flex: 1 1 0; height: 60px; border-radius: 999px; background: #f7f1e6; border: 1px solid rgba(31,61,58,.12); display: grid; place-items: center; font-size: 11.5px; font-weight: 600">999 · Chip</div>
+      </div>
+
+      <div class="lbl" style="margin-bottom: 10px">Elevation</div>
+      <div style="display: flex; gap: 14px; margin-bottom: 20px">
+        <div style="flex: 1 1 0; height: 68px; border-radius: 14px; background: #f7f1e6; border: 1px solid rgba(31,61,58,.10); box-shadow: 0 1px 2px rgba(20,32,31,.06); display: grid; place-items: center; font-size: 11.5px; font-weight: 600">ruhend</div>
+        <div style="flex: 1 1 0; height: 68px; border-radius: 14px; background: #f7f1e6; border: 1px solid rgba(31,61,58,.10); box-shadow: 0 1px 2px rgba(20,32,31,.06), 0 10px 30px -12px rgba(20,32,31,.32); display: grid; place-items: center; font-size: 11.5px; font-weight: 600">schwebend</div>
+        <div style="flex: 1 1 0; height: 68px; border-radius: 14px; background: #f7f1e6; border: 1px solid rgba(31,61,58,.10); box-shadow: 0 1px 2px rgba(20,32,31,.06), 0 24px 60px -20px rgba(20,32,31,.45); display: grid; place-items: center; font-size: 11.5px; font-weight: 600">Panel</div>
+      </div>
+
+      <div class="lbl" style="margin-bottom: 10px">Raster</div>
+      <div style="display: flex; align-items: flex-end; gap: 8px">
+        <div style="width: 4px; height: 16px; border-radius: 3px; background: rgba(31,61,58,.18)"></div>
+        <div style="width: 8px; height: 24px; border-radius: 3px; background: rgba(31,61,58,.26)"></div>
+        <div style="width: 12px; height: 32px; border-radius: 3px; background: rgba(31,61,58,.34)"></div>
+        <div style="width: 16px; height: 40px; border-radius: 3px; background: rgba(31,61,58,.42)"></div>
+        <div style="width: 24px; height: 48px; border-radius: 3px; background: rgba(31,61,58,.5)"></div>
+        <div style="width: 32px; height: 56px; border-radius: 3px; background: rgba(31,61,58,.58)"></div>
+        <div class="note" style="margin-left: 6px">4 · 8 · 12 · 16 · 24 · 32</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- components -->
+  <div class="card">
+    <div class="h">Bausteine</div>
+    <div class="note" style="margin-bottom: 20px">Alle Bedienelemente mindestens 40 px hoch (mobil 48 px). Ein einziger Primärknopf pro Fläche.</div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px">
+
+      <div>
+        <div class="lbl" style="margin-bottom: 10px">Knöpfe</div>
+        <div style="display: flex; flex-direction: column; gap: 9px; align-items: flex-start">
+          <span style="display: inline-flex; align-items: center; gap: 7px; padding: 10px 15px; border-radius: 11px; background: #1f3d3a; color: #f7f1e6; font-size: 13px; font-weight: 600; box-shadow: 0 1px 2px rgba(20,32,31,.18)">Präsentationsmodus</span>
+          <span style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px; border-radius: 11px; border: 1px solid rgba(31,61,58,.14); color: #1f3d3a; font-size: 13px; font-weight: 600">Stammbäume</span>
+          <span style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px; border-radius: 11px; background: #e0a449; color: #1f3d3a; font-size: 13px; font-weight: 700">Beenden</span>
+          <span style="display: inline-flex; align-items: center; gap: 7px; padding: 9px 14px; border-radius: 11px; color: #4a5754; font-size: 13px; font-weight: 600; opacity: .4">Deaktiviert</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="lbl" style="margin-bottom: 10px">Segmente &amp; Chips</div>
+        <div style="display: flex; gap: 2px; padding: 3px; border-radius: 11px; background: #efe6d6; margin-bottom: 12px">
+          <span style="padding: 6px 12px; border-radius: 9px; background: #1f3d3a; color: #f7f1e6; font-size: 13px; font-weight: 600">Marker</span>
+          <span style="padding: 6px 12px; border-radius: 9px; color: #4a5754; font-size: 13px; font-weight: 500">Heatmap</span>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 5px">
+          <span style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 7px; border-radius: 999px; background: rgba(47,143,127,.16); font-size: 11.5px; font-weight: 600"><i style="display: block; width: 6px; height: 6px; border-radius: 9px; background: #2f8f7f"></i>Geteiltes Kgr.</span>
+          <span style="padding: 3px 9px; border-radius: 999px; background: #efe6d6; font-size: 11px; color: #4a5754">Siedlung</span>
+          <span style="padding: 3px 9px; border-radius: 999px; background: rgba(224,164,73,.22); font-size: 11px; font-weight: 600; color: #8a5a17">955 ×</span>
+        </div>
+      </div>
+
+      <div>
+        <div class="lbl" style="margin-bottom: 10px">Eingabe</div>
+        <div style="display: flex; align-items: center; gap: 9px; padding: 11px 13px; border-radius: 12px; background: #f7f1e6; border: 1px solid rgba(31,61,58,.12); margin-bottom: 9px">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#7c8785" stroke-width="1.9" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 20 20"></path></svg>
+          <span style="font-size: 13.5px; color: #7c8785">Ort suchen …</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 9px; padding: 11px 13px; border-radius: 12px; background: #fbf8f1; border: 1px solid #c2812a; box-shadow: 0 0 0 3px rgba(224,164,73,.28)">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#c2812a" stroke-width="1.9" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 20 20"></path></svg>
+          <span style="font-size: 13.5px; color: #20302e">Goschen</span>
+        </div>
+        <div class="note" style="margin-top: 7px">Fokus: 1 px gold-deep + 3 px Gold-Ring.</div>
+      </div>
+
+      <div>
+        <div class="lbl" style="margin-bottom: 10px">Listeneintrag</div>
+        <div style="display: flex; align-items: center; gap: 11px; padding: 9px 10px; border-radius: 12px; background: #efe6d6; border: 1px solid rgba(31,61,58,.10)">
+          <svg viewBox="0 0 24 24" width="42" height="42" style="flex-shrink: 0"><rect width="24" height="24" rx="7" fill="#2f8f7f" fill-opacity=".14"></rect><g fill="none" stroke="#2f8f7f" stroke-width="1.5" stroke-linecap="round"><path d="M5 18v-6h14v6"></path><path d="M5 15h14"></path><path d="M9 18v-3M15 18v-3"></path><path d="M8 12V9l4-3 4 3v3"></path></g></svg>
+          <div style="flex-grow: 1">
+            <div style="font-size: 14px; font-weight: 600; color: #1f3d3a">Jerusalem</div>
+            <div style="font-size: 11.5px; color: #7c8785">955 Erwähnungen · Siedlung</div>
+          </div>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#2f6f66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+        </div>
+        <div class="note" style="margin-top: 7px">Vorschaubild ist ein Typ-Sigel in Epochenfarbe, kein Foto – ruhigere Liste, keine Ladefehler.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

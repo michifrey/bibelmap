@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FIXTURE, kein echter Feed-Abzug.
+  Die fünf Folgentitel und ihre Adressen stammen aus öffentlichen Suchtreffern
+  zu bibletunes.de und sind wortgetreu übernommen; sie dienen nur dazu, den
+  Parser und den Resolver zu prüfen. Sobald der echte Feed hier liegt, wird
+  diese Datei überschrieben.
+-->
+<rss version="2.0"><channel>
+  <title>bibletunes.de</title>
+  <item>
+    <title>Genesis 18 – Teil 1</title>
+    <link>https://bibletunes.de/genesis-18-teil-1</link>
+    <pubDate>Mon, 12 May 2025 05:00:00 +0200</pubDate>
+    <description><![CDATA[Abraham und die drei Männer bei den Eichen.]]></description>
+  </item>
+  <item>
+    <title>Genesis 11 – Teil 2</title>
+    <link>https://bibletunes.de/genesis-11-teil-2</link>
+    <pubDate>Tue, 06 May 2025 05:00:00 +0200</pubDate>
+    <description><![CDATA[Der Turmbau und die Nachkommen Sems.]]></description>
+  </item>
+  <item>
+    <title>Markus 6,30-44 | Die Speisung der 5000: Jesus, der gute Hirte (Teil 1)</title>
+    <link>https://bibletunes.de/markus-630-44-die-speisung-der-5000-jesus-der-gute-hirte-teil-1</link>
+    <pubDate>Wed, 07 May 2025 05:00:00 +0200</pubDate>
+    <description><![CDATA[]]></description>
+  </item>
+  <item>
+    <title>Markus 6,30-44 | Die Speisung der 5000: Fünf Brote und zwei Fische (Teil 2)</title>
+    <link>https://bibletunes.de/markus-630-44-die-speisung-der-5000-fuenf-brote-und-zwei-fische-teil-2</link>
+    <pubDate>Thu, 08 May 2025 05:00:00 +0200</pubDate>
+    <description><![CDATA[]]></description>
+  </item>
+  <item>
+    <title>Scott &amp; Gott – 13 – Der lustvolle Mader</title>
+    <link>https://bibletunes.de/scott-gott-13-der-lustvolle-mader</link>
+    <pubDate>Fri, 09 May 2025 05:00:00 +0200</pubDate>
+    <description><![CDATA[Eine Folge ohne Bibelstelle im Titel.]]></description>
+  </item>
+</channel></rss>

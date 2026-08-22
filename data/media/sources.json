@@ -1,0 +1,60 @@
+{
+  "_comment": [
+    "Quellen für scripts/build-media.mjs.",
+    "",
+    "'feed' ist die RSS-Adresse. Fehlt sie, aber 'appleId' ist gesetzt, löst",
+    "`npm run media -- --fetch` die Adresse über die iTunes-Lookup-API auf und",
+    "meldet sie - dann kann sie hier fest eingetragen werden.",
+    "",
+    "Feeds werden als XML unter data/media/raw/<id>.xml zwischengespeichert. Wer",
+    "keinen Netzzugriff hat, legt die Datei einfach von Hand dorthin.",
+    "",
+    "Nicht überprüfte Feed-Adressen stehen bewusst auf null statt geraten zu",
+    "werden: eine falsche URL erzeugt still einen leeren Index."
+  ],
+  "sources": [
+    {
+      "id": "bibletunes",
+      "title": "bibletunes.de – Die Bibel im Ohr!",
+      "author": "Detlef Kühlein",
+      "homepage": "https://bibletunes.de/",
+      "feed": "https://bibletunes.de/bt/feed/main.rss",
+      "lang": "de",
+      "kind": "podcast",
+      "note": "Nach Bibelbüchern gegliederte Staffeln — der Folgentitel nennt die Stelle, das trägt die Zuordnung."
+    },
+    {
+      "id": "bibleproject",
+      "title": "BibleProject",
+      "author": "Tim Mackie & Jon Collins",
+      "homepage": "https://bibleproject.com/",
+      "feed": null,
+      "lang": "en",
+      "kind": "generated",
+      "urlPattern": "https://bibleproject.com/guides/{slug}/",
+      "note": "Braucht keinen Feed: je Buch eine Übersichtsseite, die URL baut sich aus dem Buchkürzel (siehe BP_GUIDE_OVERRIDE in src/data/books.ts)."
+    },
+    {
+      "id": "comer",
+      "title": "John Mark Comer Teachings",
+      "author": "John Mark Comer",
+      "homepage": "https://practicingtheway.org/",
+      "feed": null,
+      "lang": "en",
+      "kind": "podcast",
+      "note": "Apple-Podcasts-ID 1592847144. Die Feed-Adresse wird daraus beim --fetch aufgelöst. Überwiegend thematisch (Formation, Sabbat, Stille); Folgen ohne Bibelstelle im Titel fallen aus der Ortszuordnung heraus. Alternativen derselben Ecke: Bridgetown Audio Podcast (84246334), Practicing the Way (1729195085), Rule of Life (1646299048).",
+      "appleId": 1592847144
+    },
+    {
+      "id": "keller",
+      "title": "Timothy Keller Sermons Podcast by Gospel in Life",
+      "author": "Timothy Keller",
+      "homepage": "https://gospelinlife.com/",
+      "feed": null,
+      "lang": "en",
+      "kind": "podcast",
+      "note": "Apple-Podcasts-ID 352660924. Überwiegend auslegend, die Stelle steht meist im Titel - daher gute Ortsausbeute zu erwarten.",
+      "appleId": 352660924
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Place } from './types';
 import { LangContext, type Lang, useT, t as tr } from './i18n';
-import { loadPlaces, placesInEra, searchPlaces, erasForPlace } from './lib/places';
+import { loadPlaces, placesInEra, searchPlaces, erasForPlace, placeName } from './lib/places';
 import { ERAS } from './data/eras';
 import MapView, { type BasemapId } from './components/MapView';
 import Header, { type Mode, type View } from './components/Header';
@@ -157,7 +157,7 @@ export default function App() {
                     <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
                   </svg>
                   <span className="flex-1 truncate text-sm text-ink-soft">
-                    {selected ? selected.name.replace(/ \d+$/, '') : tr(lang, 'search')}
+                    {selected ? placeName(selected, lang) : tr(lang, 'search')}
                   </span>
                   <svg viewBox="0 0 24 24" className={`h-4 w-4 flex-none text-ink-soft transition-transform ${sheetOpen ? 'rotate-180' : ''}`} fill="currentColor">
                     <path d="M7 14l5-5 5 5z" />

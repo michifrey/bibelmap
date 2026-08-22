@@ -1,6 +1,6 @@
 import type { Place, PlaceImage } from '../types';
 import { t, type Lang } from '../i18n';
-import { erasForPlace, booksForPlace } from './places';
+import { erasForPlace, booksForPlace, placeName, placeNames } from './places';
 import { ERAS, ERA_BY_ID } from '../data/eras';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { resolveWikidataImage } from './wikidataImage';
@@ -18,9 +18,7 @@ function esc(s: string): string {
   );
 }
 
-function displayName(place: Place): string {
-  return place.name.replace(/ \d+$/, '');
-}
+
 
 function imageHtml(img: PlaceImage, name: string): string {
   const credit = img.credit
@@ -44,7 +42,7 @@ function linkHtml(href: string, label: string): string {
  * resolved lazily and swapped into the header once available.
  */
 export function buildPlacePopup(place: Place, lang: Lang, onMore: () => void): HTMLElement {
-  const name = displayName(place);
+  const name = placeName(place, lang);
   const eraIds = new Set(erasForPlace(place));
   const eras = ERAS.filter((e) => eraIds.has(e.id));
   const books = booksForPlace(place);
@@ -61,9 +59,9 @@ export function buildPlacePopup(place: Place, lang: Lang, onMore: () => void): H
     .join('');
 
   const variantLine =
-    place.variants.length > 1
+    placeNames(place, lang).length > 1
       ? `<div class="bm-pop-variants"><span>${esc(t(lang, 'alsoCalled'))}:</span> ${esc(
-          place.variants.slice(0, 4).join(' · '),
+          [...new Set(placeNames(place, lang))].filter((n) => n !== name).slice(0, 4).join(' · '),
         )}</div>`
       : '';
 

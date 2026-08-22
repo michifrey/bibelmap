@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
-import { booksWithPlaces, placesInChapter } from '../lib/places';
+import { booksWithPlaces, placeName, placeNames, placesInChapter } from '../lib/places';
 import { BOOKS, BOOK_BY_OSIS, bibleGatewayUrl, bibleProjectUrl, bibleProjectVideoIds } from '../data/books';
 import { ERA_BY_ID } from '../data/eras';
 import { loadBookText, chapterVerses, type BookText } from '../lib/text';
@@ -230,7 +230,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                     }`}
                     title={`${t('placesInChapter')}`}
                   >
-                    {place.name.replace(/ \d+$/, '')}
+                    {placeName(place, lang)}
                   </button>
                 ))}
               </div>
@@ -249,7 +249,9 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                   const vp = versePlaces.get(vs.v) ?? [];
                   const candidates: Candidate[] = vp.map((p) => ({
                     placeId: p.id,
-                    strings: [p.name.replace(/ \d+$/, ''), ...p.variants],
+                    // German spellings first: in the Luther text "Ägypten" is
+                    // what actually appears, not "Egypt".
+                    strings: placeNames(p, lang),
                     onPick: () => setSelected(p),
                   }));
                   return (
@@ -260,13 +262,13 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                         <button
                           key={p.id}
                           onClick={() => setSelected(p)}
-                          title={p.name.replace(/ \d+$/, '')}
+                          title={placeName(p, lang)}
                           className={`ml-1 inline-flex translate-y-[1px] items-center rounded-full px-1 align-middle text-[10px] font-sans transition ${
                             selected?.id === p.id ? 'bg-teal text-cream' : 'bg-gold/30 text-teal hover:bg-gold/55'
                           }`}
                         >
                           <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" /></svg>
-                          {p.name.replace(/ \d+$/, '')}
+                          {placeName(p, lang)}
                         </button>
                       ))}
                     </p>

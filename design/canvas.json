@@ -1,0 +1,66 @@
+{
+  "pages": [
+    { "id": "startseite", "name": "Startseite" },
+    { "id": "app", "name": "App-Screens" },
+    { "id": "system", "name": "System & Review" },
+    { "id": "archiv", "name": "Archiv · warme Studie" }
+  ],
+  "artboards": [
+    { "file": "Start.dc.html", "page": "startseite", "x": 0, "y": 0, "w": 1440, "h": 3800, "title": "Startseite · Desktop", "print": "flow" },
+    { "file": "StartMobile.dc.html", "page": "startseite", "x": 1560, "y": 0, "w": 390, "h": 2600, "title": "Startseite · Mobil", "print": "flow" },
+
+    { "file": "Main.dc.html", "page": "app", "x": 0, "y": 0, "w": 1440, "h": 900, "title": "Karte" },
+    { "file": "PlaceRadical.dc.html", "page": "app", "x": 1560, "y": 0, "w": 1440, "h": 900, "title": "Ortskarte" },
+    { "file": "MobileMapRadical.dc.html", "page": "app", "x": 3120, "y": 0, "w": 390, "h": 844, "title": "Karte · Mobil" },
+    { "file": "PresentationRadical.dc.html", "page": "app", "x": 0, "y": 1080, "w": 1440, "h": 900, "title": "Präsentationsmodus" },
+    { "file": "GenealogyRadical.dc.html", "page": "app", "x": 1560, "y": 1080, "w": 1440, "h": 900, "title": "Stammbäume" },
+
+    { "file": "FoundationsRadical.dc.html", "page": "system", "x": 0, "y": 0, "w": 1200, "h": 1620, "title": "Grundlagen", "print": "flow" },
+    { "file": "Review.dc.html", "page": "system", "x": 1320, "y": 0, "w": 1200, "h": 1400, "title": "Review", "print": "flow" },
+
+    { "file": "MainWarm.dc.html", "page": "archiv", "x": 0, "y": 0, "w": 1440, "h": 900, "title": "Karte (warm)" },
+    { "file": "PlaceDetail.dc.html", "page": "archiv", "x": 1560, "y": 0, "w": 880, "h": 860, "title": "Ortskarte (warm)" },
+    { "file": "Mobile.dc.html", "page": "archiv", "x": 2560, "y": 0, "w": 390, "h": 844, "title": "Mobil (warm)" },
+    { "file": "Presentation.dc.html", "page": "archiv", "x": 0, "y": 1080, "w": 1440, "h": 900, "title": "Präsentation (warm)" },
+    { "file": "Genealogy.dc.html", "page": "archiv", "x": 1560, "y": 1080, "w": 1440, "h": 900, "title": "Stammbäume (warm)" },
+    { "file": "Foundations.dc.html", "page": "archiv", "x": 0, "y": 2160, "w": 1200, "h": 1560, "title": "Grundlagen (warm)", "print": "flow" },
+    { "file": "Artwork.dc.html", "page": "archiv", "x": 1320, "y": 2160, "w": 1200, "h": 1120, "title": "Bildsprache (warm)", "print": "flow" },
+    { "file": "DirectionDark.dc.html", "page": "archiv", "x": 2640, "y": 2160, "w": 760, "h": 520, "title": "B · Dunkler Atlas" },
+    { "file": "DirectionEditorial.dc.html", "page": "archiv", "x": 2640, "y": 2800, "w": 760, "h": 520, "title": "C · Editorial" }
+  ],
+  "annotations": [
+    {
+      "id": "note-start",
+      "page": "startseite",
+      "x": 0,
+      "y": -300,
+      "w": 560,
+      "text": "Radikale Richtung nach der hochgeladenen Vorlage: Montserrat Black in Versalien mit ausgestrichener dritter Zeile, Duotone-Teal-Bühne, gepunktetes Raster und Dreiecksmotiv, harte Ecken, weiße Karten, die über die Heldenfläche ragen.\n\nÜbernommen sind Aufbau und Härte – nicht die Reisethemen. Statt Strandfotos eine gezeichnete Luftbildkarte, statt Log-in ein direkter Einstieg in die Karte, statt Social-Icons die neun Epochenfarben als Leiste."
+    },
+    {
+      "id": "note-app",
+      "page": "app",
+      "x": 0,
+      "y": -300,
+      "w": 620,
+      "text": "Dieselbe Sprache durch die ganze App: dunkle Bühne, harte Kanten, Zahlen als Blickfang, Gold für genau eine Aktion pro Bildschirm.\n\nWeiß kommt nur noch dort vor, wo wirklich gelesen wird – im Bibeltext und in der Detailkarte des Stammbaums. Die neun Epochenfarben aus eras.ts sind unverändert."
+    },
+    {
+      "id": "note-app-inhalt",
+      "page": "app",
+      "x": 3120,
+      "y": 920,
+      "w": 460,
+      "text": "Die inhaltlichen Korrekturen aus dem Review sind mitgenommen: Kanonstreifen statt 37 Buchkarten, Zeitleiste nach Dauer, keine Ortspillen im Fließtext, Kapitelspalte mit Ortsdichte, gezeichneter Baum statt Einrückungsliste.\n\nOffen bleibt weiterhin: die Ortsnamen sind englisch (Egypt, Babylon), das ist eine Datenfrage."
+    },
+    {
+      "id": "note-archiv",
+      "page": "archiv",
+      "x": 0,
+      "y": -300,
+      "w": 560,
+      "text": "Die erste, warme Studie – aufgehoben, nicht gelöscht.\n\nSie ist überholt, seit die radikale Richtung gewonnen hat. Was daraus weiterlebt: die neun Epochenfarben, Fraunces für den Bibeltext, und sämtliche inhaltlichen Korrekturen aus dem Review."
+    }
+  ],
+  "launch": { "view": "canvas", "page": "app" }
+}

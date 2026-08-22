@@ -3,7 +3,7 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 import type { Place } from '../types';
-import { erasForPlace } from '../lib/places';
+import { erasForPlace, placeName } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
 import { buildPlacePopup } from '../lib/placePopup';
 import type { Lang } from '../i18n';
@@ -190,7 +190,7 @@ export default function MapView({ places, heat, selectedId, lang, onSelect, base
     for (const p of places) {
       const marker = L.marker([p.lat, p.lon], {
         icon: makeIcon(p, p.id === selectedId),
-        title: p.name,
+        title: placeName(p, lang),
       });
       // Rich on-map popup (thumbnail, passages, links) – built lazily on open so
       // we never construct ~1.3k DOM trees up front, and always in the current
