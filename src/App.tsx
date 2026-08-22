@@ -1,7 +1,15 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import type { Place } from './types';
 import { LangContext, type Lang, useT, t as tr } from './i18n';
-import { loadPlaces, placesInEra, placesInChapter, searchPlaces, erasForPlace, placeName } from './lib/places';
+import {
+  loadPlaces,
+  placesInEra,
+  placesUpToEra,
+  placesInChapter,
+  searchPlaces,
+  erasForPlace,
+  placeName,
+} from './lib/places';
 import { ERAS } from './data/eras';
 import MapView, { type BasemapId } from './components/MapView';
 import Header, { type Mode, type View } from './components/Header';
@@ -86,6 +94,8 @@ export default function App() {
 
   const [heat, setHeat] = useState(false);
   const [era, setEra] = useState<string | null>(null);
+  /** Zeitleiste: „nur diese Epoche" oder „alles bis hierhin". */
+  const [cumulative, setCumulative] = useState(false);
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
@@ -294,7 +304,15 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [places, navEpoch]);
 
-  const visible = useMemo(() => (places ? placesInEra(places, era) : []), [places, era]);
+  const visible = useMemo(
+    () => (places ? (cumulative ? placesUpToEra(places, era) : placesInEra(places, era)) : []),
+    [places, era, cumulative],
+  );
+  /** In der kumulativen Ansicht: was in der gewählten Epoche neu dazukommt. */
+  const newIds = useMemo(() => {
+    if (!places || !cumulative || !era) return null;
+    return new Set(placesInEra(places, era).map((p) => p.id));
+  }, [places, cumulative, era]);
   const results = useMemo(() => (places ? searchPlaces(places, query) : []), [places, query]);
   // Der Index über Reisen und Ausbreitung hängt an den großen Datendateien.
   // Er wird geladen, sobald jemand tippt – nicht schon beim Start.
@@ -453,6 +471,7 @@ export default function App() {
               lang={lang}
               onSelect={select}
               basemap={basemap}
+              newIds={newIds}
               flyTo={flyTo}
               borderYear={borderYear}
             />
@@ -558,6 +577,8 @@ export default function App() {
                   selected={era}
                   counts={eraCounts}
                   onSelect={setEra}
+                  cumulative={cumulative}
+                  onCumulative={() => setCumulative((v) => !v)}
                   open={tlOpen}
                   onToggle={() => setTlOpen((v) => !v)}
                 />

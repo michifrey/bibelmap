@@ -96,9 +96,10 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 **Akzeptanzkriterien**
 - [x] Auswahl aktualisiert Kartenmarker sofort.
 - [x] Aktive Epoche ist farblich klar markiert.
-- [ ] *(offen)* Kumulativer Modus in der **biblischen** Zeitleiste („alles bis zu
-      diesem Zeitpunkt"). Für die **Ausbreitung nach der Apostelgeschichte** ist er
-      umgesetzt: Zeitraffer mit Jahresregler (4.13).
+- [x] **Kumulativer Modus** („Bis hierhin"): zeigt alle Orte bis einschließlich
+      der gewählten Epoche; die in dieser Epoche neu hinzukommenden bleiben in
+      voller Größe, alles Ältere tritt kleiner und blasser zurück. Für die
+      Ausbreitung nach der Apostelgeschichte gibt es dasselbe als Zeitraffer (4.13).
 
 ### 4.3 Suche — P0 ✅
 
@@ -357,7 +358,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v1.0** | **Bibeltext eingebettet** (4.7) inkl. Ort-im-Text-Verknüpfung, Tastatur | ✅ erledigt |
 | **v0.3** | Suche über Referenzen (4.3/4.15), State in URL (4.15), reduzierte Bewegung + Escape | ✅ erledigt |
 | **v0.4** | Reisen & Geschichten (4.12), Mission & Ausbreitung (4.13), Bibelquiz (4.14), Offline (4.16), Handout (4.17), Nachbarorte (4.18), Code-Splitting | ✅ erledigt |
-| **offen** | kumulative biblische Zeitleiste, durchgängige Alt-Texte, 3-D-Gelände (MapLibre) | ⬜ offen |
+| **offen** | durchgängige Alt-Texte, 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
 
@@ -385,7 +386,6 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 - BibleProject-Guide-Slugs sind heuristisch (`book-of-<name>` + Gruppen-Override);
   einzelne selten gruppierte Bücher könnten ins Leere zeigen → bei Bedarf in
   `bibleProjectUrl` nachpflegen.
-- Kumulative **biblische** Zeitleiste weiterhin offen.
 - **3-D-Gelände**: Leaflet kann die Karte nicht kippen. Ein Umstieg auf MapLibre
   würde Terrain und Neigung erlauben, betrifft aber alle fünf Kartenansichten –
   bewusst zurückgestellt.

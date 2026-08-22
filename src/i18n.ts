@@ -205,6 +205,12 @@ const STRINGS: Dict = {
     de: 'Text groß, Karte aus – zum Vortragen. Die Einstellung bleibt gemerkt.',
     en: 'Large text, no map – for presenting. The setting is remembered.',
   },
+  cumulative: { de: 'Bis hierhin', en: 'Up to here' },
+  cumulativeHint: {
+    de: 'Alle Orte bis einschließlich dieser Epoche zeigen; die in dieser Epoche neu hinzukommenden treten hervor.',
+    en: 'Show every place up to and including this era; the ones new in this era stand out.',
+  },
+  newInEra: { de: 'neu in dieser Epoche', en: 'new in this era' },
   allJourneys: { de: 'Alle Reisen', en: 'All journeys' },
   stations: { de: 'Stationen', en: 'stations' },
   replay: { de: 'Noch einmal', en: 'Replay' },

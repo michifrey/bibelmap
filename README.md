@@ -18,6 +18,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   und nach Häufigkeit der Erwähnung größer. Klick öffnet eine Infokarte mit Bild,
   Bibelstellen, alternativen Schreibweisen und Quellen.
 - **Zeitleiste** – filtert die Orte nach biblischer Epoche (Erzväter → Frühe Kirche).
+  Mit **Bis hierhin** wird daraus ein Aufbau statt eines Filters: Die Karte zeigt
+  alles bis einschließlich dieser Epoche, und was in ihr **neu** dazukommt, steht
+  vorn – alles Ältere tritt kleiner und blasser zurück.
 - **Heatmap** – die am häufigsten erwähnten Orte als Wärmebild.
 - **Suche** – z. B. `Goschen`: zeigt *wo* (Karte) und *wann* (Epochen/Bücher) ein Ort
   vorkommt, inkl. aller Bibelstellen. Gesucht wird auch in den **Reisen und in
