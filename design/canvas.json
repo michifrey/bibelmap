@@ -1,10 +1,15 @@
 {
   "pages": [
+    { "id": "startseite", "name": "Startseite (radikal)" },
     { "id": "screens", "name": "Screens" },
     { "id": "system", "name": "System & Review" },
     { "id": "richtungen", "name": "Richtungen" }
   ],
   "artboards": [
+    { "file": "Start.dc.html", "page": "startseite", "x": 0, "y": 0, "w": 1440, "h": 3800, "title": "Startseite · Desktop", "print": "flow" },
+    { "file": "StartMobile.dc.html", "page": "startseite", "x": 1560, "y": 0, "w": 390, "h": 2600, "title": "Startseite · Mobil", "print": "flow" },
+    { "file": "MapRadical.dc.html", "page": "startseite", "x": 2070, "y": 0, "w": 1440, "h": 900, "title": "Karte im neuen Ton" },
+
     { "file": "Main.dc.html", "page": "screens", "x": 0, "y": 0, "w": 1440, "h": 900, "title": "Karte · Desktop" },
     { "file": "PlaceDetail.dc.html", "page": "screens", "x": 1560, "y": 0, "w": 880, "h": 860, "title": "Ortskarte" },
     { "file": "Mobile.dc.html", "page": "screens", "x": 2560, "y": 0, "w": 390, "h": 844, "title": "Karte · Mobil" },
@@ -19,6 +24,22 @@
     { "file": "DirectionEditorial.dc.html", "page": "richtungen", "x": 880, "y": 0, "w": 760, "h": 520, "title": "C · Editorial" }
   ],
   "annotations": [
+    {
+      "id": "note-start",
+      "page": "startseite",
+      "x": 0,
+      "y": -300,
+      "w": 560,
+      "text": "Radikale Richtung nach der hochgeladenen Vorlage: Montserrat Black in Versalien mit ausgestrichener dritter Zeile, Duotone-Teal-Bühne, gepunktetes Raster und Dreiecksmotiv, harte Ecken, weiße Karten, die über die Heldenfläche ragen.\n\nÜbernommen sind Aufbau und Härte – nicht die Reisethemen. Statt Strandfotos steht eine gezeichnete Luftbildkarte, statt Log-in ein direkter Einstieg in die Karte, statt Social-Icons die neun Epochenfarben als Leiste."
+    },
+    {
+      "id": "note-start-farbe",
+      "page": "startseite",
+      "x": 2070,
+      "y": 960,
+      "w": 620,
+      "text": "Die Karte im neuen Ton zeigt, dass die Richtung nicht bei der Startseite aufhört: dieselbe dunkle Bühne, dieselben harten Kanten, Zahlen als Blickfang – die neun Epochenfarben aus eras.ts bleiben unangetastet.\n\nDas heißt aber auch: die warme Papierwelt der ersten Studie wird ersetzt, nicht ergänzt. Beides zusammen geht nicht."
+    },
     {
       "id": "note-namen",
       "page": "screens",
@@ -41,8 +62,8 @@
       "x": 0,
       "y": -230,
       "w": 560,
-      "text": "Richtung A ist gebaut – sie liegt als fertige Screens auf der ersten Seite.\n\nB und C sind absichtlich grob: sie sollen nur die Entscheidung tragen, nicht schon die Ausführung. Wenn eine davon gewinnt, wandert sie in die Screens und A verschwindet."
+      "text": "Richtung A ist gebaut – sie liegt als fertige Screens auf der Seite „Screens“.\n\nB und C sind absichtlich grob: sie sollen nur die Entscheidung tragen, nicht schon die Ausführung."
     }
   ],
-  "launch": { "view": "canvas", "page": "screens" }
+  "launch": { "view": "canvas", "page": "startseite" }
 }

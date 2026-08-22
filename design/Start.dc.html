@@ -1,0 +1,540 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Montserrat', system-ui, sans-serif; color: #10201f; background: #03302f; -webkit-font-smoothing: antialiased; }
+    .fr { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-optical-sizing: auto; }
+    a { color: #0d7f78; text-decoration: none; }
+    a:hover { color: #0a5f5a; }
+    .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .28em; text-transform: uppercase; }
+    /* outlined display type — the reference's signature move */
+    .outline { color: transparent; -webkit-text-stroke: 2px currentColor; }
+    .outline-dark { color: transparent; -webkit-text-stroke: 2px #0d7f78; }
+  </style>
+</helmet>
+
+<div style="width: 1440px; background: #f4f1ea">
+
+  <!-- ======================================================= HERO -->
+  <div style="position: relative; height: 880px; overflow: hidden; background: #06403c">
+
+    <!-- drawn aerial map, duotone teal -->
+    <svg style="position: absolute; inset: 0" width="1440" height="880" viewBox="0 0 1440 880" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <linearGradient id="sea" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#0e8f86"></stop>
+          <stop offset="55%" stop-color="#0a6b66"></stop>
+          <stop offset="100%" stop-color="#053e3c"></stop>
+        </linearGradient>
+        <linearGradient id="land" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0%" stop-color="#0a5450"></stop>
+          <stop offset="100%" stop-color="#12736a"></stop>
+        </linearGradient>
+        <linearGradient id="scrim" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#03302f" stop-opacity=".94"></stop>
+          <stop offset="46%" stop-color="#04413e" stop-opacity=".72"></stop>
+          <stop offset="100%" stop-color="#04413e" stop-opacity="0"></stop>
+        </linearGradient>
+        <pattern id="stipple" width="14" height="14" patternUnits="userSpaceOnUse">
+          <circle cx="3" cy="3" r="1.5" fill="#0d7f78" fill-opacity=".55"></circle>
+          <circle cx="10" cy="9" r="1.2" fill="#14a093" fill-opacity=".35"></circle>
+        </pattern>
+      </defs>
+
+      <rect width="1440" height="880" fill="url(#sea)"></rect>
+
+      <!-- swell arcs in the water -->
+      <g fill="none" stroke="#2ec2b0" stroke-opacity=".18" stroke-width="2">
+        <path d="M-40 250C140 210 260 300 430 268"></path>
+        <path d="M-40 300C140 260 260 350 430 318"></path>
+        <path d="M-40 560C160 516 300 610 470 574"></path>
+        <path d="M-40 612C160 568 300 662 470 626"></path>
+        <path d="M-60 760C120 720 250 800 420 768"></path>
+      </g>
+
+      <!-- landmass: coast running lower-left to upper-right -->
+      <path d="M540 880C600 700 720 560 900 450C1060 352 1240 300 1440 276V0H1440V880Z" fill="url(#land)"></path>
+      <!-- surf / beach edge -->
+      <path d="M540 880C600 700 720 560 900 450C1060 352 1240 300 1440 276" fill="none" stroke="#a9e4dc" stroke-opacity=".55" stroke-width="10"></path>
+      <path d="M556 880C616 706 734 570 912 462C1070 366 1246 314 1440 290" fill="none" stroke="#d9f4ef" stroke-opacity=".35" stroke-width="3"></path>
+      <path d="M508 880C572 692 696 546 878 434C1042 334 1230 282 1440 258" fill="none" stroke="#5fd3c4" stroke-opacity=".3" stroke-width="2" stroke-dasharray="10 14"></path>
+
+      <!-- forest texture on the land -->
+      <path d="M600 880C660 716 774 584 944 480C1096 386 1264 336 1440 312V0H1440V880Z" fill="url(#stipple)"></path>
+
+      <!-- inland contours -->
+      <g fill="none" stroke="#8ee0d4" stroke-opacity=".16" stroke-width="1.5">
+        <path d="M760 880C820 730 930 610 1090 512C1210 438 1330 400 1440 380"></path>
+        <path d="M880 880C940 748 1040 640 1180 556C1280 496 1370 466 1440 452"></path>
+        <path d="M1020 880C1070 772 1150 686 1264 618C1340 574 1400 552 1440 542"></path>
+      </g>
+
+      <!-- a river cutting the land -->
+      <path d="M1440 340C1330 372 1250 424 1190 490C1128 558 1090 640 1046 720C1016 776 990 830 972 880" fill="none" stroke="#0a5450" stroke-opacity=".55" stroke-width="9" stroke-linecap="round"></path>
+      <path d="M1440 340C1330 372 1250 424 1190 490C1128 558 1090 640 1046 720C1016 776 990 830 972 880" fill="none" stroke="#3fd0bd" stroke-opacity=".35" stroke-width="3" stroke-linecap="round"></path>
+
+      <!-- map pins scattered over the land, in era colours -->
+      <g stroke="#e9fbf8" stroke-width="2.5" stroke-opacity=".9">
+        <circle cx="1188" cy="392" r="8" fill="#e0a449"></circle>
+        <circle cx="1316" cy="474" r="7" fill="#b0436b"></circle>
+        <circle cx="1054" cy="548" r="9" fill="#a89321"></circle>
+        <circle cx="1244" cy="628" r="7" fill="#5a5ca8"></circle>
+        <circle cx="928" cy="648" r="7" fill="#b8742e"></circle>
+        <circle cx="1130" cy="742" r="8" fill="#9a4ba0"></circle>
+        <circle cx="1372" cy="330" r="7" fill="#3a6ea8"></circle>
+      </g>
+
+      <!-- readability scrim for the headline -->
+      <rect width="1440" height="880" fill="url(#scrim)"></rect>
+    </svg>
+
+    <!-- ---------- header ---------- -->
+    <div style="position: absolute; left: 0; right: 0; top: 0; height: 96px; display: flex; align-items: center; gap: 40px; padding: 0 56px">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <svg viewBox="0 0 40 40" width="40" height="40" aria-hidden="true">
+          <path d="M20 3 34 11v18L20 37 6 29V11Z" fill="none" stroke="#e0a449" stroke-width="2.4" stroke-linejoin="round"></path>
+          <path d="M20 27s6-6.6 6-10.4A6 6 0 0 0 14 16.6C14 20.4 20 27 20 27Z" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"></path>
+          <circle cx="20" cy="16.4" r="2.3" fill="#e0a449"></circle>
+        </svg>
+        <span style="font-size: 25px; font-weight: 900; letter-spacing: -.02em; color: #ffffff">BIBELMAP</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 34px">
+        <span style="font-size: 14px; font-weight: 700; color: #ffffff; padding-bottom: 4px; border-bottom: 3px solid #e0a449">Start</span>
+        <span style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,.8)">Karte</span>
+        <span style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,.8)">Präsentation</span>
+        <span style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,.8)">Stammbäume</span>
+        <span style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,.8)">Über</span>
+      </div>
+
+      <div style="flex-grow: 1"></div>
+
+      <div style="display: flex; align-items: center; gap: 14px">
+        <div style="display: flex; align-items: center; gap: 12px; width: 268px; height: 46px; padding: 0 8px 0 20px; border-radius: 999px; background: #ffffff">
+          <span style="flex-grow: 1; font-size: 13.5px; font-weight: 500; color: #7b8a88">Ort suchen …</span>
+          <span style="display: grid; place-items: center; width: 32px; height: 32px; border-radius: 999px; background: #0d7f78">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5 20 20"></path></svg>
+          </span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 22px; background: #e0a449">
+          <span style="font-size: 13.5px; font-weight: 800; letter-spacing: .04em; color: #06403c">KARTE ÖFFNEN</span>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="#06403c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"></path></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- era rail (replaces the reference's social stack) ---------- -->
+    <div style="position: absolute; left: 56px; top: 300px; display: flex; flex-direction: column; align-items: center; gap: 14px">
+      <span style="display: block; width: 1px; height: 40px; background: rgba(255,255,255,.3)"></span>
+      <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #b8742e"></i>
+      <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #c98a2b"></i>
+      <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #a89321"></i>
+      <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #5c8a3a"></i>
+      <i style="display: block; width: 14px; height: 14px; border-radius: 999px; background: #2f8f7f; box-shadow: 0 0 0 4px rgba(47,143,127,.3)"></i>
+      <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #3a6ea8"></i>
+      <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #5a5ca8"></i>
+      <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #9a4ba0"></i>
+      <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #b0436b"></i>
+      <span style="display: block; width: 1px; height: 40px; background: rgba(255,255,255,.3)"></span>
+      <span style="font-size: 10px; font-weight: 700; letter-spacing: .22em; color: rgba(255,255,255,.55); writing-mode: vertical-rl">9 EPOCHEN</span>
+    </div>
+
+    <!-- ---------- dotted grid ornament ---------- -->
+    <svg style="position: absolute; left: 700px; top: 168px" width="132" height="132" viewBox="0 0 132 132" aria-hidden="true">
+      <g fill="#ffffff" fill-opacity=".55">
+        <circle cx="6" cy="6" r="4"></circle><circle cx="48" cy="6" r="4"></circle><circle cx="90" cy="6" r="4"></circle><circle cx="126" cy="6" r="4"></circle>
+        <circle cx="6" cy="48" r="4"></circle><circle cx="48" cy="48" r="4"></circle><circle cx="90" cy="48" r="4"></circle><circle cx="126" cy="48" r="4"></circle>
+        <circle cx="6" cy="90" r="4"></circle><circle cx="48" cy="90" r="4"></circle><circle cx="90" cy="90" r="4"></circle><circle cx="126" cy="90" r="4"></circle>
+        <circle cx="6" cy="126" r="4"></circle><circle cx="48" cy="126" r="4"></circle><circle cx="90" cy="126" r="4"></circle><circle cx="126" cy="126" r="4"></circle>
+      </g>
+    </svg>
+
+    <!-- ---------- headline block ---------- -->
+    <div style="position: absolute; left: 140px; top: 236px; width: 700px; display: flex; gap: 34px">
+      <span style="flex-shrink: 0; display: block; width: 4px; height: 296px; background: #e0a449"></span>
+      <div>
+        <div class="eyebrow" style="color: #7fe3d5; margin-bottom: 22px">1.335 Orte · 9 Epochen · 66 Bücher</div>
+        <div style="font-size: 82px; font-weight: 900; line-height: .94; letter-spacing: -.025em; color: #ffffff">ENTDECKE</div>
+        <div style="font-size: 82px; font-weight: 900; line-height: .94; letter-spacing: -.025em; color: #ffffff">JEDEN ORT</div>
+        <div class="outline" style="font-size: 82px; font-weight: 900; line-height: 1.02; letter-spacing: .01em; color: #ffffff">DER BIBEL</div>
+      </div>
+    </div>
+
+    <div style="position: absolute; left: 178px; top: 578px; width: 486px">
+      <p style="margin: 0; font-size: 15px; font-weight: 500; line-height: 1.75; color: rgba(255,255,255,.82); text-wrap: pretty">
+        Wo lag Goschen? Wann wird Samaria zur Hauptstadt? Bibelmap zeigt jeden Ort
+        der Bibel auf einer Karte – nach Epoche gefiltert, mit jeder Bibelstelle,
+        und Kapitel für Kapitel neben dem Bibeltext.
+      </p>
+      <div style="display: flex; align-items: center; gap: 26px; margin-top: 34px">
+        <div style="display: flex; align-items: center; gap: 16px; height: 62px; padding: 0 26px; background: #0d7f78">
+          <span style="font-size: 15px; font-weight: 800; letter-spacing: .08em; color: #ffffff">KARTE ÖFFNEN</span>
+          <span style="display: grid; place-items: center; width: 30px; height: 30px; border-radius: 999px; background: #ffffff">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="#0d7f78"><path d="M8 5.5v13l11-6.5Z"></path></svg>
+          </span>
+        </div>
+        <!-- triangle motif -->
+        <svg width="150" height="26" viewBox="0 0 150 26" aria-hidden="true">
+          <g fill="#e0a449">
+            <path d="M26 3 4 13l22 10Z" fill-opacity=".35"></path>
+            <path d="M56 3 34 13l22 10Z" fill-opacity=".5"></path>
+            <path d="M86 3 64 13l22 10Z" fill-opacity=".7"></path>
+            <path d="M116 3 94 13l22 10Z" fill-opacity=".85"></path>
+            <path d="M146 3 124 13l22 10Z"></path>
+          </g>
+        </svg>
+      </div>
+      <div style="margin-top: 22px; font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,.55)">Ohne Anmeldung · Ortsdaten unter CC-BY 4.0</div>
+    </div>
+
+    <!-- ---------- overlapping cards ---------- -->
+    <div style="position: absolute; left: 880px; top: 470px; display: flex; gap: 20px">
+
+      <div style="width: 246px; background: #ffffff; box-shadow: 0 30px 60px -30px rgba(3,48,47,.6)">
+        <svg viewBox="0 0 246 178" width="246" height="178" style="display: block" aria-hidden="true">
+          <rect width="246" height="178" fill="#0a6b66"></rect>
+          <path d="M0 178C40 120 96 84 168 58C200 46 224 40 246 36V178Z" fill="#12736a"></path>
+          <path d="M0 178C40 120 96 84 168 58C200 46 224 40 246 36" fill="none" stroke="#a9e4dc" stroke-opacity=".5" stroke-width="4"></path>
+          <g fill="none" stroke="#8ee0d4" stroke-opacity=".22" stroke-width="1.4">
+            <path d="M40 178C76 132 126 104 190 84C216 76 232 72 246 70"></path>
+            <path d="M92 178C124 144 164 122 214 108C230 104 240 102 246 100"></path>
+          </g>
+          <g fill="none" stroke="#2ec2b0" stroke-opacity=".2" stroke-width="2">
+            <path d="M-10 60C30 44 62 74 104 56"></path>
+            <path d="M-10 96C30 80 62 110 104 92"></path>
+          </g>
+          <g stroke="#e9fbf8" stroke-width="2.2">
+            <circle cx="176" cy="72" r="7" fill="#a89321"></circle>
+            <circle cx="122" cy="126" r="6" fill="#b8742e"></circle>
+            <circle cx="212" cy="112" r="6" fill="#2f8f7f"></circle>
+          </g>
+        </svg>
+        <div style="padding: 22px 22px 24px">
+          <div class="eyebrow" style="font-size: 10px; color: #0d7f78">01 — Karte</div>
+          <div style="margin-top: 10px; font-size: 19px; font-weight: 800; line-height: 1.2; letter-spacing: -.01em; color: #10201f">Orte &amp;<br>Epochen</div>
+          <p style="margin: 12px 0 0; font-size: 12.5px; font-weight: 500; line-height: 1.65; color: #5c6b69">Neun Epochen von den Erzvätern bis zur frühen Kirche. Die Zeitleiste blendet aus, was noch nicht oder nicht mehr dazugehört.</p>
+          <div style="display: inline-flex; align-items: center; gap: 9px; margin-top: 20px; height: 40px; padding: 0 16px; background: #06403c">
+            <span style="font-size: 11px; font-weight: 800; letter-spacing: .1em; color: #ffffff">ZUR KARTE</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#e0a449" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"></path></svg>
+          </div>
+        </div>
+      </div>
+
+      <div style="width: 246px; background: #ffffff; box-shadow: 0 30px 60px -30px rgba(3,48,47,.6)">
+        <svg viewBox="0 0 246 178" width="246" height="178" style="display: block" aria-hidden="true">
+          <rect width="246" height="178" fill="#0a5450"></rect>
+          <rect x="0" y="0" width="120" height="178" fill="#073f3c"></rect>
+          <g stroke="#7fe3d5" stroke-opacity=".5" stroke-width="3" stroke-linecap="round">
+            <path d="M20 44h74M20 62h84M20 80h60M20 98h80M20 116h48"></path>
+          </g>
+          <g stroke="#e0a449" stroke-width="3" stroke-linecap="round">
+            <path d="M20 62h30M20 98h26"></path>
+          </g>
+          <path d="M120 178C146 138 180 110 246 88V178Z" fill="#12736a"></path>
+          <path d="M120 178C146 138 180 110 246 88" fill="none" stroke="#a9e4dc" stroke-opacity=".5" stroke-width="4"></path>
+          <path d="M150 150 190 106" fill="none" stroke="#e0a449" stroke-width="2.4" stroke-dasharray="3 7" stroke-linecap="round"></path>
+          <g stroke="#e9fbf8" stroke-width="2.2">
+            <circle cx="150" cy="150" r="6" fill="#2f8f7f"></circle>
+            <circle cx="194" cy="102" r="7" fill="#e0a449"></circle>
+          </g>
+        </svg>
+        <div style="padding: 22px 22px 24px">
+          <div class="eyebrow" style="font-size: 10px; color: #0d7f78">02 — Lesen</div>
+          <div style="margin-top: 10px; font-size: 19px; font-weight: 800; line-height: 1.2; letter-spacing: -.01em; color: #10201f">Präsen-<br>tationsmodus</div>
+          <p style="margin: 12px 0 0; font-size: 12.5px; font-weight: 500; line-height: 1.65; color: #5c6b69">Ein Buch Kapitel für Kapitel: links der Bibeltext, rechts zoomt die Karte auf die Orte, die gerade genannt werden.</p>
+          <div style="display: inline-flex; align-items: center; gap: 9px; margin-top: 20px; height: 40px; padding: 0 16px; background: #06403c">
+            <span style="font-size: 11px; font-weight: 800; letter-spacing: .1em; color: #ffffff">ANSEHEN</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#e0a449" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"></path></svg>
+          </div>
+        </div>
+      </div>
+
+      <div style="width: 246px; background: #ffffff; box-shadow: 0 30px 60px -30px rgba(3,48,47,.6)">
+        <svg viewBox="0 0 246 178" width="246" height="178" style="display: block" aria-hidden="true">
+          <rect width="246" height="178" fill="#073f3c"></rect>
+          <g fill="none" stroke="#7fe3d5" stroke-opacity=".45" stroke-width="2">
+            <path d="M40 89C58 89 58 41 76 41"></path>
+            <path d="M40 89C58 89 58 89 76 89"></path>
+            <path d="M40 89C58 89 58 137 76 137"></path>
+            <path d="M138 41C156 41 156 21 174 21"></path>
+            <path d="M138 41C156 41 156 61 174 61"></path>
+            <path d="M138 89C156 89 156 109 174 109"></path>
+            <path d="M138 137C156 137 156 153 174 153"></path>
+          </g>
+          <g fill="#0a5450" stroke="#7fe3d5" stroke-opacity=".7" stroke-width="1.6">
+            <rect x="14" y="79" width="26" height="20" rx="2"></rect>
+            <rect x="76" y="31" width="62" height="20" rx="2"></rect>
+            <rect x="76" y="79" width="62" height="20" rx="2"></rect>
+            <rect x="76" y="127" width="62" height="20" rx="2"></rect>
+            <rect x="174" y="11" width="58" height="20" rx="2"></rect>
+            <rect x="174" y="51" width="58" height="20" rx="2"></rect>
+            <rect x="174" y="99" width="58" height="20" rx="2"></rect>
+            <rect x="174" y="143" width="58" height="20" rx="2"></rect>
+          </g>
+          <g fill="#e0a449">
+            <rect x="76" y="31" width="3" height="20"></rect>
+            <rect x="174" y="11" width="3" height="20"></rect>
+            <rect x="174" y="51" width="3" height="20"></rect>
+          </g>
+        </svg>
+        <div style="padding: 22px 22px 24px">
+          <div class="eyebrow" style="font-size: 10px; color: #0d7f78">03 — Herkunft</div>
+          <div style="margin-top: 10px; font-size: 19px; font-weight: 800; line-height: 1.2; letter-spacing: -.01em; color: #10201f">Stamm-<br>bäume</div>
+          <p style="margin: 12px 0 0; font-size: 12.5px; font-weight: 500; line-height: 1.65; color: #5c6b69">Die Völkertafel aus 1. Chronik 1–9 als aufklappbarer Baum – von Adam bis zu den zwölf Stämmen Israels.</p>
+          <div style="display: inline-flex; align-items: center; gap: 9px; margin-top: 20px; height: 40px; padding: 0 16px; background: #06403c">
+            <span style="font-size: 11px; font-weight: 800; letter-spacing: .1em; color: #ffffff">ÖFFNEN</span>
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="#e0a449" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"></path></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- spacer under the overlapping cards -->
+  <div style="height: 264px; background: #f4f1ea"></div>
+
+  <!-- ======================================================= NUMBERS -->
+  <div style="display: flex; align-items: stretch; background: #06403c">
+    <div style="flex: 1 1 0; padding: 54px 44px">
+      <div style="font-size: 54px; font-weight: 900; letter-spacing: -.03em; color: #ffffff">1.335</div>
+      <div class="eyebrow" style="font-size: 11px; color: #7fe3d5; margin-top: 8px">Kartierte Orte</div>
+    </div>
+    <span style="width: 1px; background: rgba(255,255,255,.14)"></span>
+    <div style="flex: 1 1 0; padding: 54px 44px">
+      <div style="font-size: 54px; font-weight: 900; letter-spacing: -.03em; color: #ffffff">9</div>
+      <div class="eyebrow" style="font-size: 11px; color: #7fe3d5; margin-top: 8px">Epochen</div>
+    </div>
+    <span style="width: 1px; background: rgba(255,255,255,.14)"></span>
+    <div style="flex: 1 1 0; padding: 54px 44px">
+      <div style="font-size: 54px; font-weight: 900; letter-spacing: -.03em; color: #ffffff">66</div>
+      <div class="eyebrow" style="font-size: 11px; color: #7fe3d5; margin-top: 8px">Bücher im Präsentationsmodus</div>
+    </div>
+    <span style="width: 1px; background: rgba(255,255,255,.14)"></span>
+    <div style="flex: 1 1 0; padding: 54px 44px; background: #e0a449">
+      <div style="font-size: 54px; font-weight: 900; letter-spacing: -.03em; color: #06403c">300+</div>
+      <div class="eyebrow" style="font-size: 11px; color: rgba(6,64,60,.7); margin-top: 8px">Namen im Stammbaum</div>
+    </div>
+  </div>
+
+  <!-- ======================================================= TIMELINE -->
+  <div style="padding: 96px 100px 100px; background: #f4f1ea">
+    <div style="display: flex; align-items: flex-end; gap: 60px; margin-bottom: 52px">
+      <div>
+        <div class="eyebrow" style="color: #0d7f78; margin-bottom: 18px">Zeitleiste</div>
+        <div style="font-size: 62px; font-weight: 900; line-height: .96; letter-spacing: -.025em; color: #10201f">2000 JAHRE</div>
+        <div class="outline-dark" style="font-size: 62px; font-weight: 900; line-height: 1.04; letter-spacing: 0; color: #0d7f78">AUF EINEM BAND</div>
+      </div>
+      <p style="margin: 0 0 8px; max-width: 380px; font-size: 14px; font-weight: 500; line-height: 1.75; color: #5c6b69; text-wrap: pretty">
+        Die Breite jedes Abschnitts folgt seiner Dauer, die Zahl darunter sagt, wie
+        viele Orte in dieser Zeit vorkommen. Ein Klick filtert die Karte.
+      </p>
+    </div>
+
+    <div style="display: flex; align-items: flex-end; gap: 8px; height: 168px">
+      <div style="flex: 191 1 0; display: flex; flex-direction: column; justify-content: flex-end; height: 118px; padding: 18px 16px; background: #b8742e">
+        <div style="font-size: 26px; font-weight: 900; color: #ffffff">123</div>
+        <div style="margin-top: 6px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.9)">Erzväter</div>
+        <div style="margin-top: 2px; font-size: 10.5px; font-weight: 500; color: rgba(255,255,255,.7)">~2000–1500 v. Chr.</div>
+      </div>
+      <div style="flex: 54 1 0; display: flex; flex-direction: column; justify-content: flex-end; height: 118px; padding: 18px 10px; background: #c98a2b">
+        <div style="font-size: 26px; font-weight: 900; color: #ffffff">188</div>
+        <div style="margin-top: 6px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.9)">Exodus</div>
+      </div>
+      <div style="flex: 161 1 0; display: flex; flex-direction: column; justify-content: flex-end; height: 118px; padding: 18px 16px; background: #a89321">
+        <div style="font-size: 26px; font-weight: 900; color: #ffffff">511</div>
+        <div style="margin-top: 6px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.9)">Landnahme &amp; Richter</div>
+        <div style="margin-top: 2px; font-size: 10.5px; font-weight: 500; color: rgba(255,255,255,.7)">~1406–1050 v. Chr.</div>
+      </div>
+      <div style="flex: 94 1 0; display: flex; flex-direction: column; justify-content: flex-end; height: 118px; padding: 18px 14px; background: #5c8a3a">
+        <div style="font-size: 26px; font-weight: 900; color: #ffffff">393</div>
+        <div style="margin-top: 6px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.9)">Vereintes Kgr.</div>
+      </div>
+      <div style="flex: 158 1 0; display: flex; flex-direction: column; justify-content: flex-end; height: 168px; padding: 20px 16px; background: #2f8f7f; box-shadow: 0 22px 44px -20px rgba(47,143,127,.9)">
+        <div style="font-size: 34px; font-weight: 900; color: #ffffff">345</div>
+        <div style="margin-top: 6px; font-size: 13px; font-weight: 800; color: #ffffff">Geteiltes Königreich</div>
+        <div style="margin-top: 2px; font-size: 11px; font-weight: 500; color: rgba(255,255,255,.78)">~930–586 v. Chr.</div>
+      </div>
+      <div style="flex: 59 1 0; display: flex; flex-direction: column; justify-content: flex-end; height: 118px; padding: 18px 10px; background: #3a6ea8">
+        <div style="font-size: 26px; font-weight: 900; color: #ffffff">125</div>
+        <div style="margin-top: 6px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.9)">Exil</div>
+      </div>
+      <div style="flex: 100 1 0; display: flex; flex-direction: column; justify-content: flex-end; height: 118px; padding: 18px 14px; background: #5a5ca8">
+        <div style="font-size: 26px; font-weight: 900; color: #ffffff">148</div>
+        <div style="margin-top: 6px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.9)">Rückkehr</div>
+      </div>
+      <div style="flex: 53 1 0; display: flex; flex-direction: column; justify-content: flex-end; height: 118px; padding: 18px 10px; background: #9a4ba0">
+        <div style="font-size: 26px; font-weight: 900; color: #ffffff">64</div>
+        <div style="margin-top: 6px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.9)">Jesus</div>
+      </div>
+      <div style="flex: 70 1 0; display: flex; flex-direction: column; justify-content: flex-end; height: 118px; padding: 18px 12px; background: #b0436b">
+        <div style="font-size: 26px; font-weight: 900; color: #ffffff">135</div>
+        <div style="margin-top: 6px; font-size: 12px; font-weight: 700; color: rgba(255,255,255,.9)">Kirche</div>
+      </div>
+    </div>
+    <div style="display: flex; justify-content: space-between; margin-top: 14px">
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: .16em; color: #8a9895">2000 V. CHR.</span>
+      <span style="font-size: 11px; font-weight: 700; letter-spacing: .16em; color: #8a9895">100 N. CHR.</span>
+    </div>
+  </div>
+
+  <!-- ======================================================= PRESENTATION -->
+  <div style="display: flex; align-items: stretch; background: #ffffff">
+    <div style="flex: 0 0 620px; padding: 92px 60px 92px 100px">
+      <div class="eyebrow" style="color: #0d7f78; margin-bottom: 18px">Präsentationsmodus</div>
+      <div style="font-size: 58px; font-weight: 900; line-height: .96; letter-spacing: -.025em; color: #10201f">DER TEXT</div>
+      <div style="font-size: 58px; font-weight: 900; line-height: .96; letter-spacing: -.025em; color: #10201f">BEWEGT</div>
+      <div class="outline-dark" style="font-size: 58px; font-weight: 900; line-height: 1.04; color: #0d7f78">DIE KARTE</div>
+
+      <div style="display: flex; gap: 22px; margin-top: 40px; padding: 28px 30px; background: #f4f1ea; border-left: 4px solid #e0a449">
+        <div>
+          <p class="fr" style="margin: 0; font-size: 21px; line-height: 1.7; color: #10201f">
+            Gehe hin und wasche dich siebenmal im
+            <span style="background: rgba(224,164,73,.4); padding: 0 4px">Jordan</span>,
+            so wird dir dein Fleisch wieder erstattet und rein werden.
+          </p>
+          <div style="margin-top: 16px; font-size: 11px; font-weight: 700; letter-spacing: .16em; color: #8a9895">2. KÖNIGE 5,10 · LUTHER 1912</div>
+        </div>
+      </div>
+
+      <p style="margin: 34px 0 0; max-width: 440px; font-size: 14px; font-weight: 500; line-height: 1.8; color: #5c6b69; text-wrap: pretty">
+        Jeder Ort im Text ist markiert. Ein Klick, und die Karte springt hin.
+        Mit den Pfeiltasten blätterst du durch das ganze Buch – der Text kommt
+        aus der Lutherbibel 1912 oder der World English Bible.
+      </p>
+
+      <div style="display: inline-flex; align-items: center; gap: 14px; margin-top: 36px; height: 58px; padding: 0 26px; background: #0d7f78">
+        <span style="font-size: 14px; font-weight: 800; letter-spacing: .08em; color: #ffffff">MODUS STARTEN</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#e0a449" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6"></path></svg>
+      </div>
+    </div>
+
+    <div style="position: relative; flex-grow: 1; min-height: 620px; background: #06403c">
+      <svg style="position: absolute; inset: 0" width="820" height="640" viewBox="0 0 820 640" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="820" height="640" fill="#0a5450"></rect>
+        <path d="M0 640C60 480 180 350 380 250C520 180 680 140 820 118V640Z" fill="#12736a"></path>
+        <path d="M0 640C60 480 180 350 380 250C520 180 680 140 820 118" fill="none" stroke="#a9e4dc" stroke-opacity=".45" stroke-width="6"></path>
+        <g fill="none" stroke="#8ee0d4" stroke-opacity=".16" stroke-width="1.5">
+          <path d="M120 640C180 500 300 390 480 306C600 250 720 216 820 200"></path>
+          <path d="M260 640C314 526 420 434 570 366C670 320 760 296 820 284"></path>
+        </g>
+        <g fill="none" stroke="#2ec2b0" stroke-opacity=".16" stroke-width="2">
+          <path d="M-10 220C60 190 120 260 200 226"></path>
+          <path d="M-10 300C60 270 120 340 200 306"></path>
+        </g>
+        <path d="M820 190C720 226 640 288 580 366C520 444 480 520 452 610" fill="none" stroke="#083f3c" stroke-opacity=".6" stroke-width="10" stroke-linecap="round"></path>
+        <path d="M820 190C720 226 640 288 580 366C520 444 480 520 452 610" fill="none" stroke="#4fd8c4" stroke-opacity=".45" stroke-width="4" stroke-linecap="round"></path>
+        <path d="M660 240 545 400" fill="none" stroke="#e0a449" stroke-width="3" stroke-dasharray="3 10" stroke-linecap="round"></path>
+        <g stroke="#e9fbf8" stroke-width="3">
+          <circle cx="672" cy="232" r="12" fill="#2f8f7f"></circle>
+          <circle cx="538" cy="410" r="16" fill="#e0a449"></circle>
+        </g>
+        <circle cx="538" cy="410" r="26" fill="none" stroke="#e0a449" stroke-opacity=".45" stroke-width="4"></circle>
+        <g font-family="'Montserrat', sans-serif" font-weight="700" fill="#ffffff">
+          <text x="694" y="237" font-size="15">Damascus</text>
+          <text x="538" y="462" font-size="17" text-anchor="middle">Jordan</text>
+        </g>
+      </svg>
+      <div style="position: absolute; left: 40px; bottom: 40px; display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: rgba(6,64,60,.86)">
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: .16em; color: #7fe3d5">2. KÖNIGE · KAPITEL 5</span>
+        <span style="width: 1px; height: 18px; background: rgba(255,255,255,.24)"></span>
+        <span style="font-size: 11px; font-weight: 700; letter-spacing: .16em; color: #ffffff">7 ORTE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================= SOURCES -->
+  <div style="padding: 88px 100px; background: #f4f1ea">
+    <div style="display: flex; align-items: flex-end; gap: 40px; margin-bottom: 44px">
+      <div class="eyebrow" style="color: #0d7f78">Woher die Daten kommen</div>
+      <span style="flex-grow: 1; height: 1px; background: #d8d2c4"></span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px">
+      <div style="padding: 28px 26px 30px; background: #ffffff; border-top: 4px solid #0d7f78">
+        <div style="font-size: 17px; font-weight: 800; letter-spacing: -.01em; color: #10201f">OpenBible.info</div>
+        <p style="margin: 10px 0 0; font-size: 12.5px; font-weight: 500; line-height: 1.7; color: #5c6b69">Koordinaten, Namensvarianten und Bibelstellen für alle 1.335 Orte. Lizenz CC-BY 4.0.</p>
+      </div>
+      <div style="padding: 28px 26px 30px; background: #ffffff; border-top: 4px solid #0d7f78">
+        <div style="font-size: 17px; font-weight: 800; letter-spacing: -.01em; color: #10201f">open-bibles</div>
+        <p style="margin: 10px 0 0; font-size: 12.5px; font-weight: 500; line-height: 1.7; color: #5c6b69">Lutherbibel 1912 und World English Bible – beide gemeinfrei.</p>
+      </div>
+      <div style="padding: 28px 26px 30px; background: #ffffff; border-top: 4px solid #0d7f78">
+        <div style="font-size: 17px; font-weight: 800; letter-spacing: -.01em; color: #10201f">Wikimedia Commons</div>
+        <p style="margin: 10px 0 0; font-size: 12.5px; font-weight: 500; line-height: 1.7; color: #5c6b69">Fotos der Orte, jeweils mit eigenem Bildnachweis und freier Lizenz.</p>
+      </div>
+      <div style="padding: 28px 26px 30px; background: #ffffff; border-top: 4px solid #0d7f78">
+        <div style="font-size: 17px; font-weight: 800; letter-spacing: -.01em; color: #10201f">OpenStreetMap &amp; CARTO</div>
+        <p style="margin: 10px 0 0; font-size: 12.5px; font-weight: 500; line-height: 1.7; color: #5c6b69">Die Kartenkacheln, auf denen alles liegt.</p>
+      </div>
+    </div>
+    <p style="margin: 26px 0 0; font-size: 12px; font-weight: 500; line-height: 1.7; color: #8a9895; max-width: 760px">
+      Die Zuordnung der Bücher zu Epochen ist eine bewusste Vereinfachung, um der
+      Zeitleiste Struktur zu geben – kein Anspruch auf wissenschaftliche Datierung.
+    </p>
+  </div>
+
+  <!-- ======================================================= FINAL CTA -->
+  <div style="position: relative; padding: 104px 100px 108px; background: #06403c; overflow: hidden">
+    <svg style="position: absolute; right: -60px; top: -40px" width="520" height="520" viewBox="0 0 520 520" aria-hidden="true">
+      <g fill="none" stroke="#0d7f78" stroke-width="2">
+        <circle cx="260" cy="260" r="80"></circle><circle cx="260" cy="260" r="140"></circle>
+        <circle cx="260" cy="260" r="200"></circle><circle cx="260" cy="260" r="258"></circle>
+      </g>
+      <circle cx="260" cy="260" r="14" fill="#e0a449"></circle>
+    </svg>
+    <div style="position: relative; display: flex; align-items: flex-end; gap: 70px">
+      <div>
+        <div style="font-size: 68px; font-weight: 900; line-height: .96; letter-spacing: -.03em; color: #ffffff">ÖFFNE</div>
+        <div class="outline" style="font-size: 68px; font-weight: 900; line-height: 1.04; color: #e0a449">DIE KARTE</div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 14px; height: 66px; padding: 0 30px; background: #e0a449">
+        <span style="font-size: 15px; font-weight: 800; letter-spacing: .08em; color: #06403c">JETZT LOSGEHEN</span>
+        <span style="display: grid; place-items: center; width: 32px; height: 32px; border-radius: 999px; background: #06403c">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="#e0a449"><path d="M8 5.5v13l11-6.5Z"></path></svg>
+        </span>
+      </div>
+      <div style="flex-grow: 1"></div>
+      <svg width="150" height="26" viewBox="0 0 150 26" style="margin-bottom: 26px" aria-hidden="true">
+        <g fill="#0d7f78">
+          <path d="M4 3 26 13 4 23Z" fill-opacity=".4"></path>
+          <path d="M34 3 56 13 34 23Z" fill-opacity=".55"></path>
+          <path d="M64 3 86 13 64 23Z" fill-opacity=".7"></path>
+          <path d="M94 3 116 13 94 23Z" fill-opacity=".85"></path>
+          <path d="M124 3 146 13 124 23Z"></path>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- ======================================================= FOOTER -->
+  <div style="display: flex; align-items: center; gap: 34px; padding: 34px 100px; background: #03302f">
+    <div style="display: flex; align-items: center; gap: 11px">
+      <svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true">
+        <path d="M20 3 34 11v18L20 37 6 29V11Z" fill="none" stroke="#e0a449" stroke-width="2.4" stroke-linejoin="round"></path>
+        <path d="M20 27s6-6.6 6-10.4A6 6 0 0 0 14 16.6C14 20.4 20 27 20 27Z" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linejoin="round"></path>
+      </svg>
+      <span style="font-size: 17px; font-weight: 900; letter-spacing: -.01em; color: #ffffff">BIBELMAP</span>
+    </div>
+    <span style="width: 1px; height: 22px; background: rgba(255,255,255,.16)"></span>
+    <span style="font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,.6)">Karte</span>
+    <span style="font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,.6)">Präsentation</span>
+    <span style="font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,.6)">Stammbäume</span>
+    <span style="font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,.6)">Quellcode</span>
+    <div style="flex-grow: 1"></div>
+    <span style="font-size: 11.5px; font-weight: 500; color: rgba(255,255,255,.4)">Ortsdaten © OpenBible.info, CC-BY 4.0 · Kacheln © OpenStreetMap, © CARTO</span>
+    <div style="display: flex; gap: 2px; padding: 3px; background: rgba(255,255,255,.08)">
+      <span style="padding: 5px 10px; background: #e0a449; font-size: 11px; font-weight: 800; color: #06403c">DE</span>
+      <span style="padding: 5px 10px; font-size: 11px; font-weight: 700; color: rgba(255,255,255,.6)">EN</span>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>
