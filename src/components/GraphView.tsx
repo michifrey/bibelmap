@@ -695,7 +695,7 @@ export default function GraphView({ places, lang }: Props) {
       onClick={() => set(!on)}
       className={`flex items-center gap-1.5 px-2 py-1 text-[11px] font-medium transition ${ on ? 'bg-signal text-white' : 'bg-surface text-white/60 hover:bg-deepest' }`}
     >
-      <span className="h-2 w-2 rounded-full" style={{ background: on ? dot : 'transparent', outline: `1.5px solid ${dot}` }} />
+      <span className="h-2 w-2" style={{ background: on ? dot : 'transparent', outline: `1.5px solid ${dot}` }} />
       {label}
     </button>
   );
@@ -708,16 +708,16 @@ export default function GraphView({ places, lang }: Props) {
 
       {/* title + controls */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex flex-col gap-2 p-3 pt-20 sm:p-4 sm:pt-24">
-        <div className="pointer-events-auto flex max-w-[min(94vw,40rem)] flex-wrap items-center gap-x-3 gap-y-2 self-start bg-deepest/95 px-3.5 py-2.5 ring-1 ring-white/10 backdrop-blur">
+        <div className="bm-panel pointer-events-auto flex max-w-[min(94vw,40rem)] flex-wrap items-center gap-x-3 gap-y-2 self-start px-4 py-3">
           <div className="pr-1">
-            <div className="font-display text-base font-semibold leading-tight text-white">{t('graphTitle')}</div>
+            <div className="font-display text-lg uppercase leading-none text-white">{t('graphTitle')}</div>
             <div className="text-[11px] text-white/60">{t('graphSubtitle')}</div>
           </div>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('graphSearch')}
-            className="w-36 bg-surface px-2.5 py-1.5 text-[12px] text-white outline-none ring-1 ring-white/10 placeholder:text-white/45 focus:ring-gold"
+            className="bm-input w-36 px-2.5 py-1.5 text-[12px]"
           />
           <div className="flex flex-wrap items-center gap-1.5">
             <Toggle on={showPlaces} set={setShowPlaces} label={t('graphPlaces')} dot="#2f8f7f" />
@@ -741,7 +741,7 @@ export default function GraphView({ places, lang }: Props) {
             />
           </label>
         </div>
-        <div className="pointer-events-none self-start bg-deepest/95 px-2.5 py-1 text-[11px] text-white/60 ring-1 ring-white/10 backdrop-blur">
+        <div className="bm-panel pointer-events-none self-start px-3 py-1.5 text-[11px] text-white/60">
           {t('graphHint')} · {bookCount} {t('graphBooks')} · {placeCount} {t('graphPlaces')} · {personCount} {t('graphPeople')} · {passageCount} {t('graphPassages')}
           {showBookLinks && ` · ${t('graphBookLinks')}: ${xrefReal ? t('graphXrefReal') : t('graphXrefDerived')}`}
         </div>

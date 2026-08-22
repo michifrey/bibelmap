@@ -45,12 +45,12 @@ export default function HistoryMode({ places, lang, onExit }: Props) {
   return (
     <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
       {/* bar */}
-      <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-signal px-4 py-3 text-white">
+      <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
         <div className="flex items-center gap-2">
           <svg viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="currentColor"><path d="M12 8v5l4 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" fill="none"/></svg>
-          <div className="font-display text-lg font-semibold leading-tight">{t('historyMode')}</div>
+          <div className="font-display text-xl uppercase leading-none">{t('historyMode')}</div>
         </div>
-        <button onClick={onExit} className="bg-gold px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold-deep">
+        <button onClick={onExit} className="bm-btn bm-btn-gold">
           {t('exit')} ✕
         </button>
       </div>
@@ -59,28 +59,32 @@ export default function HistoryMode({ places, lang, onExit }: Props) {
         {/* narrative */}
         <div className="scroll-soft flex w-full flex-col overflow-y-auto border-b border-white/10 md:w-[42%] md:max-w-xl md:border-b-0 md:border-r">
           <div className="px-5 py-5">
-            <div className="mb-2 flex items-center gap-2">
-              <span className="rounded-full px-2.5 py-1 text-[11px] font-medium text-white" style={{ background: era?.color }}>
+            <div className="mb-4 flex items-baseline gap-3">
+              <span className="bm-num text-4xl text-gold">{String(i + 1).padStart(2, '0')}</span>
+              <span className="bm-eyebrow bm-eyebrow-dim">{t('historyStation')} / {HISTORY.length}</span>
+            </div>
+            <div className="mb-3 flex items-center gap-2">
+              <span className="px-2.5 py-1 text-[11px] font-bold text-white" style={{ background: era?.color }}>
                 {lang === 'de' ? era?.de : era?.en}
               </span>
               <span className="text-xs text-white/60">{m.date}</span>
             </div>
-            <h2 className="font-display text-3xl font-semibold leading-tight text-white">{lang === 'de' ? m.de.title : m.en.title}</h2>
-            <p className="mt-3 text-[15px] leading-relaxed text-white">{lang === 'de' ? m.de.text : m.en.text}</p>
+            <h2 className="font-display text-4xl uppercase leading-[0.95] text-white">{lang === 'de' ? m.de.title : m.en.title}</h2>
+            <p className="mt-4 max-w-prose text-[15px] leading-relaxed text-white/80">{lang === 'de' ? m.de.text : m.en.text}</p>
 
             <div className="mt-4 flex flex-wrap gap-1.5">
               <a
                 href={bibleGatewayUrl(m.ref.osis, m.ref.chapter, lang === 'de' ? 'LUTH1545' : 'ESV')}
                 target="_blank"
                 rel="noreferrer"
-                className="bg-signal px-3 py-1.5 text-xs font-medium text-white transition hover:bg-signal"
+                className="bm-btn bm-btn-signal"
               >
                 {m.ref.label}
               </a>
               {m.video && (
                 <button
                   onClick={() => setShowVideo((v) => !v)}
-                  className="inline-flex items-center gap-1 bg-clay px-3 py-1.5 text-xs font-medium text-white transition hover:bg-gold-deep"
+                  className="bm-btn bm-btn-ghost"
                 >
                   <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
                   {t('video')}
@@ -96,13 +100,13 @@ export default function HistoryMode({ places, lang, onExit }: Props) {
 
             {stops.length > 0 && (
               <div className="mt-5">
-                <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/60">{t('placesOnMap')}</div>
+                <div className="bm-eyebrow mb-2">{t('placesOnMap')}</div>
                 <div className="flex flex-wrap gap-1.5">
                   {stops.map((p) => (
                     <button
                       key={p.id}
                       onClick={() => setSelected(p)}
-                      className={`rounded-full px-2.5 py-1 text-xs font-medium transition ${ selected?.id === p.id ? 'bg-signal text-white' : 'bg-surface text-white hover:bg-gold/30' }`}
+                      className={`px-3 py-1.5 text-[11.5px] font-bold transition ${ selected?.id === p.id ? 'bg-gold text-deep' : 'bg-white/8 text-white hover:bg-white/16' }`}
                     >
                       {p.name.replace(/ \d+$/, '')}
                     </button>
@@ -113,22 +117,27 @@ export default function HistoryMode({ places, lang, onExit }: Props) {
           </div>
 
           {/* nav */}
-          <div className="sticky bottom-0 mt-auto flex items-center justify-between gap-2 border-t border-white/10 bg-deepest/95 px-5 py-3 backdrop-blur">
+          <div className="sticky bottom-0 mt-auto border-t border-white/10 bg-abyss">
+            <div className="flex h-1.5 w-full bg-white/8">
+              <div className="h-full bg-gold transition-all" style={{ width: `${((i + 1) / HISTORY.length) * 100}%` }} />
+            </div>
+            <div className="flex items-center justify-between gap-2 px-5 py-3">
             <button
               onClick={() => go(-1)}
               disabled={i <= 0}
-              className="bg-surface px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold/30 disabled:opacity-30"
+              className="bm-btn bm-btn-ghost"
             >
               ‹ {t('prev')}
             </button>
-            <span className="text-xs text-white/60">{i + 1} / {HISTORY.length}</span>
+            <span className="bm-num text-sm text-white/50">{i + 1} / {HISTORY.length}</span>
             <button
               onClick={() => go(1)}
               disabled={i >= HISTORY.length - 1}
-              className="bg-surface px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold/30 disabled:opacity-30"
+              className="bm-btn bm-btn-ghost"
             >
               {t('next')} ›
             </button>
+          </div>
           </div>
         </div>
 

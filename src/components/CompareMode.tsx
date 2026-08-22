@@ -14,12 +14,11 @@ interface Props {
 
 function RefCard({ title, color, refs }: { title: string; color: string; refs: string }) {
   return (
-    <div className="border border-white/10 bg-surface/40 p-3">
-      <div className="mb-1 flex items-center gap-1.5">
-        <span className="h-2.5 w-2.5 rounded-full" style={{ background: color }} />
-        <span className="text-[11px] font-semibold uppercase tracking-wide text-white/60">{title}</span>
+    <div className="border-l-4 bg-surface/50 p-3.5" style={{ borderLeftColor: color }}>
+      <div className="mb-1.5">
+        <span className="bm-eyebrow bm-eyebrow-dim">{title}</span>
       </div>
-      <div className="text-sm font-medium text-white">{refs}</div>
+      <div className="text-sm font-semibold leading-snug text-white">{refs}</div>
     </div>
   );
 }
@@ -32,12 +31,12 @@ export default function CompareMode({ places, lang, onExit }: Props) {
 
   return (
     <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
-      <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-signal px-4 py-3 text-white">
+      <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
         <div className="flex items-center gap-2">
           <svg viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="currentColor"><path d="M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z" stroke="currentColor" strokeWidth="1.6" fill="none"/></svg>
-          <div className="font-display text-lg font-semibold leading-tight">{t('compareMode')}</div>
+          <div className="font-display text-xl uppercase leading-none">{t('compareMode')}</div>
         </div>
-        <button onClick={onExit} className="bg-gold px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold-deep">
+        <button onClick={onExit} className="bm-btn bm-btn-gold">
           {t('exit')} ✕
         </button>
       </div>
@@ -53,9 +52,9 @@ export default function CompareMode({ places, lang, onExit }: Props) {
                   setSel(f);
                   setSelectedPlace(null);
                 }}
-                className={`px-3 py-2 text-left transition ${ sel.id === f.id ? 'bg-signal text-white' : 'hover:bg-surface' }`}
+                className={`border-l-4 px-3 py-2.5 text-left transition ${ sel.id === f.id ? 'border-gold bg-surface text-white' : 'border-transparent hover:bg-white/6' }`}
               >
-                <span className="block text-sm font-medium leading-tight">{lang === 'de' ? f.de.name : f.en.name}</span>
+                <span className="block text-sm font-bold leading-tight">{lang === 'de' ? f.de.name : f.en.name}</span>
                 <span className={`text-[11px] ${sel.id === f.id ? 'text-white/75' : 'text-white/60'}`}>{f.islamName}</span>
               </button>
             ))}

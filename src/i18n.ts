@@ -51,6 +51,7 @@ const STRINGS: Dict = {
   era: { de: 'Epoche', en: 'Era' },
   reset: { de: 'Zurücksetzen', en: 'Reset' },
   historyMode: { de: 'Heilsgeschichte', en: 'Story of the Bible' },
+  historyStation: { de: 'Station', en: 'Station' },
   historyHint: { de: 'Chronologisch von der Schöpfung bis zur neuen Welt.', en: 'Chronologically from creation to the new creation.' },
   placesOnMap: { de: 'Orte auf der Karte', en: 'Places on the map' },
   compareMode: { de: 'Religionen im Vergleich', en: 'Faiths compared' },

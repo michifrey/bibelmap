@@ -131,12 +131,12 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
 
   return (
     <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
-      <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-signal px-4 py-3 text-white">
+      <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
         <div className="flex items-center gap-2">
           <svg viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3v18M7 8h10M5 21h14" /></svg>
-          <div className="font-display text-lg font-semibold leading-tight">{t('churchMode')}</div>
+          <div className="font-display text-xl uppercase leading-none">{t('churchMode')}</div>
         </div>
-        <button onClick={onExit} className="bg-gold px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold-deep">
+        <button onClick={onExit} className="bm-btn bm-btn-gold">
           {t('exit')} ✕
         </button>
       </div>
@@ -144,12 +144,12 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         {/* left */}
         <div className="scroll-soft flex w-full flex-col overflow-y-auto border-b border-white/10 md:w-[40%] md:max-w-md md:border-b-0 md:border-r">
-          <div className="sticky top-0 z-10 flex gap-1 border-b border-white/10 bg-deepest/95 p-2 backdrop-blur">
+          <div className="bm-seg sticky top-0 z-10 gap-0.5 border-b border-white/10 bg-deepest p-1.5">
             {tabs.map((tb) => (
               <button
                 key={tb.id}
                 onClick={() => switchTab(tb.id)}
-                className={`flex-1 px-2 py-1.5 text-xs font-medium transition ${ tab === tb.id ? 'bg-signal text-white' : 'text-white/60 hover:bg-surface' }`}
+                className={`flex-1 px-2 py-2 text-[11.5px] font-bold tracking-wide transition ${ tab === tb.id ? 'bg-signal text-white' : 'text-white/55 hover:text-white' }`}
               >
                 {tb.label}
               </button>
@@ -164,11 +164,11 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
                   <button
                     key={j.id}
                     onClick={() => setSel(j.id)}
-                    className={`flex w-full items-center gap-2 px-3 py-2 text-left transition ${sel === j.id ? 'bg-surface ring-1 ring-white/10' : 'hover:bg-surface'}`}
+                    className={`flex w-full items-center gap-3 border-l-4 px-3 py-2.5 text-left transition ${sel === j.id ? 'border-gold bg-surface' : 'border-transparent hover:bg-white/6'}`}
                   >
-                    <span className="h-3 w-3 flex-none rounded-full" style={{ background: j.color }} />
+                    <span className="h-3 w-3 flex-none" style={{ background: j.color }} />
                     <span className="min-w-0">
-                      <span className="block text-sm font-semibold text-white">{lang === 'de' ? j.de.title : j.en.title}</span>
+                      <span className="block text-sm font-bold text-white">{lang === 'de' ? j.de.title : j.en.title}</span>
                       <span className="text-[11px] text-white/60">{j.date} · {j.ref}</span>
                     </span>
                   </button>
@@ -181,7 +181,7 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
                 <div className="mb-2 flex flex-wrap gap-2 px-1">
                   {(['west', 'east', 'orient'] as Tradition[]).map((tr) => (
                     <span key={tr} className="flex items-center gap-1 text-[11px] text-white/60">
-                      <span className="h-2.5 w-2.5 rounded-full" style={{ background: TRADITION_COLOR[tr] }} />
+                      <span className="h-2.5 w-2.5" style={{ background: TRADITION_COLOR[tr] }} />
                       {lang === 'de' ? TRADITION_LABEL[tr].de : TRADITION_LABEL[tr].en}
                     </span>
                   ))}
@@ -191,7 +191,7 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
                     <button
                       key={f.id}
                       onClick={() => setSel(f.id)}
-                      className={`flex w-full items-center gap-2 px-3 py-1.5 text-left transition ${sel === f.id ? 'bg-surface ring-1 ring-white/10' : 'hover:bg-surface'}`}
+                      className={`flex w-full items-center gap-3 border-l-4 px-3 py-2 text-left transition ${sel === f.id ? 'border-gold bg-surface' : 'border-transparent hover:bg-white/6'}`}
                     >
                       <span className="h-2.5 w-2.5 flex-none rounded-full" style={{ background: TRADITION_COLOR[f.tradition] }} />
                       <span className="min-w-0 flex-1">
