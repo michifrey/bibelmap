@@ -10,6 +10,7 @@ import SearchPanel from './components/SearchPanel';
 import PlaceDetail from './components/PlaceDetail';
 import Presentation from './components/Presentation';
 import Genealogy from './components/Genealogy';
+import Mission from './components/Mission';
 
 function Loading() {
   const t = useT();
@@ -37,6 +38,7 @@ export default function App() {
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
   const [present, setPresent] = useState(false);
   const [genealogy, setGenealogy] = useState(false);
+  const [mission, setMission] = useState(false);
 
   useEffect(() => {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
@@ -60,8 +62,10 @@ export default function App() {
     setFlyTo({ lat: p.lat, lon: p.lon, zoom: 9, key: Date.now() });
   }
 
-  function showPlaceFromGenealogy(p: Place) {
+  /** Aus einer Nebenansicht heraus einen Ort auf der Hauptkarte zeigen. */
+  function showPlaceOnMap(p: Place) {
     setGenealogy(false);
+    setMission(false);
     setEra(null);
     setHeat(false);
     select(p);
@@ -101,6 +105,7 @@ export default function App() {
           onHeat={setHeat}
           onPresent={() => setPresent(true)}
           onGenealogy={() => setGenealogy(true)}
+          onMission={() => setMission(true)}
         />
 
         {/* Left panel */}
@@ -123,7 +128,16 @@ export default function App() {
         {!heat && <Timeline lang={lang} selected={era} counts={eraCounts} onSelect={setEra} />}
 
         {/* mobile action buttons */}
-        <div className="absolute bottom-4 right-4 z-[1100] flex flex-col gap-2 sm:hidden">
+        <div className="absolute bottom-4 right-4 z-[1100] flex flex-col gap-2 lg:hidden">
+          <button
+            onClick={() => setMission(true)}
+            className="grid h-12 w-12 place-items-center rounded-full bg-cream text-teal shadow-xl ring-1 ring-teal/15 transition hover:bg-gold/25"
+            aria-label="Mission & Ausbreitung"
+          >
+            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+              <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 9h-3.2a15.6 15.6 0 0 0-1-5 8 8 0 0 1 4.2 5zM12 4.1c.7 1 1.5 3 1.7 6.9h-3.4C10.5 7.1 11.3 5.1 12 4.1zM5.1 11a8 8 0 0 1 4.2-5 15.6 15.6 0 0 0-1 5H5.1zm0 2h3.2c.1 1.9.5 3.6 1 5a8 8 0 0 1-4.2-5zm5.2 0h3.4c-.2 3.9-1 5.9-1.7 6.9-.7-1-1.5-3-1.7-6.9zm4.4 7a15.6 15.6 0 0 0 1-5h3.2a8 8 0 0 1-4.2 5z" />
+            </svg>
+          </button>
           <button
             onClick={() => setGenealogy(true)}
             className="grid h-12 w-12 place-items-center rounded-full bg-cream text-teal shadow-xl ring-1 ring-teal/15 transition hover:bg-gold/25"
@@ -135,7 +149,7 @@ export default function App() {
           </button>
           <button
             onClick={() => setPresent(true)}
-            className="grid h-12 w-12 place-items-center rounded-full bg-teal text-cream shadow-xl ring-1 ring-teal/20 transition hover:bg-teal-2"
+            className="grid h-12 w-12 place-items-center rounded-full bg-teal text-cream shadow-xl ring-1 ring-teal/20 transition hover:bg-teal-2 sm:hidden"
             aria-label="Präsentationsmodus"
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
@@ -148,11 +162,20 @@ export default function App() {
           <Presentation places={places} lang={lang} onExit={() => setPresent(false)} />
         )}
 
+        {mission && (
+          <Mission
+            places={places}
+            lang={lang}
+            onShowPlace={showPlaceOnMap}
+            onExit={() => setMission(false)}
+          />
+        )}
+
         {genealogy && (
           <Genealogy
             places={places}
             lang={lang}
-            onShowPlace={showPlaceFromGenealogy}
+            onShowPlace={showPlaceOnMap}
             onExit={() => setGenealogy(false)}
           />
         )}

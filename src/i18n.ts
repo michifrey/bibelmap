@@ -57,6 +57,19 @@ const STRINGS: Dict = {
   expandAll: { de: 'Alle öffnen', en: 'Expand all' },
   collapseAll: { de: 'Alle schließen', en: 'Collapse all' },
   showOnMap: { de: 'Auf Karte', en: 'On map' },
+  mission: { de: 'Mission & Ausbreitung', en: 'Mission & spread' },
+  missionSub: {
+    de: 'Von Jerusalem bis ans Ende der Erde – die Reisen des Paulus und der Weg des Evangeliums um die Welt',
+    en: 'From Jerusalem to the ends of the earth – Paul’s journeys and the gospel’s way around the world',
+  },
+  play: { de: 'Abspielen', en: 'Play' },
+  pause: { de: 'Pause', en: 'Pause' },
+  lookUp: { de: 'Nachschlagen', en: 'Look up' },
+  missionToday: { de: 'Die Christenheit heute', en: 'Christianity today' },
+  missionFactsNote: {
+    de: 'Größenordnungen, gerundet (Schätzungen um 2020–2025; Sprachzahlen nach den Berichten der Bibelübersetzer). Verschiedene Zählweisen kommen zu unterschiedlichen Ergebnissen.',
+    en: 'Orders of magnitude, rounded (estimates around 2020–2025; language figures from Bible-translation reporting). Different ways of counting give different results.',
+  },
   genealogyNote: {
     de: 'Quellen: 1. Chronik 1 (Völkertafel) und 1. Chronik 2–8 für die Stämme, ergänzt durch 4. Mose 26 und 1. Mose 46. Die Zuordnung der Stammväter zu historischen Völkern und Regionen folgt einer verbreiteten, traditionellen Deutung und ist nicht in jedem Fall gesichert.',
     en: 'Sources: 1 Chronicles 1 (Table of Nations) and 1 Chronicles 2–8 for the tribes, with Numbers 26 and Genesis 46. The identification of the ancestors with historical peoples and regions follows a common, traditional reading and is not certain in every case.',

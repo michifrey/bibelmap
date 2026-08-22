@@ -8,9 +8,10 @@ interface Props {
   onHeat: (v: boolean) => void;
   onPresent: () => void;
   onGenealogy: () => void;
+  onMission: () => void;
 }
 
-export default function Header({ lang, onLang, heat, onHeat, onPresent, onGenealogy }: Props) {
+export default function Header({ lang, onLang, heat, onHeat, onPresent, onGenealogy, onMission }: Props) {
   const t = useT();
   return (
     <header className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex items-start justify-between gap-3 p-3 sm:p-4">
@@ -28,8 +29,17 @@ export default function Header({ lang, onLang, heat, onHeat, onPresent, onGeneal
 
       <div className="pointer-events-auto flex items-center gap-2">
         <button
+          onClick={onMission}
+          className="hidden items-center gap-1.5 rounded-xl bg-cream/85 px-3.5 py-2.5 text-sm font-medium text-teal shadow-lg ring-1 ring-teal/10 backdrop-blur transition hover:bg-gold/25 lg:flex"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 9h-3.2a15.6 15.6 0 0 0-1-5 8 8 0 0 1 4.2 5zM12 4.1c.7 1 1.5 3 1.7 6.9h-3.4C10.5 7.1 11.3 5.1 12 4.1zM5.1 11a8 8 0 0 1 4.2-5 15.6 15.6 0 0 0-1 5H5.1zm0 2h3.2c.1 1.9.5 3.6 1 5a8 8 0 0 1-4.2-5zm5.2 0h3.4c-.2 3.9-1 5.9-1.7 6.9-.7-1-1.5-3-1.7-6.9zm4.4 7a15.6 15.6 0 0 0 1-5h3.2a8 8 0 0 1-4.2 5z" />
+          </svg>
+          {t('mission')}
+        </button>
+        <button
           onClick={onGenealogy}
-          className="hidden items-center gap-1.5 rounded-xl bg-cream/85 px-3.5 py-2.5 text-sm font-medium text-teal shadow-lg ring-1 ring-teal/10 backdrop-blur transition hover:bg-gold/25 sm:flex"
+          className="hidden items-center gap-1.5 rounded-xl bg-cream/85 px-3.5 py-2.5 text-sm font-medium text-teal shadow-lg ring-1 ring-teal/10 backdrop-blur transition hover:bg-gold/25 lg:flex"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
             <path d="M12 2a2.5 2.5 0 0 0-1 4.8V9H6.5A1.5 1.5 0 0 0 5 10.5V13H3.2A2.5 2.5 0 1 0 5 13h0v-2.5h6.9V13H11a2.5 2.5 0 1 0 2 0v-2.5h6.9V13h0a2.5 2.5 0 1 0 1-2.5H13v-2.2A2.5 2.5 0 0 0 12 2z" />

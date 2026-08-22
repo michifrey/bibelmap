@@ -103,6 +103,50 @@ body {
   box-shadow: 0 0 0 4px rgba(224, 164, 73, 0.55), 0 1px 4px rgba(0, 0, 0, 0.35);
 }
 
+/* Mission & Ausbreitung: Punkte auf der Weltkarte */
+.bm-mspot {
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--c);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  transition: transform 0.12s ease;
+}
+.bm-mspot:hover {
+  transform: scale(1.2);
+}
+.bm-mspot--past {
+  opacity: 0.35;
+  border-width: 1px;
+}
+.bm-mspot--active {
+  box-shadow: 0 0 0 5px rgba(224, 164, 73, 0.45), 0 2px 8px rgba(0, 0, 0, 0.35);
+  animation: bm-pulse 1.8s ease-out infinite;
+}
+
+@keyframes bm-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(224, 164, 73, 0.6), 0 2px 8px rgba(0, 0, 0, 0.35); }
+  70% { box-shadow: 0 0 0 14px rgba(224, 164, 73, 0), 0 2px 8px rgba(0, 0, 0, 0.35); }
+  100% { box-shadow: 0 0 0 0 rgba(224, 164, 73, 0), 0 2px 8px rgba(0, 0, 0, 0.35); }
+}
+
+.bm-mtip {
+  background: var(--color-teal);
+  color: var(--color-cream);
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: 0 4px 14px rgba(31, 61, 58, 0.3);
+}
+.bm-mtip::before {
+  border-top-color: var(--color-teal);
+}
+
 @keyframes bm-fade-in {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
