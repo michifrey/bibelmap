@@ -39,10 +39,10 @@
       "title": "John Mark Comer Teachings",
       "author": "John Mark Comer",
       "homepage": "https://practicingtheway.org/",
-      "feed": null,
+      "feed": "https://feeds.redcircle.com/8348d458-b87c-4c2e-af25-08feaf0c3ebf",
       "lang": "en",
       "kind": "podcast",
-      "note": "Apple-Podcasts-ID 1592847144. Die Feed-Adresse wird daraus beim --fetch aufgelöst. Überwiegend thematisch (Formation, Sabbat, Stille); Folgen ohne Bibelstelle im Titel fallen aus der Ortszuordnung heraus. Alternativen derselben Ecke: Bridgetown Audio Podcast (84246334), Practicing the Way (1729195085), Rule of Life (1646299048).",
+      "note": "Feed über Apple-Podcasts-ID 1592847144 aufgelöst und durch einen erfolgreichen Abruf bestätigt. Überwiegend thematisch (Formation, Sabbat, Stille); Folgen ohne Bibelstelle im Titel fallen aus der Ortszuordnung heraus. Alternativen derselben Ecke: Bridgetown Audio Podcast (84246334), Practicing the Way (1729195085), Rule of Life (1646299048).",
       "appleId": 1592847144
     },
     {
@@ -50,10 +50,10 @@
       "title": "Timothy Keller Sermons Podcast by Gospel in Life",
       "author": "Timothy Keller",
       "homepage": "https://gospelinlife.com/",
-      "feed": null,
+      "feed": "https://podcast.gospelinlife.com/feed.xml",
       "lang": "en",
       "kind": "podcast",
-      "note": "Apple-Podcasts-ID 352660924. Überwiegend auslegend, die Stelle steht meist im Titel - daher gute Ortsausbeute zu erwarten.",
+      "note": "Feed über Apple-Podcasts-ID 352660924 aufgelöst und durch einen erfolgreichen Abruf bestätigt. Überwiegend auslegend, die Stelle steht meist im Titel - daher gute Ortsausbeute zu erwarten.",
       "appleId": 352660924
     }
   ]
