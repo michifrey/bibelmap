@@ -16,6 +16,8 @@ import {
   type SpreadEvent,
 } from '../data/mission';
 import MissionMap, { type MissionMarker, type MissionRoute } from './MissionMap';
+import RouteMap from './RouteMap';
+import { formatKm, legDistances, type LatLon } from '../lib/route';
 import ShareLink from './ShareLink';
 
 interface Props {
@@ -122,6 +124,12 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
     return [...past, ...current];
   }, [pastEvents, items, selected, isJourneys, journey, phase, lang]);
 
+  const activeIndex = useMemo(() => {
+    if (!isJourneys || !selected) return 0;
+    const i = items.findIndex((it) => it.key === selected);
+    return i < 0 ? 0 : i;
+  }, [isJourneys, selected, items]);
+
   const routes = useMemo<MissionRoute[]>(() => {
     if (!isJourneys) return [];
     return JOURNEYS.map((j) => ({
@@ -131,6 +139,23 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
       dim: j.id !== journeyId,
     }));
   }, [isJourneys, journeyId]);
+
+  const journeyStops = useMemo(
+    () => journey.stops.map((st) => ({ lat: st.lat, lon: st.lon, label: lang === 'de' ? st.de : st.en })),
+    [journey, lang],
+  );
+  const otherJourneys = useMemo(
+    () =>
+      JOURNEYS.filter((j) => j.id !== journeyId).map((j) => ({
+        points: j.stops.map((st) => [st.lat, st.lon] as LatLon),
+        color: j.color,
+      })),
+    [journeyId],
+  );
+  const journeyLegs = useMemo(
+    () => legDistances(journey.stops.map((st) => [st.lat, st.lon] as LatLon)),
+    [journey],
+  );
 
   // Beim Wechsel von Phase oder Reise den Ausschnitt neu setzen
   useEffect(() => {
@@ -150,8 +175,21 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
 
   function pick(key: string) {
     setSelected(key);
+    if (isJourneys) return; // die Reisekarte führt den Ausschnitt selbst nach
     const it = items.find((i) => i.key === key);
-    if (it) setFocus({ lat: it.lat, lon: it.lon, zoom: isJourneys ? 7 : 4, key: Date.now() });
+    if (it) setFocus({ lat: it.lat, lon: it.lon, zoom: 4, key: Date.now() });
+  }
+
+  /** Reise zu Ende gespielt: die nächste, sonst die nächste Phase. */
+  function afterJourney() {
+    const ji = JOURNEYS.findIndex((j) => j.id === journeyId);
+    if (ji < JOURNEYS.length - 1) {
+      setJourneyId(JOURNEYS[ji + 1].id);
+      return;
+    }
+    const pi = PHASES.findIndex((p) => p.id === phaseId);
+    if (pi < PHASES.length - 1) setPhaseId(PHASES[pi + 1].id);
+    else setPlaying(false);
   }
 
   /** Einen Schritt weiter – über Reisen und Phasen hinweg. */
@@ -182,14 +220,15 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
   const stepRef = useRef(step);
   stepRef.current = step;
 
-  // Abspielen: Station für Station durch die ganze Geschichte
+  // Abspielen der Ausbreitung: Ereignis für Ereignis. Die Reisen laufen
+  // stattdessen als Bewegung auf der Karte (RouteMap gibt den Takt vor).
   useEffect(() => {
-    if (!playing) return;
+    if (!playing || isJourneys) return;
     const id = window.setInterval(() => {
       if (!stepRef.current(1)) setPlaying(false);
     }, STEP_MS);
     return () => window.clearInterval(id);
-  }, [playing]);
+  }, [playing, isJourneys]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -259,6 +298,7 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
               onSelect={pick}
               placeById={placeById}
               onShowPlace={onShowPlace}
+              legs={journeyLegs}
             />
           ) : (
             <EventList
@@ -275,7 +315,21 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
 
         {/* Karte */}
         <div className="relative min-h-[45vh] flex-1">
-          <MissionMap markers={markers} routes={routes} fit={fit} focus={focus} onSelect={pick} />
+          {isJourneys ? (
+            <RouteMap
+              key={journeyId}
+              stops={journeyStops}
+              color={journey.color}
+              context={otherJourneys}
+              activeIndex={activeIndex}
+              playing={playing}
+              onArrive={(i) => setSelected(items[i]?.key ?? null)}
+              onFinish={afterJourney}
+              onSelect={(i) => pick(items[i].key)}
+            />
+          ) : (
+            <MissionMap markers={markers} routes={routes} fit={fit} focus={focus} onSelect={pick} />
+          )}
         </div>
       </div>
 
@@ -315,6 +369,7 @@ function JourneyList({
   onSelect,
   placeById,
   onShowPlace,
+  legs,
 }: {
   journey: MissionJourney;
   journeyId: string;
@@ -324,6 +379,7 @@ function JourneyList({
   onSelect: (key: string) => void;
   placeById: Map<string, Place>;
   onShowPlace: (p: Place) => void;
+  legs: number[];
 }) {
   const t = useT();
   return (
@@ -370,6 +426,9 @@ function JourneyList({
           const place = s.placeId ? placeById.get(s.placeId) : undefined;
           return (
             <li key={key} data-item={key}>
+              {i > 0 && legs[i - 1] !== undefined && (
+                <div className="py-0.5 pl-10 text-[11px] text-white/35">↓ {formatKm(legs[i - 1], lang)}</div>
+              )}
               <button
                 onClick={() => onSelect(key)}
                 className={`flex w-full items-start gap-2.5 px-2.5 py-2 text-left transition ${
