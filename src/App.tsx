@@ -215,6 +215,24 @@ export default function App() {
     window.history.replaceState(null, '', hash || window.location.pathname + window.location.search);
   }, [atStart, view, mode, selected, journeyNav, missionNav, readingNav]);
 
+  /*
+   * Escape schließt, was gerade offen ist – von außen nach innen: erst der
+   * Modus, dann die Nebenansicht, zuletzt die Ortskarte. Ein Griff, der in
+   * jedem Vollbild funktioniert, ohne dass jede Ansicht ihn selbst kennt.
+   */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (mode) setMode(null);
+      else if (view !== 'map') setView('map');
+      else if (selected) setSelected(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mode, view, selected]);
+
   // Zurück-Taste und von Hand geänderte Adressen anwenden.
   useEffect(() => {
     const sync = () => {

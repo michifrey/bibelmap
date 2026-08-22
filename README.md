@@ -240,6 +240,17 @@ Die Zuordnung von Büchern zu historischen Epochen (`src/data/books.ts`,
 Struktur zu geben – kein Anspruch auf wissenschaftliche Datierung. Die Datums-
 angaben folgen einer gängigen konservativen Chronologie.
 
+### Bewegung und Tastatur
+
+Wer im System **weniger Bewegung** eingestellt hat, bekommt dieselben Inhalte
+ohne die Fahrt dazwischen: Die Karte setzt ihren Ausschnitt, statt ihn
+anzufliegen, der Reisende springt von Station zu Station, Pulsringe und
+Übergänge stehen still.
+
+**Escape** schließt, was gerade offen ist – von außen nach innen: erst der
+Modus, dann die Nebenansicht, zuletzt die Ortskarte. In den Reisen blättern
+← / →, die Leertaste startet und pausiert.
+
 ### Ladezeit
 
 Die Ansichten (Präsentation, Reisen, Mission, Kirchengeschichte, Vergleich,

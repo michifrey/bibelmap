@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { flyOptions, useReducedMotion } from '../lib/motion';
 import { pointAt, traveled, type LatLon } from '../lib/route';
 
 export interface RouteStop {
@@ -58,6 +59,7 @@ export default function RouteMap({
   onFinish,
   onSelect,
 }: Props) {
+  const reduced = useReducedMotion();
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const baseRef = useRef<L.Polyline | null>(null);
@@ -139,7 +141,7 @@ export default function RouteMap({
       zIndexOffset: 1000,
     }).addTo(map);
 
-    map.flyToBounds(L.latLngBounds(points).pad(0.25), { duration: 0.8, maxZoom: 9 });
+    map.flyToBounds(L.latLngBounds(points).pad(0.25), flyOptions({ duration: 0.8, maxZoom: 9 }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stops, color, context]);
 
@@ -153,7 +155,7 @@ export default function RouteMap({
     const map = mapRef.current;
     const p = points[activeIndex];
     if (map && p && !map.getBounds().pad(-0.15).contains(p)) {
-      map.panTo(p, { animate: true, duration: 0.7 });
+      map.panTo(p, flyOptions({ animate: true, duration: 0.7 }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex, playing, stops]);
@@ -168,9 +170,27 @@ export default function RouteMap({
     markersRef.current.forEach((m, i) => m.setIcon(stopIcon(i, i === at && Math.abs(t - at) < 0.02, color)));
   }
 
-  /** Abspielen: Etappe für Etappe, mit Lesepause an jeder Station. */
+  /**
+   * Abspielen: Etappe für Etappe, mit Lesepause an jeder Station. Wer weniger
+   * Bewegung eingestellt hat, bekommt dieselbe Reise ohne die Fahrt dazwischen –
+   * die Stationen wechseln im Takt der Lesepause.
+   */
   useEffect(() => {
     if (!playing || points.length < 2) return;
+    if (reduced) {
+      const id = window.setInterval(() => {
+        const next = Math.floor(tRef.current) + 1;
+        if (next > points.length - 1) {
+          cb.current.onFinish();
+          window.clearInterval(id);
+          return;
+        }
+        tRef.current = next;
+        draw(next);
+        cb.current.onArrive(next);
+      }, dwellMs);
+      return () => window.clearInterval(id);
+    }
     const map = mapRef.current;
     let raf = 0;
     let last = performance.now();
@@ -199,7 +219,7 @@ export default function RouteMap({
 
       const p = pointAt(points, tRef.current);
       if (map && !map.getBounds().pad(-0.2).contains(p)) {
-        map.panTo(p, { animate: true, duration: 0.7 });
+        map.panTo(p, flyOptions({ animate: true, duration: 0.7 }));
       }
 
       if (tRef.current >= points.length - 1 && ts >= dwellUntil) {
@@ -211,7 +231,7 @@ export default function RouteMap({
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playing, stops, legSeconds, dwellMs]);
+  }, [playing, stops, legSeconds, dwellMs, reduced]);
 
   return <div ref={el} className="absolute inset-0 h-full w-full" />;
 }

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { flyOptions } from '../lib/motion';
 
 /** Ein Punkt auf der Weltkarte: Reisestation oder Ereignis der Ausbreitung. */
 export interface MissionMarker {
@@ -149,14 +150,14 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
     const map = mapRef.current;
     if (!map || !fit || fit.points.length === 0) return;
     const bounds = L.latLngBounds(fit.points);
-    map.flyToBounds(bounds.pad(0.25), { maxZoom: 7, duration: 0.9 });
+    map.flyToBounds(bounds.pad(0.25), flyOptions({ maxZoom: 7, duration: 0.9 }));
   }, [fit]);
 
   // einzelnes Ereignis anfliegen
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !focus) return;
-    map.flyTo([focus.lat, focus.lon], focus.zoom ?? 5, { duration: 0.9 });
+    map.flyTo([focus.lat, focus.lon], focus.zoom ?? 5, flyOptions({ duration: 0.9 }));
   }, [focus]);
 
   return <div ref={el} className="absolute inset-0 h-full w-full" />;

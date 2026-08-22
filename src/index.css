@@ -709,6 +709,25 @@ body {
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* Weniger Bewegung, wenn das System darum bittet                      */
+/* ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Der Pulsring bliebe sonst als harter Schatten stehen. */
+  .bm-mspot--active {
+    box-shadow: 0 0 0 5px rgba(224, 164, 73, 0.45), 0 2px 8px rgba(0, 0, 0, 0.35);
+    animation: none !important;
+  }
+}
+
 /* Ortskenntnis: der gesetzte Tipp */
 .bm-quiz-guess {
   width: 14px;
