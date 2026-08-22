@@ -353,6 +353,7 @@ export default function App() {
                 }}
                 initialFatherId={churchFocus}
                 onOpenInTree={openPersonInTree}
+                onOpenMission={() => setMode('mission')}
               />
             )}
             {mode === 'compare' && <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />}

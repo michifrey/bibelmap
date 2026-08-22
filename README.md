@@ -36,9 +36,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 - **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
   Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
   Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
-- **Kirchengeschichte-Modus** – **Paulus’ Missionsreisen** als eingezeichnete
-  Routen, **Kirchenväter** (westlich/lateinisch · östlich/griechisch · orientalisch)
-  und die **Konzilien** (Apostelkonzil + die 7 ökumenischen) auf der Karte.
+- **Kirchengeschichte-Modus** – **Kirchenväter** (westlich/lateinisch ·
+  östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
+  7 ökumenischen) auf der Karte. Paulus’ Reisen stehen nicht hier, sondern in
+  *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
 - **Mission & Ausbreitung** – wie das Evangelium in die Welt kam: die vier
   Reisen des Paulus (plus die Wege vor ihm, Apg 1–11) als Route mit nummerierten
   Stationen und Bibelstellen – und danach die Ausbreitung bis heute, in sieben
