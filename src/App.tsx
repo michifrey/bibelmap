@@ -17,6 +17,7 @@ import QuizMode from './components/QuizMode';
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
 import { searchStories, type SearchHit } from './lib/globalSearch';
 import { parseRef } from './lib/parseRef';
+import { bearing, compass, distanceKm, KM_PER_DAY } from './lib/route';
 import CompareMode from './components/CompareMode';
 import ChurchMode from './components/ChurchMode';
 import GraphView from './components/GraphView';
@@ -217,6 +218,36 @@ export default function App() {
     [ref, places],
   );
 
+  /*
+   * Was von hier aus an einem Tag zu erreichen war. Nur Siedlungen: Tore,
+   * Stadtviertel und Bauwerke teilen sich die Koordinaten ihres Ortes und
+   * wären keine Nachbarn, sondern derselbe Fleck. Alles unter 1,5 km fällt
+   * aus demselben Grund heraus.
+   */
+  const neighbours = useMemo(() => {
+    if (!places || !selected) return [];
+    const seen = new Set<string>();
+    return places
+      .filter((p) => p.id !== selected.id && p.types.includes('settlement'))
+      .map((p) => ({
+        place: p,
+        km: distanceKm([selected.lat, selected.lon], [p.lat, p.lon]),
+        dir: compass(bearing([selected.lat, selected.lon], [p.lat, p.lon]), lang),
+      }))
+      .filter((n) => n.km >= 1.5 && n.km <= KM_PER_DAY)
+      // Nach Bedeutung auswählen, nach Entfernung zeigen: in Jerusalems Umkreis
+      // sagen Bethlehem und Jericho mehr als der nächstgelegene Weiler.
+      .sort((a, b) => b.place.mentionCount - a.place.mentionCount)
+      .filter((n) => {
+        const name = placeName(n.place, lang);
+        if (seen.has(name)) return false;
+        seen.add(name);
+        return true;
+      })
+      .slice(0, 8)
+      .sort((a, b) => a.km - b.km);
+  }, [places, selected, lang]);
+
   function openRef() {
     if (!ref) return;
     setReadingNav({ osis: ref.osis, chapter: ref.chapter });
@@ -340,7 +371,13 @@ export default function App() {
                 </button>
                 <div className={`min-h-0 flex-col overflow-hidden ${sheetOpen ? 'flex max-h-[58vh]' : 'hidden'} sm:flex sm:max-h-none sm:flex-1`}>
                   {selected ? (
-                    <PlaceDetail place={selected} lang={lang} onClose={() => setSelected(null)} />
+                    <PlaceDetail
+                      place={selected}
+                      lang={lang}
+                      neighbours={neighbours}
+                      onSelectPlace={select}
+                      onClose={() => setSelected(null)}
+                    />
                   ) : (
                     <SearchPanel
                       query={query}
