@@ -74,8 +74,8 @@ export const SUPPORT_PROJECTS: SupportProject[] = [
       de: 'Alle Ressourcen sind dort kostenlos – finanziert von monatlich Gebenden.',
       en: 'Every resource there is free – paid for by monthly givers.',
     },
-    home: 'https://practicingtheway.org/',
-    donate: 'https://practicingtheway.org/give',
+    home: 'https://www.practicingtheway.org/',
+    donate: 'https://www.practicingtheway.org/give',
   },
   {
     id: 'keller',
@@ -191,7 +191,7 @@ export const SUPPORT_PROJECTS: SupportProject[] = [
 /** Services that are only linked out to — named for completeness, not for giving. */
 export const SUPPORT_LINKED = [
   { name: 'BibleGateway', note: { de: 'Lutherbibel & ESV zum Nachlesen', en: 'Luther & ESV for reading on' }, home: 'https://www.biblegateway.com/' },
-  { name: 'Biblia Factbook', note: { de: 'Faithlife – Hintergrund zu jedem Ort', en: 'Faithlife – background on each place' }, home: 'https://biblia.com/factbook/' },
+  { name: 'Biblia Factbook', note: { de: 'Faithlife – Hintergrund zu jedem Ort', en: 'Faithlife – background on each place' }, home: 'https://biblia.com/' },
   { name: 'Leaflet', note: { de: 'die Kartenbibliothek, BSD-2', en: 'the map library, BSD-2' }, home: 'https://leafletjs.com/' },
   { name: 'React · Vite · Tailwind CSS', note: { de: 'das Fundament der Oberfläche', en: 'the ground the interface stands on' }, home: 'https://react.dev/' },
 ];
