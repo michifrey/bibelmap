@@ -114,6 +114,22 @@ function bookSlug(name: string): string {
     .replace(/^-|-$/g, '');
 }
 
+// Curated BibleProject book-overview YouTube video IDs (1–2 parts per book).
+// Where a book has entries we embed the player; otherwise we link to the guide.
+export const BP_VIDEO: Record<string, string[]> = {
+  Gen: ['GQI72THyO5I'],
+  Exod: ['jH_aojNJM3E', 'b0GhR-2kPKI'],
+  Ps: ['j9phNEaPrv8'],
+  Matt: ['3Dv4-n6OYGI', 'GGCF3OPWN14'],
+  John: ['G-2e9mMf7E8', 'RUfh_wOsauk'],
+  Acts: ['CGbNw855ksw', 'Z-17KxpjL0Q'],
+  Rev: ['5nvVVcYD-0w', 'QpnIrbq2bKo'],
+};
+
+export function bibleProjectVideoIds(osis: string): string[] {
+  return BP_VIDEO[osis] ?? [];
+}
+
 // Link to a book's BibleProject overview (guide page with the video).
 export function bibleProjectUrl(osis: string): string {
   const b = BOOK_BY_OSIS[osis];

@@ -188,18 +188,20 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
   }, []);
 
   return (
-    <div className="fixed inset-0 z-[2000] flex flex-col bg-cream">
+    <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
       {/* Kopfzeile */}
-      <div className="flex flex-none items-center justify-between gap-3 border-b border-teal/10 bg-teal px-4 py-3 text-cream">
-        <div>
-          <div className="font-display text-lg font-semibold leading-tight">{t('mission')}</div>
-          <div className="hidden text-[11px] text-cream/75 sm:block">{t('missionSub')}</div>
+      <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
+        <div className="flex items-center gap-2">
+          <svg viewBox="0 0 24 24" className="h-5 w-5 flex-none text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18" />
+          </svg>
+          <div>
+            <div className="font-display text-xl uppercase leading-none">{t('mission')}</div>
+            <div className="mt-1 hidden text-[11px] text-white/55 sm:block">{t('missionSub')}</div>
+          </div>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            onClick={() => setPlaying((p) => !p)}
-            className="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-sm transition hover:bg-white/20"
-          >
+          <button onClick={() => setPlaying((p) => !p)} className="bm-btn">
             {playing ? (
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>
             ) : (
@@ -207,10 +209,7 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
             )}
             {playing ? t('pause') : t('play')}
           </button>
-          <button
-            onClick={onExit}
-            className="rounded-lg bg-gold px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold-deep"
-          >
+          <button onClick={onExit} className="bm-btn bm-btn-gold">
             {t('exit')} ✕
           </button>
         </div>
@@ -220,14 +219,18 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
         {/* Liste */}
         <div
           ref={panelRef}
-          className="scroll-soft flex w-full flex-col overflow-y-auto border-b border-teal/10 md:w-[26rem] md:flex-none md:border-b-0 md:border-r"
+          className="scroll-soft flex w-full flex-col overflow-y-auto border-b border-white/10 md:w-[26rem] md:flex-none md:border-b-0 md:border-r"
         >
-          <div className="border-b border-teal/10 px-5 py-4">
-            <div className="flex items-baseline gap-2">
-              <h2 className="font-display text-xl font-semibold text-teal">{lang === 'de' ? phase.de : phase.en}</h2>
-              <span className="text-xs text-ink-soft">{lang === 'de' ? phase.range.de : phase.range.en}</span>
+          <div className="border-b border-white/10 px-5 py-5">
+            <div className="bm-eyebrow mb-2" style={{ color: phase.color }}>
+              {lang === 'de' ? phase.range.de : phase.range.en}
             </div>
-            <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{lang === 'de' ? phase.lead.de : phase.lead.en}</p>
+            <h2 className="font-display text-3xl uppercase leading-[0.95] text-white">
+              {lang === 'de' ? phase.de : phase.en}
+            </h2>
+            <p className="mt-3 max-w-prose text-[14px] leading-relaxed text-white/70">
+              {lang === 'de' ? phase.lead.de : phase.lead.en}
+            </p>
           </div>
 
           {isJourneys ? (
@@ -261,21 +264,25 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
       </div>
 
       {/* Zeitleiste der Phasen */}
-      <div className="scroll-soft flex flex-none gap-1.5 overflow-x-auto border-t border-teal/10 bg-cream-2/60 px-3 py-2">
-        {PHASES.map((p) => (
-          <button
-            key={p.id}
-            onClick={() => setPhaseId(p.id)}
-            className={`flex-none rounded-xl px-3 py-1.5 text-left transition ${
-              p.id === phaseId ? 'bg-teal text-cream' : 'bg-cream text-teal hover:bg-gold/25'
-            }`}
-          >
-            <span className="block text-sm font-medium leading-tight">{lang === 'de' ? p.de : p.en}</span>
-            <span className={`block text-[10px] ${p.id === phaseId ? 'text-cream/70' : 'text-ink-soft'}`}>
-              {lang === 'de' ? p.range.de : p.range.en}
-            </span>
-          </button>
-        ))}
+      <div className="scroll-soft flex flex-none gap-px overflow-x-auto border-t border-white/10 bg-abyss px-2 py-2">
+        {PHASES.map((p) => {
+          const on = p.id === phaseId;
+          return (
+            <button
+              key={p.id}
+              onClick={() => setPhaseId(p.id)}
+              style={on ? { background: p.color } : undefined}
+              className={`flex-none border-t-2 px-3 py-1.5 text-left transition ${
+                on ? 'text-white' : 'border-transparent text-white/55 hover:bg-white/8 hover:text-white'
+              }`}
+            >
+              <span className="block text-[12.5px] font-bold leading-tight">{lang === 'de' ? p.de : p.en}</span>
+              <span className={`block text-[10px] ${on ? 'text-white/75' : 'text-white/40'}`}>
+                {lang === 'de' ? p.range.de : p.range.en}
+              </span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -311,8 +318,8 @@ function JourneyList({
             key={j.id}
             onClick={() => onJourney(j.id)}
             style={j.id === journeyId ? { background: j.color } : undefined}
-            className={`rounded-full px-3 py-1 text-xs font-medium transition ${
-              j.id === journeyId ? 'text-cream' : 'bg-cream-2 text-teal hover:bg-gold/30'
+            className={`px-3 py-1.5 text-[11.5px] font-bold transition ${
+              j.id === journeyId ? 'text-white' : 'bg-white/8 text-white/70 hover:bg-white/16 hover:text-white'
             }`}
           >
             {lang === 'de' ? j.de : j.en}
@@ -320,17 +327,21 @@ function JourneyList({
         ))}
       </div>
 
-      <div className="mb-3 rounded-xl bg-cream-2/50 px-3.5 py-3">
+      <div className="mb-4 border-l-2 pl-3.5" style={{ borderColor: journey.color }}>
         <div className="flex items-baseline justify-between gap-2">
-          <span className="font-display text-base font-semibold text-teal">{lang === 'de' ? journey.de : journey.en}</span>
-          <span className="text-[11px] text-ink-soft">{lang === 'de' ? journey.years.de : journey.years.en}</span>
+          <span className="font-display text-lg uppercase leading-tight text-white">
+            {lang === 'de' ? journey.de : journey.en}
+          </span>
+          <span className="text-[11px] text-white/45">{lang === 'de' ? journey.years.de : journey.years.en}</span>
         </div>
-        <p className="mt-1 text-sm leading-relaxed text-ink-soft">{lang === 'de' ? journey.summary.de : journey.summary.en}</p>
+        <p className="mt-1.5 text-[14px] leading-relaxed text-white/70">
+          {lang === 'de' ? journey.summary.de : journey.summary.en}
+        </p>
         <a
           href={passageUrl(lang === 'de' ? journey.passage.de : journey.passage.en, lang)}
           target="_blank"
           rel="noreferrer"
-          className="mt-2 inline-block rounded-lg bg-teal px-2.5 py-1 text-xs font-medium text-cream transition hover:bg-teal-2"
+          className="bm-btn bm-btn-signal mt-2.5"
         >
           {lang === 'de' ? journey.passage.de : journey.passage.en}
         </a>
@@ -345,21 +356,21 @@ function JourneyList({
             <li key={key} data-item={key}>
               <button
                 onClick={() => onSelect(key)}
-                className={`flex w-full items-start gap-2.5 rounded-xl px-2.5 py-2 text-left transition ${
-                  active ? 'bg-gold/25 ring-1 ring-gold' : 'hover:bg-cream-2/70'
+                className={`flex w-full items-start gap-2.5 px-2.5 py-2 text-left transition ${
+                  active ? 'bg-deep' : 'hover:bg-white/6'
                 }`}
               >
                 <span
-                  style={{ background: s.back ? 'transparent' : journey.color, color: s.back ? journey.color : '#f7f1e6', borderColor: journey.color }}
-                  className="mt-0.5 grid h-6 w-6 flex-none place-items-center rounded-full border text-[11px] font-semibold"
+                  style={{ background: s.back ? 'transparent' : journey.color, color: s.back ? journey.color : '#fff', borderColor: journey.color }}
+                  className="bm-num mt-0.5 grid h-6 w-6 flex-none place-items-center border text-[11px]"
                 >
                   {i + 1}
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-medium leading-snug text-ink">{lang === 'de' ? s.de : s.en}</span>
-                  {s.ref && <span className="block text-[11px] text-gold-deep">{lang === 'de' ? s.ref.de : s.ref.en}</span>}
+                  <span className="block text-[13.5px] font-bold leading-snug text-white">{lang === 'de' ? s.de : s.en}</span>
+                  {s.ref && <span className="block text-[11px] text-gold">{lang === 'de' ? s.ref.de : s.ref.en}</span>}
                   {s.note && active && (
-                    <span className="mt-1 block text-[13px] leading-relaxed text-ink-soft">
+                    <span className="mt-1 block text-[13px] leading-relaxed text-white/70">
                       {lang === 'de' ? s.note.de : s.note.en}
                     </span>
                   )}
@@ -368,7 +379,7 @@ function JourneyList({
               {active && place && (
                 <button
                   onClick={() => onShowPlace(place)}
-                  className="ml-11 mt-1 rounded-lg bg-cream-2 px-2.5 py-1 text-[11px] font-medium text-teal transition hover:bg-gold/40"
+                  className="bm-btn bm-btn-ghost ml-11 mt-1"
                 >
                   {t('showOnMap')} →
                 </button>
@@ -402,25 +413,23 @@ function EventList({
         return (
           <li key={e.id} data-item={e.id} className="relative pl-6">
             {/* Zeitstrahl */}
-            <span className="absolute left-[7px] top-0 h-full w-px bg-teal/15" aria-hidden />
+            <span className="absolute left-[7px] top-0 h-full w-px bg-white/12" aria-hidden />
             <span
-              style={{ background: active ? color : '#efe6d6', borderColor: color }}
+              style={{ background: active ? color : 'transparent', borderColor: color }}
               className="absolute left-[2px] top-4 h-3 w-3 rounded-full border-2"
               aria-hidden
             />
             <button
               onClick={() => onSelect(e.id)}
-              className={`w-full rounded-xl px-3 py-2.5 text-left transition ${
-                active ? 'bg-gold/25 ring-1 ring-gold' : 'hover:bg-cream-2/70'
+              className={`w-full px-3 py-2.5 text-left transition ${
+                active ? 'bg-deep' : 'hover:bg-white/6'
               }`}
             >
-              <span className="block text-[11px] font-semibold uppercase tracking-wide text-gold-deep">
-                {lang === 'de' ? e.when.de : e.when.en}
-              </span>
-              <span className="block font-display text-[15px] font-semibold leading-snug text-teal">
+              <span className="bm-eyebrow block text-gold">{lang === 'de' ? e.when.de : e.when.en}</span>
+              <span className="mt-0.5 block font-display text-[15px] uppercase leading-snug text-white">
                 {lang === 'de' ? e.de : e.en}
               </span>
-              <span className="mt-1 block text-[13px] leading-relaxed text-ink-soft">
+              <span className="mt-1 block text-[13px] leading-relaxed text-white/70">
                 {lang === 'de' ? e.text.de : e.text.en}
               </span>
             </button>
@@ -429,7 +438,7 @@ function EventList({
                 href={wikiUrl(lang === 'de' ? e.topic : (e.topicEn ?? e.topic), lang)}
                 target="_blank"
                 rel="noreferrer"
-                className="ml-3 mt-1 inline-block rounded-lg bg-cream-2 px-2.5 py-1 text-[11px] font-medium text-teal transition hover:bg-gold/40"
+                className="bm-btn bm-btn-ghost ml-3 mt-1"
               >
                 {t('lookUp')} →
               </a>
@@ -444,17 +453,17 @@ function EventList({
 function Facts({ lang }: { lang: Lang }) {
   const t = useT();
   return (
-    <div className="border-t border-teal/10 px-5 py-4">
-      <h3 className="font-display text-base font-semibold text-teal">{t('missionToday')}</h3>
-      <dl className="mt-2 space-y-1.5">
+    <div className="border-t border-white/10 px-5 py-5">
+      <h3 className="font-display text-lg uppercase text-white">{t('missionToday')}</h3>
+      <dl className="mt-3 space-y-2">
         {TODAY_FACTS.map((f) => (
-          <div key={f.label.en} className="flex items-baseline justify-between gap-3 border-b border-teal/8 pb-1.5">
-            <dt className="text-[13px] text-ink-soft">{lang === 'de' ? f.label.de : f.label.en}</dt>
-            <dd className="text-right text-[13px] font-medium text-ink">{lang === 'de' ? f.value.de : f.value.en}</dd>
+          <div key={f.label.en} className="flex items-baseline justify-between gap-3 border-b border-white/8 pb-2">
+            <dt className="text-[12.5px] text-white/55">{lang === 'de' ? f.label.de : f.label.en}</dt>
+            <dd className="text-right text-[12.5px] font-bold text-white">{lang === 'de' ? f.value.de : f.value.en}</dd>
           </div>
         ))}
       </dl>
-      <p className="mt-2 text-[11px] leading-relaxed text-ink-soft">{t('missionFactsNote')}</p>
+      <p className="mt-3 text-[11px] leading-relaxed text-white/45">{t('missionFactsNote')}</p>
     </div>
   );
 }

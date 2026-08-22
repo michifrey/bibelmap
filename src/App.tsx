@@ -1,22 +1,26 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { Place } from './types';
-import { LangContext, type Lang, useT } from './i18n';
-import { loadPlaces, placesInEra, searchPlaces, erasForPlace } from './lib/places';
+import { LangContext, type Lang, useT, t as tr } from './i18n';
+import { loadPlaces, placesInEra, searchPlaces, erasForPlace, placeName } from './lib/places';
 import { ERAS } from './data/eras';
-import MapView from './components/MapView';
-import Header from './components/Header';
+import MapView, { type BasemapId } from './components/MapView';
+import Header, { type Mode, type View } from './components/Header';
 import Timeline from './components/Timeline';
 import SearchPanel from './components/SearchPanel';
 import PlaceDetail from './components/PlaceDetail';
 import Presentation from './components/Presentation';
-import Genealogy from './components/Genealogy';
+import HistoryMode from './components/HistoryMode';
 import Mission from './components/Mission';
+import CompareMode from './components/CompareMode';
+import ChurchMode from './components/ChurchMode';
+import GraphView from './components/GraphView';
+import Genealogy from './components/Genealogy';
 
 function Loading() {
   const t = useT();
   return (
-    <div className="flex h-full w-full items-center justify-center bg-cream">
-      <div className="flex flex-col items-center gap-3 text-teal">
+    <div className="flex h-full w-full items-center justify-center bg-deepest">
+      <div className="flex flex-col items-center gap-3 text-white">
         <svg viewBox="0 0 24 24" className="h-8 w-8 animate-pulse" fill="currentColor">
           <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
         </svg>
@@ -36,9 +40,37 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
-  const [present, setPresent] = useState(false);
-  const [genealogy, setGenealogy] = useState(false);
-  const [mission, setMission] = useState(false);
+  const [mode, setMode] = useState<Mode | null>(null);
+  const [basemap, setBasemap] = useState<BasemapId>('dark');
+  const [view, setView] = useState<View>('map');
+  // Cross-links between the time tree and the church-history map (shared data).
+  const [treeFocus, setTreeFocus] = useState<string | null>(null);
+  const [churchFocus, setChurchFocus] = useState<string | null>(null);
+  // Mobile-only: bottom-sheet (search/detail) and timeline are collapsible so
+  // the map stays usable on small screens. Desktop ignores these.
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [tlOpen, setTlOpen] = useState(false);
+
+  function showPersonOnMap(id: string) {
+    setChurchFocus(id);
+    setMode('church');
+    setView('map');
+  }
+  function openPersonInTree(id: string) {
+    setTreeFocus(id);
+    setMode(null);
+    setView('tree');
+  }
+  // Opening a view/mode manually (header toggle, modes menu) clears any pending
+  // cross-link focus so it doesn't unexpectedly jump on the next visit.
+  function handleView(v: View) {
+    if (v === 'tree') setTreeFocus(null);
+    setView(v);
+  }
+  function handleMode(m: Mode) {
+    if (m === 'church') setChurchFocus(null);
+    setMode(m);
+  }
 
   useEffect(() => {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
@@ -59,13 +91,15 @@ export default function App() {
 
   function select(p: Place) {
     setSelected(p);
+    setSheetOpen(true); // reveal the detail sheet on mobile
     setFlyTo({ lat: p.lat, lon: p.lon, zoom: 9, key: Date.now() });
   }
 
-  /** Aus einer Nebenansicht heraus einen Ort auf der Hauptkarte zeigen. */
-  function showPlaceOnMap(p: Place) {
-    setGenealogy(false);
-    setMission(false);
+  // Jump from the genealogy overlay to a place: close the overlay, return to the
+  // map view and focus the place.
+  function showPlaceFromGenealogy(p: Place) {
+    setMode(null);
+    setView('map');
     setEra(null);
     setHeat(false);
     select(p);
@@ -73,7 +107,7 @@ export default function App() {
 
   if (error) {
     return (
-      <div className="flex h-full items-center justify-center bg-cream p-6 text-center text-sm text-ink-soft">
+      <div className="flex h-full items-center justify-center bg-deepest p-6 text-center text-sm text-white/60">
         Konnte Daten nicht laden: {error}
       </div>
     );
@@ -89,96 +123,132 @@ export default function App() {
   return (
     <LangContext.Provider value={lang}>
       <div className="relative h-full w-full overflow-hidden">
-        <MapView
-          places={visible}
-          lang={lang}
-          heat={heat}
-          selectedId={selected?.id ?? null}
-          onSelect={select}
-          flyTo={flyTo}
-        />
+        {view === 'tree' ? (
+          <Genealogy
+            places={places}
+            lang={lang}
+            focusId={treeFocus}
+            onShowOnMap={showPersonOnMap}
+            onShowPlace={showPlaceFromGenealogy}
+          />
+        ) : view === 'graph' ? (
+          <GraphView places={places} lang={lang} />
+        ) : (
+          <>
+            <MapView
+              places={visible}
+              heat={heat}
+              selectedId={selected?.id ?? null}
+              lang={lang}
+              onSelect={select}
+              basemap={basemap}
+              flyTo={flyTo}
+            />
+
+            {/* Search / detail — left rail on desktop, bottom sheet on mobile */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1110] flex flex-col p-2 sm:inset-y-0 sm:left-0 sm:right-auto sm:z-[1100] sm:w-full sm:max-w-[22rem] sm:p-4 sm:pt-24">
+              <div className="pointer-events-auto flex min-h-0 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur-xl sm:flex-1 sm:">
+                {/* mobile peek / grab handle */}
+                <button
+                  onClick={() => setSheetOpen((v) => !v)}
+                  className="flex items-center gap-2 border-b border-white/10 px-3 py-2 text-left sm:hidden"
+                  aria-label={tr(lang, 'search')}
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
+                  </svg>
+                  <span className="flex-1 truncate text-sm text-white/60">
+                    {selected ? placeName(selected, lang) : tr(lang, 'search')}
+                  </span>
+                  <svg viewBox="0 0 24 24" className={`h-4 w-4 flex-none text-white/60 transition-transform ${sheetOpen ? 'rotate-180' : ''}`} fill="currentColor">
+                    <path d="M7 14l5-5 5 5z" />
+                  </svg>
+                </button>
+                <div className={`min-h-0 flex-col overflow-hidden ${sheetOpen ? 'flex max-h-[58vh]' : 'hidden'} sm:flex sm:max-h-none sm:flex-1`}>
+                  {selected ? (
+                    <PlaceDetail place={selected} lang={lang} onClose={() => setSelected(null)} />
+                  ) : (
+                    <SearchPanel
+                      query={query}
+                      onQuery={setQuery}
+                      results={results}
+                      topPlaces={topPlaces}
+                      onSelect={select}
+                    />
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* basemap switcher (right edge) */}
+            <div className="pointer-events-auto absolute right-3 top-1/2 z-[1100] flex -translate-y-1/2 flex-col gap-1 bg-deepest/95 p-1 ring-1 ring-white/10 backdrop-blur-xl sm:right-4">
+              {([
+                ['dark', 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z', 'basemapDark'],
+                ['light', 'M3 12h18M12 3v18', 'basemapLight'],
+                ['satellite', 'M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20M12 2c2.5 2.7 2.5 17.3 0 20M12 2c-2.5 2.7-2.5 17.3 0 20', 'basemapSatellite'],
+                ['relief', 'M3 18l5-8 4 5 3-4 6 7z', 'basemapRelief'],
+                ['antique', 'M9 3 4 5v16l5-2 6 2 5-2V3l-5 2-6-2zM9 3v16M15 5v16', 'basemapAntique'],
+              ] as [BasemapId, string, 'basemapDark' | 'basemapLight' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'][]).map(([id, icon, key]) => (
+                <button
+                  key={id}
+                  onClick={() => setBasemap(id)}
+                  title={tr(lang, key)}
+                  aria-label={tr(lang, key)}
+                  className={`grid h-9 w-9 place-items-center transition ${ basemap === id ? 'bg-signal text-white ' : 'text-white/60 hover:bg-surface' }`}
+                >
+                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d={icon} />
+                  </svg>
+                </button>
+              ))}
+            </div>
+
+            {!heat && (
+              <Timeline
+                lang={lang}
+                selected={era}
+                counts={eraCounts}
+                onSelect={setEra}
+                open={tlOpen}
+                onToggle={() => setTlOpen((v) => !v)}
+              />
+            )}
+
+            {mode === 'present' && <Presentation places={places} lang={lang} onExit={() => setMode(null)} />}
+            {mode === 'history' && <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />}
+            {mode === 'mission' && (
+              <Mission
+                places={places}
+                lang={lang}
+                onShowPlace={showPlaceFromGenealogy}
+                onExit={() => setMode(null)}
+              />
+            )}
+            {mode === 'church' && (
+              <ChurchMode
+                lang={lang}
+                onExit={() => {
+                  setMode(null);
+                  setChurchFocus(null);
+                }}
+                initialFatherId={churchFocus}
+                onOpenInTree={openPersonInTree}
+              />
+            )}
+            {mode === 'compare' && <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />}
+          </>
+        )}
+
 
         <Header
           lang={lang}
           onLang={setLang}
           heat={heat}
           onHeat={setHeat}
-          onPresent={() => setPresent(true)}
-          onGenealogy={() => setGenealogy(true)}
-          onMission={() => setMission(true)}
+          onMode={handleMode}
+          view={view}
+          onView={handleView}
         />
-
-        {/* Left panel */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-[1100] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
-          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-cream/92 shadow-2xl ring-1 ring-teal/10 backdrop-blur">
-            {selected ? (
-              <PlaceDetail place={selected} lang={lang} onClose={() => setSelected(null)} />
-            ) : (
-              <SearchPanel
-                query={query}
-                onQuery={setQuery}
-                results={results}
-                topPlaces={topPlaces}
-                onSelect={select}
-              />
-            )}
-          </div>
-        </div>
-
-        {!heat && <Timeline lang={lang} selected={era} counts={eraCounts} onSelect={setEra} />}
-
-        {/* mobile action buttons */}
-        <div className="absolute bottom-4 right-4 z-[1100] flex flex-col gap-2 lg:hidden">
-          <button
-            onClick={() => setMission(true)}
-            className="grid h-12 w-12 place-items-center rounded-full bg-cream text-teal shadow-xl ring-1 ring-teal/15 transition hover:bg-gold/25"
-            aria-label="Mission & Ausbreitung"
-          >
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-              <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm6.9 9h-3.2a15.6 15.6 0 0 0-1-5 8 8 0 0 1 4.2 5zM12 4.1c.7 1 1.5 3 1.7 6.9h-3.4C10.5 7.1 11.3 5.1 12 4.1zM5.1 11a8 8 0 0 1 4.2-5 15.6 15.6 0 0 0-1 5H5.1zm0 2h3.2c.1 1.9.5 3.6 1 5a8 8 0 0 1-4.2-5zm5.2 0h3.4c-.2 3.9-1 5.9-1.7 6.9-.7-1-1.5-3-1.7-6.9zm4.4 7a15.6 15.6 0 0 0 1-5h3.2a8 8 0 0 1-4.2 5z" />
-            </svg>
-          </button>
-          <button
-            onClick={() => setGenealogy(true)}
-            className="grid h-12 w-12 place-items-center rounded-full bg-cream text-teal shadow-xl ring-1 ring-teal/15 transition hover:bg-gold/25"
-            aria-label="Stammbäume"
-          >
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-              <path d="M12 2a2.5 2.5 0 0 0-1 4.8V9H6.5A1.5 1.5 0 0 0 5 10.5V13H3.2A2.5 2.5 0 1 0 5 13h0v-2.5h6.9V13H11a2.5 2.5 0 1 0 2 0v-2.5h6.9V13h0a2.5 2.5 0 1 0 1-2.5H13v-2.2A2.5 2.5 0 0 0 12 2z" />
-            </svg>
-          </button>
-          <button
-            onClick={() => setPresent(true)}
-            className="grid h-12 w-12 place-items-center rounded-full bg-teal text-cream shadow-xl ring-1 ring-teal/20 transition hover:bg-teal-2 sm:hidden"
-            aria-label="Präsentationsmodus"
-          >
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
-              <path d="M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z" />
-            </svg>
-          </button>
-        </div>
-
-        {present && (
-          <Presentation places={places} lang={lang} onExit={() => setPresent(false)} />
-        )}
-
-        {mission && (
-          <Mission
-            places={places}
-            lang={lang}
-            onShowPlace={showPlaceOnMap}
-            onExit={() => setMission(false)}
-          />
-        )}
-
-        {genealogy && (
-          <Genealogy
-            places={places}
-            lang={lang}
-            onShowPlace={showPlaceOnMap}
-            onExit={() => setGenealogy(false)}
-          />
-        )}
       </div>
     </LangContext.Provider>
   );

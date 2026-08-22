@@ -33,7 +33,7 @@ interface Props {
   onSelect: (id: string) => void;
 }
 
-const CARTO = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+const CARTO = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
 /**
  * Bogen zwischen zwei Punkten (quadratische Bézier-Kurve). Bögen lesen sich auf

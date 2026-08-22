@@ -49,7 +49,7 @@ export function highlightVerse(text: string, candidates: Candidate[]): ReactNode
         <button
           key={key++}
           onClick={cand.onPick}
-          className="rounded bg-gold/25 px-0.5 font-medium text-teal underline decoration-gold decoration-1 underline-offset-2 transition hover:bg-gold/45"
+          className="bg-gold/25 px-0.5 font-medium text-white underline decoration-gold decoration-1 underline-offset-2 transition hover:bg-gold/45"
         >
           {m[0]}
         </button>,

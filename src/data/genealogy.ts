@@ -1,1007 +1,822 @@
-// Genealogy / Table of Nations from 1 Chronicles 1 (with its Genesis parallels
-// Gen 5, 10, 11, 25, 36). This is the biblical descent of peoples and nations —
-// "Völkertafel". The identifications of the eponymous ancestors with historical
-// peoples and regions follow common, traditional scholarship (Josephus and
-// standard reference works); they are widely held but not certain, hence marked
-// as "traditionally". Names use the Luther/German spelling (de) and a common
-// English spelling (en).
+// Biblical genealogy ("Zeitbaum") from Adam & Eve down to Jesus Christ.
+//
+// The line follows the biblical sources: Genesis 5 (Adam → Noah) and 11
+// (Shem → Abraham) with their stated lifespans, then Ruth 4 / 1 Chronicles 2
+// (Perez → David), the royal succession of Judah (1–2 Kings / 1 Chronicles 3)
+// and finally Matthew 1 for the post-exilic generations down to Joseph and
+// Jesus. Side branches (Noah's sons / Table of Nations, the twelve sons of
+// Jacob, Levi → Moses, …) are included where Scripture names them so the tree
+// can be unfolded.
+//
+// Dates are APPROXIMATE. The antediluvian and post-flood years follow a common
+// conservative (Ussher-style) reading of the Genesis numbers; the kings use the
+// usual scholarly dates; the second-temple generations are interpolated. They
+// give the timeline shape, not a scholarly verdict — hence the "≈" everywhere.
 
-export type Line =
-  | 'primeval'
-  | 'shem'
-  | 'ham'
-  | 'japheth'
-  | 'abraham'
-  | 'ishmael'
-  | 'keturah'
-  | 'esau'
-  | 'seir'
-  | 'israel';
-
-export interface BiText {
+export interface Epoch {
+  id: string;
   de: string;
   en: string;
+  range: string;
+  color: string;
 }
 
-export interface GenNode {
+// Color-coded epochs, oldest → newest. Knoten und Zeitschiene teilen sie sich.
+export const GEN_EPOCHS: Epoch[] = [
+  { id: 'urzeit', de: 'Urgeschichte', en: 'Primeval Age', range: '≈ vor 2350 v. Chr.', color: '#7d8a86' },
+  { id: 'nachflut', de: 'Nach der Sintflut', en: 'After the Flood', range: '≈ 2350–2000 v. Chr.', color: '#a8895a' },
+  { id: 'patriarchen', de: 'Erzväter', en: 'Patriarchs', range: '≈ 2000–1700 v. Chr.', color: '#b8742e' },
+  { id: 'aegypten', de: 'Ägypten & Auszug', en: 'Egypt & Exodus', range: '≈ 1700–1400 v. Chr.', color: '#c98a2b' },
+  { id: 'richter', de: 'Richterzeit', en: 'Age of the Judges', range: '≈ 1400–1050 v. Chr.', color: '#a89321' },
+  { id: 'koenigtum', de: 'Königtum (David)', en: 'Monarchy (David)', range: '≈ 1050–930 v. Chr.', color: '#5c8a3a' },
+  { id: 'koenige', de: 'Könige von Juda', en: 'Kings of Judah', range: '≈ 930–586 v. Chr.', color: '#2f8f7f' },
+  { id: 'exil', de: 'Exil', en: 'Exile', range: '≈ 586–538 v. Chr.', color: '#3a6ea8' },
+  { id: 'ruckkehr', de: 'Rückkehr', en: 'Return', range: '≈ 538–400 v. Chr.', color: '#5a5ca8' },
+  { id: 'zweitertempel', de: 'Zweiter Tempel', en: 'Second Temple', range: '≈ 400–5 v. Chr.', color: '#7a5aa8' },
+  { id: 'messias', de: 'Messias', en: 'Messiah', range: '≈ 5 v.–30 n. Chr.', color: '#9a4ba0' },
+  // Post-biblisch: Glaubenszeugen / Kirchengeschichte (keine Blutlinie, sondern
+  // geistlich-historische Nachfolge).
+  { id: 'urkirche', de: 'Apostolische Zeit', en: 'Apostolic Age', range: '≈ 30–150 n. Chr.', color: '#b0436b' },
+  { id: 'kirchenvater', de: 'Kirchenväter', en: 'Church Fathers', range: '≈ 150–500 n. Chr.', color: '#a85a7a' },
+  { id: 'mittelalter', de: 'Mittelalter', en: 'Middle Ages', range: '≈ 500–1500 n. Chr.', color: '#7a6a45' },
+  { id: 'reformation', de: 'Reformation', en: 'Reformation', range: '16. Jh.', color: '#c2812a' },
+  { id: 'erweckung', de: 'Erweckung & Mission', en: 'Revival & Mission', range: '17.–19. Jh.', color: '#2f8f7f' },
+  { id: 'moderne', de: 'Moderne', en: 'Modern Era', range: '20.–21. Jh.', color: '#3a6ea8' },
+];
+
+export const EPOCH_BY_ID: Record<string, Epoch> = Object.fromEntries(GEN_EPOCHS.map((e) => [e.id, e]));
+
+/** Tradition of a church father — used by the church-history map overlay. */
+export type Tradition = 'west' | 'east' | 'orient';
+
+export interface Person {
   id: string;
-  de: string; // name (German / Luther spelling)
-  en: string; // name (English spelling)
-  ref?: string; // scripture reference, e.g. "1Chr 1:5 · Gen 10:2"
-  line?: Line; // colour grouping
-  people?: BiText; // the people / nation this figure is the ancestor of
-  region?: BiText; // rough geographic area (traditional identification)
-  note?: BiText; // extra remark
-  place?: string; // search term to locate a matching place on the map
-  /**
-   * A linear run of single-child generations shown compactly as a breadcrumb
-   * before this node's `children` branch out. Keeps deep genealogical chains
-   * (Adam→Noah, Shem→Abraham) readable instead of nesting 10 levels deep.
-   */
-  spine?: { de: string; en: string; ref?: string }[];
-  children?: GenNode[];
+  de: string;
+  en: string;
+  parent: string | null;
+  /** On the main line Adam → Jesus (drawn as the open spine by default). */
+  line?: boolean;
+  /** Post-biblical faith witness (church history), not part of the bloodline. */
+  faith?: boolean;
+  /** Spouse shown on the card, where biblically named and relevant. */
+  spouse?: { de: string; en: string };
+  /** Approximate birth year; negative = v. Chr. / BC, positive = n. Chr. / AD. */
+  born?: number;
+  /** Total years lived, where Scripture states it (Genesis, etc.). */
+  lifespan?: number;
+  /** Short reign / role note, e.g. "regierte 970–931 v. Chr." */
+  reignDe?: string;
+  reignEn?: string;
+  epoch: string;
+  /** Human-readable Bible references (work in both languages, link to Bible.com). */
+  refs: string[];
+  deText: string;
+  enText: string;
+  // --- optional geo / map link --------------------------------------------
+  // Church fathers carry a location + tradition so they appear on the
+  // church-history map AND in the time tree from the SAME record (no
+  // duplication). Persons with these fields get a "show on map" link.
+  lat?: number;
+  lon?: number;
+  city?: string;
+  tradition?: Tradition;
+  /** Life-range label for figures shown on the map, e.g. "≈ 296–373". */
+  years?: string;
 }
 
-// Metadata for the coloured legend of the descent lines.
-export const LINES: { id: Line; de: string; en: string; color: string }[] = [
-  { id: 'primeval', de: 'Von Adam bis Noah', en: 'Adam to Noah', color: '#8a7a5c' },
-  { id: 'japheth', de: 'Jafet – nördliche Völker', en: 'Japheth – northern peoples', color: '#3a6ea8' },
-  { id: 'ham', de: 'Ham – südliche & kanaanäische Völker', en: 'Ham – southern & Canaanite peoples', color: '#b8742e' },
-  { id: 'shem', de: 'Sem – semitische Völker', en: 'Shem – Semitic peoples', color: '#2f8f7f' },
-  { id: 'abraham', de: 'Abraham', en: 'Abraham', color: '#c2812a' },
-  { id: 'ishmael', de: 'Ismael – arabische Stämme', en: 'Ishmael – Arabian tribes', color: '#a89321' },
-  { id: 'keturah', de: 'Ketura – Midian & Wüstenstämme', en: 'Keturah – Midian & desert tribes', color: '#9a8a3a' },
-  { id: 'esau', de: 'Esau – Edom', en: 'Esau – Edom', color: '#a0436b' },
-  { id: 'seir', de: 'Seïr – Horiter', en: 'Seir – Horites', color: '#7a5c8a' },
-  { id: 'israel', de: 'Israel (Jakob) – 12 Stämme', en: 'Israel (Jacob) – 12 tribes', color: '#9a4ba0' },
+export const GENEALOGY: Person[] = [
+  // ---------------------------------------------------------------- Urgeschichte
+  {
+    id: 'adam', de: 'Adam', en: 'Adam', parent: null, line: true,
+    spouse: { de: 'Eva', en: 'Eve' }, born: -4004, lifespan: 930, epoch: 'urzeit',
+    refs: ['Gen 1:27', 'Gen 5:1-5', 'Lk 3:38'],
+    deText: 'Der erste Mensch, von Gott aus Erde geformt; mit Eva Stammeltern der Menschheit. Lebte 930 Jahre.',
+    enText: 'The first man, formed by God from the dust; with Eve the parents of all humanity. Lived 930 years.',
+  },
+  {
+    id: 'kain', de: 'Kain', en: 'Cain', parent: 'adam', epoch: 'urzeit',
+    born: -3980, refs: ['Gen 4:1-17'],
+    deText: 'Ältester Sohn Adams und Evas; Ackerbauer, der seinen Bruder Abel erschlug und ostwärts von Eden zog.',
+    enText: 'Firstborn of Adam and Eve; a farmer who killed his brother Abel and settled east of Eden.',
+  },
+  {
+    id: 'abel', de: 'Abel', en: 'Abel', parent: 'adam', epoch: 'urzeit',
+    born: -3978, refs: ['Gen 4:2-8', 'Hebr 11:4'],
+    deText: 'Zweiter Sohn, ein Hirte; sein Opfer fand Wohlgefallen, er wurde von Kain getötet.',
+    enText: 'Second son, a shepherd; his offering was accepted and he was murdered by Cain.',
+  },
+  {
+    id: 'set', de: 'Set', en: 'Seth', parent: 'adam', line: true,
+    born: -3874, lifespan: 912, epoch: 'urzeit', refs: ['Gen 4:25-26', 'Gen 5:6-8'],
+    deText: 'Dritter Sohn, „an Abels statt" gegeben; über ihn läuft die Linie der Verheißung weiter.',
+    enText: 'Third son, given "in place of Abel"; through him the line of promise continues.',
+  },
+  {
+    id: 'enosch', de: 'Enosch', en: 'Enosh', parent: 'set', line: true,
+    born: -3769, lifespan: 905, epoch: 'urzeit', refs: ['Gen 5:9-11'],
+    deText: 'Sohn Sets; in seinen Tagen „fing man an, den Namen des HERRN anzurufen".',
+    enText: 'Son of Seth; in his days people "began to call upon the name of the LORD".',
+  },
+  {
+    id: 'kenan', de: 'Kenan', en: 'Kenan', parent: 'enosch', line: true,
+    born: -3679, lifespan: 910, epoch: 'urzeit', refs: ['Gen 5:12-14'],
+    deText: 'Sohn Enoschs in der Linie Sets. Lebte 910 Jahre.',
+    enText: 'Son of Enosh in the line of Seth. Lived 910 years.',
+  },
+  {
+    id: 'mahalalel', de: 'Mahalalel', en: 'Mahalalel', parent: 'kenan', line: true,
+    born: -3609, lifespan: 895, epoch: 'urzeit', refs: ['Gen 5:15-17'],
+    deText: 'Vierter Nachkomme Sets. Lebte 895 Jahre.',
+    enText: 'Fourth descendant of Seth. Lived 895 years.',
+  },
+  {
+    id: 'jered', de: 'Jered', en: 'Jared', parent: 'mahalalel', line: true,
+    born: -3544, lifespan: 962, epoch: 'urzeit', refs: ['Gen 5:18-20'],
+    deText: 'Vater Henochs; mit 962 Jahren einer der ältesten Menschen der Bibel.',
+    enText: 'Father of Enoch; at 962 years one of the longest-lived people in the Bible.',
+  },
+  {
+    id: 'henoch', de: 'Henoch', en: 'Enoch', parent: 'jered', line: true,
+    born: -3382, lifespan: 365, epoch: 'urzeit', refs: ['Gen 5:21-24', 'Hebr 11:5'],
+    deText: 'Wandelte mit Gott und „war nicht mehr, denn Gott nahm ihn hinweg" — ohne zu sterben.',
+    enText: 'Walked with God and "was not, for God took him" — taken up without dying.',
+  },
+  {
+    id: 'metuschelach', de: 'Metuschelach', en: 'Methuselah', parent: 'henoch', line: true,
+    born: -3317, lifespan: 969, epoch: 'urzeit', refs: ['Gen 5:25-27'],
+    deText: 'Mit 969 Jahren der älteste genannte Mensch; Großvater Noahs.',
+    enText: 'At 969 years the oldest person named in Scripture; grandfather of Noah.',
+  },
+  {
+    id: 'lamech', de: 'Lamech', en: 'Lamech', parent: 'metuschelach', line: true,
+    born: -3130, lifespan: 777, epoch: 'urzeit', refs: ['Gen 5:28-31'],
+    deText: 'Vater Noahs; hoffte, dass sein Sohn Trost bringe „von unserer Arbeit".',
+    enText: "Father of Noah; he hoped his son would bring relief 'from our work'.",
+  },
+  {
+    id: 'noah', de: 'Noah', en: 'Noah', parent: 'lamech', line: true,
+    born: -2948, lifespan: 950, epoch: 'urzeit', refs: ['Gen 5:32', 'Gen 6-9'],
+    deText: 'Gerecht in seiner Zeit; baute die Arche und überlebte mit seiner Familie die Sintflut. Neuanfang der Menschheit.',
+    enText: 'Righteous in his generation; built the ark and survived the Flood with his family. A new beginning for humanity.',
+  },
+
+  // ---------------------------------------------------------------- Nach der Flut
+  {
+    id: 'jafet', de: 'Jafet', en: 'Japheth', parent: 'noah', epoch: 'nachflut',
+    born: -2450, refs: ['Gen 10:2-5'],
+    deText: 'Sohn Noahs; Stammvater der nördlichen Völker (Gomer, Magog, Jawan u. a.).',
+    enText: 'Son of Noah; ancestor of the northern peoples (Gomer, Magog, Javan, …).',
+  },
+  {
+    id: 'ham', de: 'Ham', en: 'Ham', parent: 'noah', epoch: 'nachflut',
+    born: -2448, refs: ['Gen 10:6-20'],
+    deText: 'Sohn Noahs; Stammvater von Kusch, Mizrajim (Ägypten), Put und Kanaan.',
+    enText: 'Son of Noah; ancestor of Cush, Mizraim (Egypt), Put and Canaan.',
+  },
+  {
+    id: 'kusch', de: 'Kusch', en: 'Cush', parent: 'ham', epoch: 'nachflut',
+    refs: ['Gen 10:6-8'],
+    deText: 'Sohn Hams; Vater Nimrods, Stammvater der kuschitischen Völker.',
+    enText: 'Son of Ham; father of Nimrod and ancestor of the Cushite peoples.',
+  },
+  {
+    id: 'nimrod', de: 'Nimrod', en: 'Nimrod', parent: 'kusch', epoch: 'nachflut',
+    refs: ['Gen 10:8-12'],
+    deText: 'Ein „gewaltiger Jäger"; gründete Babel, Erech und Ninive — erste Großreiche.',
+    enText: 'A "mighty hunter"; founded Babel, Erech and Nineveh — the first kingdoms.',
+  },
+  {
+    id: 'mizrajim', de: 'Mizrajim', en: 'Mizraim', parent: 'ham', epoch: 'nachflut',
+    refs: ['Gen 10:6,13'],
+    deText: 'Sohn Hams; in der Bibel der Stammvater der Ägypter.',
+    enText: 'Son of Ham; in Scripture the ancestor of the Egyptians.',
+  },
+  {
+    id: 'kanaan', de: 'Kanaan', en: 'Canaan', parent: 'ham', epoch: 'nachflut',
+    refs: ['Gen 10:15-19'],
+    deText: 'Sohn Hams; Stammvater der Kanaaniter, Hetiter, Jebusiter u. a.',
+    enText: 'Son of Ham; ancestor of the Canaanites, Hittites, Jebusites and others.',
+  },
+  {
+    id: 'sem', de: 'Sem', en: 'Shem', parent: 'noah', line: true,
+    born: -2446, lifespan: 600, epoch: 'nachflut', refs: ['Gen 10:21-31', 'Gen 11:10-11'],
+    deText: 'Ältester (gesegneter) Sohn Noahs; Stammvater der semitischen Völker und der Linie Abrahams.',
+    enText: 'Eldest (blessed) son of Noah; ancestor of the Semitic peoples and of Abraham’s line.',
+  },
+  {
+    id: 'arpachschad', de: 'Arpachschad', en: 'Arphaxad', parent: 'sem', line: true,
+    born: -2346, lifespan: 438, epoch: 'nachflut', refs: ['Gen 11:12-13'],
+    deText: 'Sohn Sems, zwei Jahre nach der Flut geboren.',
+    enText: 'Son of Shem, born two years after the Flood.',
+  },
+  {
+    id: 'schelach', de: 'Schelach', en: 'Shelah', parent: 'arpachschad', line: true,
+    born: -2311, lifespan: 433, epoch: 'nachflut', refs: ['Gen 11:14-15'],
+    deText: 'Sohn Arpachschads in der Linie Sems.',
+    enText: 'Son of Arphaxad in the line of Shem.',
+  },
+  {
+    id: 'eber', de: 'Eber', en: 'Eber', parent: 'schelach', line: true,
+    born: -2281, lifespan: 464, epoch: 'nachflut', refs: ['Gen 11:16-17'],
+    deText: 'Namensgeber der „Hebräer"; in seinen Tagen wurde die Erde geteilt.',
+    enText: 'The namesake of the "Hebrews"; in his days the earth was divided.',
+  },
+  {
+    id: 'peleg', de: 'Peleg', en: 'Peleg', parent: 'eber', line: true,
+    born: -2247, lifespan: 239, epoch: 'nachflut', refs: ['Gen 11:18-19'],
+    deText: 'Sein Name bedeutet „Teilung", denn „in seinen Tagen wurde die Erde geteilt".',
+    enText: 'His name means "division", for "in his days the earth was divided".',
+  },
+  {
+    id: 'regu', de: 'Regu', en: 'Reu', parent: 'peleg', line: true,
+    born: -2217, lifespan: 239, epoch: 'nachflut', refs: ['Gen 11:20-21'],
+    deText: 'Sohn Pelegs in der Linie nach Abraham.',
+    enText: 'Son of Peleg in the line toward Abraham.',
+  },
+  {
+    id: 'serug', de: 'Serug', en: 'Serug', parent: 'regu', line: true,
+    born: -2185, lifespan: 230, epoch: 'nachflut', refs: ['Gen 11:22-23'],
+    deText: 'Urgroßvater Abrahams.',
+    enText: "Great-grandfather of Abraham.",
+  },
+  {
+    id: 'nahor1', de: 'Nahor', en: 'Nahor', parent: 'serug', line: true,
+    born: -2155, lifespan: 148, epoch: 'nachflut', refs: ['Gen 11:24-25'],
+    deText: 'Großvater Abrahams; lebte deutlich kürzer als seine Vorfahren.',
+    enText: 'Grandfather of Abraham; lived markedly shorter than his forefathers.',
+  },
+  {
+    id: 'terach', de: 'Terach', en: 'Terah', parent: 'nahor1', line: true,
+    born: -2126, lifespan: 205, epoch: 'nachflut', refs: ['Gen 11:26-32'],
+    deText: 'Vater Abrahams, Nahors und Harans; zog von Ur auf nach Haran.',
+    enText: 'Father of Abraham, Nahor and Haran; set out from Ur and settled in Haran.',
+  },
+  {
+    id: 'haran', de: 'Haran', en: 'Haran', parent: 'terach', epoch: 'nachflut',
+    refs: ['Gen 11:27-31'],
+    deText: 'Bruder Abrahams; Vater Lots, starb früh in Ur.',
+    enText: 'Brother of Abraham; father of Lot, died young in Ur.',
+  },
+  {
+    id: 'lot', de: 'Lot', en: 'Lot', parent: 'haran', epoch: 'patriarchen',
+    refs: ['Gen 13', 'Gen 19'],
+    deText: 'Neffe Abrahams; ließ sich bei Sodom nieder und entkam dessen Untergang.',
+    enText: "Abraham's nephew; settled near Sodom and escaped its destruction.",
+  },
+  {
+    id: 'nahor2', de: 'Nahor', en: 'Nahor', parent: 'terach', epoch: 'nachflut',
+    refs: ['Gen 22:20-23'],
+    deText: 'Bruder Abrahams; Großvater Rebekkas, der Frau Isaaks.',
+    enText: 'Brother of Abraham; grandfather of Rebekah, the wife of Isaac.',
+  },
+
+  // ---------------------------------------------------------------- Erzväter
+  {
+    id: 'abraham', de: 'Abraham', en: 'Abraham', parent: 'terach', line: true,
+    spouse: { de: 'Sara', en: 'Sarah' }, born: -1996, lifespan: 175, epoch: 'patriarchen',
+    refs: ['Gen 12', 'Gen 15', 'Gen 17', 'Gen 22'],
+    deText: 'Aus Ur berufen; ihm gilt der Bund und die Verheißung, dass in ihm „alle Geschlechter gesegnet" werden. Vater des Glaubens.',
+    enText: 'Called out of Ur; recipient of the covenant and the promise that in him "all families will be blessed". Father of faith.',
+  },
+  {
+    id: 'ismael', de: 'Ismael', en: 'Ishmael', parent: 'abraham', epoch: 'patriarchen',
+    born: -1910, refs: ['Gen 16', 'Gen 21:8-21'],
+    deText: 'Sohn Abrahams mit der Magd Hagar; Stammvater von zwölf Fürsten, traditionell der Araber.',
+    enText: "Abraham's son by Hagar; ancestor of twelve princes, traditionally of the Arab peoples.",
+  },
+  {
+    id: 'isaak', de: 'Isaak', en: 'Isaac', parent: 'abraham', line: true,
+    spouse: { de: 'Rebekka', en: 'Rebekah' }, born: -1896, lifespan: 180, epoch: 'patriarchen',
+    refs: ['Gen 21', 'Gen 24', 'Gen 26'],
+    deText: 'Der verheißene Sohn Saras; Träger des Bundes, beinahe geopfert auf dem Berg Morija.',
+    enText: 'The promised son of Sarah; bearer of the covenant, almost offered on Mount Moriah.',
+  },
+  {
+    id: 'esau', de: 'Esau', en: 'Esau', parent: 'isaak', epoch: 'patriarchen',
+    born: -1836, refs: ['Gen 25:24-34', 'Gen 36'],
+    deText: 'Zwillingsbruder Jakobs; verkaufte sein Erstgeburtsrecht und wurde Stammvater Edoms.',
+    enText: "Jacob's twin; sold his birthright and became the ancestor of Edom.",
+  },
+  {
+    id: 'jakob', de: 'Jakob (Israel)', en: 'Jacob (Israel)', parent: 'isaak', line: true,
+    spouse: { de: 'Lea & Rahel', en: 'Leah & Rachel' }, born: -1836, lifespan: 147, epoch: 'patriarchen',
+    refs: ['Gen 27-35', 'Gen 49'],
+    deText: 'Erhielt den Namen „Israel"; Vater der zwölf Stämme. Über seinen Sohn Juda läuft die königliche Linie.',
+    enText: 'Renamed "Israel"; father of the twelve tribes. The royal line runs through his son Judah.',
+  },
+
+  // ---------------------------------------------------------------- 12 Söhne Jakobs
+  { id: 'ruben', de: 'Ruben', en: 'Reuben', parent: 'jakob', epoch: 'patriarchen', refs: ['Gen 29:32', 'Gen 49:3-4'],
+    deText: 'Erstgeborener Jakobs und Leas; verlor den Erstgeburtssegen.', enText: 'Firstborn of Jacob and Leah; forfeited the birthright blessing.' },
+  { id: 'simeon', de: 'Simeon', en: 'Simeon', parent: 'jakob', epoch: 'patriarchen', refs: ['Gen 29:33', 'Gen 34'],
+    deText: 'Zweiter Sohn Leas; Stammvater des Stammes Simeon.', enText: 'Second son of Leah; ancestor of the tribe of Simeon.' },
+  { id: 'levi', de: 'Levi', en: 'Levi', parent: 'jakob', epoch: 'patriarchen', refs: ['Gen 29:34', 'Ex 6:16-20'],
+    deText: 'Dritter Sohn Leas; Stammvater der Priester und Leviten — über ihn kommen Mose und Aaron.', enText: 'Third son of Leah; ancestor of the priests and Levites — Moses and Aaron descend from him.' },
+  { id: 'juda', de: 'Juda', en: 'Judah', parent: 'jakob', line: true, spouse: { de: 'Tamar', en: 'Tamar' }, born: -1753, epoch: 'patriarchen', refs: ['Gen 29:35', 'Gen 49:8-10'],
+    deText: 'Vierter Sohn Leas; ihm gilt die Verheißung des Zepters — die königliche und messianische Linie.', enText: 'Fourth son of Leah; recipient of the promise of the scepter — the royal and messianic line.' },
+  { id: 'dan', de: 'Dan', en: 'Dan', parent: 'jakob', epoch: 'patriarchen', refs: ['Gen 30:6'],
+    deText: 'Sohn Jakobs mit Bilha, der Magd Rahels.', enText: "Jacob's son by Bilhah, Rachel's maidservant." },
+  { id: 'naftali', de: 'Naftali', en: 'Naphtali', parent: 'jakob', epoch: 'patriarchen', refs: ['Gen 30:8'],
+    deText: 'Zweiter Sohn mit Bilha; Stammvater Naftalis.', enText: "Second son by Bilhah; ancestor of Naphtali." },
+  { id: 'gad', de: 'Gad', en: 'Gad', parent: 'jakob', epoch: 'patriarchen', refs: ['Gen 30:11'],
+    deText: 'Sohn Jakobs mit Silpa, der Magd Leas.', enText: "Jacob's son by Zilpah, Leah's maidservant." },
+  { id: 'ascher', de: 'Ascher', en: 'Asher', parent: 'jakob', epoch: 'patriarchen', refs: ['Gen 30:13'],
+    deText: 'Zweiter Sohn mit Silpa; sein Erbteil war reich an Öl.', enText: 'Second son by Zilpah; his territory was rich in oil.' },
+  { id: 'issachar', de: 'Issachar', en: 'Issachar', parent: 'jakob', epoch: 'patriarchen', refs: ['Gen 30:18'],
+    deText: 'Fünfter Sohn Leas.', enText: 'Fifth son of Leah.' },
+  { id: 'sebulon', de: 'Sebulon', en: 'Zebulun', parent: 'jakob', epoch: 'patriarchen', refs: ['Gen 30:20'],
+    deText: 'Sechster Sohn Leas; sein Gebiet lag Richtung Meer.', enText: 'Sixth son of Leah; his territory faced the sea.' },
+  { id: 'josef', de: 'Josef', en: 'Joseph', parent: 'jakob', born: -1745, lifespan: 110, epoch: 'aegypten', refs: ['Gen 37', 'Gen 39-50'],
+    deText: 'Lieblingssohn Rahels; nach Ägypten verkauft, dort zum Vizekönig erhöht und Retter der Familie.', enText: "Rachel's favored son; sold into Egypt, raised to vizier and saviour of his family." },
+  { id: 'benjamin', de: 'Benjamin', en: 'Benjamin', parent: 'jakob', epoch: 'patriarchen', refs: ['Gen 35:16-18'],
+    deText: 'Jüngster Sohn; Rahel starb bei seiner Geburt. Stamm des Königs Saul und des Paulus.', enText: "Youngest son; Rachel died giving him birth. Tribe of King Saul and of Paul." },
+
+  // Josef → Ephraim & Manasse
+  { id: 'manasse', de: 'Manasse', en: 'Manasseh', parent: 'josef', epoch: 'aegypten', refs: ['Gen 41:51', 'Gen 48'],
+    deText: 'Erstgeborener Josefs; Stammvater eines halben Stammes Israels.', enText: "Joseph's firstborn; ancestor of a half-tribe of Israel." },
+  { id: 'ephraim', de: 'Ephraim', en: 'Ephraim', parent: 'josef', epoch: 'aegypten', refs: ['Gen 41:52', 'Gen 48:14-20'],
+    deText: 'Zweiter Sohn Josefs, von Jakob über Manasse gesegnet; führender Nordstamm.', enText: "Joseph's second son, blessed by Jacob above Manasseh; a leading northern tribe." },
+
+  // Levi → Mose, Aaron, Mirjam
+  { id: 'kehat', de: 'Kehat', en: 'Kohath', parent: 'levi', epoch: 'aegypten', refs: ['Ex 6:16-18'],
+    deText: 'Sohn Levis; Großvater Moses, Aarons und Mirjams.', enText: 'Son of Levi; grandfather of Moses, Aaron and Miriam.' },
+  { id: 'amram', de: 'Amram', en: 'Amram', parent: 'kehat', epoch: 'aegypten', spouse: { de: 'Jochebed', en: 'Jochebed' }, refs: ['Ex 6:18-20'],
+    deText: 'Sohn Kehats; mit Jochebed Vater von Mose, Aaron und Mirjam.', enText: 'Son of Kohath; with Jochebed the father of Moses, Aaron and Miriam.' },
+  { id: 'mirjam', de: 'Mirjam', en: 'Miriam', parent: 'amram', epoch: 'aegypten', refs: ['Ex 2:4-8', 'Ex 15:20-21'],
+    deText: 'Schwester Moses und Aarons; Prophetin, die am Schilfmeer den Lobgesang anstimmte.', enText: 'Sister of Moses and Aaron; a prophetess who led the song at the Red Sea.' },
+  { id: 'aaron', de: 'Aaron', en: 'Aaron', parent: 'amram', epoch: 'aegypten', born: -1529, refs: ['Ex 4:14', 'Ex 28', 'Lev 8'],
+    deText: 'Älterer Bruder Moses; erster Hoherpriester Israels.', enText: "Moses' elder brother; the first high priest of Israel." },
+  { id: 'mose', de: 'Mose', en: 'Moses', parent: 'amram', born: -1526, lifespan: 120, epoch: 'aegypten', refs: ['Ex 2-3', 'Ex 14', 'Dtn 34'],
+    deText: 'Führte Israel aus Ägypten, empfing am Sinai das Gesetz und brachte das Volk an den Rand des verheißenen Landes.', enText: 'Led Israel out of Egypt, received the Law at Sinai and brought the people to the edge of the promised land.' },
+
+  // ---------------------------------------------------------------- Juda → David (Rut 4 / 1Chr 2)
+  { id: 'perez', de: 'Perez', en: 'Perez', parent: 'juda', line: true, born: -1715, epoch: 'aegypten', refs: ['Gen 38:29', 'Rut 4:18', '1Chr 2:4-5'],
+    deText: 'Sohn Judas und Tamars; Kopf der Familie, aus der David hervorgeht.', enText: 'Son of Judah and Tamar; head of the clan from which David comes.' },
+  { id: 'hezron', de: 'Hezron', en: 'Hezron', parent: 'perez', line: true, born: -1680, epoch: 'aegypten', refs: ['Rut 4:18', '1Chr 2:5'],
+    deText: 'Sohn des Perez; zog mit Jakobs Haus nach Ägypten.', enText: "Son of Perez; went down to Egypt with Jacob's household." },
+  { id: 'ram', de: 'Ram', en: 'Ram', parent: 'hezron', line: true, born: -1650, epoch: 'aegypten', refs: ['Rut 4:19', '1Chr 2:9-10'],
+    deText: 'Sohn Hezrons in der Linie nach David.', enText: 'Son of Hezron in the line toward David.' },
+  { id: 'amminadab', de: 'Amminadab', en: 'Amminadab', parent: 'ram', line: true, born: -1610, epoch: 'aegypten', refs: ['Rut 4:19-20', 'Num 1:7'],
+    deText: 'Schwiegervater Aarons; sein Sohn Nachschon führte den Stamm Juda.', enText: "Father-in-law of Aaron; his son Nahshon led the tribe of Judah." },
+  { id: 'nachschon', de: 'Nachschon', en: 'Nahshon', parent: 'amminadab', line: true, born: -1500, epoch: 'aegypten', refs: ['Num 1:7', 'Num 2:3', 'Rut 4:20'],
+    deText: 'Fürst Judas in der Wüste; trug das Banner an der Spitze des Volkes.', enText: 'Prince of Judah in the wilderness; led the people at the head of the camp.' },
+  { id: 'salmon', de: 'Salmon', en: 'Salmon', parent: 'nachschon', line: true, born: -1440, epoch: 'richter', spouse: { de: 'Rahab', en: 'Rahab' }, refs: ['Rut 4:20-21', 'Mt 1:5'],
+    deText: 'Nach jüdischer Überlieferung Mann der Rahab von Jericho; Vater des Boas.', enText: 'By tradition the husband of Rahab of Jericho; father of Boaz.' },
+  { id: 'boas', de: 'Boas', en: 'Boaz', parent: 'salmon', line: true, born: -1150, epoch: 'richter', spouse: { de: 'Rut', en: 'Ruth' }, refs: ['Rut 2-4', '1Chr 2:11-12'],
+    deText: 'Wohlhabender Bauer in Bethlehem; löste die Moabiterin Rut aus und heiratete sie.', enText: 'A prosperous man of Bethlehem; redeemed and married Ruth the Moabitess.' },
+  { id: 'obed', de: 'Obed', en: 'Obed', parent: 'boas', line: true, born: -1115, epoch: 'richter', refs: ['Rut 4:17,21-22'],
+    deText: 'Sohn von Boas und Rut; Großvater des Königs David.', enText: 'Son of Boaz and Ruth; grandfather of King David.' },
+  { id: 'isai', de: 'Isai', en: 'Jesse', parent: 'obed', line: true, born: -1080, epoch: 'richter', refs: ['1Sam 16', 'Jes 11:1'],
+    deText: 'Vater von acht Söhnen in Bethlehem; aus seinem „Wurzelstock" sollte der Messias kommen.', enText: 'Father of eight sons in Bethlehem; from his "stump" the Messiah would come.' },
+
+  // ---------------------------------------------------------------- Könige
+  { id: 'david', de: 'David', en: 'David', parent: 'isai', line: true, born: -1040, lifespan: 70, epoch: 'koenigtum', spouse: { de: 'Batseba', en: 'Bathsheba' }, reignDe: 'regierte ≈ 1010–970 v. Chr.', reignEn: 'reigned ≈ 1010–970 BC', refs: ['1Sam 16-17', '2Sam 7', 'Ps 23'],
+    deText: 'Hirte, Psalmdichter und König; ihm wird ein ewiger Thron verheißen — der „Sohn Davids" ist der Messias.', enText: 'Shepherd, psalmist and king; promised an everlasting throne — the "Son of David" is the Messiah.' },
+  { id: 'natan', de: 'Natan (Sohn Davids)', en: 'Nathan (son of David)', parent: 'david', epoch: 'koenigtum', refs: ['Lk 3:31', '2Sam 5:14'],
+    deText: 'Sohn Davids; über ihn führt das Lukas-Evangelium die Abstammung Jesu (Linie Marias).', enText: "Son of David; through him Luke's Gospel traces Jesus' descent (Mary's line)." },
+  { id: 'salomo', de: 'Salomo', en: 'Solomon', parent: 'david', line: true, born: -1010, epoch: 'koenigtum', reignDe: 'regierte ≈ 970–931 v. Chr.', reignEn: 'reigned ≈ 970–931 BC', refs: ['1Kön 3', '1Kön 6-8', 'Spr 1:1'],
+    deText: 'Sohn Davids und Batsebas; erbat Weisheit und baute den Tempel in Jerusalem.', enText: 'Son of David and Bathsheba; asked for wisdom and built the Temple in Jerusalem.' },
+  { id: 'rehabeam', de: 'Rehabeam', en: 'Rehoboam', parent: 'salomo', line: true, born: -972, epoch: 'koenige', reignDe: 'regierte ≈ 931–913 v. Chr.', reignEn: 'reigned ≈ 931–913 BC', refs: ['1Kön 12', '2Chr 10'],
+    deText: 'Unter ihm zerbrach das Reich; ihm blieb das Südreich Juda.', enText: 'Under him the kingdom split; the southern kingdom of Judah remained his.' },
+  { id: 'abija', de: 'Abija', en: 'Abijah', parent: 'rehabeam', line: true, born: -955, epoch: 'koenige', reignDe: 'regierte ≈ 913–911 v. Chr.', reignEn: 'reigned ≈ 913–911 BC', refs: ['1Kön 15:1-8', '2Chr 13'],
+    deText: 'König von Juda; siegte über das Nordreich Israel.', enText: 'King of Judah; victorious over the northern kingdom.' },
+  { id: 'asa', de: 'Asa', en: 'Asa', parent: 'abija', line: true, born: -940, epoch: 'koenige', reignDe: 'regierte ≈ 911–870 v. Chr.', reignEn: 'reigned ≈ 911–870 BC', refs: ['1Kön 15:9-24', '2Chr 14-16'],
+    deText: 'Frommer Reformkönig, der den Götzendienst aus Juda entfernte.', enText: 'A devout reforming king who removed idolatry from Judah.' },
+  { id: 'joschafat', de: 'Joschafat', en: 'Jehoshaphat', parent: 'asa', line: true, born: -908, epoch: 'koenige', reignDe: 'regierte ≈ 870–848 v. Chr.', reignEn: 'reigned ≈ 870–848 BC', refs: ['1Kön 22', '2Chr 17-20'],
+    deText: 'Gottesfürchtiger König; sandte Lehrer mit dem Gesetz durchs Land.', enText: 'A God-fearing king; sent teachers with the Law throughout the land.' },
+  { id: 'joram', de: 'Joram', en: 'Jehoram', parent: 'joschafat', line: true, born: -882, epoch: 'koenige', reignDe: 'regierte ≈ 848–841 v. Chr.', reignEn: 'reigned ≈ 848–841 BC', refs: ['2Kön 8:16-24', '2Chr 21'],
+    deText: 'Heiratete Atalja vom Haus Ahab und folgte deren Götzendienst.', enText: 'Married Athaliah of the house of Ahab and followed their idolatry.' },
+  { id: 'ahasja', de: 'Ahasja', en: 'Ahaziah', parent: 'joram', line: true, born: -862, epoch: 'koenige', reignDe: 'regierte ≈ 841 v. Chr.', reignEn: 'reigned ≈ 841 BC', refs: ['2Kön 8:25-29', '2Chr 22:1-9'],
+    deText: 'Regierte nur ein Jahr; in Matthäus 1 unter den ausgelassenen Königen.', enText: 'Reigned only a year; among the kings omitted in Matthew 1.' },
+  { id: 'joasch', de: 'Joasch', en: 'Joash', parent: 'ahasja', line: true, born: -843, epoch: 'koenige', reignDe: 'regierte ≈ 835–796 v. Chr.', reignEn: 'reigned ≈ 835–796 BC', refs: ['2Kön 11-12', '2Chr 24'],
+    deText: 'Als Kind vor Atalja gerettet; ließ den Tempel ausbessern.', enText: 'Rescued as a child from Athaliah; repaired the Temple.' },
+  { id: 'amazja', de: 'Amazja', en: 'Amaziah', parent: 'joasch', line: true, born: -825, epoch: 'koenige', reignDe: 'regierte ≈ 796–767 v. Chr.', reignEn: 'reigned ≈ 796–767 BC', refs: ['2Kön 14:1-20', '2Chr 25'],
+    deText: 'König von Juda; siegte über Edom, verlor aber gegen Israel.', enText: 'King of Judah; defeated Edom but lost to Israel.' },
+  { id: 'usija', de: 'Usija (Asarja)', en: 'Uzziah (Azariah)', parent: 'amazja', line: true, born: -808, epoch: 'koenige', reignDe: 'regierte ≈ 792–740 v. Chr.', reignEn: 'reigned ≈ 792–740 BC', refs: ['2Kön 15:1-7', '2Chr 26', 'Jes 6:1'],
+    deText: 'Langer, blühender Herrscher; wurde aussätzig, weil er sich am Tempeldienst vergriff.', enText: 'A long, prosperous reign; struck with leprosy for usurping the priestly office.' },
+  { id: 'jotam', de: 'Jotam', en: 'Jotham', parent: 'usija', line: true, born: -752, epoch: 'koenige', reignDe: 'regierte ≈ 750–735 v. Chr.', reignEn: 'reigned ≈ 750–735 BC', refs: ['2Kön 15:32-38', '2Chr 27'],
+    deText: 'Tat, was recht war; baute am Tempel und an den Festungen.', enText: 'Did what was right; built up the Temple and the fortifications.' },
+  { id: 'ahas', de: 'Ahas', en: 'Ahaz', parent: 'jotam', line: true, born: -735, epoch: 'koenige', reignDe: 'regierte ≈ 735–715 v. Chr.', reignEn: 'reigned ≈ 735–715 BC', refs: ['2Kön 16', '2Chr 28', 'Jes 7'],
+    deText: 'Götzendiener; ihm gilt Jesajas Zeichen vom „Immanuel".', enText: "An idolater; to him Isaiah gave the sign of 'Immanuel'." },
+  { id: 'hiskia', de: 'Hiskia', en: 'Hezekiah', parent: 'ahas', line: true, born: -715, epoch: 'koenige', reignDe: 'regierte ≈ 715–686 v. Chr.', reignEn: 'reigned ≈ 715–686 BC', refs: ['2Kön 18-20', '2Chr 29-32', 'Jes 36-39'],
+    deText: 'Großer Reformkönig; vertraute Gott, als Jerusalem von Assyrien belagert wurde.', enText: 'A great reforming king; trusted God when Jerusalem was besieged by Assyria.' },
+  { id: 'manasse_k', de: 'Manasse', en: 'Manasseh', parent: 'hiskia', line: true, born: -709, epoch: 'koenige', reignDe: 'regierte ≈ 697–642 v. Chr.', reignEn: 'reigned ≈ 697–642 BC', refs: ['2Kön 21:1-18', '2Chr 33'],
+    deText: 'Längste Regierung Judas; zunächst grausamer Götzendiener, später reuig.', enText: "Judah's longest reign; first a cruel idolater, later repentant." },
+  { id: 'amon', de: 'Amon', en: 'Amon', parent: 'manasse_k', line: true, born: -664, epoch: 'koenige', reignDe: 'regierte ≈ 642–640 v. Chr.', reignEn: 'reigned ≈ 642–640 BC', refs: ['2Kön 21:19-26', '2Chr 33:21-25'],
+    deText: 'Setzte den Götzendienst fort und wurde von seinen Dienern ermordet.', enText: 'Continued the idolatry and was assassinated by his servants.' },
+  { id: 'joschija', de: 'Joschija', en: 'Josiah', parent: 'amon', line: true, born: -648, epoch: 'koenige', reignDe: 'regierte ≈ 640–609 v. Chr.', reignEn: 'reigned ≈ 640–609 BC', refs: ['2Kön 22-23', '2Chr 34-35'],
+    deText: 'Letzter großer Reformkönig; fand das Gesetzbuch und erneuerte den Bund.', enText: 'The last great reforming king; found the Book of the Law and renewed the covenant.' },
+  { id: 'jojakim', de: 'Jojakim', en: 'Jehoiakim', parent: 'joschija', line: true, born: -635, epoch: 'koenige', reignDe: 'regierte ≈ 609–598 v. Chr.', reignEn: 'reigned ≈ 609–598 BC', refs: ['2Kön 23:34-24:6', '2Chr 36:5-8', 'Jer 36'],
+    deText: 'Vasall Babylons; verbrannte die Schriftrolle des Propheten Jeremia.', enText: "A vassal of Babylon; burned the scroll of the prophet Jeremiah." },
+  { id: 'jojachin', de: 'Jojachin (Jechonja)', en: 'Jehoiachin (Jeconiah)', parent: 'jojakim', line: true, born: -616, epoch: 'exil', reignDe: 'regierte ≈ 598–597 v. Chr.', reignEn: 'reigned ≈ 598–597 BC', refs: ['2Kön 24:8-17', 'Mt 1:11-12', 'Jer 22:24-30'],
+    deText: 'Wurde nach Babylon weggeführt; mit ihm beginnt das Exil der Davidslinie.', enText: 'Carried off to Babylon; with him the exile of the Davidic line begins.' },
+
+  // ---------------------------------------------------------------- Exil, Rückkehr, Zweiter Tempel
+  { id: 'schealtiel', de: 'Schealtiël', en: 'Shealtiel', parent: 'jojachin', line: true, born: -598, epoch: 'exil', refs: ['Mt 1:12', '1Chr 3:17', 'Esra 3:2'],
+    deText: 'Im babylonischen Exil geborener Nachkomme Davids.', enText: 'A descendant of David born in the Babylonian exile.' },
+  { id: 'serubbabel', de: 'Serubbabel', en: 'Zerubbabel', parent: 'schealtiel', line: true, born: -566, epoch: 'ruckkehr', refs: ['Esra 3', 'Hag 2', 'Mt 1:12-13'],
+    deText: 'Führte die erste Rückkehr aus dem Exil und begann den Wiederaufbau des Tempels.', enText: 'Led the first return from exile and began rebuilding the Temple.' },
+  { id: 'abihud', de: 'Abihud', en: 'Abiud', parent: 'serubbabel', line: true, born: -515, epoch: 'zweitertempel', refs: ['Mt 1:13'],
+    deText: 'Nachkomme Serubbabels in der Linie Josefs (Matthäus 1).', enText: "Descendant of Zerubbabel in Joseph's line (Matthew 1)." },
+  { id: 'eljakim', de: 'Eljakim', en: 'Eliakim', parent: 'abihud', line: true, born: -460, epoch: 'zweitertempel', refs: ['Mt 1:13'],
+    deText: 'Glied der Geschlechterliste des Matthäus.', enText: "A link in Matthew's genealogy." },
+  { id: 'asor', de: 'Asor', en: 'Azor', parent: 'eljakim', line: true, born: -405, epoch: 'zweitertempel', refs: ['Mt 1:13-14'],
+    deText: 'Glied der Geschlechterliste des Matthäus.', enText: "A link in Matthew's genealogy." },
+  { id: 'zadok', de: 'Zadok', en: 'Zadok', parent: 'asor', line: true, born: -350, epoch: 'zweitertempel', refs: ['Mt 1:14'],
+    deText: 'Glied der Geschlechterliste des Matthäus.', enText: "A link in Matthew's genealogy." },
+  { id: 'achim', de: 'Achim', en: 'Achim', parent: 'zadok', line: true, born: -300, epoch: 'zweitertempel', refs: ['Mt 1:14'],
+    deText: 'Glied der Geschlechterliste des Matthäus.', enText: "A link in Matthew's genealogy." },
+  { id: 'eliud', de: 'Eliud', en: 'Eliud', parent: 'achim', line: true, born: -250, epoch: 'zweitertempel', refs: ['Mt 1:14-15'],
+    deText: 'Glied der Geschlechterliste des Matthäus.', enText: "A link in Matthew's genealogy." },
+  { id: 'eleasar', de: 'Eleasar', en: 'Eleazar', parent: 'eliud', line: true, born: -190, epoch: 'zweitertempel', refs: ['Mt 1:15'],
+    deText: 'Glied der Geschlechterliste des Matthäus.', enText: "A link in Matthew's genealogy." },
+  { id: 'mattan', de: 'Mattan', en: 'Matthan', parent: 'eleasar', line: true, born: -120, epoch: 'zweitertempel', refs: ['Mt 1:15'],
+    deText: 'Großvater Josefs, des Mannes Marias.', enText: "Grandfather of Joseph, the husband of Mary." },
+  { id: 'jakob2', de: 'Jakob (Vater Josefs)', en: 'Jacob (father of Joseph)', parent: 'mattan', line: true, born: -60, epoch: 'zweitertempel', refs: ['Mt 1:15-16'],
+    deText: 'Vater Josefs nach der Liste des Matthäus.', enText: "Father of Joseph according to Matthew's list." },
+
+  // ---------------------------------------------------------------- Messias
+  { id: 'josef_nt', de: 'Josef von Nazaret', en: 'Joseph of Nazareth', parent: 'jakob2', line: true, born: -25, epoch: 'messias', spouse: { de: 'Maria', en: 'Mary' }, refs: ['Mt 1:16-25', 'Lk 2', 'Mt 13:55'],
+    deText: 'Zimmermann in Nazaret; gesetzlicher Vater Jesu, durch den der Davidsanspruch übergeht.', enText: 'A carpenter in Nazareth; the legal father of Jesus, through whom the Davidic claim passes.' },
+  { id: 'jesus', de: 'Jesus Christus', en: 'Jesus Christ', parent: 'josef_nt', line: true, born: -4, epoch: 'messias', refs: ['Mt 1:1,16', 'Lk 3:23-38', 'Lk 1:31-33'],
+    deText: 'Geboren in Bethlehem aus Maria; „Sohn Davids, Sohn Abrahams". In ihm laufen alle Geschlechter zusammen — das Ziel des Stammbaums.', enText: 'Born in Bethlehem of Mary; "Son of David, Son of Abraham". In him all the generations converge — the goal of the genealogy.' },
+
+  // ================================================================
+  // Glaubenszeugen / Kirchengeschichte (nach Jesus).
+  // Keine Blutlinie mehr, sondern eine geistlich-historische Nachfolge:
+  // christliche und jüdische Persönlichkeiten, die Glauben und Geschichte
+  // bis in die Neuzeit geprägt haben (gestrichelte Linien im Baum).
+  // ================================================================
+
+  // ---------------------------------------------------------------- Apostolische Zeit
+  { id: 'paulus', de: 'Paulus von Tarsus', en: 'Paul of Tarsus', parent: 'jesus', line: true, faith: true, born: 5, epoch: 'urkirche', refs: ['Apg 9', 'Röm 1', 'Gal 1'],
+    deText: 'Vom Christenverfolger zum „Apostel der Heiden"; trug das Evangelium ins Römische Reich und schrieb große Teile des Neuen Testaments.', enText: 'From persecutor to "apostle to the Gentiles"; carried the gospel across the Roman world and wrote much of the New Testament.' },
+  { id: 'petrus', de: 'Petrus', en: 'Peter', parent: 'jesus', faith: true, born: 1, epoch: 'urkirche', refs: ['Mt 16:16-18', 'Apg 2', '1Petr 1'],
+    deText: 'Fischer und führender Apostel; predigte zu Pfingsten und gilt als Säule der jungen Gemeinde.', enText: 'Fisherman and leading apostle; preached at Pentecost and a pillar of the early church.' },
+  { id: 'johannes_ev', de: 'Johannes (Apostel)', en: 'John the Apostle', parent: 'jesus', faith: true, born: 6, epoch: 'urkirche', refs: ['Joh 21', '1Joh 1', 'Offb 1'],
+    deText: '„Der Jünger, den Jesus liebte"; ihm werden Evangelium, Briefe und die Offenbarung zugeschrieben.', enText: '"The disciple whom Jesus loved"; traditionally author of a Gospel, letters and Revelation.' },
+
+  // ---------------------------------------------------------------- Kirchenväter
+  { id: 'polykarp', de: 'Polykarp von Smyrna', en: 'Polycarp of Smyrna', parent: 'paulus', line: true, faith: true, born: 69, epoch: 'kirchenvater', refs: [],
+    city: 'Smyrna', lat: 38.42, lon: 27.14, tradition: 'east', years: '≈ 69–155',
+    deText: 'Schüler des Apostels Johannes, Bischof von Smyrna; starb als Märtyrer für seinen Glauben.', enText: 'A disciple of the apostle John, bishop of Smyrna; died a martyr for his faith.' },
+  { id: 'justin', de: 'Justin der Märtyrer', en: 'Justin Martyr', parent: 'polykarp', line: true, faith: true, born: 100, epoch: 'kirchenvater', refs: [],
+    deText: 'Philosoph, der zum Christen wurde; verteidigte den Glauben vor den Gebildeten seiner Zeit.', enText: 'A philosopher turned Christian; defended the faith before the learned of his day.' },
+  { id: 'irenaeus', de: 'Irenäus von Lyon', en: 'Irenaeus of Lyon', parent: 'justin', line: true, faith: true, born: 130, epoch: 'kirchenvater', refs: [],
+    city: 'Lyon', lat: 45.76, lon: 4.83, tradition: 'west', years: '≈ 130–202',
+    deText: 'Bischof und Theologe; betonte die Einheit der Schrift gegen die Gnosis.', enText: 'Bishop and theologian; upheld the unity of Scripture against gnosticism.' },
+  { id: 'origenes', de: 'Origenes', en: 'Origen', parent: 'irenaeus', faith: true, born: 184, epoch: 'kirchenvater', refs: [],
+    city: 'Alexandria', lat: 31.2, lon: 29.92, tradition: 'east', years: '≈ 184–253',
+    deText: 'Gelehrter aus Alexandria; einer der ersten großen Bibelausleger.', enText: 'A scholar of Alexandria; one of the first great interpreters of the Bible.' },
+  { id: 'athanasius', de: 'Athanasius', en: 'Athanasius', parent: 'irenaeus', line: true, faith: true, born: 296, epoch: 'kirchenvater', refs: [],
+    city: 'Alexandria', lat: 31.2, lon: 29.92, tradition: 'east', years: '≈ 296–373',
+    deText: 'Bischof von Alexandria; verteidigte die Gottheit Christi und half, den Bibelkanon zu klären.', enText: 'Bishop of Alexandria; defended the deity of Christ and helped settle the biblical canon.' },
+  { id: 'hieronymus', de: 'Hieronymus', en: 'Jerome', parent: 'athanasius', faith: true, born: 347, epoch: 'kirchenvater', refs: [],
+    city: 'Betlehem', lat: 31.7, lon: 35.2, tradition: 'west', years: '≈ 347–420',
+    deText: 'Übersetzte die Bibel ins Lateinische (Vulgata) — über tausend Jahre die Bibel des Abendlandes.', enText: 'Translated the Bible into Latin (the Vulgate) — the Bible of the West for over a thousand years.' },
+  { id: 'augustinus', de: 'Augustinus von Hippo', en: 'Augustine of Hippo', parent: 'athanasius', line: true, faith: true, born: 354, epoch: 'kirchenvater', refs: [],
+    city: 'Hippo', lat: 36.88, lon: 7.75, tradition: 'west', years: '354–430',
+    deText: 'Bischof und einflussreichster Theologe der Alten Kirche; schrieb „Bekenntnisse" und „Gottesstaat".', enText: 'Bishop and most influential theologian of the early church; wrote the "Confessions" and "City of God".' },
+  // --- weitere Kirchenväter (erscheinen im Baum UND auf der Kirchengeschichte-Karte) ---
+  { id: 'clemens', de: 'Clemens von Rom', en: 'Clement of Rome', parent: 'petrus', faith: true, born: 35, epoch: 'urkirche', refs: [],
+    city: 'Rom', lat: 41.89, lon: 12.49, tradition: 'west', years: '≈ 35–99',
+    deText: 'Früher Bischof von Rom; sein Brief (1. Clemens) an die Gemeinde in Korinth ist erhalten.', enText: 'An early bishop of Rome; his letter (1 Clement) to the church in Corinth survives.' },
+  { id: 'ignatius', de: 'Ignatius von Antiochia', en: 'Ignatius of Antioch', parent: 'paulus', faith: true, born: 35, epoch: 'urkirche', refs: [],
+    city: 'Antiochia', lat: 36.2, lon: 36.16, tradition: 'east', years: '≈ 35–108',
+    deText: 'Märtyrerbischof; seine Briefe prägen das frühe Kirchen- und Bischofsamt.', enText: 'A martyr-bishop whose letters shaped early church and episcopal order.' },
+  { id: 'tertullian', de: 'Tertullian', en: 'Tertullian', parent: 'irenaeus', faith: true, born: 155, epoch: 'kirchenvater', refs: [],
+    city: 'Karthago', lat: 36.85, lon: 10.32, tradition: 'west', years: '≈ 155–220',
+    deText: 'Vater der lateinischen Theologie; prägte den Begriff „Trinitas".', enText: 'Father of Latin theology; coined the term "Trinitas".' },
+  { id: 'cyprian', de: 'Cyprian von Karthago', en: 'Cyprian of Carthage', parent: 'tertullian', faith: true, born: 210, epoch: 'kirchenvater', refs: [],
+    city: 'Karthago', lat: 36.85, lon: 10.32, tradition: 'west', years: '≈ 210–258',
+    deText: 'Bischof und Märtyrer; schrieb über die Einheit der Kirche.', enText: 'Bishop and martyr; wrote on the unity of the church.' },
+  { id: 'ephrem', de: 'Ephräm der Syrer', en: 'Ephrem the Syrian', parent: 'athanasius', faith: true, born: 306, epoch: 'kirchenvater', refs: [],
+    city: 'Nisibis / Edessa', lat: 37.07, lon: 41.21, tradition: 'orient', years: '≈ 306–373',
+    deText: 'Bedeutendster Dichter-Theologe der syrischen Kirche.', enText: 'The foremost poet-theologian of the Syriac church.' },
+  { id: 'basilius', de: 'Basilius der Große', en: 'Basil the Great', parent: 'athanasius', faith: true, born: 330, epoch: 'kirchenvater', refs: [],
+    city: 'Caesarea (Kappadokien)', lat: 38.73, lon: 35.48, tradition: 'east', years: '≈ 330–379',
+    deText: 'Einer der drei Kappadokier; Klosterregel und Trinitätslehre.', enText: 'One of the Cappadocians; monastic rule and Trinitarian theology.' },
+  { id: 'gregor_naz', de: 'Gregor von Nazianz', en: 'Gregory of Nazianzus', parent: 'basilius', faith: true, born: 329, epoch: 'kirchenvater', refs: [],
+    city: 'Nazianz', lat: 38.4, lon: 34.5, tradition: 'east', years: '≈ 329–390',
+    deText: 'Kappadokier, „der Theologe"; prägte die Trinitätssprache.', enText: 'A Cappadocian, "the Theologian"; shaped Trinitarian language.' },
+  { id: 'chrysostomus', de: 'Johannes Chrysostomus', en: 'John Chrysostom', parent: 'basilius', faith: true, born: 349, epoch: 'kirchenvater', refs: [],
+    city: 'Antiochia / Konstantinopel', lat: 41.01, lon: 28.98, tradition: 'east', years: '≈ 349–407',
+    deText: '„Goldmund"; berühmtester Prediger der Ostkirche.', enText: '"Golden-mouthed"; the greatest preacher of the Eastern church.' },
+  { id: 'ambrosius', de: 'Ambrosius von Mailand', en: 'Ambrose of Milan', parent: 'athanasius', faith: true, born: 340, epoch: 'kirchenvater', refs: [],
+    city: 'Mailand', lat: 45.46, lon: 9.19, tradition: 'west', years: '≈ 340–397',
+    deText: 'Bischof von Mailand, Lehrer und Wegbereiter Augustins.', enText: 'Bishop of Milan, teacher and mentor of Augustine.' },
+  { id: 'kyrill', de: 'Kyrill von Alexandria', en: 'Cyril of Alexandria', parent: 'athanasius', faith: true, born: 376, epoch: 'kirchenvater', refs: [],
+    city: 'Alexandria', lat: 31.2, lon: 29.92, tradition: 'east', years: '≈ 376–444',
+    deText: 'Führende Stimme beim Konzil von Ephesus (431).', enText: 'A leading voice at the Council of Ephesus (431).' },
+
+  // ---------------------------------------------------------------- Mittelalter
+  { id: 'benedikt', de: 'Benedikt von Nursia', en: 'Benedict of Nursia', parent: 'augustinus', line: true, faith: true, born: 480, epoch: 'mittelalter', refs: [],
+    deText: 'Vater des abendländischen Mönchtums; seine Regel „bete und arbeite" prägte Europa.', enText: 'Father of Western monasticism; his rule "pray and work" shaped Europe.' },
+  { id: 'gregor_gross', de: 'Gregor der Große', en: 'Gregory the Great', parent: 'benedikt', faith: true, born: 540, epoch: 'mittelalter', refs: [],
+    city: 'Rom', lat: 41.89, lon: 12.49, tradition: 'west', years: '≈ 540–604',
+    deText: 'Papst; prägte Liturgie und Mission des lateinischen Westens.', enText: 'Pope; shaped the liturgy and mission of the Latin West.' },
+  { id: 'rashi', de: 'Raschi', en: 'Rashi', parent: 'benedikt', faith: true, born: 1040, epoch: 'mittelalter', refs: [],
+    deText: 'Jüdischer Gelehrter aus Troyes; sein Bibel- und Talmudkommentar ist bis heute grundlegend.', enText: 'Jewish scholar of Troyes; his commentary on the Bible and Talmud remains foundational.' },
+  { id: 'anselm', de: 'Anselm von Canterbury', en: 'Anselm of Canterbury', parent: 'benedikt', line: true, faith: true, born: 1033, epoch: 'mittelalter', refs: [],
+    deText: 'Theologe und Erzbischof; „Glaube, der nach Einsicht sucht", und Denker über die Versöhnung.', enText: 'Theologian and archbishop; "faith seeking understanding" and thinker on the atonement.' },
+  { id: 'maimonides', de: 'Maimonides (Mose ben Maimon)', en: 'Maimonides (Moses ben Maimon)', parent: 'rashi', faith: true, born: 1138, epoch: 'mittelalter', refs: [],
+    deText: 'Bedeutendster jüdischer Philosoph des Mittelalters; ordnete das jüdische Religionsgesetz.', enText: 'The foremost Jewish philosopher of the Middle Ages; codified Jewish religious law.' },
+  { id: 'franz_assisi', de: 'Franz von Assisi', en: 'Francis of Assisi', parent: 'anselm', faith: true, born: 1181, epoch: 'mittelalter', refs: [],
+    deText: 'Gab seinen Reichtum auf für ein Leben in Armut und Nächstenliebe; gründete den Franziskanerorden.', enText: 'Gave up his wealth for a life of poverty and love of neighbour; founded the Franciscan order.' },
+  { id: 'thomas_aquin', de: 'Thomas von Aquin', en: 'Thomas Aquinas', parent: 'anselm', line: true, faith: true, born: 1225, epoch: 'mittelalter', refs: [],
+    deText: 'Größter Theologe der Scholastik; verband Glaube und Vernunft in der „Summa Theologica".', enText: 'The greatest scholastic theologian; joined faith and reason in the "Summa Theologica".' },
+  { id: 'wycliffe', de: 'John Wyclif', en: 'John Wycliffe', parent: 'thomas_aquin', line: true, faith: true, born: 1328, epoch: 'mittelalter', refs: [],
+    deText: '„Morgenstern der Reformation"; ließ die Bibel erstmals ins Englische übersetzen.', enText: 'The "morning star of the Reformation"; had the Bible first translated into English.' },
+  { id: 'hus', de: 'Jan Hus', en: 'Jan Hus', parent: 'wycliffe', line: true, faith: true, born: 1369, epoch: 'mittelalter', refs: [],
+    deText: 'Böhmischer Reformator; forderte eine Kirche nach der Schrift und starb auf dem Scheiterhaufen.', enText: 'Bohemian reformer; called for a church shaped by Scripture and was burned at the stake.' },
+
+  // ---------------------------------------------------------------- Reformation
+  { id: 'luther', de: 'Martin Luther', en: 'Martin Luther', parent: 'hus', line: true, faith: true, born: 1483, epoch: 'reformation', refs: ['Röm 1:17', 'Eph 2:8-9'],
+    deText: 'Mönch, der 1517 die 95 Thesen anschlug; löste die Reformation aus, übersetzte die Bibel ins Deutsche — „allein aus Gnade, allein durch den Glauben".', enText: 'A monk who posted the 95 Theses in 1517; sparked the Reformation and translated the Bible into German — "by grace alone, through faith alone".' },
+  { id: 'zwingli', de: 'Huldrych Zwingli', en: 'Huldrych Zwingli', parent: 'hus', faith: true, born: 1484, epoch: 'reformation', refs: [],
+    deText: 'Reformator von Zürich; brachte die Reformation in die Schweiz.', enText: 'The reformer of Zürich; brought the Reformation to Switzerland.' },
+  { id: 'melanchthon', de: 'Philipp Melanchthon', en: 'Philip Melanchthon', parent: 'luther', faith: true, born: 1497, epoch: 'reformation', refs: [],
+    deText: 'Luthers Mitstreiter; verfasste das „Augsburger Bekenntnis", das Grundbekenntnis der Lutheraner.', enText: "Luther's co-worker; wrote the Augsburg Confession, the basic Lutheran confession." },
+  { id: 'calvin', de: 'Johannes Calvin', en: 'John Calvin', parent: 'luther', line: true, faith: true, born: 1509, epoch: 'reformation', refs: [],
+    deText: 'Reformator von Genf; seine „Institutio" prägte den reformierten Protestantismus weltweit.', enText: 'The reformer of Geneva; his "Institutes" shaped Reformed Protestantism worldwide.' },
+  { id: 'knox', de: 'John Knox', en: 'John Knox', parent: 'calvin', faith: true, born: 1514, epoch: 'reformation', refs: [],
+    deText: 'Brachte die Reformation nach Schottland und begründete die presbyterianische Kirche.', enText: 'Brought the Reformation to Scotland and founded the Presbyterian church.' },
+
+  // ---------------------------------------------------------------- Erweckung & Mission
+  { id: 'wesley', de: 'John Wesley', en: 'John Wesley', parent: 'calvin', line: true, faith: true, born: 1703, epoch: 'erweckung', refs: [],
+    deText: 'Erweckungsprediger; begründete den Methodismus und predigte im Freien vor Zehntausenden.', enText: 'A revival preacher; founded Methodism and preached in the open air to tens of thousands.' },
+  { id: 'whitefield', de: 'George Whitefield', en: 'George Whitefield', parent: 'wesley', faith: true, born: 1714, epoch: 'erweckung', refs: [],
+    deText: 'Mitreißender Prediger der großen Erweckung in Großbritannien und Amerika.', enText: 'A stirring preacher of the Great Awakening in Britain and America.' },
+  { id: 'spurgeon', de: 'Charles H. Spurgeon', en: 'Charles H. Spurgeon', parent: 'wesley', line: true, faith: true, born: 1834, epoch: 'erweckung', refs: [],
+    deText: 'Der „Fürst der Prediger" in London; predigte vor Tausenden und hinterließ ein gewaltiges Schrifttum.', enText: 'The "prince of preachers" in London; preached to thousands and left a vast body of writing.' },
+  { id: 'moody', de: 'Dwight L. Moody', en: 'Dwight L. Moody', parent: 'spurgeon', faith: true, born: 1837, epoch: 'erweckung', refs: [],
+    deText: 'Amerikanischer Evangelist und Gründer von Schulen und Werken der Mission.', enText: 'American evangelist and founder of schools and mission works.' },
+
+  // ---------------------------------------------------------------- Moderne
+  { id: 'bonhoeffer', de: 'Dietrich Bonhoeffer', en: 'Dietrich Bonhoeffer', parent: 'spurgeon', line: true, faith: true, born: 1906, epoch: 'moderne', refs: [],
+    deText: 'Theologe der Bekennenden Kirche; widerstand dem NS-Regime und wurde 1945 hingerichtet („Nachfolge").', enText: 'Theologian of the Confessing Church; resisted the Nazi regime and was executed in 1945 ("The Cost of Discipleship").' },
+  { id: 'graham', de: 'Billy Graham', en: 'Billy Graham', parent: 'bonhoeffer', line: true, faith: true, born: 1918, epoch: 'moderne', refs: [],
+    deText: 'Wohl bekanntester Evangelist des 20. Jahrhunderts; predigte vor Millionen auf allen Kontinenten.', enText: 'Perhaps the best-known evangelist of the 20th century; preached to millions on every continent.' },
+
+  // ============================================================================
+  // 1. Chronik 1–9 — die großen Geschlechtsregister (Seitenlinien, eingeklappt)
+  // Namen nach Luther 1912; verbinden bekannte Gestalten mit dem Stammbaum.
+  // ============================================================================
+
+  // ---- Ismaels zwölf Söhne (1Chr 1:29-31) -----------------------------------
+  { id: 'nebajot', de: 'Nebajoth', en: 'Nebaioth', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:29', 'Gen 25:13'],
+    deText: 'Erstgeborener Ismaels; Stammvater eines nordarabischen Stammes.', enText: 'Ishmael’s firstborn; ancestor of a north-Arabian tribe.' },
+  { id: 'kedar', de: 'Kedar', en: 'Kedar', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:29', 'Ps 120:5'],
+    deText: 'Zweiter Sohn Ismaels; die Kedarener wurden zum Inbegriff der Wüstennomaden.', enText: 'Ishmael’s second son; the Kedarites became a byword for desert nomads.' },
+  { id: 'adbeel', de: 'Adbeel', en: 'Adbeel', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:29'],
+    deText: 'Dritter Sohn Ismaels.', enText: 'Third son of Ishmael.' },
+  { id: 'mibsam', de: 'Mibsam', en: 'Mibsam', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:29'],
+    deText: 'Sohn Ismaels.', enText: 'Son of Ishmael.' },
+  { id: 'mischma', de: 'Misma', en: 'Mishma', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:30'],
+    deText: 'Sohn Ismaels.', enText: 'Son of Ishmael.' },
+  { id: 'duma', de: 'Duma', en: 'Dumah', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:30'],
+    deText: 'Sohn Ismaels; gab einer Oase in Nordarabien den Namen.', enText: 'Son of Ishmael; gave his name to an oasis in north Arabia.' },
+  { id: 'massa', de: 'Massa', en: 'Massa', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:30'],
+    deText: 'Sohn Ismaels.', enText: 'Son of Ishmael.' },
+  { id: 'hadad_i', de: 'Hadad', en: 'Hadad', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:30'],
+    deText: 'Sohn Ismaels.', enText: 'Son of Ishmael.' },
+  { id: 'thema', de: 'Thema', en: 'Tema', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:30', 'Hi 6:19'],
+    deText: 'Sohn Ismaels; Namensgeber der Oasenstadt Tema.', enText: 'Son of Ishmael; namesake of the oasis town of Tema.' },
+  { id: 'jetur', de: 'Jetur', en: 'Jetur', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:31'],
+    deText: 'Sohn Ismaels; Stammvater der Ituräer.', enText: 'Son of Ishmael; ancestor of the Itureans.' },
+  { id: 'naphis', de: 'Naphis', en: 'Naphish', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:31'],
+    deText: 'Sohn Ismaels.', enText: 'Son of Ishmael.' },
+  { id: 'kedma', de: 'Kedma', en: 'Kedemah', parent: 'ismael', epoch: 'patriarchen', refs: ['1Chr 1:31'],
+    deText: 'Jüngster der zwölf Söhne Ismaels.', enText: 'Youngest of Ishmael’s twelve sons.' },
+
+  // ---- Söhne der Ketura (1Chr 1:32) -----------------------------------------
+  { id: 'simran', de: 'Simran', en: 'Zimran', parent: 'abraham', epoch: 'patriarchen', refs: ['1Chr 1:32', 'Gen 25:2'],
+    deText: 'Sohn Abrahams von Ketura.', enText: 'Son of Abraham by Keturah.' },
+  { id: 'joksan', de: 'Joksan', en: 'Jokshan', parent: 'abraham', epoch: 'patriarchen', refs: ['1Chr 1:32'],
+    deText: 'Sohn Abrahams von Ketura; Vater Sabas und Dedans.', enText: 'Son of Abraham by Keturah; father of Sheba and Dedan.' },
+  { id: 'medan', de: 'Medan', en: 'Medan', parent: 'abraham', epoch: 'patriarchen', refs: ['1Chr 1:32'],
+    deText: 'Sohn Abrahams von Ketura.', enText: 'Son of Abraham by Keturah.' },
+  { id: 'midian', de: 'Midian', en: 'Midian', parent: 'abraham', epoch: 'patriarchen', refs: ['1Chr 1:32', 'Ex 2:15-21'],
+    deText: 'Sohn Abrahams von Ketura; Stammvater der Midianiter, bei denen Mose Zuflucht fand.', enText: 'Son of Abraham by Keturah; ancestor of the Midianites, among whom Moses took refuge.' },
+  { id: 'jesbak', de: 'Jesbak', en: 'Ishbak', parent: 'abraham', epoch: 'patriarchen', refs: ['1Chr 1:32'],
+    deText: 'Sohn Abrahams von Ketura.', enText: 'Son of Abraham by Keturah.' },
+  { id: 'suah', de: 'Suah', en: 'Shuah', parent: 'abraham', epoch: 'patriarchen', refs: ['1Chr 1:32'],
+    deText: 'Sohn Abrahams von Ketura.', enText: 'Son of Abraham by Keturah.' },
+
+  // ---- Söhne Esaus / Edom (1Chr 1:35-36) ------------------------------------
+  { id: 'eliphas', de: 'Eliphas', en: 'Eliphaz', parent: 'esau', epoch: 'patriarchen', refs: ['1Chr 1:35', 'Gen 36:10'],
+    deText: 'Erstgeborener Esaus; Stammvater edomitischer Sippen.', enText: 'Esau’s firstborn; ancestor of Edomite clans.' },
+  { id: 'reguel', de: 'Reguel', en: 'Reuel', parent: 'esau', epoch: 'patriarchen', refs: ['1Chr 1:35'],
+    deText: 'Sohn Esaus.', enText: 'Son of Esau.' },
+  { id: 'jeus', de: 'Jeus', en: 'Jeush', parent: 'esau', epoch: 'patriarchen', refs: ['1Chr 1:35'],
+    deText: 'Sohn Esaus.', enText: 'Son of Esau.' },
+  { id: 'jaelam', de: 'Jaelam', en: 'Jalam', parent: 'esau', epoch: 'patriarchen', refs: ['1Chr 1:35'],
+    deText: 'Sohn Esaus.', enText: 'Son of Esau.' },
+  { id: 'korah_e', de: 'Korah', en: 'Korah', parent: 'esau', epoch: 'patriarchen', refs: ['1Chr 1:35'],
+    deText: 'Sohn Esaus; ein Häuptling Edoms.', enText: 'Son of Esau; a chief of Edom.' },
+  { id: 'amalek', de: 'Amalek', en: 'Amalek', parent: 'eliphas', epoch: 'patriarchen', refs: ['1Chr 1:36', 'Ex 17:8-16'],
+    deText: 'Enkel Esaus; Stammvater der Amalekiter, Israels Erzfeinde in der Wüste.', enText: 'Grandson of Esau; ancestor of the Amalekites, Israel’s archenemies in the wilderness.' },
+
+  // ---- Söhne Judas (1Chr 2:3-5) ---------------------------------------------
+  { id: 'ger', de: 'Ger', en: 'Er', parent: 'juda', epoch: 'patriarchen', refs: ['1Chr 2:3', 'Gen 38:7'],
+    deText: 'Erstgeborener Judas; „böse vor dem HERRN", darum getötet.', enText: 'Judah’s firstborn; "wicked in the sight of the LORD", and so put to death.' },
+  { id: 'onan', de: 'Onan', en: 'Onan', parent: 'juda', epoch: 'patriarchen', refs: ['1Chr 2:3', 'Gen 38:8-10'],
+    deText: 'Zweiter Sohn Judas; verweigerte die Schwagerehe und starb.', enText: 'Judah’s second son; refused the levirate duty and died.' },
+  { id: 'sela', de: 'Sela', en: 'Shelah', parent: 'juda', epoch: 'patriarchen', refs: ['1Chr 2:3'],
+    deText: 'Dritter Sohn Judas von der Tochter Suas.', enText: 'Judah’s third son, by the daughter of Shua.' },
+  { id: 'serah_juda', de: 'Serah', en: 'Zerah', parent: 'juda', epoch: 'patriarchen', refs: ['1Chr 2:4', 'Gen 38:30'],
+    deText: 'Zwillingsbruder des Perez, von Thamar geboren.', enText: 'Twin brother of Perez, born to Tamar.' },
+  { id: 'hamul', de: 'Hamul', en: 'Hamul', parent: 'perez', epoch: 'patriarchen', refs: ['1Chr 2:5'],
+    deText: 'Sohn des Perez, neben Hezron.', enText: 'Son of Perez, alongside Hezron.' },
+  { id: 'jerachmeel', de: 'Jerahmeel', en: 'Jerahmeel', parent: 'hezron', epoch: 'patriarchen', refs: ['1Chr 2:9'],
+    deText: 'Erstgeborener Hezrons; Stammvater der Jerahmeeliter im Süden Judas.', enText: 'Hezron’s firstborn; ancestor of the Jerahmeelites in southern Judah.' },
+  { id: 'chalubai', de: 'Chalubai (Kaleb)', en: 'Chelubai (Caleb)', parent: 'hezron', epoch: 'patriarchen', refs: ['1Chr 2:9', '1Chr 2:18'],
+    deText: 'Sohn Hezrons, auch Kaleb genannt; Vater eines weitverzweigten Geschlechts in Juda.', enText: 'Son of Hezron, also called Caleb; father of a wide-branching family in Judah.' },
+
+  // ---- Davids Geschwister (1Chr 2:13-17) ------------------------------------
+  { id: 'eliab', de: 'Eliab', en: 'Eliab', parent: 'isai', epoch: 'koenigtum', refs: ['1Chr 2:13', '1Sam 17:13'],
+    deText: 'Ältester Bruder Davids; zog mit Saul gegen die Philister.', enText: 'David’s eldest brother; went with Saul against the Philistines.' },
+  { id: 'abinadab_d', de: 'Abinadab', en: 'Abinadab', parent: 'isai', epoch: 'koenigtum', refs: ['1Chr 2:13'],
+    deText: 'Zweiter Bruder Davids.', enText: 'David’s second brother.' },
+  { id: 'simea_d', de: 'Simea', en: 'Shimea', parent: 'isai', epoch: 'koenigtum', refs: ['1Chr 2:13'],
+    deText: 'Dritter Bruder Davids (auch Schamma).', enText: 'David’s third brother (also Shammah).' },
+  { id: 'nathanel_d', de: 'Nathanel', en: 'Nethanel', parent: 'isai', epoch: 'koenigtum', refs: ['1Chr 2:14'],
+    deText: 'Vierter Bruder Davids.', enText: 'David’s fourth brother.' },
+  { id: 'raddai', de: 'Raddai', en: 'Raddai', parent: 'isai', epoch: 'koenigtum', refs: ['1Chr 2:14'],
+    deText: 'Fünfter Bruder Davids.', enText: 'David’s fifth brother.' },
+  { id: 'ozem', de: 'Ozem', en: 'Ozem', parent: 'isai', epoch: 'koenigtum', refs: ['1Chr 2:15'],
+    deText: 'Sechster Bruder Davids.', enText: 'David’s sixth brother.' },
+  { id: 'zeruja', de: 'Zeruja', en: 'Zeruiah', parent: 'isai', epoch: 'koenigtum', refs: ['1Chr 2:16'],
+    deText: 'Schwester Davids; Mutter der Heerführer Abisai, Joab und Asahel.', enText: 'David’s sister; mother of the commanders Abishai, Joab and Asahel.' },
+  { id: 'abigail_d', de: 'Abigail', en: 'Abigail', parent: 'isai', epoch: 'koenigtum', refs: ['1Chr 2:16-17'],
+    deText: 'Schwester Davids; Mutter Amasas.', enText: 'David’s sister; mother of Amasa.' },
+  { id: 'abisai', de: 'Abisai', en: 'Abishai', parent: 'zeruja', epoch: 'koenigtum', refs: ['1Chr 2:16', '2Sam 23:18'],
+    deText: 'Neffe Davids; einer seiner tapfersten Krieger.', enText: 'David’s nephew; one of his mightiest warriors.' },
+  { id: 'joab', de: 'Joab', en: 'Joab', parent: 'zeruja', epoch: 'koenigtum', refs: ['1Chr 2:16', '2Sam 8:16'],
+    deText: 'Neffe Davids und Oberbefehlshaber seines Heeres.', enText: 'David’s nephew and commander of his army.' },
+  { id: 'asahel', de: 'Asahel', en: 'Asahel', parent: 'zeruja', epoch: 'koenigtum', refs: ['1Chr 2:16', '2Sam 2:18-23'],
+    deText: 'Neffe Davids; „schnell auf den Füßen", von Abner getötet.', enText: 'David’s nephew; "swift of foot", killed by Abner.' },
+  { id: 'amasa', de: 'Amasa', en: 'Amasa', parent: 'abigail_d', epoch: 'koenigtum', refs: ['1Chr 2:17', '2Sam 17:25'],
+    deText: 'Neffe Davids; Heerführer, von Joab erschlagen.', enText: 'David’s nephew; an army commander, slain by Joab.' },
+
+  // ---- Davids Söhne (1Chr 3:1-9) --------------------------------------------
+  { id: 'amnon', de: 'Amnon', en: 'Amnon', parent: 'david', epoch: 'koenigtum', refs: ['1Chr 3:1', '2Sam 13'],
+    deText: 'Davids Erstgeborener (in Hebron); von Absalom getötet.', enText: 'David’s firstborn (at Hebron); killed by Absalom.' },
+  { id: 'daniel_d', de: 'Daniel (Kileab)', en: 'Daniel (Chileab)', parent: 'david', epoch: 'koenigtum', refs: ['1Chr 3:1'],
+    deText: 'Zweiter Sohn Davids, von Abigail der Karmelitin.', enText: 'David’s second son, by Abigail the Carmelite.' },
+  { id: 'absalom', de: 'Absalom', en: 'Absalom', parent: 'david', epoch: 'koenigtum', refs: ['1Chr 3:2', '2Sam 15-18'],
+    deText: 'Dritter Sohn Davids; empörte sich gegen seinen Vater und fiel im Aufstand.', enText: 'David’s third son; rebelled against his father and died in the revolt.' },
+  { id: 'adonija', de: 'Adonia', en: 'Adonijah', parent: 'david', epoch: 'koenigtum', refs: ['1Chr 3:2', '1Kön 1'],
+    deText: 'Vierter Sohn Davids; griff nach dem Thron, unterlag aber Salomo.', enText: 'David’s fourth son; reached for the throne but lost out to Solomon.' },
+  { id: 'sephatja', de: 'Sephatja', en: 'Shephatiah', parent: 'david', epoch: 'koenigtum', refs: ['1Chr 3:3'],
+    deText: 'Fünfter Sohn Davids, von Abital.', enText: 'David’s fifth son, by Abital.' },
+  { id: 'jethream', de: 'Jethream', en: 'Ithream', parent: 'david', epoch: 'koenigtum', refs: ['1Chr 3:3'],
+    deText: 'Sechster Sohn Davids, in Hebron geboren.', enText: 'David’s sixth son, born at Hebron.' },
+  { id: 'simea_dj', de: 'Simea', en: 'Shimea', parent: 'david', epoch: 'koenigtum', refs: ['1Chr 3:5'],
+    deText: 'Sohn Davids und der Bathseba, in Jerusalem geboren.', enText: 'Son of David and Bathsheba, born in Jerusalem.' },
+  { id: 'sobab', de: 'Sobab', en: 'Shobab', parent: 'david', epoch: 'koenigtum', refs: ['1Chr 3:5'],
+    deText: 'Sohn Davids und der Bathseba.', enText: 'Son of David and Bathsheba.' },
+  { id: 'tamar_d', de: 'Thamar', en: 'Tamar', parent: 'david', epoch: 'koenigtum', refs: ['1Chr 3:9', '2Sam 13'],
+    deText: 'Tochter Davids; Schwester Absaloms.', enText: 'Daughter of David; sister of Absalom.' },
+
+  // ---- Leviten: Söhne Levis & Kahaths (1Chr 5:27-6:3) -----------------------
+  { id: 'gerson', de: 'Gerson', en: 'Gershon', parent: 'levi', epoch: 'aegypten', refs: ['1Chr 5:27', '1Chr 6:1'],
+    deText: 'Erstgeborener Levis; Stammvater der gersonitischen Leviten.', enText: 'Levi’s firstborn; ancestor of the Gershonite Levites.' },
+  { id: 'merari', de: 'Merari', en: 'Merari', parent: 'levi', epoch: 'aegypten', refs: ['1Chr 5:27', '1Chr 6:1'],
+    deText: 'Dritter Sohn Levis; Stammvater der meraritischen Leviten.', enText: 'Levi’s third son; ancestor of the Merarite Levites.' },
+  { id: 'jizhar', de: 'Jizhar', en: 'Izhar', parent: 'kehat', epoch: 'aegypten', refs: ['1Chr 5:28', 'Ex 6:18'],
+    deText: 'Sohn Kahaths; Vater Korahs.', enText: 'Son of Kohath; father of Korah.' },
+  { id: 'hebron_lev', de: 'Hebron', en: 'Hebron', parent: 'kehat', epoch: 'aegypten', refs: ['1Chr 5:28'],
+    deText: 'Sohn Kahaths; Haupt einer levitischen Sippe.', enText: 'Son of Kohath; head of a Levitical clan.' },
+  { id: 'usiel', de: 'Usiel', en: 'Uzziel', parent: 'kehat', epoch: 'aegypten', refs: ['1Chr 5:28', 'Ex 6:18'],
+    deText: 'Jüngster Sohn Kahaths.', enText: 'Youngest son of Kohath.' },
+
+  // ---- Söhne Aarons & die Hohepriesterlinie (1Chr 5:29-41) ------------------
+  { id: 'nadab', de: 'Nadab', en: 'Nadab', parent: 'aaron', epoch: 'aegypten', refs: ['1Chr 5:29', 'Lev 10:1-2'],
+    deText: 'Sohn Aarons; brachte „fremdes Feuer" dar und kam um.', enText: 'Son of Aaron; offered "strange fire" and died.' },
+  { id: 'abihu', de: 'Abihu', en: 'Abihu', parent: 'aaron', epoch: 'aegypten', refs: ['1Chr 5:29', 'Lev 10:1-2'],
+    deText: 'Sohn Aarons; starb mit Nadab vor dem HERRN.', enText: 'Son of Aaron; died with Nadab before the LORD.' },
+  { id: 'eleasar_p', de: 'Eleasar', en: 'Eleazar', parent: 'aaron', epoch: 'aegypten', refs: ['1Chr 5:29', 'Num 20:25-28'],
+    deText: 'Dritter Sohn Aarons; folgte ihm als Hoherpriester nach.', enText: 'Aaron’s third son; succeeded him as high priest.' },
+  { id: 'ithamar', de: 'Ithamar', en: 'Ithamar', parent: 'aaron', epoch: 'aegypten', refs: ['1Chr 5:29', 'Ex 38:21'],
+    deText: 'Jüngster Sohn Aarons; aus seiner Linie stammte später Eli.', enText: 'Aaron’s youngest son; from his line later came Eli.' },
+  { id: 'pinhas', de: 'Pinehas', en: 'Phinehas', parent: 'eleasar_p', epoch: 'aegypten', refs: ['1Chr 5:30', 'Num 25:10-13'],
+    deText: 'Sohn Eleasars; wehrte Gottes Zorn ab und empfing den „Bund des ewigen Priestertums".', enText: 'Son of Eleazar; turned away God’s wrath and received the "covenant of perpetual priesthood".' },
+  { id: 'abisua', de: 'Abisua', en: 'Abishua', parent: 'pinhas', epoch: 'aegypten', refs: ['1Chr 5:30'],
+    deText: 'Hoherpriester in der Linie Eleasars.', enText: 'High priest in the line of Eleazar.' },
+  { id: 'bukki', de: 'Bukki', en: 'Bukki', parent: 'abisua', epoch: 'richter', refs: ['1Chr 5:31'],
+    deText: 'Hoherpriester der Frühzeit.', enText: 'High priest of the early period.' },
+  { id: 'usi', de: 'Usi', en: 'Uzzi', parent: 'bukki', epoch: 'richter', refs: ['1Chr 5:31'],
+    deText: 'Hoherpriester in der Richterzeit.', enText: 'High priest in the age of the judges.' },
+  { id: 'serahja', de: 'Serahja', en: 'Zerahiah', parent: 'usi', epoch: 'richter', refs: ['1Chr 5:32'],
+    deText: 'Hoherpriester in der Linie Eleasars.', enText: 'High priest in the line of Eleazar.' },
+  { id: 'merajot', de: 'Merajoth', en: 'Meraioth', parent: 'serahja', epoch: 'richter', refs: ['1Chr 5:32'],
+    deText: 'Hoherpriester der Frühzeit.', enText: 'High priest of the early period.' },
+  { id: 'amarja1', de: 'Amarja', en: 'Amariah', parent: 'merajot', epoch: 'koenigtum', refs: ['1Chr 5:33'],
+    deText: 'Hoherpriester in der Linie Eleasars.', enText: 'High priest in the line of Eleazar.' },
+  { id: 'ahitub1', de: 'Ahitob', en: 'Ahitub', parent: 'amarja1', epoch: 'koenigtum', refs: ['1Chr 5:33'],
+    deText: 'Hoherpriester; Vater Zadoks.', enText: 'High priest; father of Zadok.' },
+  { id: 'zadok1', de: 'Zadok', en: 'Zadok', parent: 'ahitub1', epoch: 'koenigtum', refs: ['1Chr 5:34', '2Sam 15:24-29'],
+    deText: 'Hoherpriester unter David und Salomo; seine Linie versah den Tempeldienst.', enText: 'High priest under David and Solomon; his line served in the temple.' },
+  { id: 'ahimaaz', de: 'Ahimaaz', en: 'Ahimaaz', parent: 'zadok1', epoch: 'koenigtum', refs: ['1Chr 5:34', '2Sam 18:19-33'],
+    deText: 'Sohn Zadoks; treuer Bote Davids im Aufstand Absaloms.', enText: 'Son of Zadok; a faithful runner for David during Absalom’s revolt.' },
+  { id: 'asarja1', de: 'Asarja', en: 'Azariah', parent: 'ahimaaz', epoch: 'koenige', refs: ['1Chr 5:35'],
+    deText: 'Hoherpriester der Königszeit.', enText: 'High priest of the monarchy.' },
+  { id: 'johanan', de: 'Johanan', en: 'Johanan', parent: 'asarja1', epoch: 'koenige', refs: ['1Chr 5:35'],
+    deText: 'Hoherpriester in der Linie Zadoks.', enText: 'High priest in the line of Zadok.' },
+  { id: 'asarja2', de: 'Asarja', en: 'Azariah', parent: 'johanan', epoch: 'koenige', refs: ['1Chr 5:36'],
+    deText: 'Priester „in dem Hause, das Salomo zu Jerusalem baute".', enText: 'Priest "in the house that Solomon built in Jerusalem".' },
+  { id: 'amarja2', de: 'Amarja', en: 'Amariah', parent: 'asarja2', epoch: 'koenige', refs: ['1Chr 5:37'],
+    deText: 'Hoherpriester der Königszeit.', enText: 'High priest of the monarchy.' },
+  { id: 'ahitub2', de: 'Ahitob', en: 'Ahitub', parent: 'amarja2', epoch: 'koenige', refs: ['1Chr 5:37'],
+    deText: 'Hoherpriester in der Linie Zadoks.', enText: 'High priest in the line of Zadok.' },
+  { id: 'zadok2', de: 'Zadok', en: 'Zadok', parent: 'ahitub2', epoch: 'koenige', refs: ['1Chr 5:38'],
+    deText: 'Hoherpriester der späten Königszeit.', enText: 'High priest of the late monarchy.' },
+  { id: 'sallum', de: 'Sallum', en: 'Shallum', parent: 'zadok2', epoch: 'koenige', refs: ['1Chr 5:38'],
+    deText: 'Hoherpriester; Vater Hilkias.', enText: 'High priest; father of Hilkiah.' },
+  { id: 'hilkia', de: 'Hilkia', en: 'Hilkiah', parent: 'sallum', epoch: 'koenige', refs: ['1Chr 5:39', '2Kön 22:8'],
+    deText: 'Hoherpriester unter Josia; fand das Gesetzbuch im Tempel.', enText: 'High priest under Josiah; found the Book of the Law in the temple.' },
+  { id: 'asarja3', de: 'Asarja', en: 'Azariah', parent: 'hilkia', epoch: 'koenige', refs: ['1Chr 5:39'],
+    deText: 'Hoherpriester der ausgehenden Königszeit.', enText: 'High priest at the close of the monarchy.' },
+  { id: 'seraja_p', de: 'Seraja', en: 'Seraiah', parent: 'asarja3', epoch: 'koenige', refs: ['1Chr 5:40', '2Kön 25:18-21'],
+    deText: 'Letzter Hoherpriester vor dem Exil; von Nebukadnezar hingerichtet.', enText: 'Last high priest before the exile; executed by Nebuchadnezzar.' },
+  { id: 'jozadak', de: 'Jozadak', en: 'Jehozadak', parent: 'seraja_p', epoch: 'exil', refs: ['1Chr 5:40-41'],
+    deText: 'Sohn Serajas; wurde ins babylonische Exil weggeführt. Vater des Hohenpriesters Josua der Rückkehr.', enText: 'Son of Seraiah; carried into Babylonian exile. Father of Joshua the high priest of the return.' },
+
+  // ---- Ephraim → Josua (1Chr 7:25-27) ---------------------------------------
+  { id: 'rephah', de: 'Repha', en: 'Rephah', parent: 'ephraim', epoch: 'aegypten', refs: ['1Chr 7:25'],
+    deText: 'Nachkomme Ephraims in der Linie auf Josua hin.', enText: 'Descendant of Ephraim in the line toward Joshua.' },
+  { id: 'resheph', de: 'Reseph', en: 'Resheph', parent: 'rephah', epoch: 'aegypten', refs: ['1Chr 7:25'],
+    deText: 'Vorfahr Josuas.', enText: 'Ancestor of Joshua.' },
+  { id: 'telach', de: 'Telah', en: 'Telah', parent: 'resheph', epoch: 'aegypten', refs: ['1Chr 7:25'],
+    deText: 'Vorfahr Josuas.', enText: 'Ancestor of Joshua.' },
+  { id: 'tahan', de: 'Thahan', en: 'Tahan', parent: 'telach', epoch: 'aegypten', refs: ['1Chr 7:25'],
+    deText: 'Vorfahr Josuas.', enText: 'Ancestor of Joshua.' },
+  { id: 'ladan', de: 'Laedan', en: 'Ladan', parent: 'tahan', epoch: 'aegypten', refs: ['1Chr 7:26'],
+    deText: 'Vorfahr Josuas.', enText: 'Ancestor of Joshua.' },
+  { id: 'ammihud', de: 'Ammihud', en: 'Ammihud', parent: 'ladan', epoch: 'aegypten', refs: ['1Chr 7:26'],
+    deText: 'Vater Elisamas, des Stammesfürsten Ephraims.', enText: 'Father of Elishama, the tribal prince of Ephraim.' },
+  { id: 'elischama_e', de: 'Elisama', en: 'Elishama', parent: 'ammihud', epoch: 'aegypten', refs: ['1Chr 7:26', 'Num 1:10'],
+    deText: 'Fürst Ephraims beim Auszug; Großvater Josuas.', enText: 'Prince of Ephraim at the Exodus; grandfather of Joshua.' },
+  { id: 'nun', de: 'Nun', en: 'Nun', parent: 'elischama_e', epoch: 'aegypten', refs: ['1Chr 7:27', 'Ex 33:11'],
+    deText: 'Vater Josuas.', enText: 'Father of Joshua.' },
+  { id: 'josua', de: 'Josua', en: 'Joshua', parent: 'nun', epoch: 'richter', refs: ['1Chr 7:27', 'Jos 1:1-9'],
+    deText: 'Sohn Nuns; Nachfolger Moses, der Israel ins verheißene Land führte.', enText: 'Son of Nun; successor of Moses who led Israel into the promised land.' },
+
+  // ---- Benjamin → Sauls Haus (1Chr 8:33-35) ---------------------------------
+  { id: 'ner', de: 'Ner', en: 'Ner', parent: 'benjamin', epoch: 'koenigtum', refs: ['1Chr 8:33', '1Sam 14:51'],
+    deText: 'Benjaminit aus Gibeon; Großvater König Sauls (vereinfacht an Benjamin angehängt).', enText: 'A Benjaminite of Gibeon; grandfather of King Saul (attached to Benjamin in simplified form).' },
+  { id: 'kis', de: 'Kis', en: 'Kish', parent: 'ner', epoch: 'koenigtum', refs: ['1Chr 8:33', '1Sam 9:1-2'],
+    deText: 'Vater König Sauls.', enText: 'Father of King Saul.' },
+  { id: 'saul', de: 'Saul', en: 'Saul', parent: 'kis', epoch: 'koenigtum', refs: ['1Chr 8:33', '1Sam 9-31'],
+    deText: 'Erster König Israels; aus dem Stamm Benjamin, von Samuel gesalbt, fiel auf dem Gilboa.', enText: 'First king of Israel; of the tribe of Benjamin, anointed by Samuel, fell on Mount Gilboa.' },
+  { id: 'jonatan', de: 'Jonathan', en: 'Jonathan', parent: 'saul', epoch: 'koenigtum', refs: ['1Chr 8:33', '1Sam 18-20'],
+    deText: 'Sohn Sauls; treuer Freund Davids, fiel mit dem Vater auf dem Gilboa.', enText: 'Son of Saul; devoted friend of David, fell with his father on Gilboa.' },
+  { id: 'malchisua', de: 'Malchisua', en: 'Malchishua', parent: 'saul', epoch: 'koenigtum', refs: ['1Chr 8:33'],
+    deText: 'Sohn Sauls; fiel mit ihm im Kampf.', enText: 'Son of Saul; fell with him in battle.' },
+  { id: 'abinadab_s', de: 'Abinadab', en: 'Abinadab', parent: 'saul', epoch: 'koenigtum', refs: ['1Chr 8:33'],
+    deText: 'Sohn Sauls; fiel auf dem Gilboa.', enText: 'Son of Saul; fell on Mount Gilboa.' },
+  { id: 'esbaal', de: 'Esbaal (Isboseth)', en: 'Esh-Baal (Ish-Bosheth)', parent: 'saul', epoch: 'koenigtum', refs: ['1Chr 8:33', '2Sam 2-4'],
+    deText: 'Sohn Sauls; herrschte kurz als Gegenkönig zu David.', enText: 'Son of Saul; briefly reigned as rival king to David.' },
+  { id: 'meribbaal', de: 'Merib-Baal (Mefiboseth)', en: 'Merib-Baal (Mephibosheth)', parent: 'jonatan', epoch: 'koenigtum', refs: ['1Chr 8:34', '2Sam 9'],
+    deText: 'Sohn Jonathans; an beiden Füßen lahm, von David an die Königstafel geholt.', enText: 'Son of Jonathan; lame in both feet, brought by David to the king’s table.' },
+  { id: 'micha_s', de: 'Micha', en: 'Micah', parent: 'meribbaal', epoch: 'koenige', refs: ['1Chr 8:34-35'],
+    deText: 'Sohn Merib-Baals; setzte das Haus Sauls fort.', enText: 'Son of Merib-Baal; continued the house of Saul.' },
 ];
 
-export const LINE_COLOR: Record<Line, string> = Object.fromEntries(
-  LINES.map((l) => [l.id, l.color]),
-) as Record<Line, string>;
+export const PERSON_BY_ID: Record<string, Person> = Object.fromEntries(GENEALOGY.map((p) => [p.id, p]));
 
-// ---- Japheth (1 Chr 1:5–7 · Gen 10:2–5) ------------------------------------
-const JAPHETH: GenNode = {
-  id: 'japheth',
-  de: 'Jafet',
-  en: 'Japheth',
-  ref: '1Chr 1:5 · Gen 10:2',
-  line: 'japheth',
-  note: { de: 'Stammvater der nördlichen und westlichen Küstenvölker.', en: 'Ancestor of the northern and coastland peoples.' },
-  children: [
-    {
-      id: 'gomer', de: 'Gomer', en: 'Gomer', ref: '1Chr 1:6', line: 'japheth',
-      people: { de: 'Kimmerier', en: 'Cimmerians' }, region: { de: 'nördl. Schwarzmeerraum', en: 'north of the Black Sea' },
-      children: [
-        { id: 'ashkenaz', de: 'Aschkenas', en: 'Ashkenaz', ref: '1Chr 1:6', line: 'japheth', people: { de: 'Skythen', en: 'Scythians' }, place: 'Ashkenaz' },
-        { id: 'riphath', de: 'Rifat', en: 'Riphath', ref: '1Chr 1:6', line: 'japheth' },
-        { id: 'togarmah', de: 'Togarma', en: 'Togarmah', ref: '1Chr 1:6', line: 'japheth', region: { de: 'Armenien', en: 'Armenia' }, place: 'Togarmah' },
-      ],
-    },
-    { id: 'magog', de: 'Magog', en: 'Magog', ref: '1Chr 1:5', line: 'japheth', people: { de: 'Skythen', en: 'Scythians' }, place: 'Magog' },
-    { id: 'madai', de: 'Madai', en: 'Madai', ref: '1Chr 1:5', line: 'japheth', people: { de: 'Meder', en: 'Medes' }, region: { de: 'Iran (Medien)', en: 'Media (Iran)' } },
-    {
-      id: 'javan', de: 'Jawan', en: 'Javan', ref: '1Chr 1:5 · Gen 10:4', line: 'japheth',
-      people: { de: 'Griechen / Ionier', en: 'Greeks / Ionians' }, place: 'Greece',
-      children: [
-        { id: 'elishah', de: 'Elischa', en: 'Elishah', ref: '1Chr 1:7', line: 'japheth', region: { de: 'Zypern (Alaschija)', en: 'Cyprus (Alashiya)' } },
-        { id: 'tarshish', de: 'Tarschisch', en: 'Tarshish', ref: '1Chr 1:7', line: 'japheth', region: { de: 'Westl. Mittelmeer (Tartessos)', en: 'Western Mediterranean (Tartessus)' }, place: 'Tarshish' },
-        { id: 'kittim', de: 'Kittäer', en: 'Kittim', ref: '1Chr 1:7', line: 'japheth', region: { de: 'Zypern (Kition)', en: 'Cyprus (Kition)' }, place: 'Kittim' },
-        { id: 'rodanim', de: 'Rodaniter', en: 'Rodanim', ref: '1Chr 1:7', line: 'japheth', region: { de: 'Rhodos', en: 'Rhodes' } },
-      ],
-    },
-    { id: 'tubal', de: 'Tubal', en: 'Tubal', ref: '1Chr 1:5', line: 'japheth', region: { de: 'Anatolien (Tabal)', en: 'Anatolia (Tabal)' }, place: 'Tubal' },
-    { id: 'meshech', de: 'Meschech', en: 'Meshech', ref: '1Chr 1:5', line: 'japheth', region: { de: 'Anatolien', en: 'Anatolia' }, place: 'Meshech' },
-    { id: 'tiras', de: 'Tiras', en: 'Tiras', ref: '1Chr 1:5', line: 'japheth', region: { de: 'Ägäis / Thrakien', en: 'Aegean / Thrace' } },
-  ],
-};
+/** Format an approximate year: negative → "v. Chr." / "BC", positive → "n. Chr." / "AD". */
+export function formatYear(year: number, lang: 'de' | 'en'): string {
+  const bc = lang === 'de' ? 'v. Chr.' : 'BC';
+  const ad = lang === 'de' ? 'n. Chr.' : 'AD';
+  return year < 0 ? `${Math.abs(year)} ${bc}` : `${year} ${ad}`;
+}
 
-// ---- Ham (1 Chr 1:8–16 · Gen 10:6–20) --------------------------------------
-const HAM: GenNode = {
-  id: 'ham',
-  de: 'Ham',
-  en: 'Ham',
-  ref: '1Chr 1:8 · Gen 10:6',
-  line: 'ham',
-  note: { de: 'Stammvater der Völker Afrikas, Arabiens und Kanaans.', en: 'Ancestor of the peoples of Africa, Arabia and Canaan.' },
-  children: [
-    {
-      id: 'cush', de: 'Kusch', en: 'Cush', ref: '1Chr 1:8', line: 'ham',
-      region: { de: 'Nubien / Äthiopien', en: 'Nubia / Ethiopia' }, place: 'Cush',
-      children: [
-        { id: 'seba', de: 'Seba', en: 'Seba', ref: '1Chr 1:9', line: 'ham', place: 'Seba' },
-        { id: 'havilah-c', de: 'Hawila', en: 'Havilah', ref: '1Chr 1:9', line: 'ham', region: { de: 'Arabien', en: 'Arabia' }, place: 'Havilah' },
-        { id: 'sabta', de: 'Sabta', en: 'Sabta', ref: '1Chr 1:9', line: 'ham' },
-        {
-          id: 'raamah', de: 'Ragma', en: 'Raamah', ref: '1Chr 1:9', line: 'ham',
-          children: [
-            { id: 'sheba-r', de: 'Saba', en: 'Sheba', ref: '1Chr 1:9', line: 'ham', region: { de: 'Südarabien', en: 'South Arabia' }, place: 'Sheba' },
-            { id: 'dedan-r', de: 'Dedan', en: 'Dedan', ref: '1Chr 1:9', line: 'ham', region: { de: 'Nordarabien', en: 'North Arabia' }, place: 'Dedan' },
-          ],
-        },
-        { id: 'sabteca', de: 'Sabtecha', en: 'Sabteca', ref: '1Chr 1:9', line: 'ham' },
-        {
-          id: 'nimrod', de: 'Nimrod', en: 'Nimrod', ref: '1Chr 1:10', line: 'ham',
-          note: { de: 'Der erste Gewaltige auf Erden; Reich in Babel, Erech, Akkad – später Ninive.', en: 'The first mighty one on earth; kingdom of Babel, Erech, Akkad – later Nineveh.' },
-          place: 'Babylon',
-        },
-      ],
-    },
-    {
-      id: 'mizraim', de: 'Mizrajim', en: 'Mizraim', ref: '1Chr 1:8', line: 'ham',
-      people: { de: 'Ägypter', en: 'Egyptians' }, region: { de: 'Ägypten', en: 'Egypt' }, place: 'Egypt',
-      children: [
-        { id: 'ludim', de: 'Ludim', en: 'Ludim', ref: '1Chr 1:11', line: 'ham' },
-        { id: 'anamim', de: 'Anamim', en: 'Anamim', ref: '1Chr 1:11', line: 'ham' },
-        { id: 'lehabim', de: 'Lehabim', en: 'Lehabim', ref: '1Chr 1:11', line: 'ham', people: { de: 'Libyer', en: 'Libyans' } },
-        { id: 'naphtuhim', de: 'Naftuhim', en: 'Naphtuhim', ref: '1Chr 1:11', line: 'ham' },
-        { id: 'pathrusim', de: 'Patrusim', en: 'Pathrusim', ref: '1Chr 1:12', line: 'ham', region: { de: 'Oberägypten (Patros)', en: 'Upper Egypt (Pathros)' } },
-        { id: 'casluhim', de: 'Kasluhim', en: 'Casluhim', ref: '1Chr 1:12', line: 'ham', note: { de: 'Von ihnen stammen die Philister.', en: 'From whom the Philistines came.' } },
-        { id: 'caphtorim', de: 'Kaftoriter', en: 'Caphtorim', ref: '1Chr 1:12', line: 'ham', region: { de: 'Kreta (Kaftor)', en: 'Crete (Caphtor)' }, place: 'Caphtor' },
-      ],
-    },
-    { id: 'put', de: 'Put', en: 'Put', ref: '1Chr 1:8', line: 'ham', region: { de: 'Libyen', en: 'Libya' }, place: 'Put' },
-    {
-      id: 'canaan', de: 'Kanaan', en: 'Canaan', ref: '1Chr 1:8', line: 'ham',
-      people: { de: 'Kanaaniter', en: 'Canaanites' }, region: { de: 'Kanaan / Levante', en: 'Canaan / Levant' }, place: 'Canaan',
-      children: [
-        { id: 'sidon', de: 'Sidon', en: 'Sidon', ref: '1Chr 1:13', line: 'ham', note: { de: 'Erstgeborener; Phönizien.', en: 'Firstborn; Phoenicia.' }, place: 'Sidon' },
-        { id: 'heth', de: 'Het', en: 'Heth', ref: '1Chr 1:13', line: 'ham', people: { de: 'Hetiter', en: 'Hittites' } },
-        { id: 'jebusite', de: 'Jebusiter', en: 'Jebusites', ref: '1Chr 1:14', line: 'ham', note: { de: 'Bewohner von Jerusalem.', en: 'Inhabitants of Jerusalem.' }, place: 'Jebus' },
-        { id: 'amorite', de: 'Amoriter', en: 'Amorites', ref: '1Chr 1:14', line: 'ham' },
-        { id: 'girgashite', de: 'Girgaschiter', en: 'Girgashites', ref: '1Chr 1:14', line: 'ham' },
-        { id: 'hivite', de: 'Hiwiter', en: 'Hivites', ref: '1Chr 1:15', line: 'ham' },
-        { id: 'arkite', de: 'Arkiter', en: 'Arkites', ref: '1Chr 1:15', line: 'ham', region: { de: 'Arka (Libanon)', en: 'Arqa (Lebanon)' } },
-        { id: 'sinite', de: 'Siniter', en: 'Sinites', ref: '1Chr 1:15', line: 'ham' },
-        { id: 'arvadite', de: 'Arwaditer', en: 'Arvadites', ref: '1Chr 1:16', line: 'ham', region: { de: 'Arwad (Phönizien)', en: 'Arwad (Phoenicia)' }, place: 'Arvad' },
-        { id: 'zemarite', de: 'Zemariter', en: 'Zemarites', ref: '1Chr 1:16', line: 'ham', place: 'Zemaraim' },
-        { id: 'hamathite', de: 'Hamatiter', en: 'Hamathites', ref: '1Chr 1:16', line: 'ham', region: { de: 'Hamat (Syrien)', en: 'Hamath (Syria)' }, place: 'Hamath' },
-      ],
-    },
-  ],
-};
+/** Bible.com search URL for a human-readable reference. */
+export function bibleRefUrl(ref: string): string {
+  return `https://www.bible.com/search/bible?query=${encodeURIComponent(ref)}`;
+}
 
-// ---- Joktan's Arabian sons (1 Chr 1:20–23 · Gen 10:26–29) ------------------
-const JOKTAN: GenNode = {
-  id: 'joktan',
-  de: 'Joktan',
-  en: 'Joktan',
-  ref: '1Chr 1:19–20',
-  line: 'shem',
-  note: { de: 'Stammvater südarabischer Stämme.', en: 'Ancestor of South-Arabian tribes.' },
-  children: [
-    { id: 'almodad', de: 'Almodad', en: 'Almodad', ref: '1Chr 1:20', line: 'shem' },
-    { id: 'sheleph', de: 'Schelef', en: 'Sheleph', ref: '1Chr 1:20', line: 'shem' },
-    { id: 'hazarmaveth', de: 'Hazarmawet', en: 'Hazarmaveth', ref: '1Chr 1:20', line: 'shem', region: { de: 'Hadramaut (Jemen)', en: 'Hadramaut (Yemen)' } },
-    { id: 'jerah', de: 'Jerach', en: 'Jerah', ref: '1Chr 1:20', line: 'shem' },
-    { id: 'hadoram', de: 'Hadoram', en: 'Hadoram', ref: '1Chr 1:21', line: 'shem' },
-    { id: 'uzal', de: 'Usal', en: 'Uzal', ref: '1Chr 1:21', line: 'shem', region: { de: 'Sana (Jemen)', en: "Sana'a (Yemen)" } },
-    { id: 'diklah', de: 'Dikla', en: 'Diklah', ref: '1Chr 1:21', line: 'shem' },
-    { id: 'ebal-j', de: 'Ebal', en: 'Ebal', ref: '1Chr 1:22', line: 'shem' },
-    { id: 'abimael', de: 'Abimaël', en: 'Abimael', ref: '1Chr 1:22', line: 'shem' },
-    { id: 'sheba-j', de: 'Saba', en: 'Sheba', ref: '1Chr 1:22', line: 'shem', region: { de: 'Südarabien', en: 'South Arabia' }, place: 'Sheba' },
-    { id: 'ophir', de: 'Ofir', en: 'Ophir', ref: '1Chr 1:23', line: 'shem', region: { de: 'Arabien / Goldland', en: 'Arabia / land of gold' }, place: 'Ophir' },
-    { id: 'havilah-j', de: 'Hawila', en: 'Havilah', ref: '1Chr 1:23', line: 'shem', place: 'Havilah' },
-    { id: 'jobab', de: 'Jobab', en: 'Jobab', ref: '1Chr 1:23', line: 'shem' },
-  ],
-};
+/**
+ * Children of each person, keyed by parent id, in authored (≈ chronological)
+ * order. Lets a person card list and link the next generation, not just the
+ * parent above it.
+ */
+export const CHILDREN_BY_PARENT: Record<string, Person[]> = (() => {
+  const map: Record<string, Person[]> = {};
+  for (const p of GENEALOGY) {
+    if (p.parent) (map[p.parent] ??= []).push(p);
+  }
+  return map;
+})();
 
-// ---- Shem (1 Chr 1:17–27 · Gen 10:21–31, 11:10–26) -------------------------
-const SHEM: GenNode = {
-  id: 'shem',
-  de: 'Sem',
-  en: 'Shem',
-  ref: '1Chr 1:17 · Gen 10:22',
-  line: 'shem',
-  note: { de: 'Stammvater der semitischen Völker – und der Linie Abrahams.', en: 'Ancestor of the Semitic peoples – and of Abraham’s line.' },
-  children: [
-    { id: 'elam', de: 'Elam', en: 'Elam', ref: '1Chr 1:17', line: 'shem', people: { de: 'Elamiter', en: 'Elamites' }, region: { de: 'SW-Iran', en: 'SW Iran' }, place: 'Elam' },
-    { id: 'asshur', de: 'Assur', en: 'Asshur', ref: '1Chr 1:17', line: 'shem', people: { de: 'Assyrer', en: 'Assyrians' }, region: { de: 'Assyrien', en: 'Assyria' }, place: 'Assyria' },
-    {
-      id: 'arphaxad', de: 'Arpachschad', en: 'Arphaxad', ref: '1Chr 1:17–18', line: 'shem',
-      note: { de: 'Über Schelach und Eber verzweigt sich die Linie.', en: 'Through Shelah and Eber the line branches.' },
-      spine: [
-        { de: 'Schelach', en: 'Shelah', ref: '1Chr 1:18' },
-        { de: 'Eber', en: 'Eber', ref: '1Chr 1:18–19' },
-      ],
-      children: [
-        {
-          id: 'peleg', de: 'Peleg', en: 'Peleg', ref: '1Chr 1:19', line: 'abraham',
-          note: { de: '»Denn in seinen Tagen wurde die Erde geteilt.« → Linie bis Abraham.', en: '“For in his days the earth was divided.” → line to Abraham.' },
-          children: [], // continues in the Abraham spine below
-        },
-        JOKTAN,
-      ],
-    },
-    { id: 'lud', de: 'Lud', en: 'Lud', ref: '1Chr 1:17', line: 'shem', people: { de: 'Lyder', en: 'Lydians' }, region: { de: 'Anatolien', en: 'Anatolia' }, place: 'Lud' },
-    {
-      id: 'aram', de: 'Aram', en: 'Aram', ref: '1Chr 1:17', line: 'shem',
-      people: { de: 'Aramäer', en: 'Arameans' }, region: { de: 'Syrien', en: 'Syria' },
-      children: [
-        { id: 'uz', de: 'Uz', en: 'Uz', ref: '1Chr 1:17', line: 'shem', place: 'Uz' },
-        { id: 'hul', de: 'Hul', en: 'Hul', ref: '1Chr 1:17', line: 'shem' },
-        { id: 'gether', de: 'Geter', en: 'Gether', ref: '1Chr 1:17', line: 'shem' },
-        { id: 'meshech-s', de: 'Masch', en: 'Meshech', ref: '1Chr 1:17', line: 'shem' },
-      ],
-    },
-  ],
-};
-
-// ---- Ishmael (1 Chr 1:29–31 · Gen 25:13–16) --------------------------------
-const ISHMAEL: GenNode = {
-  id: 'ishmael',
-  de: 'Ismael',
-  en: 'Ishmael',
-  ref: '1Chr 1:28–29 · Gen 25:12',
-  line: 'ishmael',
-  note: { de: 'Sohn Abrahams und der Hagar; zwölf Fürsten – die Ismaeliter.', en: 'Son of Abraham and Hagar; twelve princes – the Ishmaelites.' },
-  children: [
-    { id: 'nebaioth', de: 'Nebajot', en: 'Nebaioth', ref: '1Chr 1:29', line: 'ishmael', people: { de: 'Nabatäer', en: 'Nabateans' } },
-    { id: 'kedar', de: 'Kedar', en: 'Kedar', ref: '1Chr 1:29', line: 'ishmael', region: { de: 'Nordarabien', en: 'North Arabia' }, place: 'Kedar' },
-    { id: 'adbeel', de: 'Adbeel', en: 'Adbeel', ref: '1Chr 1:29', line: 'ishmael' },
-    { id: 'mibsam', de: 'Mibsam', en: 'Mibsam', ref: '1Chr 1:29', line: 'ishmael' },
-    { id: 'mishma', de: 'Mischma', en: 'Mishma', ref: '1Chr 1:30', line: 'ishmael' },
-    { id: 'dumah', de: 'Duma', en: 'Dumah', ref: '1Chr 1:30', line: 'ishmael', place: 'Dumah' },
-    { id: 'massa', de: 'Massa', en: 'Massa', ref: '1Chr 1:30', line: 'ishmael' },
-    { id: 'hadad-i', de: 'Hadad', en: 'Hadad', ref: '1Chr 1:30', line: 'ishmael' },
-    { id: 'tema', de: 'Tema', en: 'Tema', ref: '1Chr 1:30', line: 'ishmael', region: { de: 'Oase Tayma (Arabien)', en: 'Tayma oasis (Arabia)' }, place: 'Tema' },
-    { id: 'jetur', de: 'Jetur', en: 'Jetur', ref: '1Chr 1:31', line: 'ishmael', people: { de: 'Ituräer', en: 'Itureans' } },
-    { id: 'naphish', de: 'Nafisch', en: 'Naphish', ref: '1Chr 1:31', line: 'ishmael' },
-    { id: 'kedemah', de: 'Kedma', en: 'Kedemah', ref: '1Chr 1:31', line: 'ishmael' },
-  ],
-};
-
-// ---- Keturah (1 Chr 1:32–33 · Gen 25:1–4) ----------------------------------
-const KETURAH: GenNode = {
-  id: 'keturah',
-  de: 'Söhne der Ketura',
-  en: 'Sons of Keturah',
-  ref: '1Chr 1:32 · Gen 25:1',
-  line: 'keturah',
-  note: { de: 'Ketura, Abrahams Nebenfrau; Stammväter arabischer Wüstenstämme.', en: 'Keturah, Abraham’s concubine; ancestors of Arabian desert tribes.' },
-  children: [
-    { id: 'zimran', de: 'Simran', en: 'Zimran', ref: '1Chr 1:32', line: 'keturah' },
-    {
-      id: 'jokshan', de: 'Jokschan', en: 'Jokshan', ref: '1Chr 1:32', line: 'keturah',
-      children: [
-        { id: 'sheba-k', de: 'Saba', en: 'Sheba', ref: '1Chr 1:32', line: 'keturah', place: 'Sheba' },
-        { id: 'dedan-k', de: 'Dedan', en: 'Dedan', ref: '1Chr 1:32', line: 'keturah', place: 'Dedan' },
-      ],
-    },
-    { id: 'medan', de: 'Medan', en: 'Medan', ref: '1Chr 1:32', line: 'keturah' },
-    {
-      id: 'midian', de: 'Midian', en: 'Midian', ref: '1Chr 1:32', line: 'keturah',
-      people: { de: 'Midianiter', en: 'Midianites' }, region: { de: 'NW-Arabien', en: 'NW Arabia' }, place: 'Midian',
-      children: [
-        { id: 'ephah', de: 'Efa', en: 'Ephah', ref: '1Chr 1:33', line: 'keturah' },
-        { id: 'epher', de: 'Efer', en: 'Epher', ref: '1Chr 1:33', line: 'keturah' },
-        { id: 'hanoch-m', de: 'Henoch', en: 'Hanoch', ref: '1Chr 1:33', line: 'keturah' },
-        { id: 'abida', de: 'Abida', en: 'Abida', ref: '1Chr 1:33', line: 'keturah' },
-        { id: 'eldaah', de: 'Eldaa', en: 'Eldaah', ref: '1Chr 1:33', line: 'keturah' },
-      ],
-    },
-    { id: 'ishbak', de: 'Jischbak', en: 'Ishbak', ref: '1Chr 1:32', line: 'keturah' },
-    { id: 'shuah', de: 'Schuach', en: 'Shuah', ref: '1Chr 1:32', line: 'keturah' },
-  ],
-};
-
-// ---- Esau / Edom (1 Chr 1:35–54 · Gen 36) ----------------------------------
-const ESAU: GenNode = {
-  id: 'esau',
-  de: 'Esau (Edom)',
-  en: 'Esau (Edom)',
-  ref: '1Chr 1:34–35 · Gen 36:1',
-  line: 'esau',
-  people: { de: 'Edomiter', en: 'Edomites' }, region: { de: 'Edom (Seïr)', en: 'Edom (Seir)' }, place: 'Edom',
-  children: [
-    {
-      id: 'eliphaz', de: 'Elifas', en: 'Eliphaz', ref: '1Chr 1:35–36', line: 'esau',
-      children: [
-        { id: 'teman', de: 'Teman', en: 'Teman', ref: '1Chr 1:36', line: 'esau', region: { de: 'Süd-Edom', en: 'Southern Edom' }, place: 'Teman' },
-        { id: 'omar', de: 'Omar', en: 'Omar', ref: '1Chr 1:36', line: 'esau' },
-        { id: 'zephi', de: 'Zefo', en: 'Zephi', ref: '1Chr 1:36', line: 'esau' },
-        { id: 'gatam', de: 'Gaetam', en: 'Gatam', ref: '1Chr 1:36', line: 'esau' },
-        { id: 'kenaz', de: 'Kenas', en: 'Kenaz', ref: '1Chr 1:36', line: 'esau', people: { de: 'Kenasiter', en: 'Kenizzites' } },
-        { id: 'timna', de: 'Timna', en: 'Timna', ref: '1Chr 1:36', line: 'esau' },
-        { id: 'amalek', de: 'Amalek', en: 'Amalek', ref: '1Chr 1:36', line: 'esau', people: { de: 'Amalekiter', en: 'Amalekites' }, place: 'Amalek' },
-      ],
-    },
-    {
-      id: 'reuel', de: 'Reguel', en: 'Reuel', ref: '1Chr 1:35–37', line: 'esau',
-      children: [
-        { id: 'nahath', de: 'Nahat', en: 'Nahath', ref: '1Chr 1:37', line: 'esau' },
-        { id: 'zerah-e', de: 'Serach', en: 'Zerah', ref: '1Chr 1:37', line: 'esau' },
-        { id: 'shammah', de: 'Schamma', en: 'Shammah', ref: '1Chr 1:37', line: 'esau' },
-        { id: 'mizzah', de: 'Misa', en: 'Mizzah', ref: '1Chr 1:37', line: 'esau' },
-      ],
-    },
-    { id: 'jeush', de: 'Jeusch', en: 'Jeush', ref: '1Chr 1:35', line: 'esau' },
-    { id: 'jalam', de: 'Jaelam', en: 'Jalam', ref: '1Chr 1:35', line: 'esau' },
-    { id: 'korah-e', de: 'Korach', en: 'Korah', ref: '1Chr 1:35', line: 'esau' },
-  ],
-};
-
-// ---- Seir the Horite (1 Chr 1:38–42 · Gen 36:20–30) ------------------------
-const SEIR: GenNode = {
-  id: 'seir',
-  de: 'Seïr, der Horiter',
-  en: 'Seir the Horite',
-  ref: '1Chr 1:38',
-  line: 'seir',
-  note: { de: 'Die Ureinwohner Edoms; mit Esaus Nachkommen verbunden.', en: 'The original inhabitants of Edom; joined to Esau’s descendants.' },
-  place: 'Seir',
-  children: [
-    { id: 'lotan', de: 'Lotan', en: 'Lotan', ref: '1Chr 1:38–39', line: 'seir' },
-    { id: 'shobal', de: 'Schobal', en: 'Shobal', ref: '1Chr 1:38–40', line: 'seir' },
-    { id: 'zibeon', de: 'Zibeon', en: 'Zibeon', ref: '1Chr 1:38–40', line: 'seir' },
-    { id: 'anah', de: 'Ana', en: 'Anah', ref: '1Chr 1:38–41', line: 'seir' },
-    { id: 'dishon', de: 'Dischon', en: 'Dishon', ref: '1Chr 1:38–41', line: 'seir' },
-    { id: 'ezer-s', de: 'Ezer', en: 'Ezer', ref: '1Chr 1:38–42', line: 'seir' },
-    { id: 'dishan', de: 'Dischan', en: 'Dishan', ref: '1Chr 1:38–42', line: 'seir' },
-  ],
-};
-
-// ---- The twelve tribes and their families (1 Chr 2–9 · Num 26 · Gen 46) ----
-// Each tribe lists its clan-heads and named descendants as recorded in the
-// genealogies of 1 Chronicles 2–9, so one can see "who belongs to which tribe" —
-// e.g. Machir, Gilead, Gideon and Zelophehad’s daughters under Manasseh; David,
-// the kings of Judah and Zerubbabel under Judah; Aaron’s priestly dynasty, Moses,
-// Samuel and the temple singers under Levi; the house of Saul under Benjamin.
-
-const TRIBE_REUBEN: GenNode = {
-  id: 'reuben', de: 'Ruben', en: 'Reuben', ref: '1Chr 5:1–3', line: 'israel',
-  note: { de: 'Erstgeborener Jakobs; Ostjordanland. Die Erstgeburt ging an Josef.', en: 'Jacob’s firstborn; east of the Jordan. The birthright passed to Joseph.' },
-  children: [
-    { id: 'r-hanoch', de: 'Henoch', en: 'Hanoch', ref: '1Chr 5:3', line: 'israel' },
-    { id: 'r-pallu', de: 'Pallu', en: 'Pallu', ref: '1Chr 5:3', line: 'israel' },
-    { id: 'r-hezron', de: 'Hezron', en: 'Hezron', ref: '1Chr 5:3', line: 'israel' },
-    { id: 'r-carmi', de: 'Karmi', en: 'Carmi', ref: '1Chr 5:3', line: 'israel' },
-    {
-      id: 'r-joel', de: 'Joel', en: 'Joel', ref: '1Chr 5:4', line: 'israel',
-      note: { de: 'Fürstenlinie der Rubeniter.', en: 'The princely Reubenite line.' },
-      spine: [
-        { de: 'Schemaja', en: 'Shemaiah', ref: '1Chr 5:4' },
-        { de: 'Gog', en: 'Gog', ref: '1Chr 5:4' },
-        { de: 'Schimi', en: 'Shimei', ref: '1Chr 5:4' },
-        { de: 'Micha', en: 'Micah', ref: '1Chr 5:5' },
-        { de: 'Reaja', en: 'Reaiah', ref: '1Chr 5:5' },
-        { de: 'Baal', en: 'Baal', ref: '1Chr 5:5' },
-      ],
-      children: [
-        { id: 'r-beera', de: 'Beera', en: 'Beerah', ref: '1Chr 5:6', line: 'israel', note: { de: 'Fürst; von Tiglat-Pileser nach Assyrien weggeführt.', en: 'Prince; carried to Assyria by Tiglath-Pileser.' } },
-      ],
-    },
-  ],
-};
-
-const TRIBE_SIMEON: GenNode = {
-  id: 'simeon', de: 'Simeon', en: 'Simeon', ref: '1Chr 4:24–43', line: 'israel',
-  note: { de: 'Wohnte im Süden Judas (Beerscheba, Ziklag).', en: 'Settled in the south of Judah (Beersheba, Ziklag).' },
-  children: [
-    { id: 's-nemuel', de: 'Nemuel', en: 'Nemuel', ref: '1Chr 4:24', line: 'israel' },
-    { id: 's-jamin', de: 'Jamin', en: 'Jamin', ref: '1Chr 4:24', line: 'israel' },
-    { id: 's-jarib', de: 'Jarib', en: 'Jarib', ref: '1Chr 4:24', line: 'israel' },
-    { id: 's-zerah', de: 'Serach', en: 'Zerah', ref: '1Chr 4:24', line: 'israel' },
-    {
-      id: 's-shaul', de: 'Saul', en: 'Shaul', ref: '1Chr 4:24–27', line: 'israel',
-      note: { de: 'Sein Nachkomme Schimi hatte 16 Söhne und 6 Töchter.', en: 'His descendant Shimei had 16 sons and 6 daughters.' },
-      spine: [
-        { de: 'Schallum', en: 'Shallum', ref: '1Chr 4:25' },
-        { de: 'Mibsam', en: 'Mibsam', ref: '1Chr 4:25' },
-        { de: 'Mischma', en: 'Mishma', ref: '1Chr 4:25' },
-        { de: 'Hammuel', en: 'Hammuel', ref: '1Chr 4:26' },
-        { de: 'Sakkur', en: 'Zaccur', ref: '1Chr 4:26' },
-      ],
-      children: [
-        { id: 's-shimei', de: 'Schimi', en: 'Shimei', ref: '1Chr 4:26–27', line: 'israel' },
-      ],
-    },
-  ],
-};
-
-const TRIBE_LEVI: GenNode = {
-  id: 'levi', de: 'Levi', en: 'Levi', ref: '1Chr 6:1', line: 'israel',
-  note: { de: 'Priesterstamm. Aus Kehat kommen Aaron (Priester), Mose und Samuel; die Tempelsänger sind Heman, Asaph und Etan.', en: 'The priestly tribe. From Kohath come Aaron (priest), Moses and Samuel; the temple singers are Heman, Asaph and Ethan.' },
-  children: [
-    {
-      id: 'l-gershon', de: 'Gerschon', en: 'Gershon', ref: '1Chr 6:1 · 6:17', line: 'israel',
-      note: { de: 'Aus seiner Linie der Sänger Asaph.', en: 'From his line the singer Asaph.' },
-      children: [
-        { id: 'l-libni', de: 'Libni', en: 'Libni', ref: '1Chr 6:17', line: 'israel' },
-        { id: 'l-shimei-g', de: 'Schimi', en: 'Shimei', ref: '1Chr 6:17', line: 'israel' },
-        { id: 'asaph', de: 'Asaph', en: 'Asaph', ref: '1Chr 6:39', line: 'israel', note: { de: 'Sänger zur Rechten Hemans; ihm werden Psalmen zugeschrieben.', en: 'Singer at Heman’s right; psalms are ascribed to him.' } },
-      ],
-    },
-    {
-      id: 'l-kohath', de: 'Kehat', en: 'Kohath', ref: '1Chr 6:2', line: 'israel',
-      children: [
-        {
-          id: 'l-amram', de: 'Amram', en: 'Amram', ref: '1Chr 6:3', line: 'israel',
-          children: [
-            {
-              id: 'aaron', de: 'Aaron', en: 'Aaron', ref: '1Chr 6:3', line: 'israel',
-              note: { de: 'Der erste Hohepriester; seine Linie stellt die Priester.', en: 'The first high priest; his line supplies the priests.' },
-              children: [
-                { id: 'nadab', de: 'Nadab', en: 'Nadab', ref: '1Chr 6:3', line: 'israel' },
-                { id: 'abihu', de: 'Abihu', en: 'Abihu', ref: '1Chr 6:3', line: 'israel' },
-                {
-                  id: 'eleazar', de: 'Eleasar', en: 'Eleazar', ref: '1Chr 6:3–4', line: 'israel',
-                  note: { de: 'Hohepriesterlinie bis ins Exil.', en: 'High-priestly line down to the exile.' },
-                  spine: [
-                    { de: 'Pinhas', en: 'Phinehas', ref: '1Chr 6:4' },
-                    { de: 'Abischua', en: 'Abishua', ref: '1Chr 6:4' },
-                    { de: 'Bukki', en: 'Bukki', ref: '1Chr 6:5' },
-                    { de: 'Usi', en: 'Uzzi', ref: '1Chr 6:5' },
-                    { de: 'Serachja', en: 'Zerahiah', ref: '1Chr 6:6' },
-                    { de: 'Merajot', en: 'Meraioth', ref: '1Chr 6:6' },
-                    { de: 'Amarja', en: 'Amariah', ref: '1Chr 6:7' },
-                    { de: 'Ahitub', en: 'Ahitub', ref: '1Chr 6:7' },
-                  ],
-                  children: [
-                    {
-                      id: 'zadok', de: 'Zadok', en: 'Zadok', ref: '1Chr 6:8', line: 'israel',
-                      note: { de: 'Hoherpriester unter David und Salomo.', en: 'High priest under David and Solomon.' },
-                      spine: [
-                        { de: 'Ahimaaz', en: 'Ahimaaz', ref: '1Chr 6:8' },
-                        { de: 'Asarja', en: 'Azariah', ref: '1Chr 6:9' },
-                        { de: 'Johanan', en: 'Johanan', ref: '1Chr 6:9' },
-                        { de: 'Asarja', en: 'Azariah', ref: '1Chr 6:10' },
-                        { de: 'Amarja', en: 'Amariah', ref: '1Chr 6:11' },
-                        { de: 'Ahitub', en: 'Ahitub', ref: '1Chr 6:11' },
-                        { de: 'Zadok', en: 'Zadok', ref: '1Chr 6:12' },
-                        { de: 'Schallum', en: 'Shallum', ref: '1Chr 6:12' },
-                        { de: 'Hilkija', en: 'Hilkiah', ref: '1Chr 6:13' },
-                        { de: 'Asarja', en: 'Azariah', ref: '1Chr 6:13' },
-                        { de: 'Seraja', en: 'Seraiah', ref: '1Chr 6:14' },
-                      ],
-                      children: [
-                        { id: 'jozadak', de: 'Jozadak', en: 'Jehozadak', ref: '1Chr 6:15', line: 'israel', note: { de: 'Wurde beim Exil nach Babel weggeführt.', en: 'Carried into exile to Babylon.' } },
-                      ],
-                    },
-                  ],
-                },
-                { id: 'ithamar', de: 'Itamar', en: 'Ithamar', ref: '1Chr 6:3', line: 'israel' },
-              ],
-            },
-            { id: 'moses', de: 'Mose', en: 'Moses', ref: '1Chr 6:3 · 2Mo 6:20', line: 'israel', note: { de: 'Führer beim Auszug aus Ägypten.', en: 'Leader of the Exodus.' } },
-            { id: 'miriam', de: 'Mirjam', en: 'Miriam', ref: '1Chr 6:3 · 2Mo 15:20', line: 'israel', note: { de: 'Prophetin, Schwester Moses.', en: 'Prophetess, sister of Moses.' } },
-          ],
-        },
-        {
-          id: 'l-izhar', de: 'Jizhar', en: 'Izhar', ref: '1Chr 6:2', line: 'israel',
-          children: [
-            { id: 'korah-l', de: 'Korach', en: 'Korah', ref: '1Chr 6:22', line: 'israel', note: { de: 'Stammvater der Korachiter (Sänger und Torhüter).', en: 'Ancestor of the Korahites (singers and gatekeepers).' } },
-          ],
-        },
-        { id: 'l-hebron', de: 'Hebron', en: 'Hebron', ref: '1Chr 6:2', line: 'israel' },
-        { id: 'l-uzziel', de: 'Usiël', en: 'Uzziel', ref: '1Chr 6:2', line: 'israel' },
-        {
-          id: 'l-elkanah', de: 'Elkana', en: 'Elkanah', ref: '1Chr 6:27', line: 'israel',
-          note: { de: 'Kehatitische Linie der Sänger.', en: 'The Kohathite line of the singers.' },
-          children: [
-            {
-              id: 'samuel', de: 'Samuel', en: 'Samuel', ref: '1Chr 6:27–28', line: 'israel',
-              note: { de: 'Prophet und letzter Richter; salbte Saul und David.', en: 'Prophet and last judge; anointed Saul and David.' },
-              children: [
-                {
-                  id: 's-joel-l', de: 'Joel', en: 'Joel', ref: '1Chr 6:33', line: 'israel',
-                  children: [
-                    { id: 'heman', de: 'Heman', en: 'Heman', ref: '1Chr 6:33', line: 'israel', note: { de: 'Oberster der Tempelsänger unter David.', en: 'Chief of the temple singers under David.' } },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'l-merari', de: 'Merari', en: 'Merari', ref: '1Chr 6:1 · 6:19', line: 'israel',
-      note: { de: 'Aus seiner Linie der Sänger Etan.', en: 'From his line the singer Ethan.' },
-      children: [
-        { id: 'l-mahli', de: 'Machli', en: 'Mahli', ref: '1Chr 6:19', line: 'israel' },
-        { id: 'l-mushi', de: 'Muschi', en: 'Mushi', ref: '1Chr 6:19', line: 'israel' },
-        { id: 'ethan', de: 'Etan', en: 'Ethan', ref: '1Chr 6:44', line: 'israel', note: { de: 'Sänger zur Linken Hemans (auch Jedutun genannt).', en: 'Singer at Heman’s left (also called Jeduthun).' } },
-      ],
-    },
-  ],
-};
-
-const TRIBE_JUDAH: GenNode = {
-  id: 'judah', de: 'Juda', en: 'Judah', ref: '1Chr 2 – 4', line: 'israel',
-  note: { de: 'Aus ihm kommen David, die Könige von Juda und der Messias.', en: 'From him come David, the kings of Judah and the Messiah.' },
-  children: [
-    { id: 'j-er', de: 'Ger', en: 'Er', ref: '1Chr 2:3', line: 'israel' },
-    { id: 'j-onan', de: 'Onan', en: 'Onan', ref: '1Chr 2:3', line: 'israel' },
-    {
-      id: 'j-shelah', de: 'Schela', en: 'Shelah', ref: '1Chr 2:3 · 4:21', line: 'israel',
-      note: { de: 'Sippen der Leinweber und Töpfer.', en: 'Clans of linen-workers and potters.' },
-      children: [
-        { id: 'j-er2', de: 'Ger (von Lecha)', en: 'Er of Lecah', ref: '1Chr 4:21', line: 'israel' },
-        { id: 'j-laadah', de: 'Laeda', en: 'Laadah', ref: '1Chr 4:21', line: 'israel' },
-      ],
-    },
-    {
-      id: 'j-zerah', de: 'Serach', en: 'Zerah', ref: '1Chr 2:4–8', line: 'israel',
-      children: [
-        { id: 'j-zimri', de: 'Simri', en: 'Zimri', ref: '1Chr 2:6', line: 'israel' },
-        { id: 'j-ethan', de: 'Etan', en: 'Ethan', ref: '1Chr 2:6', line: 'israel', note: { de: 'Sprichwörtlich weise (vgl. 1Kön 5:11).', en: 'Proverbially wise (cf. 1Kgs 4:31).' } },
-        { id: 'j-heman', de: 'Heman', en: 'Heman', ref: '1Chr 2:6', line: 'israel' },
-        { id: 'j-calcol', de: 'Chalkol', en: 'Calcol', ref: '1Chr 2:6', line: 'israel' },
-        { id: 'j-dara', de: 'Dara', en: 'Darda', ref: '1Chr 2:6', line: 'israel' },
-        { id: 'j-achan', de: 'Achan', en: 'Achan', ref: '1Chr 2:7 · Jos 7', line: 'israel', note: { de: '»Der Israel betrübte« – vergriff sich am Gebannten.', en: '“Troubler of Israel” – took what was devoted.' } },
-      ],
-    },
-    {
-      id: 'perez', de: 'Perez', en: 'Perez', ref: '1Chr 2:4–5', line: 'israel',
-      note: { de: 'Aus ihm die Linie bis David.', en: 'From him the line down to David.' },
-      children: [
-        { id: 'j-hamul', de: 'Hamul', en: 'Hamul', ref: '1Chr 2:5', line: 'israel' },
-        {
-          id: 'j-hezron', de: 'Hezron', en: 'Hezron', ref: '1Chr 2:5·9', line: 'israel',
-          children: [
-            {
-              id: 'j-ram', de: 'Ram', en: 'Ram', ref: '1Chr 2:9–10', line: 'israel',
-              spine: [
-                { de: 'Amminadab', en: 'Amminadab', ref: '1Chr 2:10' },
-                { de: 'Nachschon', en: 'Nahshon', ref: '1Chr 2:10' },
-                { de: 'Salma', en: 'Salmon', ref: '1Chr 2:11' },
-                { de: 'Boas', en: 'Boaz', ref: '1Chr 2:11' },
-                { de: 'Obed', en: 'Obed', ref: '1Chr 2:12' },
-              ],
-              children: [
-                {
-                  id: 'jesse', de: 'Isai', en: 'Jesse', ref: '1Chr 2:12–13', line: 'israel',
-                  note: { de: 'Vater Davids; seine Söhne und Töchter:', en: 'Father of David; his sons and daughters:' },
-                  children: [
-                    { id: 'j-eliab', de: 'Eliab', en: 'Eliab', ref: '1Chr 2:13', line: 'israel' },
-                    { id: 'j-abinadab', de: 'Abinadab', en: 'Abinadab', ref: '1Chr 2:13', line: 'israel' },
-                    { id: 'j-shimea', de: 'Simea', en: 'Shimea', ref: '1Chr 2:13', line: 'israel' },
-                    { id: 'j-nethanel', de: 'Netanel', en: 'Nethanel', ref: '1Chr 2:14', line: 'israel' },
-                    { id: 'j-raddai', de: 'Raddai', en: 'Raddai', ref: '1Chr 2:14', line: 'israel' },
-                    { id: 'j-ozem', de: 'Ozem', en: 'Ozem', ref: '1Chr 2:15', line: 'israel' },
-                    {
-                      id: 'david', de: 'David', en: 'David', ref: '1Chr 2:15 · 1Chr 3', line: 'israel',
-                      note: { de: 'Der siebte Sohn; König über Israel. Aus seiner Linie die Könige von Juda bis zum Exil und Serubbabel.', en: 'The seventh son; king of Israel. His line are the kings of Judah down to the exile and Zerubbabel.' },
-                      place: 'Bethlehem',
-                      children: [
-                        { id: 'd-amnon', de: 'Amnon', en: 'Amnon', ref: '1Chr 3:1', line: 'israel', note: { de: 'In Hebron geboren.', en: 'Born at Hebron.' } },
-                        { id: 'd-absalom', de: 'Absalom', en: 'Absalom', ref: '1Chr 3:2', line: 'israel', note: { de: 'Empörte sich gegen David.', en: 'Rebelled against David.' } },
-                        { id: 'd-adonijah', de: 'Adonija', en: 'Adonijah', ref: '1Chr 3:2', line: 'israel' },
-                        { id: 'd-nathan', de: 'Natan', en: 'Nathan', ref: '1Chr 3:5', line: 'israel', note: { de: 'In Jerusalem geboren; über ihn läuft Lukas’ Stammbaum Jesu.', en: 'Born at Jerusalem; Luke’s genealogy of Jesus runs through him.' } },
-                        {
-                          id: 'solomon', de: 'Salomo', en: 'Solomon', ref: '1Chr 3:5', line: 'israel',
-                          note: { de: 'König; baute den Tempel. Aus ihm die Königslinie:', en: 'King; built the temple. From him the royal line:' },
-                          place: 'Jerusalem',
-                          spine: [
-                            { de: 'Rehabeam', en: 'Rehoboam', ref: '1Chr 3:10' },
-                            { de: 'Abija', en: 'Abijah', ref: '1Chr 3:10' },
-                            { de: 'Asa', en: 'Asa', ref: '1Chr 3:10' },
-                            { de: 'Joschafat', en: 'Jehoshaphat', ref: '1Chr 3:10' },
-                            { de: 'Joram', en: 'Joram', ref: '1Chr 3:11' },
-                            { de: 'Ahasja', en: 'Ahaziah', ref: '1Chr 3:11' },
-                            { de: 'Joasch', en: 'Joash', ref: '1Chr 3:11' },
-                            { de: 'Amazja', en: 'Amaziah', ref: '1Chr 3:12' },
-                            { de: 'Asarja (Usija)', en: 'Azariah (Uzziah)', ref: '1Chr 3:12' },
-                            { de: 'Jotam', en: 'Jotham', ref: '1Chr 3:12' },
-                            { de: 'Ahas', en: 'Ahaz', ref: '1Chr 3:13' },
-                            { de: 'Hiskia', en: 'Hezekiah', ref: '1Chr 3:13' },
-                            { de: 'Manasse', en: 'Manasseh', ref: '1Chr 3:13' },
-                            { de: 'Amon', en: 'Amon', ref: '1Chr 3:14' },
-                            { de: 'Josia', en: 'Josiah', ref: '1Chr 3:14' },
-                            { de: 'Jojakim', en: 'Jehoiakim', ref: '1Chr 3:15–16' },
-                          ],
-                          children: [
-                            {
-                              id: 'jeconiah', de: 'Jojachin (Jechonja)', en: 'Jehoiachin (Jeconiah)', ref: '1Chr 3:16–17', line: 'israel',
-                              note: { de: 'Wurde ins Exil weggeführt.', en: 'Was carried into exile.' },
-                              children: [
-                                {
-                                  id: 'shealtiel', de: 'Schealtiël', en: 'Shealtiel', ref: '1Chr 3:17', line: 'israel',
-                                  children: [
-                                    {
-                                      id: 'pedaiah', de: 'Pedaja', en: 'Pedaiah', ref: '1Chr 3:18–19', line: 'israel',
-                                      children: [
-                                        {
-                                          id: 'zerubbabel', de: 'Serubbabel', en: 'Zerubbabel', ref: '1Chr 3:19', line: 'israel',
-                                          note: { de: 'Führt die Rückkehrer aus dem Exil und baut den Tempel wieder auf.', en: 'Leads the return from exile and rebuilds the temple.' },
-                                          children: [
-                                            { id: 'z-meshullam', de: 'Meschullam', en: 'Meshullam', ref: '1Chr 3:19', line: 'israel' },
-                                            { id: 'z-hananiah', de: 'Hananja', en: 'Hananiah', ref: '1Chr 3:19', line: 'israel' },
-                                            { id: 'z-shelomith', de: 'Schelomit (Tochter)', en: 'Shelomith (daughter)', ref: '1Chr 3:19', line: 'israel' },
-                                          ],
-                                        },
-                                      ],
-                                    },
-                                  ],
-                                },
-                              ],
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                    { id: 'j-zeruiah', de: 'Zeruja (Schwester)', en: 'Zeruiah (sister)', ref: '1Chr 2:16', line: 'israel', note: { de: 'Mutter der Feldherren Abischai, Joab und Asaël.', en: 'Mother of the commanders Abishai, Joab and Asahel.' } },
-                    { id: 'j-abigail', de: 'Abigail (Schwester)', en: 'Abigail (sister)', ref: '1Chr 2:16–17', line: 'israel', note: { de: 'Mutter Amasas.', en: 'Mother of Amasa.' } },
-                  ],
-                },
-              ],
-            },
-            {
-              id: 'j-caleb-h', de: 'Kaleb (Chelubai)', en: 'Caleb (Chelubai)', ref: '1Chr 2:9·18', line: 'israel',
-              note: { de: 'Sohn Hezrons; aus seiner Linie Bezalel.', en: 'Son of Hezron; from his line Bezalel.' },
-              children: [
-                {
-                  id: 'j-hur', de: 'Hur', en: 'Hur', ref: '1Chr 2:19–20', line: 'israel',
-                  spine: [{ de: 'Uri', en: 'Uri', ref: '1Chr 2:20' }],
-                  children: [
-                    { id: 'bezalel', de: 'Bezalel', en: 'Bezalel', ref: '1Chr 2:20 · 2Mo 31:2', line: 'israel', note: { de: 'Kunsthandwerker der Stiftshütte.', en: 'Master craftsman of the tabernacle.' } },
-                  ],
-                },
-              ],
-            },
-            {
-              id: 'j-jerahmeel', de: 'Jerachmeel', en: 'Jerahmeel', ref: '1Chr 2:9·25', line: 'israel',
-              note: { de: 'Erstgeborener Hezrons; die Jerachmeeliter.', en: 'Firstborn of Hezron; the Jerahmeelites.' },
-            },
-            {
-              id: 'j-segub', de: 'Segub', en: 'Segub', ref: '1Chr 2:21–22', line: 'israel',
-              children: [
-                { id: 'j-jair', de: 'Jair', en: 'Jair', ref: '1Chr 2:22', line: 'israel', note: { de: 'Hatte 23 Städte im Land Gilead.', en: 'Had 23 towns in the land of Gilead.' } },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'j-kenaz', de: 'Kenas (Kenisiter)', en: 'Kenaz (Kenizzites)', ref: '1Chr 4:13', line: 'israel',
-      note: { de: 'In Juda einverleibte Sippe.', en: 'A clan reckoned to Judah.' },
-      children: [
-        { id: 'othniel', de: 'Otniel', en: 'Othniel', ref: '1Chr 4:13 · Ri 3:9', line: 'israel', note: { de: 'Der erste Richter Israels.', en: 'The first judge of Israel.' } },
-      ],
-    },
-    { id: 'j-caleb-j', de: 'Kaleb, Sohn Jefunnes', en: 'Caleb son of Jephunneh', ref: '1Chr 4:15 · 4Mo 13:6', line: 'israel', note: { de: 'Der treue Kundschafter.', en: 'The faithful spy.' } },
-    { id: 'jabez', de: 'Jaebez', en: 'Jabez', ref: '1Chr 4:9–10', line: 'israel', note: { de: '»Ehrenwerter als seine Brüder«; für sein Gebet bekannt.', en: '“More honorable than his brothers”; known for his prayer.' } },
-  ],
-};
-
-const TRIBE_ISSACHAR: GenNode = {
-  id: 'issachar', de: 'Issachar', en: 'Issachar', ref: '1Chr 7:1–5', line: 'israel',
-  children: [
-    {
-      id: 'i-tola', de: 'Tola', en: 'Tola', ref: '1Chr 7:1–2', line: 'israel',
-      children: [
-        { id: 'i-uzzi', de: 'Usi', en: 'Uzzi', ref: '1Chr 7:2', line: 'israel' },
-        { id: 'i-rephaiah', de: 'Rephaja', en: 'Rephaiah', ref: '1Chr 7:2', line: 'israel' },
-        { id: 'i-jeriel', de: 'Jeriel', en: 'Jeriel', ref: '1Chr 7:2', line: 'israel' },
-        { id: 'i-jahmai', de: 'Jahemai', en: 'Jahmai', ref: '1Chr 7:2', line: 'israel' },
-        { id: 'i-ibsam', de: 'Jibsam', en: 'Ibsam', ref: '1Chr 7:2', line: 'israel' },
-        { id: 'i-shemuel', de: 'Samuel', en: 'Shemuel', ref: '1Chr 7:2', line: 'israel' },
-      ],
-    },
-    { id: 'i-puah', de: 'Pua', en: 'Puah', ref: '1Chr 7:1', line: 'israel' },
-    { id: 'i-jashub', de: 'Jaschub', en: 'Jashub', ref: '1Chr 7:1', line: 'israel' },
-    { id: 'i-shimron', de: 'Schimron', en: 'Shimron', ref: '1Chr 7:1', line: 'israel' },
-  ],
-};
-
-const TRIBE_ZEBULUN: GenNode = {
-  id: 'zebulun', de: 'Sebulon', en: 'Zebulun', ref: '1Mo 46:14 · 4Mo 26:26', line: 'israel',
-  children: [
-    { id: 'z-sered', de: 'Sered', en: 'Sered', ref: '1Mo 46:14', line: 'israel' },
-    { id: 'z-elon', de: 'Elon', en: 'Elon', ref: '1Mo 46:14', line: 'israel' },
-    { id: 'z-jahleel', de: 'Jachleel', en: 'Jahleel', ref: '1Mo 46:14', line: 'israel' },
-  ],
-};
-
-const TRIBE_DAN: GenNode = {
-  id: 'dan', de: 'Dan', en: 'Dan', ref: '1Mo 46:23 · 4Mo 26:42', line: 'israel', place: 'Dan',
-  note: { de: 'Aus Dan kommt der Richter Simson.', en: 'From Dan comes the judge Samson.' },
-  children: [
-    { id: 'd-hushim', de: 'Huschim (Schuham)', en: 'Hushim (Shuham)', ref: '1Mo 46:23', line: 'israel' },
-  ],
-};
-
-const TRIBE_MANASSEH: GenNode = {
-  id: 'manasseh', de: 'Manasse', en: 'Manasseh', ref: '1Chr 7:14–19 · 4Mo 26:29', line: 'israel',
-  note: { de: 'Halbstamm im Ostjordanland (Gilead) und im Westen.', en: 'Half-tribe east (Gilead) and west of the Jordan.' },
-  children: [
-    { id: 'm-asriel', de: 'Asriel', en: 'Asriel', ref: '1Chr 7:14', line: 'israel' },
-    {
-      id: 'm-machir', de: 'Machir', en: 'Machir', ref: '1Chr 7:14–16', line: 'israel',
-      note: { de: 'Erstgeborener; Vater Gileads.', en: 'Firstborn; father of Gilead.' },
-      children: [
-        {
-          id: 'gilead', de: 'Gilead', en: 'Gilead', ref: '1Chr 7:17 · 4Mo 26:29', line: 'israel', place: 'Gilead',
-          note: { de: 'Nach ihm ist die Landschaft Gilead benannt; seine Sippen:', en: 'The region of Gilead is named after him; his clans:' },
-          children: [
-            {
-              id: 'g-abiezer', de: 'Abiëser (Iëser)', en: 'Abiezer (Iezer)', ref: '4Mo 26:30 · Jos 17:2', line: 'israel',
-              children: [
-                { id: 'gideon', de: 'Gideon', en: 'Gideon', ref: 'Ri 6:11', line: 'israel', note: { de: 'Richter; aus der Sippe Abiëser.', en: 'Judge; of the clan of Abiezer.' } },
-              ],
-            },
-            { id: 'g-helek', de: 'Helek', en: 'Helek', ref: '4Mo 26:30', line: 'israel' },
-            { id: 'g-shechem', de: 'Sichem', en: 'Shechem', ref: '4Mo 26:31', line: 'israel' },
-            {
-              id: 'g-shemida', de: 'Schemida', en: 'Shemida', ref: '1Chr 7:19 · 4Mo 26:32', line: 'israel',
-              children: [
-                { id: 'g-ahian', de: 'Ahjan', en: 'Ahian', ref: '1Chr 7:19', line: 'israel' },
-                { id: 'g-shechem2', de: 'Sichem', en: 'Shechem', ref: '1Chr 7:19', line: 'israel' },
-                { id: 'g-likhi', de: 'Likhi', en: 'Likhi', ref: '1Chr 7:19', line: 'israel' },
-                { id: 'g-aniam', de: 'Aniam', en: 'Aniam', ref: '1Chr 7:19', line: 'israel' },
-              ],
-            },
-            {
-              id: 'g-hepher', de: 'Hefer', en: 'Hepher', ref: '4Mo 26:32', line: 'israel',
-              children: [
-                {
-                  id: 'zelophehad', de: 'Zelofhad', en: 'Zelophehad', ref: '1Chr 7:15 · 4Mo 27:1', line: 'israel',
-                  note: { de: 'Hatte nur Töchter – die ein eigenes Erbrecht erhielten.', en: 'Had only daughters – who received their own inheritance right.' },
-                  children: [
-                    { id: 'zd-mahlah', de: 'Machla', en: 'Mahlah', ref: '4Mo 27:1', line: 'israel' },
-                    { id: 'zd-noah', de: 'Noa', en: 'Noah', ref: '4Mo 27:1', line: 'israel' },
-                    { id: 'zd-hoglah', de: 'Hogla', en: 'Hoglah', ref: '4Mo 27:1', line: 'israel' },
-                    { id: 'zd-milcah', de: 'Milka', en: 'Milcah', ref: '4Mo 27:1', line: 'israel' },
-                    { id: 'zd-tirzah', de: 'Tirza', en: 'Tirzah', ref: '4Mo 27:1', line: 'israel' },
-                  ],
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'm-east', de: 'Halbstamm im Basan', en: 'Half-tribe in Bashan', ref: '1Chr 5:23–24', line: 'israel',
-      note: { de: 'Häupter im Ostjordanland.', en: 'Heads east of the Jordan.' },
-      children: [
-        { id: 'hm-epher', de: 'Epher', en: 'Epher', ref: '1Chr 5:24', line: 'israel' },
-        { id: 'hm-ishi', de: 'Jesei', en: 'Ishi', ref: '1Chr 5:24', line: 'israel' },
-        { id: 'hm-eliel', de: 'Eliel', en: 'Eliel', ref: '1Chr 5:24', line: 'israel' },
-        { id: 'hm-jeremiah', de: 'Jeremia', en: 'Jeremiah', ref: '1Chr 5:24', line: 'israel' },
-        { id: 'hm-hodaviah', de: 'Hodawja', en: 'Hodaviah', ref: '1Chr 5:24', line: 'israel' },
-        { id: 'hm-jahdiel', de: 'Jachdiel', en: 'Jahdiel', ref: '1Chr 5:24', line: 'israel' },
-      ],
-    },
-  ],
-};
-
-const TRIBE_EPHRAIM: GenNode = {
-  id: 'ephraim', de: 'Ephraim', en: 'Ephraim', ref: '1Chr 7:20–27', line: 'israel', place: 'Ephraim',
-  note: { de: 'Aus seiner Linie kommt Josua, der Nachfolger Moses.', en: 'From his line comes Joshua, Moses’ successor.' },
-  children: [
-    {
-      id: 'e-shuthelah', de: 'Sutelach', en: 'Shuthelah', ref: '1Chr 7:20', line: 'israel',
-      note: { de: 'Eine seiner Linien; einige Söhne fielen bei Gat.', en: 'One of his lines; some sons fell at Gath.' },
-    },
-    {
-      id: 'e-line', de: 'Beria', en: 'Beriah', ref: '1Chr 7:23', line: 'israel',
-      note: { de: 'Geboren, als es im Haus Ephraims Unglück gab; seine Tochter Scheera baute Bet-Horon.', en: 'Born amid misfortune in Ephraim’s house; his daughter Sheerah built Beth-horon.' },
-      spine: [
-        { de: 'Refach', en: 'Rephah', ref: '1Chr 7:25' },
-        { de: 'Reschef', en: 'Resheph', ref: '1Chr 7:25' },
-        { de: 'Telach', en: 'Telah', ref: '1Chr 7:25' },
-        { de: 'Tahan', en: 'Tahan', ref: '1Chr 7:25' },
-        { de: 'Ladan', en: 'Ladan', ref: '1Chr 7:26' },
-        { de: 'Ammihud', en: 'Ammihud', ref: '1Chr 7:26' },
-        { de: 'Elischama', en: 'Elishama', ref: '1Chr 7:26' },
-        { de: 'Nun', en: 'Nun', ref: '1Chr 7:27' },
-      ],
-      children: [
-        { id: 'joshua', de: 'Josua', en: 'Joshua', ref: '1Chr 7:27', line: 'israel', note: { de: 'Führt Israel ins verheißene Land.', en: 'Leads Israel into the promised land.' } },
-      ],
-    },
-  ],
-};
-
-const TRIBE_JOSEPH: GenNode = {
-  id: 'joseph', de: 'Josef', en: 'Joseph', ref: '1Chr 5:1 · 1Mo 41:51–52', line: 'israel',
-  note: { de: 'Erhielt die Erstgeburt; seine Söhne Ephraim und Manasse werden zu eigenen Stämmen.', en: 'Received the birthright; his sons Ephraim and Manasseh become tribes of their own.' },
-  children: [TRIBE_MANASSEH, TRIBE_EPHRAIM],
-};
-
-const TRIBE_BENJAMIN: GenNode = {
-  id: 'benjamin', de: 'Benjamin', en: 'Benjamin', ref: '1Chr 7:6 · 1Chr 8', line: 'israel',
-  note: { de: 'Aus ihm der erste König, Saul.', en: 'From him the first king, Saul.' },
-  children: [
-    {
-      id: 'b-bela', de: 'Bela', en: 'Bela', ref: '1Chr 7:6–7', line: 'israel',
-      note: { de: 'Erstgeborener; fünf Söhne.', en: 'Firstborn; five sons.' },
-      children: [
-        { id: 'b-ezbon', de: 'Ezbon', en: 'Ezbon', ref: '1Chr 7:7', line: 'israel' },
-        { id: 'b-uzzi', de: 'Usi', en: 'Uzzi', ref: '1Chr 7:7', line: 'israel' },
-        { id: 'b-uzziel', de: 'Usiël', en: 'Uzziel', ref: '1Chr 7:7', line: 'israel' },
-        { id: 'b-jerimoth', de: 'Jerimot', en: 'Jerimoth', ref: '1Chr 7:7', line: 'israel' },
-        { id: 'b-iri', de: 'Iri', en: 'Iri', ref: '1Chr 7:7', line: 'israel' },
-      ],
-    },
-    { id: 'b-becher', de: 'Becher', en: 'Becher', ref: '1Chr 7:6·8', line: 'israel' },
-    {
-      id: 'b-jediael', de: 'Jediaël', en: 'Jediael', ref: '1Chr 7:6·10', line: 'israel',
-      children: [
-        { id: 'b-bilhan', de: 'Bilhan', en: 'Bilhan', ref: '1Chr 7:10', line: 'israel' },
-        { id: 'b-ehud', de: 'Ehud', en: 'Ehud', ref: '1Chr 8:6 · Ri 3:15', line: 'israel', note: { de: 'Der linkshändige Richter, der Eglon besiegte.', en: 'The left-handed judge who defeated Eglon.' } },
-      ],
-    },
-    {
-      id: 'b-ner', de: 'Ner', en: 'Ner', ref: '1Chr 8:33', line: 'israel',
-      note: { de: 'Die Königslinie Sauls (Sippe zu Gibeon).', en: 'The royal line of Saul (clan at Gibeon).' },
-      children: [
-        {
-          id: 'kish', de: 'Kisch', en: 'Kish', ref: '1Chr 8:33', line: 'israel',
-          note: { de: 'Vater König Sauls.', en: 'Father of King Saul.' },
-          children: [
-            {
-              id: 'saul', de: 'Saul', en: 'Saul', ref: '1Chr 8:33', line: 'israel', place: 'Gibeah',
-              note: { de: 'Der erste König Israels.', en: 'The first king of Israel.' },
-              children: [
-                {
-                  id: 'jonathan', de: 'Jonatan', en: 'Jonathan', ref: '1Chr 8:33', line: 'israel', note: { de: 'Freund Davids.', en: 'Friend of David.' },
-                  children: [
-                    {
-                      id: 'meribbaal', de: 'Merib-Baal (Mefi-Boschet)', en: 'Merib-baal (Mephibosheth)', ref: '1Chr 8:34', line: 'israel',
-                      spine: [
-                        { de: 'Micha', en: 'Micah', ref: '1Chr 8:34' },
-                        { de: 'Ahas', en: 'Ahaz', ref: '1Chr 8:35' },
-                        { de: 'Moza', en: 'Moza', ref: '1Chr 8:36–37' },
-                        { de: 'Binea', en: 'Binea', ref: '1Chr 8:37' },
-                      ],
-                      children: [
-                        { id: 'b-azel', de: 'Azel', en: 'Azel', ref: '1Chr 8:37–38', line: 'israel', note: { de: 'Hatte sechs Söhne.', en: 'Had six sons.' } },
-                      ],
-                    },
-                  ],
-                },
-                { id: 'b-malchishua', de: 'Malkischua', en: 'Malchishua', ref: '1Chr 8:33', line: 'israel' },
-                { id: 'b-abinadab', de: 'Abinadab', en: 'Abinadab', ref: '1Chr 8:33', line: 'israel' },
-                { id: 'b-eshbaal', de: 'Esch-Baal (Isch-Boschet)', en: 'Esh-baal (Ish-bosheth)', ref: '1Chr 8:33', line: 'israel' },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-  ],
-};
-
-const TRIBE_NAPHTALI: GenNode = {
-  id: 'naphtali', de: 'Naftali', en: 'Naphtali', ref: '1Chr 7:13', line: 'israel',
-  note: { de: 'Kinder von Bilha.', en: 'Sons of Bilhah.' },
-  children: [
-    { id: 'n-jahziel', de: 'Jachziel', en: 'Jahziel', ref: '1Chr 7:13', line: 'israel' },
-    { id: 'n-guni', de: 'Guni', en: 'Guni', ref: '1Chr 7:13', line: 'israel' },
-    { id: 'n-jezer', de: 'Jezer', en: 'Jezer', ref: '1Chr 7:13', line: 'israel' },
-    { id: 'n-shallum', de: 'Schallum', en: 'Shallum', ref: '1Chr 7:13', line: 'israel' },
-  ],
-};
-
-const TRIBE_GAD: GenNode = {
-  id: 'gad', de: 'Gad', en: 'Gad', ref: '1Mo 46:16 · 1Chr 5:11–16', line: 'israel',
-  note: { de: 'Wohnte im Basan; Häupter u. a. Joel und Schafam.', en: 'Settled in Bashan; chiefs included Joel and Shapham.' },
-  children: [
-    { id: 'gd-zephon', de: 'Zifjon', en: 'Zephon', ref: '1Mo 46:16 · 4Mo 26:15', line: 'israel' },
-    { id: 'gd-haggi', de: 'Haggi', en: 'Haggi', ref: '4Mo 26:15', line: 'israel' },
-    { id: 'gd-shuni', de: 'Schuni', en: 'Shuni', ref: '4Mo 26:15', line: 'israel' },
-    { id: 'gd-ozni', de: 'Osni (Ezbon)', en: 'Ozni (Ezbon)', ref: '4Mo 26:16', line: 'israel' },
-    { id: 'gd-eri', de: 'Eri', en: 'Eri', ref: '4Mo 26:16', line: 'israel' },
-    { id: 'gd-arod', de: 'Arod', en: 'Arod', ref: '4Mo 26:17', line: 'israel' },
-    { id: 'gd-areli', de: 'Areli', en: 'Areli', ref: '4Mo 26:17', line: 'israel' },
-  ],
-};
-
-const TRIBE_ASHER: GenNode = {
-  id: 'asher', de: 'Asser', en: 'Asher', ref: '1Chr 7:30–40', line: 'israel',
-  children: [
-    { id: 'a-imnah', de: 'Jimna', en: 'Imnah', ref: '1Chr 7:30', line: 'israel' },
-    { id: 'a-ishvah', de: 'Jischwa', en: 'Ishvah', ref: '1Chr 7:30', line: 'israel' },
-    { id: 'a-ishvi', de: 'Jischwi', en: 'Ishvi', ref: '1Chr 7:30', line: 'israel' },
-    {
-      id: 'a-beriah', de: 'Beria', en: 'Beriah', ref: '1Chr 7:30–31', line: 'israel',
-      children: [
-        {
-          id: 'a-heber', de: 'Heber', en: 'Heber', ref: '1Chr 7:31–32', line: 'israel',
-          children: [
-            { id: 'a-japhlet', de: 'Japhlet', en: 'Japhlet', ref: '1Chr 7:32–33', line: 'israel' },
-            { id: 'a-shomer', de: 'Semer', en: 'Shomer', ref: '1Chr 7:32', line: 'israel' },
-            { id: 'a-hotham', de: 'Hotam', en: 'Hotham', ref: '1Chr 7:32', line: 'israel' },
-          ],
-        },
-        { id: 'a-malchiel', de: 'Malkiël', en: 'Malchiel', ref: '1Chr 7:31', line: 'israel' },
-      ],
-    },
-    { id: 'a-serah', de: 'Serach (Schwester)', en: 'Serah (sister)', ref: '1Chr 7:30', line: 'israel' },
-  ],
-};
-
-// ---- Israel / Jacob and the twelve tribes (1 Chr 2:1–2 · Gen 35:23–26) -----
-const ISRAEL: GenNode = {
-  id: 'israel',
-  de: 'Israel (Jakob)',
-  en: 'Israel (Jacob)',
-  ref: '1Chr 2:1 · Gen 35:23',
-  line: 'israel',
-  note: { de: 'Aus seinen zwölf Söhnen werden die zwölf Stämme – hier mit ihren Sippen und namentlichen Nachkommen aus 1. Chronik 2–9.', en: 'From his twelve sons come the twelve tribes – here with their clans and named descendants from 1 Chronicles 2–9.' },
-  children: [
-    TRIBE_REUBEN,
-    TRIBE_SIMEON,
-    TRIBE_LEVI,
-    TRIBE_JUDAH,
-    TRIBE_ISSACHAR,
-    TRIBE_ZEBULUN,
-    TRIBE_DAN,
-    TRIBE_JOSEPH,
-    TRIBE_BENJAMIN,
-    TRIBE_NAPHTALI,
-    TRIBE_GAD,
-    TRIBE_ASHER,
-  ],
-};
-
-// ---- Isaac (1 Chr 1:34) ----------------------------------------------------
-const ISAAC: GenNode = {
-  id: 'isaac',
-  de: 'Isaak',
-  en: 'Isaac',
-  ref: '1Chr 1:34',
-  line: 'abraham',
-  children: [ESAU, SEIR, ISRAEL],
-};
-
-// ---- Abraham (1 Chr 1:27–28) -----------------------------------------------
-const ABRAHAM: GenNode = {
-  id: 'abraham',
-  de: 'Abram – Abraham',
-  en: 'Abram – Abraham',
-  ref: '1Chr 1:27',
-  line: 'abraham',
-  note: { de: 'Mit ihm beginnt die Verheißungslinie; aus seinen Söhnen werden viele Völker.', en: 'With him the line of promise begins; from his sons come many peoples.' },
-  place: 'Ur',
-  children: [ISHMAEL, KETURAH, ISAAC],
-};
-
-// ---- The full tree ---------------------------------------------------------
-// Adam → Noah is a single linear chain (Gen 5 / 1 Chr 1:1–4); shown as a spine.
-export const GENEALOGY: GenNode = {
-  id: 'adam',
-  de: 'Adam',
-  en: 'Adam',
-  ref: '1Chr 1:1 · Gen 5:1',
-  line: 'primeval',
-  note: { de: 'Der erste Mensch. Zehn Generationen bis Noah.', en: 'The first man. Ten generations to Noah.' },
-  spine: [
-    { de: 'Set', en: 'Seth', ref: '1Chr 1:1' },
-    { de: 'Enosch', en: 'Enosh', ref: '1Chr 1:1' },
-    { de: 'Kenan', en: 'Kenan', ref: '1Chr 1:2' },
-    { de: 'Mahalalel', en: 'Mahalalel', ref: '1Chr 1:2' },
-    { de: 'Jered', en: 'Jared', ref: '1Chr 1:2' },
-    { de: 'Henoch', en: 'Enoch', ref: '1Chr 1:3' },
-    { de: 'Metuschelach', en: 'Methuselah', ref: '1Chr 1:3' },
-    { de: 'Lamech', en: 'Lamech', ref: '1Chr 1:3' },
-  ],
-  children: [
-    {
-      id: 'noah',
-      de: 'Noah',
-      en: 'Noah',
-      ref: '1Chr 1:4 · Gen 5:32',
-      line: 'primeval',
-      note: { de: 'Nach der Flut gehen von seinen drei Söhnen alle Völker aus (Völkertafel).', en: 'After the flood all nations descend from his three sons (Table of Nations).' },
-      children: [JAPHETH, HAM, SHEM],
-    },
-  ],
-};
-
-// The Shem→Abraham chain (1 Chr 1:24–27) attached under Peleg, so the branch of
-// nations (Joktan) and the line of promise (Peleg → Abraham) both stay visible.
-const PELEG = (((SHEM.children!.find((c) => c.id === 'arphaxad')!).children!).find(
-  (c) => c.id === 'peleg',
-))!;
-PELEG.spine = [
-  { de: 'Regu', en: 'Reu', ref: '1Chr 1:25' },
-  { de: 'Serug', en: 'Serug', ref: '1Chr 1:26' },
-  { de: 'Nahor', en: 'Nahor', ref: '1Chr 1:26' },
-  { de: 'Terach', en: 'Terah', ref: '1Chr 1:26' },
-];
-PELEG.children = [ABRAHAM];
+/**
+ * Wikipedia lookup for a named person who is not (yet) a tree node — e.g. the
+ * wives carried only as `spouse` text. `/w/index.php?search=` jumps straight to
+ * the article on an exact match and otherwise shows search results.
+ */
+export function wikipediaSearchUrl(name: string, lang: 'de' | 'en'): string {
+  const host = lang === 'de' ? 'de.wikipedia.org' : 'en.wikipedia.org';
+  return `https://${host}/w/index.php?search=${encodeURIComponent(name)}`;
+}
