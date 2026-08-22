@@ -2,7 +2,6 @@ import type { Place } from '../types';
 import { useLang, useT } from '../i18n';
 import { erasForPlace, placeName } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
-import PlaceThumb from './PlaceThumb';
 
 interface Props {
   query: string;
@@ -26,27 +25,40 @@ function EraDots({ place }: { place: Place }) {
   );
 }
 
+/** Earliest era a place appears in — the same rule that colours its marker. */
+function eraColor(place: Place): string {
+  const eras = erasForPlace(place)
+    .map((id) => ERA_BY_ID[id])
+    .filter(Boolean)
+    .sort((a, b) => a.order - b.order);
+  return eras[0]?.color ?? '#7fe3d5';
+}
+
 function Row({ p, onSelect, t }: { p: Place; onSelect: (p: Place) => void; t: (k: any) => string }) {
   const lang = useLang();
   return (
     <button
       onClick={() => onSelect(p)}
-      className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition hover:bg-cream-2"
+      className="bm-row group"
     >
-      <PlaceThumb place={p} className="h-11 w-11 flex-none rounded-lg ring-1 ring-teal/10" />
+      {/* The mention count is the graphic — it says more about a place than a
+          44px thumbnail ever did, and it never fails to load. */}
+      <span className="bm-num w-14 flex-none text-xl" style={{ color: eraColor(p) }}>
+        {p.mentionCount}
+      </span>
 
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
-          <span className="truncate font-medium text-ink group-hover:text-teal">{placeName(p, lang)}</span>
+          <span className="truncate text-[15px] font-bold text-white">{placeName(p, lang)}</span>
           <EraDots place={p} />
         </span>
-        <span className="mt-0.5 block truncate text-[11px] text-ink-soft">
-          {p.mentionCount} {p.mentionCount === 1 ? t('mention') : t('mentions')}
+        <span className="mt-0.5 block truncate text-[11px] text-white/45">
+          {p.mentionCount === 1 ? t('mention') : t('mentions')}
           {p.types[0] ? ` · ${p.types[0]}` : ''}
         </span>
       </span>
-      <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-ink-soft/40 transition group-hover:text-teal" fill="currentColor">
-        <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" fill="none" />
+      <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white/30 transition group-hover:text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 5l7 7-7 7" />
       </svg>
     </button>
   );
@@ -61,20 +73,20 @@ export default function SearchPanel({ query, onQuery, results, topPlaces, onSele
     <div className="flex h-full flex-col">
       <div className="p-3">
         <div className="relative">
-          <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" fill="currentColor">
+          <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" fill="currentColor">
             <path d="M10 4a6 6 0 104.47 10l4.27 4.26 1.42-1.42-4.26-4.27A6 6 0 0010 4zm0 2a4 4 0 110 8 4 4 0 010-8z" />
           </svg>
           <input
             value={query}
             onChange={(e) => onQuery(e.target.value)}
             placeholder={t('search')}
-            className="w-full rounded-xl border border-teal/15 bg-cream py-2.5 pl-9 pr-9 text-sm text-ink outline-none transition placeholder:text-ink-soft/70 focus:border-gold focus:ring-2 focus:ring-gold/30"
+            className="w-full border border-white/10 bg-deepest py-2.5 pl-9 pr-9 text-sm text-white outline-none transition placeholder:text-white/45 focus:border-gold focus:ring-2 focus:ring-gold/30"
           />
           {query && (
             <button
               onClick={() => onQuery('')}
               aria-label={t('reset')}
-              className="absolute right-2 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-ink-soft hover:bg-cream-2"
+              className="absolute right-2 top-1/2 grid h-6 w-6 -translate-y-1/2 place-items-center rounded-full text-white/60 hover:bg-surface"
             >
               <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
                 <path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" />
@@ -84,13 +96,13 @@ export default function SearchPanel({ query, onQuery, results, topPlaces, onSele
         </div>
       </div>
 
-      <div className="px-4 pb-1 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">
+      <div className="px-4 pb-1 text-[11px] font-semibold uppercase tracking-wide text-white/60">
         {showResults ? `${results.length} ${t('results')}` : t('topPlaces')}
       </div>
 
       <div className="scroll-soft min-h-0 flex-1 overflow-y-auto px-1 pb-3">
         {list.length === 0 ? (
-          <div className="px-4 py-8 text-center text-sm text-ink-soft">{t('noResults')}</div>
+          <div className="px-4 py-8 text-center text-sm text-white/60">{t('noResults')}</div>
         ) : (
           list.map((p) => <Row key={p.id} p={p} onSelect={onSelect} t={t} />)
         )}

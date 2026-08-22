@@ -22,7 +22,7 @@ interface Props {
   flyTo?: { lat: number; lon: number; zoom?: number; key: number } | null;
 }
 
-export type BasemapId = 'light' | 'satellite' | 'relief' | 'antique';
+export type BasemapId = 'dark' | 'light' | 'satellite' | 'relief' | 'antique';
 
 interface Basemap {
   url: string;
@@ -36,6 +36,16 @@ interface Basemap {
 const OB_ATTR = '· Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY)';
 
 export const BASEMAPS: Record<BasemapId, Basemap> = {
+  // The default. A light basemap under a dark shell reads as two designs
+  // stacked on each other; the era colours also only sing against dark.
+  dark: {
+    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> ' + OB_ATTR,
+    maxZoom: 17,
+    subdomains: 'abcd',
+    dark: true,
+  },
   light: {
     url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
     attribution:
@@ -130,7 +140,7 @@ export default function MapView({ places, heat, selectedId, lang, onSelect, base
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    const bm = BASEMAPS[basemap] ?? BASEMAPS.light;
+    const bm = BASEMAPS[basemap] ?? BASEMAPS.dark;
     if (tileRef.current) map.removeLayer(tileRef.current);
     tileRef.current = L.tileLayer(bm.url, {
       attribution: bm.attribution,

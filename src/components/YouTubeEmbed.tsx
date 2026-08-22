@@ -27,16 +27,14 @@ export default function YouTubeEmbed({ ids, title }: Props) {
                 setPart(i);
                 setPlaying(false);
               }}
-              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition ${
-                i === part ? 'bg-teal text-cream' : 'bg-cream-2 text-teal hover:bg-gold/30'
-              }`}
+              className={`px-2.5 py-1 text-xs font-medium transition ${ i === part ? 'bg-signal text-white' : 'bg-surface text-white hover:bg-gold/30' }`}
             >
               Teil {i + 1}
             </button>
           ))}
         </div>
       )}
-      <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-black shadow-lg">
+      <div className="relative aspect-video w-full overflow-hidden bg-black">
         {playing ? (
           <iframe
             className="absolute inset-0 h-full w-full"
@@ -55,7 +53,7 @@ export default function YouTubeEmbed({ ids, title }: Props) {
               referrerPolicy="no-referrer"
             />
             <span className="absolute inset-0 grid place-items-center">
-              <span className="grid h-14 w-14 place-items-center rounded-full bg-black/60 ring-2 ring-white/80 transition group-hover:bg-clay">
+              <span className="grid h-14 w-14 place-items-center rounded-full bg-black/60 ring-2 ring-white/10 transition group-hover:bg-clay">
                 <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7 text-white" fill="currentColor">
                   <path d="M8 5v14l11-7z" />
                 </svg>
@@ -64,9 +62,9 @@ export default function YouTubeEmbed({ ids, title }: Props) {
           </button>
         )}
       </div>
-      <div className="mt-1.5 text-[11px] text-ink-soft">
+      <div className="mt-1.5 text-[11px] text-white/60">
         Video: ©{' '}
-        <a href="https://bibleproject.com" target="_blank" rel="noreferrer" className="underline hover:text-teal">
+        <a href="https://bibleproject.com" target="_blank" rel="noreferrer" className="underline hover:text-white">
           BibleProject
         </a>{' '}
         (YouTube)

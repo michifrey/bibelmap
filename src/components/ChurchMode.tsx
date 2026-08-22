@@ -130,28 +130,26 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
   ];
 
   return (
-    <div className="fixed inset-0 z-[2000] flex flex-col bg-cream">
-      <div className="flex flex-none items-center justify-between gap-3 border-b border-teal/10 bg-teal px-4 py-3 text-cream">
+    <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
+      <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-signal px-4 py-3 text-white">
         <div className="flex items-center gap-2">
           <svg viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3v18M7 8h10M5 21h14" /></svg>
           <div className="font-display text-lg font-semibold leading-tight">{t('churchMode')}</div>
         </div>
-        <button onClick={onExit} className="rounded-lg bg-gold px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold-deep">
+        <button onClick={onExit} className="bg-gold px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold-deep">
           {t('exit')} ✕
         </button>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         {/* left */}
-        <div className="scroll-soft flex w-full flex-col overflow-y-auto border-b border-teal/10 md:w-[40%] md:max-w-md md:border-b-0 md:border-r">
-          <div className="sticky top-0 z-10 flex gap-1 border-b border-teal/10 bg-cream/95 p-2 backdrop-blur">
+        <div className="scroll-soft flex w-full flex-col overflow-y-auto border-b border-white/10 md:w-[40%] md:max-w-md md:border-b-0 md:border-r">
+          <div className="sticky top-0 z-10 flex gap-1 border-b border-white/10 bg-deepest/95 p-2 backdrop-blur">
             {tabs.map((tb) => (
               <button
                 key={tb.id}
                 onClick={() => switchTab(tb.id)}
-                className={`flex-1 rounded-lg px-2 py-1.5 text-xs font-medium transition ${
-                  tab === tb.id ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'
-                }`}
+                className={`flex-1 px-2 py-1.5 text-xs font-medium transition ${ tab === tb.id ? 'bg-signal text-white' : 'text-white/60 hover:bg-surface' }`}
               >
                 {tb.label}
               </button>
@@ -166,12 +164,12 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
                   <button
                     key={j.id}
                     onClick={() => setSel(j.id)}
-                    className={`flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left transition ${sel === j.id ? 'bg-cream-2 ring-1 ring-teal/20' : 'hover:bg-cream-2'}`}
+                    className={`flex w-full items-center gap-2 px-3 py-2 text-left transition ${sel === j.id ? 'bg-surface ring-1 ring-white/10' : 'hover:bg-surface'}`}
                   >
                     <span className="h-3 w-3 flex-none rounded-full" style={{ background: j.color }} />
                     <span className="min-w-0">
-                      <span className="block text-sm font-semibold text-teal">{lang === 'de' ? j.de.title : j.en.title}</span>
-                      <span className="text-[11px] text-ink-soft">{j.date} · {j.ref}</span>
+                      <span className="block text-sm font-semibold text-white">{lang === 'de' ? j.de.title : j.en.title}</span>
+                      <span className="text-[11px] text-white/60">{j.date} · {j.ref}</span>
                     </span>
                   </button>
                 ))}
@@ -182,7 +180,7 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
               <>
                 <div className="mb-2 flex flex-wrap gap-2 px-1">
                   {(['west', 'east', 'orient'] as Tradition[]).map((tr) => (
-                    <span key={tr} className="flex items-center gap-1 text-[11px] text-ink-soft">
+                    <span key={tr} className="flex items-center gap-1 text-[11px] text-white/60">
                       <span className="h-2.5 w-2.5 rounded-full" style={{ background: TRADITION_COLOR[tr] }} />
                       {lang === 'de' ? TRADITION_LABEL[tr].de : TRADITION_LABEL[tr].en}
                     </span>
@@ -193,12 +191,12 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
                     <button
                       key={f.id}
                       onClick={() => setSel(f.id)}
-                      className={`flex w-full items-center gap-2 rounded-xl px-3 py-1.5 text-left transition ${sel === f.id ? 'bg-cream-2 ring-1 ring-teal/20' : 'hover:bg-cream-2'}`}
+                      className={`flex w-full items-center gap-2 px-3 py-1.5 text-left transition ${sel === f.id ? 'bg-surface ring-1 ring-white/10' : 'hover:bg-surface'}`}
                     >
                       <span className="h-2.5 w-2.5 flex-none rounded-full" style={{ background: TRADITION_COLOR[f.tradition] }} />
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium text-ink">{lang === 'de' ? f.de : f.en}</span>
-                        <span className="text-[11px] text-ink-soft">{f.city} · {f.years}</span>
+                        <span className="block truncate text-sm font-medium text-white">{lang === 'de' ? f.de : f.en}</span>
+                        <span className="text-[11px] text-white/60">{f.city} · {f.years}</span>
                       </span>
                     </button>
                   ))}
@@ -212,12 +210,12 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
                   <button
                     key={c.id}
                     onClick={() => setSel(c.id)}
-                    className={`flex w-full items-center gap-2 rounded-xl px-3 py-1.5 text-left transition ${sel === c.id ? 'bg-cream-2 ring-1 ring-teal/20' : 'hover:bg-cream-2'}`}
+                    className={`flex w-full items-center gap-2 px-3 py-1.5 text-left transition ${sel === c.id ? 'bg-surface ring-1 ring-white/10' : 'hover:bg-surface'}`}
                   >
-                    <span className="grid h-6 w-6 flex-none place-items-center rounded-full bg-gold/30 text-[10px] font-semibold text-teal">{c.year.slice(0, 4)}</span>
+                    <span className="grid h-6 w-6 flex-none place-items-center rounded-full bg-gold/30 text-[10px] font-semibold text-white">{c.year.slice(0, 4)}</span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium text-ink">{c.name}</span>
-                      <span className="text-[11px] text-ink-soft">{c.city}</span>
+                      <span className="block truncate text-sm font-medium text-white">{c.name}</span>
+                      <span className="text-[11px] text-white/60">{c.city}</span>
                     </span>
                   </button>
                 ))}
@@ -226,23 +224,23 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
 
             {/* detail */}
             {detail && (
-              <div className="mt-4 rounded-xl bg-cream-2/50 p-3">
+              <div className="mt-4 bg-surface/50 p-3">
                 {'stops' in detail ? (
                   <>
-                    <div className="font-display text-base font-semibold text-teal">{lang === 'de' ? detail.de.title : detail.en.title}</div>
-                    <div className="text-[11px] text-ink-soft">{detail.date} · {detail.ref}</div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink">{lang === 'de' ? detail.de.text : detail.en.text}</p>
-                    <div className="mt-2 text-[11px] text-ink-soft">{detail.stops.map((s) => s.name).join(' → ')}</div>
+                    <div className="font-display text-base font-semibold text-white">{lang === 'de' ? detail.de.title : detail.en.title}</div>
+                    <div className="text-[11px] text-white/60">{detail.date} · {detail.ref}</div>
+                    <p className="mt-1.5 text-sm leading-relaxed text-white">{lang === 'de' ? detail.de.text : detail.en.text}</p>
+                    <div className="mt-2 text-[11px] text-white/60">{detail.stops.map((s) => s.name).join(' → ')}</div>
                   </>
                 ) : 'years' in detail ? (
                   <>
-                    <div className="font-display text-base font-semibold text-teal">{lang === 'de' ? detail.de : detail.en}</div>
-                    <div className="text-[11px] text-ink-soft">{detail.city} · {detail.years} · {lang === 'de' ? TRADITION_LABEL[detail.tradition].de : TRADITION_LABEL[detail.tradition].en}</div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink">{lang === 'de' ? detail.deNote : detail.enNote}</p>
+                    <div className="font-display text-base font-semibold text-white">{lang === 'de' ? detail.de : detail.en}</div>
+                    <div className="text-[11px] text-white/60">{detail.city} · {detail.years} · {lang === 'de' ? TRADITION_LABEL[detail.tradition].de : TRADITION_LABEL[detail.tradition].en}</div>
+                    <p className="mt-1.5 text-sm leading-relaxed text-white">{lang === 'de' ? detail.deNote : detail.enNote}</p>
                     {onOpenInTree && (
                       <button
                         onClick={() => onOpenInTree(detail.personId)}
-                        className="mt-2.5 inline-flex items-center gap-1.5 rounded-lg bg-teal px-2.5 py-1.5 text-xs font-medium text-cream transition hover:bg-teal-2"
+                        className="mt-2.5 inline-flex items-center gap-1.5 bg-signal px-2.5 py-1.5 text-xs font-medium text-white transition hover:bg-signal"
                       >
                         <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3v18M5 9l7-6 7 6" /></svg>
                         {t('openInTree')}
@@ -251,9 +249,9 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
                   </>
                 ) : (
                   <>
-                    <div className="font-display text-base font-semibold text-teal">{detail.name} · {detail.year}</div>
-                    <div className="text-[11px] text-ink-soft">{detail.city}</div>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink">{lang === 'de' ? detail.de.note : detail.en.note}</p>
+                    <div className="font-display text-base font-semibold text-white">{detail.name} · {detail.year}</div>
+                    <div className="text-[11px] text-white/60">{detail.city}</div>
+                    <p className="mt-1.5 text-sm leading-relaxed text-white">{lang === 'de' ? detail.de.note : detail.en.note}</p>
                   </>
                 )}
               </div>

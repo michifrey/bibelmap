@@ -74,7 +74,7 @@ export default function PlaceThumb({ place, className = '', iconClassName = 'h-5
   if (!src) {
     if (placeholder !== undefined) return <>{placeholder}</>;
     return (
-      <span className={`grid place-items-center bg-teal/10 text-teal ${className}`}>
+      <span className={`grid place-items-center bg-white/10 text-white ${className}`}>
         <svg viewBox="0 0 24 24" className={iconClassName} fill="currentColor">
           <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
         </svg>

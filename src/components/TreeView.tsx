@@ -208,7 +208,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
   const innerH = layout.height + PAD_TOP + RULER_H + 24;
 
   return (
-    <div className="relative h-full w-full bg-cream">
+    <div className="relative h-full w-full bg-deepest">
       {/* ---- scrollable tree canvas ---- */}
       <div ref={scrollRef} className="scroll-soft absolute inset-0 overflow-auto">
         <div className="relative" style={{ width: innerW, minWidth: '100%', height: innerH }}>
@@ -260,20 +260,18 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
                 >
                   <button
                     onClick={() => setSelectedId(p.id)}
-                    className={`group flex h-full w-full items-stretch overflow-hidden rounded-xl bg-white text-left shadow-sm ring-1 transition hover:shadow-md ${
-                      isSel ? 'ring-2 ring-gold' : isHit ? 'ring-2 ring-gold-deep' : 'ring-teal/15'
-                    }`}
+                    className={`group flex h-full w-full items-stretch overflow-hidden bg-surface text-left ring-1 transition hover:brightness-125 ${ isSel ? 'ring-2 ring-gold' : isHit ? 'ring-2 ring-gold-deep' : 'ring-white/10' }`}
                     style={p.faith ? { borderStyle: 'dashed' } : undefined}
                   >
                     <span className="w-1.5 shrink-0" style={{ background: epoch?.color ?? '#1f3d3a' }} />
                     <span className="flex min-w-0 flex-1 flex-col justify-center px-2.5 py-1.5">
                       <span className="flex items-center gap-1">
                         {p.faith && <span className="text-[10px] text-gold-deep">✦</span>}
-                        <span className="truncate font-display text-[13px] font-semibold leading-tight text-teal">
+                        <span className="truncate font-display text-[13px] font-semibold leading-tight text-white">
                           {lang === 'de' ? p.de : p.en}
                         </span>
                       </span>
-                      <span className="truncate text-[10.5px] text-ink-soft">
+                      <span className="truncate text-[10.5px] text-white/60">
                         {p.born !== undefined ? formatYear(p.born, lang) : epoch ? (lang === 'de' ? epoch.de : epoch.en) : ''}
                       </span>
                     </span>
@@ -286,9 +284,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
                         toggle(p.id);
                       }}
                       aria-label={isOpen ? t('collapseAll') : t('expandAll')}
-                      className={`absolute -right-2.5 top-1/2 z-10 grid h-5 w-5 -translate-y-1/2 place-items-center rounded-full text-[11px] font-bold text-cream shadow ring-2 ring-cream transition ${
-                        isOpen ? 'bg-teal-2' : 'bg-teal'
-                      }`}
+                      className={`absolute -right-2.5 top-1/2 z-10 grid h-5 w-5 -translate-y-1/2 place-items-center rounded-full text-[11px] font-bold text-white ring-2 ring-deepest transition ${ isOpen ? 'bg-signal' : 'bg-signal' }`}
                       style={{ background: isOpen ? undefined : epoch?.color }}
                     >
                       {isOpen ? '−' : '+'}
@@ -301,7 +297,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
 
           {/* ---- time ruler (Zeitschiene) ---- */}
           <div
-            className="sticky bottom-0 z-20 border-t border-teal/15 bg-cream/95 backdrop-blur"
+            className="sticky bottom-0 z-20 border-t border-white/10 bg-deepest/95 backdrop-blur"
             style={{ height: RULER_H, marginLeft: PAD_X, width: layout.width }}
           >
             <div className="relative h-full">
@@ -317,7 +313,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
                   >
                     <div className="h-1.5 w-full" style={{ background: epoch?.color ?? '#1f3d3a' }} />
                     {r.year !== undefined && (
-                      <div className="px-1 pt-1 text-center text-[10px] font-medium text-ink-soft">
+                      <div className="px-1 pt-1 text-center text-[10px] font-medium text-white/60">
                         {formatYear(r.year, lang)}
                       </div>
                     )}
@@ -342,14 +338,14 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
         <div
           ref={trackRef}
           onPointerDown={onTrackDown}
-          className="absolute z-[1090] h-2.5 rounded-full bg-teal/10 ring-1 ring-teal/10"
+          className="absolute z-[1090] h-2.5 rounded-full bg-white/10 ring-1 ring-white/10"
           style={{ left: 14, right: 14, bottom: RULER_H + 6 }}
         >
           <div
             onPointerDown={onThumbDown}
             onPointerMove={onThumbMove}
             onPointerUp={onThumbUp}
-            className="absolute top-0 h-full min-w-[28px] cursor-grab touch-none rounded-full bg-teal/45 transition-colors hover:bg-teal/65 active:cursor-grabbing active:bg-teal/70"
+            className="absolute top-0 h-full min-w-[28px] cursor-grab touch-none rounded-full bg-white/10 transition-colors hover:bg-white/10 active:cursor-grabbing active:bg-white/10"
             style={{ left: `${hbar.left * 100}%`, width: `${hbar.width * 100}%` }}
           />
         </div>
@@ -357,40 +353,40 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
 
       {/* ---- header / toolbar ---- */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex flex-col gap-2 p-3 pt-20 sm:p-4 sm:pt-24">
-        <div className="pointer-events-auto flex flex-wrap items-center gap-2 self-start rounded-2xl bg-cream/92 px-3 py-2 shadow-lg ring-1 ring-teal/10 backdrop-blur">
+        <div className="pointer-events-auto flex flex-wrap items-center gap-2 self-start bg-deepest/95 px-3 py-2 ring-1 ring-white/10 backdrop-blur">
           <div className="pr-1">
-            <div className="font-display text-base font-semibold leading-tight text-teal">{t('treeTitle')}</div>
-            <div className="text-[11px] text-ink-soft">{t('treeSubtitle')}</div>
+            <div className="font-display text-base font-semibold leading-tight text-white">{t('treeTitle')}</div>
+            <div className="text-[11px] text-white/60">{t('treeSubtitle')}</div>
           </div>
           <button
             onClick={() => setExpanded(new Set(ALL_PARENT_IDS))}
-            className="rounded-lg bg-teal px-2.5 py-1.5 text-xs font-medium text-cream transition hover:bg-teal-2"
+            className="bg-signal px-2.5 py-1.5 text-xs font-medium text-white transition hover:bg-signal"
           >
             {t('expandAll')}
           </button>
           <button
             onClick={() => setExpanded(new Set(LINE_IDS))}
-            className="rounded-lg bg-cream-2 px-2.5 py-1.5 text-xs font-medium text-ink-soft transition hover:bg-cream"
+            className="bg-surface px-2.5 py-1.5 text-xs font-medium text-white/60 transition hover:bg-deepest"
           >
             {t('collapseAll')}
           </button>
 
           {/* filter: search a person */}
           <div className="relative">
-            <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-soft" fill="currentColor">
+            <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/60" fill="currentColor">
               <path d="M10 4a6 6 0 1 0 3.7 10.7l4.3 4.3 1.4-1.4-4.3-4.3A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" />
             </svg>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t('treeSearch')}
-              className="w-36 rounded-lg border border-teal/15 bg-cream px-2 py-1.5 pl-7 text-xs text-ink outline-none placeholder:text-ink-soft/60 focus:border-gold sm:w-44"
+              className="w-36 border border-white/10 bg-deepest px-2 py-1.5 pl-7 text-xs text-white outline-none placeholder:text-white/45 focus:border-gold sm:w-44"
             />
             {query && (
               <button
                 onClick={() => setQuery('')}
                 aria-label={t('reset')}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 text-ink-soft hover:text-teal"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
               >
                 ✕
               </button>
@@ -401,7 +397,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
           <select
             value={epochFilter ?? ''}
             onChange={(e) => setEpochFilter(e.target.value || null)}
-            className="rounded-lg border border-teal/15 bg-cream px-2 py-1.5 text-xs text-ink outline-none focus:border-gold"
+            className="border border-white/10 bg-deepest px-2 py-1.5 text-xs text-white outline-none focus:border-gold"
             title={t('filterEpoch')}
           >
             <option value="">{t('allEpochs')}</option>
@@ -413,19 +409,19 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
           </select>
 
           {matchSet && (
-            <span className="rounded-full bg-gold/25 px-2 py-0.5 text-[11px] font-medium text-teal">
+            <span className="rounded-full bg-gold/25 px-2 py-0.5 text-[11px] font-medium text-white">
               {matchSet.size} {t('results')}
             </span>
           )}
         </div>
-        <div className="pointer-events-none self-start rounded-lg bg-cream/80 px-2.5 py-1 text-[11px] text-ink-soft shadow ring-1 ring-teal/10 backdrop-blur">
+        <div className="pointer-events-none self-start bg-deepest/95 px-2.5 py-1 text-[11px] text-white/60 ring-1 ring-white/10 backdrop-blur">
           {t('expandHint')}
         </div>
       </div>
 
       {/* ---- bloodline → faith note ---- */}
       <div className="pointer-events-none absolute bottom-24 left-1/2 z-[1100] hidden -translate-x-1/2 sm:block">
-        <div className="pointer-events-auto max-w-xl rounded-xl bg-teal/95 px-3.5 py-2 text-center text-[11px] leading-snug text-cream/90 shadow-lg ring-1 ring-teal/20">
+        <div className="pointer-events-auto max-w-xl bg-white/10 px-3.5 py-2 text-center text-[11px] leading-snug text-white/75 ring-1 ring-white/10">
           {t('bloodlineNote')}
         </div>
       </div>
@@ -433,7 +429,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
       {/* ---- person detail panel ---- */}
       {selected && (
         <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
-          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-cream/95 shadow-2xl ring-1 ring-teal/10 backdrop-blur">
+          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
             <PersonDetail
               person={selected}
               lang={lang}
@@ -447,8 +443,8 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
 
       {/* ---- legend ---- */}
       <div className="pointer-events-none absolute right-3 top-20 z-[1090] hidden lg:block sm:top-24">
-        <div className="pointer-events-auto max-w-[12rem] rounded-xl bg-cream/90 p-2.5 shadow-lg ring-1 ring-teal/10 backdrop-blur">
-          <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-ink-soft">{t('epoch')}</div>
+        <div className="pointer-events-auto max-w-[12rem] bg-deepest/95 p-2.5 ring-1 ring-white/10 backdrop-blur">
+          <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-white/60">{t('epoch')}</div>
           <div className="flex flex-col gap-0.5">
             {GEN_EPOCHS.map((e) => {
               const active = epochFilter === e.id;
@@ -456,9 +452,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
                 <button
                   key={e.id}
                   onClick={() => setEpochFilter(active ? null : e.id)}
-                  className={`flex items-center gap-1.5 rounded px-1 py-0.5 text-left text-[10px] transition ${
-                    active ? 'bg-gold/30 text-teal' : 'text-ink-soft hover:bg-cream-2'
-                  } ${epochFilter && !active ? 'opacity-45' : ''}`}
+                  className={`flex items-center gap-1.5 px-1 py-0.5 text-left text-[10px] transition ${ active ? 'bg-gold/30 text-white' : 'text-white/60 hover:bg-surface' } ${epochFilter && !active ? 'opacity-45' : ''}`}
                 >
                   <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: e.color }} />
                   <span className="truncate">{lang === 'de' ? e.de : e.en}</span>
