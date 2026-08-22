@@ -638,6 +638,77 @@ body {
   background: #eab662;
 }
 
+/* ------------------------------------------------------------------ */
+/* Drucken: aus der dunklen Bühne wird ein Blatt Papier                 */
+/* Die Karte lässt sich nicht drucken – ein Handout ist die Liste:      */
+/* Stationen, Bibelstellen, Entfernungen, lesbar in Schwarz auf Weiß.   */
+/* ------------------------------------------------------------------ */
+.bm-print-only {
+  display: none;
+}
+
+@media print {
+  html,
+  body,
+  #root {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff;
+    color: #000;
+  }
+
+  /*
+   * Auf dem Weg vom Wurzelknoten zum Blatt bleibt jede Ebene stehen, alles
+   * daneben verschwindet – so druckt der Browser nur die Liste und nicht die
+   * Karte, die ohnehin nicht auf Papier gehört.
+   */
+  *:has(.bm-print-root) {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+    position: static !important;
+    background: #fff !important;
+  }
+  *:has(.bm-print-root) > *:not(.bm-print-root):not(:has(.bm-print-root)) {
+    display: none !important;
+  }
+  .bm-print-root {
+    display: block !important;
+    position: static !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .bm-noprint {
+    display: none !important;
+  }
+  .bm-print-only {
+    display: block;
+  }
+
+  .bm-print-sheet {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    border: 0 !important;
+  }
+  .bm-print-sheet * {
+    color: #000 !important;
+    background: transparent !important;
+    border-color: #999 !important;
+  }
+  .bm-print-sheet li {
+    break-inside: avoid;
+  }
+  @page {
+    margin: 16mm;
+  }
+}
+
 /* Ortskenntnis: der gesetzte Tipp */
 .bm-quiz-guess {
   width: 14px;
