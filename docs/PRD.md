@@ -2,9 +2,9 @@
 
 **Produkt:** Bibelmap – interaktive Karte, Zeitleiste und Präsentationsmodus für biblische Orte
 **Version:** 1.0 (Entwurf)
-**Stand:** 2026-06-20
+**Stand:** 2026-08-22
 **Owner:** Michi Frey
-**Status:** v0.1 implementiert · Roadmap v0.2–v1.0 offen
+**Status:** v0.4 implementiert · offene Punkte siehe 7 und 10
 
 ---
 
@@ -94,8 +94,9 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 **Akzeptanzkriterien**
 - [x] Auswahl aktualisiert Kartenmarker sofort.
 - [x] Aktive Epoche ist farblich klar markiert.
-- [ ] *(v0.3)* Optionaler **kumulativer Modus** („alles bis zu diesem Zeitpunkt") +
-      Hervorhebung neu hinzukommender Orte.
+- [ ] *(offen)* Kumulativer Modus in der **biblischen** Zeitleiste („alles bis zu
+      diesem Zeitpunkt"). Für die **Ausbreitung nach der Apostelgeschichte** ist er
+      umgesetzt: Zeitraffer mit Jahresregler (4.13).
 
 ### 4.3 Suche — P0 ✅
 
@@ -110,7 +111,9 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 **Akzeptanzkriterien**
 - [x] „Goschen" liefert relevante Treffer; Auswahl zeigt Karte + Stellen + Epochen.
 - [x] Diakritik-/Groß­schreibung-unabhängig.
-- [ ] *(v0.3)* Suche auch über Bibelstellen-Referenz (z. B. „2Kön 5").
+- [x] Suche auch über **Bibelstellen-Referenz** („Apg 13", „Mk 6,30", „1. Mose 12",
+      „Acts 27") → Orte des Kapitels + Sprung in den Text (4.15).
+- [x] Suche über **Reisen und Ausbreitung** (Stationen, Ereignisse, Phasen).
 
 ### 4.4 Heatmap — P0 ✅
 
@@ -217,15 +220,103 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [ ] Einmalig: *Settings → Pages → Source: GitHub Actions* aktivieren (Nutzer).
 - [ ] Lighthouse-Messung ≥ 90 (nach erstem Deploy verifizieren).
 
+
+### 4.12 Reisen & Geschichten — P1 ✅
+
+**Beschreibung:** Die großen Wege der Bibel als erzählte Reise, abspielbar.
+
+**Anforderungen**
+- 14 Reisen von Abraham bis Emmaus, nach Epochen gruppiert; je Station Name,
+  Bibelstelle, ein bis zwei Sätze Erzählung und – wo vorhanden – die `placeId`
+  in den Ortsdatensatz.
+- Abspielen zeichnet die zurückgelegte Strecke mit und lässt einen Punkt die
+  Etappen abgehen, mit Lesepause an jeder Station.
+- Entfernung und Tagesmärsche je Etappe und für die ganze Reise.
+
+**Akzeptanzkriterien**
+- [x] Route, Stationsliste und Erzählung laufen synchron; ← / → blättern,
+      Leertaste startet.
+- [x] Entfernungen als **Luftlinie** ausgewiesen, Tagesmärsche mit 25 km/Tag
+      gerechnet, Seewege ohne Fußrechnung.
+- [x] Jede Station führt auf die Ortskarte.
+
+### 4.13 Mission & Ausbreitung — P1 ✅
+
+**Beschreibung:** Der Weg des Evangeliums von Jerusalem bis in die Gegenwart.
+
+**Anforderungen**
+- Die Reisen des Paulus (inkl. der Wege vor ihm) mit Bibelstelle je Station,
+  animiert wie 4.12.
+- Sechs Phasen der Ausbreitung mit rund 70 Ereignissen, Bögen zeigen die
+  Richtung; **Zeitraffer** über einen Jahresregler von 30 bis heute.
+
+**Akzeptanzkriterien**
+- [x] Phasenwechsel folgt dem Jahr; jede Phase bekommt im Zeitraffer etwa
+      gleich viel Zeit.
+- [x] Alles nach Apostelgeschichte 28 ist als Kirchengeschichte gekennzeichnet;
+      Überlieferungen sind als solche benannt, Zahlen als Größenordnungen.
+
+### 4.14 Bibelquiz — P2 ✅
+
+- [x] „Wo liegt …?" auf **unbeschrifteter** Karte, Punkte nach Entfernung
+      (bis 25 km Volltreffer), drei Stufen nach Häufigkeit im Text.
+- [x] Wissensfragen aus Reisen und Ausbreitung (drei von acht Runden,
+      abschaltbar); nach der Antwort zeigt die Karte die Stelle.
+- [x] Fragen entstehen aus den Daten, es gibt keine gepflegte Fragenliste.
+
+### 4.15 Deep-Links & Teilen — P0 ✅ *(war v0.3: „State in URL")*
+
+- [x] Jede Ansicht hat eine Adresse: `#ort=…`, `#reise=<id>,<station>`,
+      `#mission=<phase>[,<detail>]`, `#lesen=<Buch>,<Kapitel>`, `#stammbaum`,
+      `#quiz`, `#kirche`, `#heilsgeschichte`, `#vergleich`, `#unterstuetzen`.
+- [x] Der Hash läuft beim Blättern mit (`replaceState`), Zurück-Taste und von
+      Hand geänderte Adressen werden übernommen.
+- [x] **Link**-Knopf in Ortskarte und Reise-Modi kopiert die aktuelle Adresse.
+
+### 4.16 Offline & installierbar — P1 ✅
+
+- [x] Service Worker mit zwei Caches: App samt Ortsdaten (sofort aus dem Cache,
+      im Hintergrund erneuert) und Kartenkacheln/Schriften (begrenzt auf 600).
+- [x] Keine Precache-Liste – die gebauten Dateien werden beim Einbau aus
+      `index.html` gelesen.
+- [x] Manifest und Symbole; die App ist installierbar.
+- [x] Ohne Netz startet die App und zeigt alle Orte sowie besuchte Ausschnitte.
+
+### 4.17 Handout drucken — P2 ✅
+
+- [x] Eine Reise als Blatt: Kopf, Anriss, alle Stationen mit Stelle, Text und
+      Entfernung, Fußnote zu den Zahlen – ohne Karte und Bedienelemente.
+- [x] Kein zweiter Bildschirm-Aufbau: `@media print` blendet aus, was daneben
+      steht.
+
+### 4.18 Nachbarorte — P2 ✅
+
+- [x] Jede Ortskarte zeigt, was **an einem Tag zu Fuß** erreichbar war (25 km),
+      mit Entfernung und Himmelsrichtung; ein Klick wechselt zum Nachbarn.
+- [x] Nur Siedlungen, nichts unter 1,5 km (Tore und Stadtviertel teilen die
+      Koordinaten ihres Ortes); ausgewählt nach Bedeutung, gezeigt nach Nähe.
+
+### 4.19 Weitere Ansichten (aus parallelen Arbeiten)
+
+Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
+(geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
+(Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
+Völkertafel** samt Zeitbaum und Graph, **Reiche & Grenzen** auf der Karte,
+Startseite und Seite „Projekte unterstützen".
+
 ---
 
 ## 5. Nicht-funktionale Anforderungen
 
-- **Performance:** Initiale Daten ≤ ~1,5 MB (gzip); flüssige Karte bei 1.300+ Markern.
-  Bibeltext lazy nachladen.
+- **Performance:** Erstes Bündel 462 kB (gzip 136 kB) – die Ansichten liegen in
+  eigenen Dateien und kommen auf Abruf; im Leerlauf werden sie nachgeholt, damit
+  die App offline vollständig bleibt. Flüssige Karte bei 1.300+ Markern,
+  Bibeltext lazy pro Buch.
 - **Responsiv:** nutzbar ab 360 px Breite; Präsentationsmodus stapelt auf Mobile.
-- **Barrierefreiheit (Ziel v0.3):** Tastaturbedienung, sichtbarer Fokus,
-  ausreichende Kontraste, Alt-Texte.
+- **Barrierefreiheit:** `prefers-reduced-motion` wird beachtet (Karte setzt statt
+  zu fliegen, Reisender springt statt zu gleiten, Pulsringe stehen still);
+  Escape schließt von außen nach innen; ← / → und Leertaste in den Reisen.
+  Offen: Tastatur-Fokus auf Kartenmarker, durchgängige Alt-Texte.
 - **i18n:** DE/EN vollständig; Architektur erlaubt weitere Sprachen.
 - **Lizenz-Compliance:** Attribution für Daten (CC-BY), Bilder (je Bild) und
   Kartenkacheln stets sichtbar.
@@ -258,7 +349,9 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v0.1** | Karte, Zeitleiste, Suche, Heatmap, Infokarte, Präsentationsmodus (Links), DE/EN | ✅ erledigt |
 | **v0.2** | Bilder-Abdeckung (4.8), kuratierte BP-Videos (4.9), Deployment (4.11) | ✅ erledigt |
 | **v1.0** | **Bibeltext eingebettet** (4.7) inkl. Ort-im-Text-Verknüpfung, Tastatur | ✅ erledigt |
-| **v0.3** | a11y/Fokus, „Beamer"-Layout, kumulative Zeitleiste, Suche über Referenzen, State in URL | ⬜ offen |
+| **v0.3** | Suche über Referenzen (4.3/4.15), State in URL (4.15), reduzierte Bewegung + Escape | ✅ erledigt |
+| **v0.4** | Reisen & Geschichten (4.12), Mission & Ausbreitung (4.13), Bibelquiz (4.14), Offline (4.16), Handout (4.17), Nachbarorte (4.18), Code-Splitting | ✅ erledigt |
+| **offen** | „Beamer"-Layout, kumulative biblische Zeitleiste, Tastatur-Fokus auf Marker, Sprachwahl merken, 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
 
@@ -286,4 +379,11 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 - BibleProject-Guide-Slugs sind heuristisch (`book-of-<name>` + Gruppen-Override);
   einzelne selten gruppierte Bücher könnten ins Leere zeigen → bei Bedarf in
   `bibleProjectUrl` nachpflegen.
-- „Beamer"-Layout, Fokus-/Tastatur-a11y, State in URL, kumulative Zeitleiste.
+- „Beamer"-Layout und kumulative **biblische** Zeitleiste weiterhin offen.
+- Tastatur-Fokus auf Kartenmarker (Leaflet-Marker sind nicht fokussierbar).
+- Sprachwahl wird noch nicht gemerkt (weder URL noch LocalStorage).
+- **3-D-Gelände**: Leaflet kann die Karte nicht kippen. Ein Umstieg auf MapLibre
+  würde Terrain und Neigung erlauben, betrifft aber alle fünf Kartenansichten –
+  bewusst zurückgestellt.
+- Die Kurzformen der Bibelbücher stehen zweimal im Repo (`src/lib/parseRef.ts`
+  für die Oberfläche, `scripts/lib/bibleref.mjs` für den Build).
