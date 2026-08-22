@@ -7,11 +7,16 @@ import { ERAS, ERA_BY_ID } from '../data/eras';
 import { passageUrl } from '../data/mission';
 import { formatKm, legDistances, walkingDays, type LatLon } from '../lib/route';
 import RouteMap from './RouteMap';
+import ShareLink from './ShareLink';
 
 interface Props {
   places: Place[];
   lang: Lang;
   onShowPlace: (place: Place) => void;
+  /** Reise und Station aus der Adresse (Deep-Link). */
+  initial?: { id: string; stop: number } | null;
+  /** Meldet Reise und Station, damit die Adresse mitläuft. */
+  onNavigate?: (state: { id: string; stop: number } | null) => void;
   /** Paulus’ Reisen stehen im Missionsmodus – dorthin verweisen statt doppeln. */
   onOpenMission?: () => void;
   onExit: () => void;
@@ -22,12 +27,21 @@ function journeyKm(j: BibleJourney): number {
   return legDistances(j.stops.map((s) => [s.lat, s.lon] as LatLon)).reduce((a, b) => a + b, 0);
 }
 
-export default function JourneyMode({ places, lang, onShowPlace, onOpenMission, onExit }: Props) {
+export default function JourneyMode({ places, lang, onShowPlace, initial, onNavigate, onOpenMission, onExit }: Props) {
   const t = useT();
-  const [id, setId] = useState<string | null>(null);
-  const [index, setIndex] = useState(0);
+  const [id, setId] = useState<string | null>(initial && JOURNEY_BY_ID[initial.id] ? initial.id : null);
+  const [index, setIndex] = useState(() => {
+    if (!initial || !JOURNEY_BY_ID[initial.id]) return 0;
+    return Math.max(0, Math.min(JOURNEY_BY_ID[initial.id].stops.length - 1, initial.stop));
+  });
   const [playing, setPlaying] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  const navRef = useRef(onNavigate);
+  navRef.current = onNavigate;
+  useEffect(() => {
+    navRef.current?.(id ? { id, stop: index } : null);
+  }, [id, index]);
 
   const journey = id ? JOURNEY_BY_ID[id] : null;
   const era = journey ? ERA_BY_ID[journey.era] : null;
@@ -300,9 +314,12 @@ function Bar({
           {subtitle && <div className="mt-1 truncate text-[11px] text-white/55">{subtitle}</div>}
         </div>
       </div>
-      <button onClick={onExit} className="bm-btn bm-btn-gold flex-none">
-        {t('exit')} ✕
-      </button>
+      <div className="flex flex-none items-center gap-2">
+        <ShareLink className="bm-btn hidden sm:inline-flex" />
+        <button onClick={onExit} className="bm-btn bm-btn-gold">
+          {t('exit')} ✕
+        </button>
+      </div>
     </div>
   );
 }

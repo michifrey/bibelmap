@@ -64,6 +64,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
   selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
   aus deren Arbeit die Seite besteht – je Projekt mit Beitrag und Nennung.
+- **Teilen & Deep-Links** – jede Ansicht hat eine Adresse: `#ort=a15257a`
+  (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
+  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`. Der Hash läuft beim
+  Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
+  Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
 - **Hören & Sehen** – zu jedem Ort die Podcast-Folgen und Videos, die eine
   Bibelstelle behandeln, in der der Ort vorkommt.

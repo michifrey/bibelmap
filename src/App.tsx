@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Place } from './types';
 import { LangContext, type Lang, useT, t as tr } from './i18n';
 import { loadPlaces, placesInEra, searchPlaces, erasForPlace, placeName } from './lib/places';
@@ -13,6 +13,7 @@ import Presentation from './components/Presentation';
 import HistoryMode from './components/HistoryMode';
 import Mission from './components/Mission';
 import JourneyMode from './components/JourneyMode';
+import { formatRoute, parseHash, type Route } from './lib/deepLink';
 import CompareMode from './components/CompareMode';
 import ChurchMode from './components/ChurchMode';
 import GraphView from './components/GraphView';
@@ -22,6 +23,9 @@ import Support from './components/Support';
 
 /** The support page is worth linking to from outside, so it lives on a hash. */
 const SUPPORT_HASH = '#unterstuetzen';
+
+/** Jede Ansicht ist verlinkbar: der Hash hält fest, wo man gerade steht. */
+const INITIAL_ROUTE: Route | null = parseHash(window.location.hash);
 
 function Loading() {
   const t = useT();
@@ -47,14 +51,21 @@ export default function App() {
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
-  const [mode, setMode] = useState<Mode | null>(() =>
-    window.location.hash === SUPPORT_HASH ? 'support' : null,
-  );
+  const [mode, setMode] = useState<Mode | null>(INITIAL_ROUTE?.mode ?? null);
   const [basemap, setBasemap] = useState<BasemapId>('dark');
-  const [view, setView] = useState<View>('map');
+  const [view, setView] = useState<View>(INITIAL_ROUTE?.view ?? 'map');
   // The start page is the front door: it is what the app opens on, and the
   // wordmark in the header is the way back to it.
-  const [atStart, setAtStart] = useState(() => window.location.hash !== SUPPORT_HASH);
+  const [atStart, setAtStart] = useState(!INITIAL_ROUTE);
+  // Unterzustand der Nebenansichten, damit die Adresse ihn mitschreibt.
+  const [journeyNav, setJourneyNav] = useState(INITIAL_ROUTE?.journey ?? null);
+  const [missionNav, setMissionNav] = useState(INITIAL_ROUTE?.mission ?? null);
+  const [readingNav, setReadingNav] = useState(INITIAL_ROUTE?.reading ?? null);
+  // Zählt hoch, wenn die Adresse von außen kommt (Zurück-Taste, getippter Link):
+  // die Nebenansichten hängen daran und übernehmen den Stand neu.
+  const [navEpoch, setNavEpoch] = useState(0);
+  const pendingPlace = useRef<string | null>(INITIAL_ROUTE?.placeId ?? null);
+  const ownHash = useRef<string>(window.location.hash);
   // Cross-links between the time tree and the church-history map (shared data).
   const [treeFocus, setTreeFocus] = useState<string | null>(null);
   const [churchFocus, setChurchFocus] = useState<string | null>(null);
@@ -135,16 +146,43 @@ export default function App() {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
   }, []);
 
-  // Keep the hash and the support page in step. popstate covers back/forward,
-  // hashchange a hand-edited address.
+  // Die Adresse schreibt mit, wo man steht – ohne Verlaufseinträge zu häufen.
+  useEffect(() => {
+    const hash = atStart
+      ? ''
+      : formatRoute({
+          view,
+          mode,
+          placeId: selected?.id,
+          journey: journeyNav ?? undefined,
+          mission: missionNav ?? undefined,
+          reading: readingNav ?? undefined,
+        });
+    if (hash === window.location.hash) return;
+    ownHash.current = hash;
+    window.history.replaceState(null, '', hash || window.location.pathname + window.location.search);
+  }, [atStart, view, mode, selected, journeyNav, missionNav, readingNav]);
+
+  // Zurück-Taste und von Hand geänderte Adressen anwenden.
   useEffect(() => {
     const sync = () => {
-      if (window.location.hash === SUPPORT_HASH) {
-        setAtStart(false);
-        setMode('support');
-      } else {
-        setMode((m) => (m === 'support' ? null : m));
+      if (window.location.hash === ownHash.current) return;
+      const route = parseHash(window.location.hash);
+      if (!route) {
+        setAtStart(true);
+        setMode(null);
+        setSelected(null);
+        return;
       }
+      setAtStart(false);
+      setView(route.view);
+      setMode(route.mode);
+      setJourneyNav(route.journey ?? null);
+      setMissionNav(route.mission ?? null);
+      setReadingNav(route.reading ?? null);
+      pendingPlace.current = route.placeId ?? null;
+      if (!route.placeId) setSelected(null);
+      setNavEpoch((n) => n + 1);
     };
     window.addEventListener('popstate', sync);
     window.addEventListener('hashchange', sync);
@@ -153,6 +191,16 @@ export default function App() {
       window.removeEventListener('hashchange', sync);
     };
   }, []);
+
+  // Ein verlinkter Ort wartet, bis places.json geladen ist.
+  useEffect(() => {
+    const id = pendingPlace.current;
+    if (!places || !id) return;
+    pendingPlace.current = null;
+    const p = places.find((x) => x.id === id);
+    if (p) select(p);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [places, navEpoch]);
 
   const visible = useMemo(() => (places ? placesInEra(places, era) : []), [places, era]);
   const results = useMemo(() => (places ? searchPlaces(places, query) : []), [places, query]);
@@ -335,22 +383,38 @@ export default function App() {
               )
             )}
 
-            {mode === 'present' && <Presentation places={places} lang={lang} onExit={() => setMode(null)} />}
+            {mode === 'present' && (
+              <Presentation
+                key={`present-${navEpoch}`}
+                places={places}
+                lang={lang}
+                initialBook={readingNav?.osis ?? null}
+                initialChapter={readingNav?.chapter}
+                onNavigate={setReadingNav}
+                onExit={() => setMode(null)}
+              />
+            )}
             {mode === 'history' && <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />}
             {mode === 'journeys' && (
               <JourneyMode
+                key={`journeys-${navEpoch}`}
                 places={places}
                 lang={lang}
                 onShowPlace={showPlaceFromGenealogy}
+                initial={journeyNav}
+                onNavigate={setJourneyNav}
                 onOpenMission={() => setMode('mission')}
                 onExit={() => setMode(null)}
               />
             )}
             {mode === 'mission' && (
               <Mission
+                key={`mission-${navEpoch}`}
                 places={places}
                 lang={lang}
                 onShowPlace={showPlaceFromGenealogy}
+                initial={missionNav}
+                onNavigate={setMissionNav}
                 onExit={() => setMode(null)}
               />
             )}
