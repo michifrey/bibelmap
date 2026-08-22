@@ -39,6 +39,14 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 - **Kirchengeschichte-Modus** – **Paulus’ Missionsreisen** als eingezeichnete
   Routen, **Kirchenväter** (westlich/lateinisch · östlich/griechisch · orientalisch)
   und die **Konzilien** (Apostelkonzil + die 7 ökumenischen) auf der Karte.
+- **Mission & Ausbreitung** – wie das Evangelium in die Welt kam: die vier
+  Reisen des Paulus (plus die Wege vor ihm, Apg 1–11) als Route mit nummerierten
+  Stationen und Bibelstellen – und danach die Ausbreitung bis heute, in sieben
+  Phasen von der apostolischen Zeit über Armenien, Äthiopien und die Seidenstraße
+  bis zu Pfingstbewegung, Bibelübersetzung und den Kirchen des globalen Südens.
+  Bögen auf der Weltkarte zeigen, von wo nach wo; **Abspielen** läuft die ganze
+  Geschichte Station für Station ab (Tastatur ← / →). Ein Klick auf *Auf Karte*
+  springt von einer Reisestation zur Ortskarte.
 - **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
   robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
 - **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
@@ -153,6 +161,20 @@ reproduzierbar läuft. **BibleProject** braucht keinen Feed: je Buch eine
 
 `public/data/media.json` wird erst geladen, wenn jemand eine Ortskarte öffnet -
 der Index wächst mit jeder Staffel und gehört nicht in den Startpfad.
+
+### Mission & Ausbreitung
+
+Die Reisestationen stehen in `src/data/mission.ts` und folgen der
+Apostelgeschichte; die Koordinaten kommen über `placeId` aus demselben
+OpenBible-Datensatz wie die Hauptkarte, sodass jede Station auch als Ortskarte
+zu öffnen ist.
+
+Alles nach Apostelgeschichte 28 ist **Kirchengeschichte, keine Bibelstelle**:
+Jahreszahlen sind gerundet, frühe Überlieferungen (Thomas in Indien, Markus in
+Alexandria) sind als Überlieferung gekennzeichnet, und die Zahlen zur heutigen
+Christenheit sind Größenordnungen – verschiedene Zählweisen kommen zu
+unterschiedlichen Ergebnissen. Jedes Ereignis hat einen Nachschlage-Link in die
+Wikipedia der jeweiligen Sprache.
 
 ### Epochen & Zeitleiste
 

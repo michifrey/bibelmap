@@ -10,6 +10,7 @@ import SearchPanel from './components/SearchPanel';
 import PlaceDetail from './components/PlaceDetail';
 import Presentation from './components/Presentation';
 import HistoryMode from './components/HistoryMode';
+import Mission from './components/Mission';
 import CompareMode from './components/CompareMode';
 import ChurchMode from './components/ChurchMode';
 import GraphView from './components/GraphView';
@@ -215,6 +216,14 @@ export default function App() {
 
             {mode === 'present' && <Presentation places={places} lang={lang} onExit={() => setMode(null)} />}
             {mode === 'history' && <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />}
+            {mode === 'mission' && (
+              <Mission
+                places={places}
+                lang={lang}
+                onShowPlace={showPlaceFromGenealogy}
+                onExit={() => setMode(null)}
+              />
+            )}
             {mode === 'church' && (
               <ChurchMode
                 lang={lang}
