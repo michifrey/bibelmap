@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
-import { enableMarkerKeyboard } from '../lib/mapKeyboard';
+import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
@@ -268,6 +268,7 @@ export default function MapView({
       cluster.addLayer(marker);
     }
     cluster.addTo(map);
+    markVectorsDecorative(map.getContainer());
     clusterRef.current = cluster;
   }, [places, heat, selectedId, newIds]);
 

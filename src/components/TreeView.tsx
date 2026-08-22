@@ -218,6 +218,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
             style={{ width: layout.width, height: layout.height, marginLeft: PAD_X, marginTop: PAD_TOP }}
           >
             <svg
+              aria-hidden="true"
               className="pointer-events-none absolute left-0 top-0"
               width={layout.width}
               height={layout.height}
@@ -373,13 +374,14 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
 
           {/* filter: search a person */}
           <div className="relative">
-            <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/60" fill="currentColor">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="pointer-events-none absolute left-2 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/60" fill="currentColor">
               <path d="M10 4a6 6 0 1 0 3.7 10.7l4.3 4.3 1.4-1.4-4.3-4.3A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" />
             </svg>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder={t('treeSearch')}
+              aria-label={t('treeSearch')}
               className="w-36 border border-white/10 bg-deepest px-2 py-1.5 pl-7 text-xs text-white outline-none placeholder:text-white/45 focus:border-gold sm:w-44"
             />
             {query && (

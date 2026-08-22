@@ -44,7 +44,7 @@ function Loading() {
   return (
     <div className="flex h-full w-full items-center justify-center bg-deepest">
       <div className="flex flex-col items-center gap-3 text-white">
-        <svg viewBox="0 0 24 24" className="h-8 w-8 animate-pulse" fill="currentColor">
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-8 w-8 animate-pulse" fill="currentColor">
           <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
         </svg>
         <span className="font-display text-sm">{t('loading')}</span>
@@ -485,13 +485,13 @@ export default function App() {
                   className="flex items-center gap-2 border-b border-white/10 px-3 py-2 text-left sm:hidden"
                   aria-label={tr(lang, 'search')}
                 >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
                   </svg>
                   <span className="flex-1 truncate text-sm text-white/60">
                     {selected ? placeName(selected, lang) : tr(lang, 'search')}
                   </span>
-                  <svg viewBox="0 0 24 24" className={`h-4 w-4 flex-none text-white/60 transition-transform ${sheetOpen ? 'rotate-180' : ''}`} fill="currentColor">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-4 w-4 flex-none text-white/60 transition-transform ${sheetOpen ? 'rotate-180' : ''}`} fill="currentColor">
                     <path d="M7 14l5-5 5 5z" />
                   </svg>
                 </button>
@@ -537,7 +537,7 @@ export default function App() {
                   aria-label={tr(lang, key)}
                   className={`grid h-9 w-9 place-items-center transition ${ basemap === id ? 'bg-signal text-white ' : 'text-white/60 hover:bg-surface' }`}
                 >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d={icon} />
                   </svg>
                 </button>
@@ -553,7 +553,7 @@ export default function App() {
                   borderYear !== null ? 'bg-gold text-deep' : 'text-white/60 hover:bg-surface'
                 }`}
               >
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
                   <path d="M4 18h16M5 18l-1.6-9 4.6 3.6L12 5l4 7.6 4.6-3.6L19 18" />
                 </svg>
               </button>

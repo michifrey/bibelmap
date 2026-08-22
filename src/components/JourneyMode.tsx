@@ -255,9 +255,9 @@ export default function JourneyMode({ places, lang, onShowPlace, initial, onNavi
               </button>
               <button onClick={() => setPlaying((p) => !p)} className="bm-btn bm-btn-gold">
                 {playing ? (
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>
                 ) : (
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M7 4v16l13-8z" /></svg>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M7 4v16l13-8z" /></svg>
                 )}
                 {playing ? t('pause') : index >= journey.stops.length - 1 ? t('replay') : t('play')}
               </button>
@@ -331,7 +331,7 @@ function Bar({
       <div className="bm-noprint flex flex-none items-center gap-2">
         {onPrint && (
           <button onClick={onPrint} className="bm-btn hidden sm:inline-flex" title={t('printHint')}>
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M7 9V4h10v5M7 19H5v-6h14v6h-2M8 15h8v5H8z" />
             </svg>
             {t('print')}

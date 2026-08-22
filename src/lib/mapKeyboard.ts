@@ -22,3 +22,12 @@ export function enableMarkerKeyboard(
   container.addEventListener('keydown', onKey);
   return () => container.removeEventListener('keydown', onKey);
 }
+
+/**
+ * Leaflets Zeichenfläche für Linien und Bögen ist Beiwerk: Was sie zeigt,
+ * steht daneben als Liste. Ohne diese Kennzeichnung liest ein Screenreader
+ * eine leere Grafik vor.
+ */
+export function markVectorsDecorative(container: HTMLElement): void {
+  container.querySelector('.leaflet-overlay-pane svg')?.setAttribute('aria-hidden', 'true');
+}

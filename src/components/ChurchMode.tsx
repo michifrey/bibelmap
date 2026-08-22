@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
+import { markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
@@ -91,6 +92,7 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
       }
     }
 
+markVectorsDecorative(map.getContainer());
     if (bounds) map.flyToBounds((bounds as L.LatLngBounds).pad(0.25), flyOptions({ duration: 0.7, maxZoom: 8 }));
   }, [tab, sel]);
 
@@ -113,7 +115,7 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
     <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
       <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
         <div className="flex items-center gap-2">
-          <svg viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3v18M7 8h10M5 21h14" /></svg>
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3v18M7 8h10M5 21h14" /></svg>
           <div className="font-display text-xl uppercase leading-none">{t('churchMode')}</div>
         </div>
         <button onClick={onExit} className="bm-btn bm-btn-gold">
@@ -207,7 +209,7 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
                         onClick={() => onOpenInTree(detail.personId)}
                         className="mt-2.5 inline-flex items-center gap-1.5 bg-signal px-2.5 py-1.5 text-xs font-medium text-white transition hover:bg-signal"
                       >
-                        <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3v18M5 9l7-6 7 6" /></svg>
+                        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3v18M5 9l7-6 7 6" /></svg>
                         {t('openInTree')}
                       </button>
                     )}

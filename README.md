@@ -259,6 +259,17 @@ Die Zuordnung von Büchern zu historischen Epochen (`src/data/books.ts`,
 Struktur zu geben – kein Anspruch auf wissenschaftliche Datierung. Die Datums-
 angaben folgen einer gängigen konservativen Chronologie.
 
+### Barrierefreiheit prüfen
+
+`scripts/a11y-audit.mjs` geht mit einem Browser durch alle zwölf Ansichten und
+meldet, was keinen Namen hat – Icon-Knöpfe, Regler, Grafiken. Braucht Playwright
+(`npm i -D playwright`), läuft gegen den Dev-Server:
+
+```bash
+npm run dev
+node scripts/a11y-audit.mjs
+```
+
 ### Bewegung und Tastatur
 
 Wer im System **weniger Bewegung** eingestellt hat, bekommt dieselben Inhalte
