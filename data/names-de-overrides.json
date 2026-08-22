@@ -1,0 +1,19 @@
+{
+  "_comment": [
+    "Von Hand geprüfte deutsche Ortsnamen. Diese Einträge gewinnen immer gegen die",
+    "automatische Herleitung aus dem Luther-Text (scripts/build-names-de.mjs).",
+    "Jede Schreibweise hier ist im Luther-Text 1912 belegt; die Zahl in 'note' sagt,",
+    "in wie vielen Versen. Offene Fälle stehen in data/names-de-review.json —",
+    "wer einen davon klärt, trägt ihn hier ein und lässt das Skript neu laufen."
+  ],
+
+  "a84f426": { "de": "Stadt Davids", "note": "Luther 1912, 42 Verse; die Herleitung findet nur 'Davids'" },
+  "a1cb244": { "de": "Mittagsland", "note": "Luther 1912, 13 Verse; heute meist 'Negeb'" },
+  "ac5a1ec": { "de": "Mohrenland", "note": "Luther 1912, 16 Verse; heute meist 'Kusch'" },
+  "aa805fb": { "de": "Großes Meer", "note": "Luther 1912, 13 Verse ('das große Meer'), gemeint ist das Mittelmeer" },
+  "a32a4f8": {
+    "de": "Chaldäa",
+    "variants": ["Chaldäer", "Chaldäern", "Chaldäas"],
+    "note": "die Herleitung wählt das Volk 'Chaldäer' statt des Landes"
+  }
+}

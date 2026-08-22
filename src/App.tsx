@@ -87,6 +87,7 @@ export default function App() {
       <div className="relative h-full w-full overflow-hidden">
         <MapView
           places={visible}
+          lang={lang}
           heat={heat}
           selectedId={selected?.id ?? null}
           onSelect={select}

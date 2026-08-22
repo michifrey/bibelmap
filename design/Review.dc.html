@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600;700&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Instrument Sans', 'Inter', system-ui, sans-serif; color: #20302e; background: #f7f1e6; -webkit-font-smoothing: antialiased; }
+    .disp { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-optical-sizing: auto; }
+    a { color: #2f6f66; text-decoration: none; }
+    a:hover { color: #1f3d3a; }
+    .lbl { font-size: 10px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #7c8785; }
+    .row { display: flex; gap: 14px; padding: 15px 16px; border-radius: 14px; background: #fbf8f1; border: 1px solid rgba(31,61,58,.10); box-shadow: 0 1px 2px rgba(20,32,31,.05); }
+    .n { flex-shrink: 0; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: #efe6d6; font-size: 12px; font-weight: 700; color: #4a5754; }
+    .t { font-size: 13.5px; font-weight: 600; color: #1f3d3a; line-height: 1.35; }
+    .d { margin-top: 5px; font-size: 11.5px; color: #7c8785; line-height: 1.6; }
+    .fix { margin-top: 8px; font-size: 11.5px; color: #20302e; line-height: 1.6; }
+    .tag { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; letter-spacing: .04em; }
+    code { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 11px; color: #4a5754; background: #efe6d6; padding: 1px 5px; border-radius: 5px; }
+  </style>
+</helmet>
+
+<div style="width: 1200px; min-height: 1080px; box-sizing: border-box; padding: 40px 40px 44px; background: #f7f1e6">
+
+  <div style="display: flex; align-items: flex-end; gap: 16px">
+    <div>
+      <div class="lbl">Bibelmap · Designstudie</div>
+      <h1 class="disp" style="margin: 6px 0 0; font-size: 40px; font-weight: 600; color: #1f3d3a; letter-spacing: -.02em">Was die Studie ändert</h1>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <div style="font-size: 11.5px; color: #7c8785; line-height: 1.5; max-width: 430px; text-align: right">Zehn Beobachtungen aus dem laufenden Code – <code>App.tsx</code>, <code>Header.tsx</code>, <code>Timeline.tsx</code>, <code>PlaceDetail.tsx</code>, <code>Presentation.tsx</code> – und was auf den Screens dieser Studie daraus wurde.</div>
+  </div>
+  <div style="height: 1px; margin: 22px 0 24px; background: rgba(31,61,58,.14)"></div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px">
+
+    <div class="row">
+      <span class="n">1</span>
+      <div>
+        <div class="t">Vier schwebende Kästen in der Kopfzeile</div>
+        <div class="d">Logo, Stammbäume/Präsentation, Marker/Heatmap und DE/EN sitzen als vier getrennte Panels mit je eigenem Rahmen und Schatten über der Karte – viel Rand, wenig Ordnung.</div>
+        <div class="fix"><span class="tag" style="background: rgba(47,143,127,.16); color: #1f3d3a">Neu</span> Eine durchgehende Leiste, innen mit Haarlinien getrennt. Ein Schatten statt vier.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="n">2</span>
+      <div>
+        <div class="t">Die Zeitleiste ist keine Zeitleiste</div>
+        <div class="d">Neun gleich breite Knöpfe mit je vier Zeilen Text. Die Exodus-Epoche (40 Jahre) ist genauso breit wie die Erzväter (500 Jahre) – Dauer und Reihenfolge sind nicht ablesbar.</div>
+        <div class="fix"><span class="tag" style="background: rgba(47,143,127,.16); color: #1f3d3a">Neu</span> Ein Band, dessen Segmentbreite der Dauer folgt (gedämpft, damit kurze Epochen klickbar bleiben); die aktive Epoche hebt sich mit Emblem und Zahlen heraus.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="n">3</span>
+      <div>
+        <div class="t">Die Ortskarte kippt bei großen Orten um</div>
+        <div class="d">Jerusalem hat 955 Stellen in 37 Büchern. <code>PlaceDetail</code> rendert je Buch eine Karte mit bis zu 24 Vers-Chips – mehrere Bildschirmhöhen Chipwüste in einem 22 rem breiten Panel.</div>
+        <div class="fix"><span class="tag" style="background: rgba(47,143,127,.16); color: #1f3d3a">Neu</span> Ein Kanonstreifen über alle 66 Bücher (Höhe = Häufigkeit, Farbe = Epoche), darunter nur die zwei stärksten Bücher; der Rest hinter „35 weitere Bücher“.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="n">4</span>
+      <div>
+        <div class="t">Ortspillen zerreißen den Bibeltext</div>
+        <div class="d">Im Präsentationsmodus hängt hinter jedem Vers je eine Pille pro erwähntem Ort – zusätzlich zur Hervorhebung im Satz selbst. Der Text liest sich in Stücken.</div>
+        <div class="fix"><span class="tag" style="background: rgba(47,143,127,.16); color: #1f3d3a">Neu</span> Nur noch die Markierung im Satz: punktierte Unterstreichung in Epochenfarbe, aktiver Ort golden hinterlegt. Die Kapitelorte stehen gesammelt über dem Text.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="n">5</span>
+      <div>
+        <div class="t">Kein Gefühl dafür, wo man im Buch ist</div>
+        <div class="d">Kapitel 5 von 25 steht als kleine Zeile über einem Schieberegler. Wo die dichten Kapitel liegen, sieht man nicht.</div>
+        <div class="fix"><span class="tag" style="background: rgba(47,143,127,.16); color: #1f3d3a">Neu</span> Eine Kapitelspalte am linken Rand: ein Balken je Kapitel, Länge = Zahl der kartierten Orte. 2. Könige 19 sticht mit 22 Orten sofort heraus.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="n">6</span>
+      <div>
+        <div class="t">Der Stammbaum ist eine Liste</div>
+        <div class="d">312 Namen als verschachtelte Einrückungen. Verzweigungen – Noahs drei Söhne, die Völkertafel – sieht man erst, wenn man sie aufklappt.</div>
+        <div class="fix"><span class="tag" style="background: rgba(47,143,127,.16); color: #1f3d3a">Neu</span> Ein gezeichneter Baum von links nach rechts mit farbigen Linien je Abstammung, Legende der zehn Linien links, Detailkarte rechts. Die Liste bleibt als zweite Ansicht.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="n">7</span>
+      <div>
+        <div class="t">Mobil bleibt von der Karte wenig übrig</div>
+        <div class="d">Das Suchpanel ist bis <code>max-w-[22rem]</code> hoch und deckt bei 390 px Breite die halbe Karte ab; darunter liegt noch die Zeitleiste. Bedient wird alles über zwei runde Knöpfe unten rechts.</div>
+        <div class="fix"><span class="tag" style="background: rgba(47,143,127,.16); color: #1f3d3a">Neu</span> Ein Bottom Sheet mit Griff und den Reitern Orte/Zeitleiste, Aktionen als 48-px-Knöpfe an der rechten Kante. Kein aufgemalter Status-Balken.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="n">8</span>
+      <div>
+        <div class="t">Vorschaubilder hängen am fremden Server</div>
+        <div class="d">Jede Listenzeile lädt ein Wikimedia-Thumbnail (<code>referrerPolicy="no-referrer"</code>). Das macht die Liste unruhig, langsam und bei fehlendem Bild leer.</div>
+        <div class="fix"><span class="tag" style="background: rgba(47,143,127,.16); color: #1f3d3a">Neu</span> Gezeichnete Typ-Sigel in Epochenfarbe in der Liste. Das echte Foto bleibt – aber nur im Kopf der Ortskarte, wo es Fläche hat.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="n">9</span>
+      <div>
+        <div class="t">Ortsnamen sind englisch, auch auf Deutsch</div>
+        <div class="d">Die Oberfläche ist zweisprachig, die Ortsdaten von OpenBible sind es nicht: in der deutschen Ansicht steht „Egypt“, „Babylon 1“, „Assyria“. Kein Designfehler, aber der sichtbarste Bruch auf dem Bildschirm.</div>
+        <div class="fix"><span class="tag" style="background: rgba(224,164,73,.3); color: #8a5a17">Offen</span> Braucht eine deutsche Namensspalte in <code>build-data.mjs</code>. Die Screens zeigen den Ist-Zustand, damit die Lücke sichtbar bleibt.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <span class="n">10</span>
+      <div>
+        <div class="t">Fokus ist nur im Suchfeld sichtbar</div>
+        <div class="d">Der Ring auf <code>:focus</code> ist am Eingabefeld definiert; Knöpfe, Epochen und Listenzeilen haben keine eigene Tastaturführung – und die Karte ist per Tastatur kaum bedienbar.</div>
+        <div class="fix"><span class="tag" style="background: rgba(224,164,73,.3); color: #8a5a17">Offen</span> Der Fokus-Ring aus den Grundlagen (1 px gold-deep + 3 px Gold) gilt für alle Bedienelemente. Umsetzung gehört in den Code, nicht in die Mockups.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 12px; margin-top: 22px; padding: 16px 18px; border-radius: 14px; background: rgba(224,164,73,.13); border: 1px solid rgba(194,129,42,.26)">
+    <svg viewBox="0 0 24 24" width="17" height="17" style="flex-shrink: 0; margin-top: 1px" fill="none" stroke="#8a5a17" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 7.6v.6"></path></svg>
+    <div style="font-size: 12px; color: #6b4a13; line-height: 1.6">Alle Zahlen auf den Screens sind echt: 1.335 Orte, die Epochenzahlen und der Kanonstreifen kommen aus <code>public/data/places.json</code> und <code>src/data/books.ts</code>, der Bibeltext aus <code>public/data/text/2Kgs.json</code> (Luther 1912). Nur die Bilder sind gezeichnet statt geladen – im Mockup gibt es keine Verbindung nach außen.</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

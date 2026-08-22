@@ -1,0 +1,227 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap">
+  <style>
+    body { margin: 0; font-family: 'Montserrat', system-ui, sans-serif; color: #ffffff; background: #03302f; -webkit-font-smoothing: antialiased; }
+    .fr { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-optical-sizing: auto; }
+    a { color: #7fe3d5; text-decoration: none; }
+    a:hover { color: #ffffff; }
+    .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+    .card { padding: 26px 28px 30px; background: #06403c; }
+    .h { font-size: 22px; font-weight: 900; letter-spacing: -.025em; color: #ffffff; }
+    .note { font-size: 12px; font-weight: 500; line-height: 1.7; color: rgba(255,255,255,.55); }
+    .sw { height: 56px; }
+    .hex { margin-top: 7px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,.4); }
+    .nm { margin-top: 7px; font-size: 11.5px; font-weight: 700; color: #ffffff; }
+  </style>
+</helmet>
+
+<div style="width: 1200px; box-sizing: border-box; padding: 44px 44px 50px; background: #03302f">
+
+  <div style="display: flex; align-items: flex-end; gap: 30px">
+    <div>
+      <div class="eyebrow" style="color: #7fe3d5">Bibelmap · Designsystem</div>
+      <div style="margin-top: 12px; font-size: 62px; font-weight: 900; line-height: .94; letter-spacing: -.035em; color: #ffffff">GRUNDLAGEN</div>
+    </div>
+    <div style="flex-grow: 1"></div>
+    <p class="note" style="max-width: 400px; margin: 0 0 8px; text-align: right">
+      Die radikale Richtung. Die neun Epochenfarben bleiben unverändert aus
+      <span style="color: #ffffff; font-weight: 700">src/data/eras.ts</span> –
+      alles andere ist neu.
+    </p>
+  </div>
+  <div style="height: 4px; margin: 28px 0 30px; background: #e0a449"></div>
+
+  <!-- colour -->
+  <div class="card" style="margin-bottom: 16px">
+    <div class="h">Farbe</div>
+    <p class="note" style="margin: 8px 0 24px; max-width: 620px">Die Bühne ist dunkel und teal. Weiß ist kein Hintergrund mehr, sondern eine Fläche, die man bewusst setzt – für Lesetext und für die Detailkarte. Gold trägt genau eine Aktion pro Bildschirm.</p>
+
+    <div class="eyebrow" style="color: #7fe3d5; margin-bottom: 12px">Bühne</div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-bottom: 28px">
+      <div><div class="sw" style="background: #021f1e"></div><div class="nm">abyss</div><div class="hex">#021f1e</div></div>
+      <div><div class="sw" style="background: #03302f"></div><div class="nm">deepest</div><div class="hex">#03302f</div></div>
+      <div><div class="sw" style="background: #06403c"></div><div class="nm">deep</div><div class="hex">#06403c</div></div>
+      <div><div class="sw" style="background: #094c48"></div><div class="nm">surface</div><div class="hex">#094c48</div></div>
+      <div><div class="sw" style="background: #0d7f78"></div><div class="nm">signal</div><div class="hex">#0d7f78</div></div>
+      <div><div class="sw" style="background: #7fe3d5"></div><div class="nm">mint</div><div class="hex">#7fe3d5</div></div>
+    </div>
+
+    <div class="eyebrow" style="color: #7fe3d5; margin-bottom: 12px">Papier &amp; Akzent</div>
+    <div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; margin-bottom: 28px">
+      <div><div class="sw" style="background: #ffffff"></div><div class="nm">paper</div><div class="hex">#ffffff</div></div>
+      <div><div class="sw" style="background: #f4f1ea"></div><div class="nm">paper-2</div><div class="hex">#f4f1ea</div></div>
+      <div><div class="sw" style="background: #10201f"></div><div class="nm">ink</div><div class="hex">#10201f</div></div>
+      <div><div class="sw" style="background: #8a9895"></div><div class="nm">ink-soft</div><div class="hex">#8a9895</div></div>
+      <div><div class="sw" style="background: #e0a449"></div><div class="nm">gold</div><div class="hex">#e0a449</div></div>
+      <div style="display: flex; align-items: center"><p class="note" style="margin: 0">Gold nur für die eine Hauptaktion. Zwei goldene Flächen auf einem Bildschirm sind ein Fehler.</p></div>
+    </div>
+
+    <div class="eyebrow" style="color: #7fe3d5; margin-bottom: 12px">Epochen · unverändert</div>
+    <div style="display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 8px">
+      <div><div class="sw" style="background: #b8742e"></div><div class="nm">Erzväter</div><div class="hex">#b8742e</div></div>
+      <div><div class="sw" style="background: #c98a2b"></div><div class="nm">Exodus</div><div class="hex">#c98a2b</div></div>
+      <div><div class="sw" style="background: #a89321"></div><div class="nm">Landnahme</div><div class="hex">#a89321</div></div>
+      <div><div class="sw" style="background: #5c8a3a"></div><div class="nm">Vereintes</div><div class="hex">#5c8a3a</div></div>
+      <div><div class="sw" style="background: #2f8f7f"></div><div class="nm">Geteiltes</div><div class="hex">#2f8f7f</div></div>
+      <div><div class="sw" style="background: #3a6ea8"></div><div class="nm">Exil</div><div class="hex">#3a6ea8</div></div>
+      <div><div class="sw" style="background: #5a5ca8"></div><div class="nm">Rückkehr</div><div class="hex">#5a5ca8</div></div>
+      <div><div class="sw" style="background: #9a4ba0"></div><div class="nm">Jesus</div><div class="hex">#9a4ba0</div></div>
+      <div><div class="sw" style="background: #b0436b"></div><div class="nm">Kirche</div><div class="hex">#b0436b</div></div>
+    </div>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px">
+
+    <!-- type -->
+    <div class="card">
+      <div class="h">Schrift</div>
+      <p class="note" style="margin: 8px 0 24px">Montserrat trägt alles. Fraunces bleibt – aber nur noch für eine Sache: den Bibeltext. Das macht die Schriftwahl zur Aussage statt zur Dekoration.</p>
+
+      <div style="font-size: 54px; font-weight: 900; line-height: .94; letter-spacing: -.035em; color: #ffffff">ENTDECKE</div>
+      <div class="hex">Montserrat 900 · −3,5 % · Versalien · Schlagzeile</div>
+
+      <div style="margin-top: 24px; font-size: 54px; font-weight: 900; line-height: .98; letter-spacing: 0; color: transparent; -webkit-text-stroke: 2px #e0a449">DER BIBEL</div>
+      <div class="hex">Ausgestrichen · genau eine Zeile pro Fläche</div>
+
+      <div style="margin-top: 24px; font-size: 38px; font-weight: 900; letter-spacing: -.04em; color: #e0a449; line-height: 1">955</div>
+      <div class="hex">Zahlen sind Grafik, nicht Beiwerk</div>
+
+      <div style="height: 1px; margin: 24px 0; background: rgba(255,255,255,.14)"></div>
+
+      <div style="font-size: 15px; font-weight: 800; color: #ffffff">Präsentationsmodus starten</div>
+      <div class="hex">Montserrat 800 · Knopf, Listentitel</div>
+      <div class="eyebrow" style="margin-top: 16px; color: #7fe3d5">Häufigste Orte</div>
+      <div class="hex">Montserrat 700 · +22 % Laufweite · Rubrik</div>
+      <div class="fr" style="margin-top: 18px; font-size: 19px; line-height: 1.8; color: #ffffff">Gehe hin und wasche dich siebenmal im Jordan.</div>
+      <div class="hex">Fraunces 19 / 1,8 · ausschließlich Bibeltext</div>
+    </div>
+
+    <!-- form -->
+    <div class="card">
+      <div class="h">Form</div>
+      <p class="note" style="margin: 8px 0 24px">Keine Radien. Kanten stoßen hart aneinander, Trennung entsteht durch Farbe und 1-px-Linien statt durch Schatten. Kreise gibt es nur für Marker und Abspiel-Knöpfe.</p>
+
+      <div style="display: flex; gap: 12px; margin-bottom: 26px">
+        <div style="flex: 1 1 0; height: 64px; background: #094c48; display: grid; place-items: center; font-size: 11.5px; font-weight: 700">0 · alles</div>
+        <div style="flex: 1 1 0; height: 64px; background: #094c48; border-left: 4px solid #e0a449; display: grid; place-items: center; font-size: 11.5px; font-weight: 700">4-px-Kante</div>
+        <div style="flex: 1 1 0; height: 64px; display: grid; place-items: center"><span style="display: grid; place-items: center; width: 44px; height: 44px; border-radius: 999px; background: #e0a449"><svg viewBox="0 0 24 24" width="16" height="16" fill="#06403c"><path d="M8 5.5v13l11-6.5Z"></path></svg></span></div>
+      </div>
+
+      <div class="eyebrow" style="color: #7fe3d5; margin-bottom: 12px">Knöpfe</div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px">
+        <span style="display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 22px; background: #e0a449; font-size: 13px; font-weight: 800; letter-spacing: .08em; color: #06403c">KARTE ÖFFNEN</span>
+        <span style="display: inline-flex; align-items: center; height: 52px; padding: 0 22px; background: #0d7f78; font-size: 13px; font-weight: 800; letter-spacing: .08em; color: #ffffff">SEKUNDÄR</span>
+        <span style="display: inline-flex; align-items: center; height: 52px; padding: 0 22px; border: 1px solid rgba(255,255,255,.24); font-size: 13px; font-weight: 700; letter-spacing: .08em; color: #ffffff">GEISTER</span>
+      </div>
+
+      <div class="eyebrow" style="color: #7fe3d5; margin-bottom: 12px">Reiter &amp; Marken</div>
+      <div style="display: flex; gap: 3px; margin-bottom: 14px">
+        <span style="padding: 10px 18px; background: #0d7f78; font-size: 11.5px; font-weight: 800; letter-spacing: .06em; color: #ffffff">BAUM</span>
+        <span style="padding: 10px 18px; background: rgba(255,255,255,.07); font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: rgba(255,255,255,.55)">LISTE</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 24px">
+        <span style="padding: 6px 11px; background: #2f8f7f; font-size: 11.5px; font-weight: 700; color: #ffffff">Geteiltes Kgr.</span>
+        <span style="padding: 6px 11px; background: #3a6ea8; font-size: 11.5px; font-weight: 700; color: #ffffff">Exil</span>
+        <span style="padding: 6px 11px; background: rgba(255,255,255,.08); font-size: 11.5px; font-weight: 600; color: rgba(255,255,255,.75)">Siedlung</span>
+      </div>
+
+      <div class="eyebrow" style="color: #7fe3d5; margin-bottom: 12px">Listeneintrag</div>
+      <div style="display: flex; align-items: center; gap: 14px; padding: 14px 16px; background: #094c48; border-left: 4px solid #2f8f7f">
+        <span style="width: 52px; font-size: 24px; font-weight: 900; letter-spacing: -.03em; color: #e0a449">955</span>
+        <div style="flex-grow: 1">
+          <div style="font-size: 15px; font-weight: 800; color: #ffffff">Jerusalem</div>
+          <div style="font-size: 11px; font-weight: 500; color: rgba(255,255,255,.5)">Siedlung · 37 Bücher</div>
+        </div>
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#e0a449" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"></path></svg>
+      </div>
+      <p class="note" style="margin: 10px 0 0">Kein Vorschaubild mehr. Die Zahl übernimmt seine Rolle – sie ist die eigentliche Information.</p>
+    </div>
+  </div>
+
+  <!-- ornaments -->
+  <div class="card">
+    <div class="h">Ornamente</div>
+    <p class="note" style="margin: 8px 0 26px; max-width: 680px">Drei Motive, sparsam eingesetzt. Sie kommen aus der Vorlage und halten Startseite und App zusammen – aber nie mehr als zwei auf einer Fläche.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px">
+      <div>
+        <svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true">
+          <g fill="#7fe3d5" fill-opacity=".7">
+            <circle cx="6" cy="6" r="4"></circle><circle cx="48" cy="6" r="4"></circle><circle cx="90" cy="6" r="4"></circle><circle cx="126" cy="6" r="4"></circle>
+            <circle cx="6" cy="48" r="4"></circle><circle cx="48" cy="48" r="4"></circle><circle cx="90" cy="48" r="4"></circle><circle cx="126" cy="48" r="4"></circle>
+            <circle cx="6" cy="90" r="4"></circle><circle cx="48" cy="90" r="4"></circle><circle cx="90" cy="90" r="4"></circle><circle cx="126" cy="90" r="4"></circle>
+            <circle cx="6" cy="126" r="4"></circle><circle cx="48" cy="126" r="4"></circle><circle cx="90" cy="126" r="4"></circle><circle cx="126" cy="126" r="4"></circle>
+          </g>
+        </svg>
+        <div class="nm" style="margin-top: 14px">Punktraster</div>
+        <p class="note" style="margin: 6px 0 0">Nur im Hero, hinter der Schlagzeile.</p>
+      </div>
+
+      <div>
+        <div style="display: grid; place-items: center; height: 132px">
+          <svg width="150" height="26" viewBox="0 0 150 26" aria-hidden="true">
+            <g fill="#e0a449">
+              <path d="M26 3 4 13l22 10Z" fill-opacity=".35"></path>
+              <path d="M56 3 34 13l22 10Z" fill-opacity=".5"></path>
+              <path d="M86 3 64 13l22 10Z" fill-opacity=".7"></path>
+              <path d="M116 3 94 13l22 10Z" fill-opacity=".85"></path>
+              <path d="M146 3 124 13l22 10Z"></path>
+            </g>
+          </svg>
+        </div>
+        <div class="nm" style="margin-top: 14px">Dreiecksreihe</div>
+        <p class="note" style="margin: 6px 0 0">Zeigt in die Leserichtung, markiert einen Übergang.</p>
+      </div>
+
+      <div>
+        <div style="display: flex; align-items: center; gap: 20px; height: 132px">
+          <span style="display: block; width: 4px; height: 110px; background: #e0a449"></span>
+          <span style="display: block; width: 4px; height: 76px; background: #0d7f78"></span>
+          <div style="display: flex; flex-direction: column; gap: 9px">
+            <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #b8742e"></i>
+            <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #a89321"></i>
+            <i style="display: block; width: 14px; height: 14px; border-radius: 999px; background: #2f8f7f; box-shadow: 0 0 0 4px rgba(47,143,127,.3)"></i>
+            <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #3a6ea8"></i>
+            <i style="display: block; width: 10px; height: 10px; border-radius: 999px; background: #9a4ba0"></i>
+          </div>
+        </div>
+        <div class="nm" style="margin-top: 14px">Kante &amp; Epochenleiste</div>
+        <p class="note" style="margin: 6px 0 0">Ersetzt die Social-Icons der Vorlage.</p>
+      </div>
+
+      <div>
+        <svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true">
+          <rect width="132" height="132" fill="#094c48"></rect>
+          <path d="M0 132C18 90 52 54 96 32C112 24 124 20 132 17V132Z" fill="#106b63"></path>
+          <path d="M0 132C18 90 52 54 96 32C112 24 124 20 132 17" fill="none" stroke="#a9e4dc" stroke-opacity=".5" stroke-width="4"></path>
+          <g fill="none" stroke="#2ec2b0" stroke-opacity=".22" stroke-width="2"><path d="M-6 40C16 30 34 52 58 40"></path><path d="M-6 66C16 56 34 78 58 66"></path></g>
+          <g stroke="#e9fbf8" stroke-width="2"><circle cx="94" cy="52" r="7" fill="#e0a449"></circle><circle cx="62" cy="92" r="6" fill="#2f8f7f"></circle></g>
+        </svg>
+        <div class="nm" style="margin-top: 14px">Duotone-Karte</div>
+        <p class="note" style="margin: 6px 0 0">Gezeichnet, nicht fotografiert. Küste hell, Land gestippelt, Marker in Epochenfarbe.</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 14px; margin-top: 16px; padding: 20px 24px; background: #094c48; border-left: 4px solid #e0a449">
+    <svg viewBox="0 0 24 24" width="18" height="18" style="flex-shrink: 0; margin-top: 1px" fill="none" stroke="#e0a449" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 7.6v.6"></path></svg>
+    <p class="note" style="margin: 0; color: rgba(255,255,255,.7)">
+      Diese Richtung ersetzt die warme Papierwelt der ersten Studie, sie ergänzt sie nicht.
+      Was davon bleibt: die neun Epochenfarben, Fraunces für den Bibeltext, und die
+      inhaltlichen Korrekturen aus dem Review – Kanonstreifen statt Chipwüste,
+      Zeitleiste nach Dauer, keine Ortspillen im Fließtext.
+    </p>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -3,11 +3,14 @@ import L from 'leaflet';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 import type { Place } from '../types';
-import { erasForPlace } from '../lib/places';
+import type { Lang } from '../i18n';
+import { erasForPlace, placeName } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
 
 interface Props {
   places: Place[];
+  /** Language for marker tooltips. */
+  lang?: Lang;
   heat: boolean;
   selectedId: string | null;
   onSelect: (p: Place) => void;
@@ -51,7 +54,7 @@ function makeIcon(p: Place, focused: boolean): L.DivIcon {
   });
 }
 
-export default function MapView({ places, heat, selectedId, onSelect, fitPlaces, flyTo }: Props) {
+export default function MapView({ places, heat, selectedId, onSelect, fitPlaces, flyTo, lang = 'de' }: Props) {
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const clusterRef = useRef<L.MarkerClusterGroup | null>(null);
@@ -130,7 +133,7 @@ export default function MapView({ places, heat, selectedId, onSelect, fitPlaces,
     for (const p of places) {
       const marker = L.marker([p.lat, p.lon], {
         icon: makeIcon(p, p.id === selectedId),
-        title: p.name,
+        title: placeName(p, lang),
       });
       marker.on('click', () => onSelectRef.current(p));
       markerById.current.set(p.id, marker);
@@ -138,7 +141,7 @@ export default function MapView({ places, heat, selectedId, onSelect, fitPlaces,
     }
     cluster.addTo(map);
     clusterRef.current = cluster;
-  }, [places, heat, selectedId]);
+  }, [places, heat, selectedId, lang]);
 
   // fit to a set of places (presentation)
   useEffect(() => {

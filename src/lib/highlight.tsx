@@ -12,9 +12,12 @@ function escapeRe(s: string): string {
 
 /**
  * Wrap occurrences of place names/variants in `text` with clickable spans.
- * Case-insensitive, longest-match-first. Works best for the English (WEB)
- * text since the candidate names are English; German spellings often differ,
- * which is why the per-verse pins are the authoritative link.
+ * Case-insensitive, longest-match-first.
+ *
+ * Boundaries are Unicode lookarounds, not `\b`: JavaScript's `\b` is defined
+ * over ASCII `\w`, so `\bÄgypten\b` never matches — a space followed by "Ä"
+ * is two non-word characters, hence no boundary. That silently broke every
+ * German place name that starts with an umlaut.
  */
 export function highlightVerse(text: string, candidates: Candidate[]): ReactNode {
   if (!candidates.length) return text;
@@ -33,7 +36,7 @@ export function highlightVerse(text: string, candidates: Candidate[]): ReactNode
   if (!all.length) return text;
   all.sort((a, b) => b.length - a.length);
 
-  const re = new RegExp(`\\b(${all.map(escapeRe).join('|')})\\b`, 'gi');
+  const re = new RegExp(`(?<!\\p{L})(${all.map(escapeRe).join('|')})(?!\\p{L})`, 'giu');
   const out: ReactNode[] = [];
   let last = 0;
   let m: RegExpExecArray | null;
