@@ -16,11 +16,16 @@ import {
   type SpreadEvent,
 } from '../data/mission';
 import MissionMap, { type MissionMarker, type MissionRoute } from './MissionMap';
+import ShareLink from './ShareLink';
 
 interface Props {
   places: Place[];
   lang: Lang;
   onShowPlace: (place: Place) => void;
+  /** Phase und Reise aus der Adresse (Deep-Link). */
+  initial?: { phase: string; journey?: string } | null;
+  /** Meldet Phase und Reise, damit die Adresse mitläuft. */
+  onNavigate?: (state: { phase: string; journey: string }) => void;
   onExit: () => void;
 }
 
@@ -57,15 +62,25 @@ function eventItems(events: SpreadEvent[], lang: Lang): Item[] {
   }));
 }
 
-export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
+export default function Mission({ places, lang, onShowPlace, initial, onNavigate, onExit }: Props) {
   const t = useT();
-  const [phaseId, setPhaseId] = useState('journeys');
-  const [journeyId, setJourneyId] = useState(JOURNEYS[0].id);
+  const [phaseId, setPhaseId] = useState(() =>
+    initial && PHASE_BY_ID[initial.phase] ? initial.phase : 'journeys',
+  );
+  const [journeyId, setJourneyId] = useState(() =>
+    initial?.journey && JOURNEY_BY_ID[initial.journey] ? initial.journey : JOURNEYS[0].id,
+  );
   const [selected, setSelected] = useState<string | null>(null);
   const [playing, setPlaying] = useState(false);
   const [fit, setFit] = useState<{ points: [number, number][]; key: number } | null>(null);
   const [focus, setFocus] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  const navRef = useRef(onNavigate);
+  navRef.current = onNavigate;
+  useEffect(() => {
+    navRef.current?.({ phase: phaseId, journey: journeyId });
+  }, [phaseId, journeyId]);
 
   const phase = PHASE_BY_ID[phaseId];
   const isJourneys = phaseId === 'journeys';
@@ -201,6 +216,7 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <ShareLink className="bm-btn hidden sm:inline-flex" />
           <button onClick={() => setPlaying((p) => !p)} className="bm-btn">
             {playing ? (
               <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>

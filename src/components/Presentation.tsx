@@ -14,19 +14,29 @@ interface Props {
   places: Place[];
   lang: Lang;
   initialBook?: string | null;
+  /** Kapitel aus der Adresse (Deep-Link). */
+  initialChapter?: number;
+  /** Meldet Buch und Kapitel, damit die Adresse mitläuft. */
+  onNavigate?: (state: { osis: string; chapter: number } | null) => void;
   onExit: () => void;
 }
 
-export default function Presentation({ places, lang, initialBook, onExit }: Props) {
+export default function Presentation({ places, lang, initialBook, initialChapter, onNavigate, onExit }: Props) {
   const t = useT();
   const available = useMemo(() => new Set(booksWithPlaces(places)), [places]);
   const [book, setBook] = useState<string | null>(initialBook ?? null);
-  const [chapter, setChapter] = useState(1);
+  const [chapter, setChapter] = useState(initialChapter ?? 1);
   const [selected, setSelected] = useState<Place | null>(null);
 
   const [bookText, setBookText] = useState<BookText | null>(null);
   const [textLoading, setTextLoading] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+
+  const navRef = useRef(onNavigate);
+  navRef.current = onNavigate;
+  useEffect(() => {
+    navRef.current?.(book ? { osis: book, chapter } : null);
+  }, [book, chapter]);
 
   const meta = book ? BOOK_BY_OSIS[book] : null;
   const chapterPlaces = useMemo(
