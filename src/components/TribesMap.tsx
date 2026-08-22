@@ -144,9 +144,9 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
     <div className="relative h-full w-full">
       <div ref={elRef} className="h-full w-full" />
       {/* group toggles — sit below the app header + sub-tabs */}
-      <div className="pointer-events-auto absolute right-3 top-16 z-[1000] flex flex-col gap-1 rounded-xl bg-cream/95 p-2 shadow-lg ring-1 ring-teal/10 backdrop-blur sm:top-20">
+      <div className="pointer-events-auto absolute right-3 top-16 z-[1000] flex flex-col gap-1 bg-deepest/95 p-2 ring-1 ring-white/10 backdrop-blur sm:top-20">
         {(Object.keys(KIND_LABEL) as GeoKind[]).map((k) => (
-          <label key={k} className="flex cursor-pointer items-center gap-2 px-1 text-[12px] text-ink">
+          <label key={k} className="flex cursor-pointer items-center gap-2 px-1 text-[12px] text-white">
             <input
               type="checkbox"
               checked={groups[k]}

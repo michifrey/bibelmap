@@ -101,7 +101,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
     const nt = BOOKS.filter((b) => b.testament === 'NT');
     const Group = ({ title, items }: { title: string; items: typeof BOOKS }) => (
       <div>
-        <h3 className="mb-2 font-display text-lg font-semibold text-teal">{title}</h3>
+        <h3 className="mb-2 font-display text-lg font-semibold text-white">{title}</h3>
         <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 md:grid-cols-4">
           {items.map((b) => {
             const has = available.has(b.osis);
@@ -110,14 +110,10 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                 key={b.osis}
                 disabled={!has}
                 onClick={() => openBook(b.osis)}
-                className={`rounded-xl border px-3 py-2.5 text-left text-sm transition ${
-                  has
-                    ? 'border-teal/15 bg-cream hover:border-gold hover:bg-gold/10'
-                    : 'cursor-not-allowed border-transparent bg-cream-2/40 text-ink-soft/40'
-                }`}
+                className={`border px-3 py-2.5 text-left text-sm transition ${ has ? 'border-white/10 bg-deepest hover:border-gold hover:bg-gold/10' : 'cursor-not-allowed border-transparent bg-surface/40 text-white/45' }`}
               >
-                <span className="block font-medium leading-tight text-ink">{lang === 'de' ? b.de : b.en}</span>
-                <span className="text-[11px] text-ink-soft">{b.chapters} {t('chapter')}</span>
+                <span className="block font-medium leading-tight text-white">{lang === 'de' ? b.de : b.en}</span>
+                <span className="text-[11px] text-white/60">{b.chapters} {t('chapter')}</span>
               </button>
             );
           })}
@@ -125,10 +121,10 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
       </div>
     );
     return (
-      <div className="fixed inset-0 z-[2000] flex flex-col bg-cream">
+      <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
         <PresentationBar title={t('presentation')} onExit={onExit} />
         <div className="scroll-soft mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-5 py-6">
-          <p className="mb-5 text-sm text-ink-soft">{t('presentationHint')}</p>
+          <p className="mb-5 text-sm text-white/60">{t('presentationHint')}</p>
           <div className="space-y-6">
             <Group title={t('oldTestament')} items={at} />
             <Group title={t('newTestament')} items={nt} />
@@ -142,7 +138,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
 
   // ---- Reading view ---------------------------------------------------
   return (
-    <div className="fixed inset-0 z-[2000] flex flex-col bg-cream">
+    <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
       <PresentationBar
         title={lang === 'de' ? meta.de : meta.en}
         subtitle={era ? `${lang === 'de' ? era.de : era.en} · ${era.range}` : undefined}
@@ -152,26 +148,26 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
 
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         {/* Left: text / places */}
-        <div className="scroll-soft flex w-full flex-col overflow-y-auto border-b border-teal/10 md:w-[42%] md:max-w-xl md:border-b-0 md:border-r">
-          <div className="sticky top-0 z-10 border-b border-teal/10 bg-cream/95 px-5 py-3 backdrop-blur">
+        <div className="scroll-soft flex w-full flex-col overflow-y-auto bg-paper text-ink border-b border-white/10 md:w-[42%] md:max-w-xl md:border-b-0 md:border-r">
+          <div className="sticky top-0 z-10 border-b-4 border-deep bg-paper px-6 py-4">
             <div className="flex items-center justify-between gap-2">
               <button
                 onClick={() => go(-1)}
                 disabled={chapter <= 1}
-                className="rounded-lg bg-cream-2 px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold/30 disabled:opacity-30"
+                className="bg-paper-2 px-3 py-2 text-xs font-bold tracking-wide text-ink transition hover:bg-gold/40 disabled:opacity-30"
               >
                 ‹ {t('prev')}
               </button>
               <div className="text-center">
-                <div className="font-display text-lg font-semibold text-teal">
+                <div className="font-display text-3xl uppercase text-ink">
                   {t('chapter')} {chapter}
                 </div>
-                <div className="text-[11px] text-ink-soft">/ {meta.chapters}</div>
+                <div className="text-[11px] font-bold text-ink-soft">/ {meta.chapters}</div>
               </div>
               <button
                 onClick={() => go(1)}
                 disabled={chapter >= meta.chapters}
-                className="rounded-lg bg-cream-2 px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold/30 disabled:opacity-30"
+                className="bg-paper-2 px-3 py-2 text-xs font-bold tracking-wide text-ink transition hover:bg-gold/40 disabled:opacity-30"
               >
                 {t('next')} ›
               </button>
@@ -192,14 +188,14 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                 href={bibleGatewayUrl(meta.osis, chapter, lang === 'de' ? 'LUTH1545' : 'ESV')}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-lg bg-teal px-2.5 py-1 text-xs font-medium text-cream transition hover:bg-teal-2"
+                className="bg-deep px-3 py-1.5 text-[11px] font-extrabold tracking-wide text-white transition hover:bg-signal"
               >
                 {lang === 'de' ? t('readDe') : t('readEn')}
               </a>
               {bibleProjectVideoIds(meta.osis).length > 0 ? (
                 <button
                   onClick={() => setShowVideo(true)}
-                  className="inline-flex items-center gap-1 rounded-lg bg-clay px-2.5 py-1 text-xs font-medium text-cream transition hover:bg-gold-deep"
+                  className="inline-flex items-center gap-1 bg-deep px-3 py-1.5 text-[11px] font-extrabold tracking-wide text-white transition hover:bg-signal"
                 >
                   <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
                   {t('video')}
@@ -209,7 +205,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                   href={bibleProjectUrl(meta.osis)}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-lg bg-gold/25 px-2.5 py-1 text-xs font-medium text-teal transition hover:bg-gold/40"
+                  className="bg-gold px-3 py-1.5 text-[11px] font-extrabold tracking-wide text-deep transition hover:bg-gold-deep"
                 >
                   {t('video')}
                 </a>
@@ -223,11 +219,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                   <button
                     key={place.id}
                     onClick={() => setSelected(place)}
-                    className={`flex-none rounded-full px-2.5 py-1 text-xs font-medium transition ${
-                      selected?.id === place.id
-                        ? 'bg-teal text-cream'
-                        : 'bg-cream-2 text-teal hover:bg-gold/30'
-                    }`}
+                    className={`flex-none px-3 py-1.5 text-[11.5px] font-bold transition ${ selected?.id === place.id ? 'bg-deep text-white' : 'bg-paper-2 text-ink hover:bg-gold/40' }`}
                     title={`${t('placesInChapter')}`}
                   >
                     {placeName(place, lang)}
@@ -240,11 +232,11 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
           {/* reading text (hero) */}
           <div className="px-5 py-4">
             {textLoading ? (
-              <p className="px-1 py-8 text-center text-sm text-ink-soft">{t('textLoading')}</p>
+              <p className="px-1 py-8 text-center text-sm text-white/60">{t('textLoading')}</p>
             ) : verses.length === 0 ? (
-              <p className="rounded-xl bg-cream-2/50 px-4 py-6 text-center text-sm text-ink-soft">{t('noText')}</p>
+              <p className="bg-surface/50 px-4 py-6 text-center text-sm text-white/60">{t('noText')}</p>
             ) : (
-              <div className="font-display text-[17px] leading-relaxed text-ink">
+              <div className="font-scripture text-[18.5px] leading-[1.85] text-ink">
                 {verses.map((vs) => {
                   const vp = versePlaces.get(vs.v) ?? [];
                   const candidates: Candidate[] = vp.map((p) => ({
@@ -263,9 +255,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                           key={p.id}
                           onClick={() => setSelected(p)}
                           title={placeName(p, lang)}
-                          className={`ml-1 inline-flex translate-y-[1px] items-center rounded-full px-1 align-middle text-[10px] font-sans transition ${
-                            selected?.id === p.id ? 'bg-teal text-cream' : 'bg-gold/30 text-teal hover:bg-gold/55'
-                          }`}
+                          className={`ml-1 inline-flex translate-y-[1px] items-center rounded-full px-1 align-middle text-[10px] font-sans transition ${ selected?.id === p.id ? 'bg-signal text-white' : 'bg-gold/30 text-white hover:bg-gold/55' }`}
                         >
                           <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" /></svg>
                           {placeName(p, lang)}
@@ -298,14 +288,14 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
           className="fixed inset-0 z-[2200] grid place-items-center bg-black/60 p-4"
           onClick={() => setShowVideo(false)}
         >
-          <div className="w-full max-w-2xl rounded-2xl bg-cream p-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full max-w-2xl bg-deepest p-4" onClick={(e) => e.stopPropagation()}>
             <div className="mb-2 flex items-center justify-between">
-              <div className="font-display text-lg font-semibold text-teal">
+              <div className="font-display text-lg font-semibold text-white">
                 {lang === 'de' ? meta.de : meta.en} · {t('video')}
               </div>
               <button
                 onClick={() => setShowVideo(false)}
-                className="grid h-8 w-8 place-items-center rounded-full bg-cream-2 text-teal transition hover:bg-gold/30"
+                className="grid h-8 w-8 place-items-center rounded-full bg-surface text-white transition hover:bg-gold/30"
                 aria-label={t('close')}
               >
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
@@ -332,19 +322,19 @@ function PresentationBar({
 }) {
   const t = useT();
   return (
-    <div className="flex flex-none items-center justify-between gap-3 border-b border-teal/10 bg-teal px-4 py-3 text-cream">
+    <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-signal px-4 py-3 text-white">
       <div className="flex items-center gap-3">
         {onBack && (
-          <button onClick={onBack} className="rounded-lg bg-white/10 px-2.5 py-1.5 text-sm transition hover:bg-white/20">
+          <button onClick={onBack} className="bg-white/10 px-2.5 py-1.5 text-sm transition hover:bg-white/20">
             ‹ {t('chooseBook')}
           </button>
         )}
         <div>
           <div className="font-display text-lg font-semibold leading-tight">{title}</div>
-          {subtitle && <div className="text-[11px] text-cream/75">{subtitle}</div>}
+          {subtitle && <div className="text-[11px] text-white/75">{subtitle}</div>}
         </div>
       </div>
-      <button onClick={onExit} className="rounded-lg bg-gold px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold-deep">
+      <button onClick={onExit} className="bg-gold px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold-deep">
         {t('exit')} ✕
       </button>
     </div>

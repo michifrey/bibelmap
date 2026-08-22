@@ -18,8 +18,8 @@ import Genealogy from './components/Genealogy';
 function Loading() {
   const t = useT();
   return (
-    <div className="flex h-full w-full items-center justify-center bg-cream">
-      <div className="flex flex-col items-center gap-3 text-teal">
+    <div className="flex h-full w-full items-center justify-center bg-deepest">
+      <div className="flex flex-col items-center gap-3 text-white">
         <svg viewBox="0 0 24 24" className="h-8 w-8 animate-pulse" fill="currentColor">
           <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
         </svg>
@@ -40,7 +40,7 @@ export default function App() {
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
   const [mode, setMode] = useState<Mode | null>(null);
-  const [basemap, setBasemap] = useState<BasemapId>('light');
+  const [basemap, setBasemap] = useState<BasemapId>('dark');
   const [view, setView] = useState<View>('map');
   // Cross-links between the time tree and the church-history map (shared data).
   const [treeFocus, setTreeFocus] = useState<string | null>(null);
@@ -106,7 +106,7 @@ export default function App() {
 
   if (error) {
     return (
-      <div className="flex h-full items-center justify-center bg-cream p-6 text-center text-sm text-ink-soft">
+      <div className="flex h-full items-center justify-center bg-deepest p-6 text-center text-sm text-white/60">
         Konnte Daten nicht laden: {error}
       </div>
     );
@@ -146,20 +146,20 @@ export default function App() {
 
             {/* Search / detail — left rail on desktop, bottom sheet on mobile */}
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1110] flex flex-col p-2 sm:inset-y-0 sm:left-0 sm:right-auto sm:z-[1100] sm:w-full sm:max-w-[22rem] sm:p-4 sm:pt-24">
-              <div className="pointer-events-auto flex min-h-0 flex-col overflow-hidden rounded-2xl bg-cream/90 shadow-2xl ring-1 ring-white/40 backdrop-blur-xl sm:flex-1 sm:rounded-3xl">
+              <div className="pointer-events-auto flex min-h-0 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur-xl sm:flex-1 sm:">
                 {/* mobile peek / grab handle */}
                 <button
                   onClick={() => setSheetOpen((v) => !v)}
-                  className="flex items-center gap-2 border-b border-teal/10 px-3 py-2 text-left sm:hidden"
+                  className="flex items-center gap-2 border-b border-white/10 px-3 py-2 text-left sm:hidden"
                   aria-label={tr(lang, 'search')}
                 >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-teal" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
                   </svg>
-                  <span className="flex-1 truncate text-sm text-ink-soft">
+                  <span className="flex-1 truncate text-sm text-white/60">
                     {selected ? placeName(selected, lang) : tr(lang, 'search')}
                   </span>
-                  <svg viewBox="0 0 24 24" className={`h-4 w-4 flex-none text-ink-soft transition-transform ${sheetOpen ? 'rotate-180' : ''}`} fill="currentColor">
+                  <svg viewBox="0 0 24 24" className={`h-4 w-4 flex-none text-white/60 transition-transform ${sheetOpen ? 'rotate-180' : ''}`} fill="currentColor">
                     <path d="M7 14l5-5 5 5z" />
                   </svg>
                 </button>
@@ -180,21 +180,20 @@ export default function App() {
             </div>
 
             {/* basemap switcher (right edge) */}
-            <div className="pointer-events-auto absolute right-3 top-1/2 z-[1100] flex -translate-y-1/2 flex-col gap-1 rounded-2xl bg-cream/80 p-1 shadow-xl ring-1 ring-white/40 backdrop-blur-xl sm:right-4">
+            <div className="pointer-events-auto absolute right-3 top-1/2 z-[1100] flex -translate-y-1/2 flex-col gap-1 bg-deepest/95 p-1 ring-1 ring-white/10 backdrop-blur-xl sm:right-4">
               {([
+                ['dark', 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z', 'basemapDark'],
                 ['light', 'M3 12h18M12 3v18', 'basemapLight'],
                 ['satellite', 'M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20M12 2c2.5 2.7 2.5 17.3 0 20M12 2c-2.5 2.7-2.5 17.3 0 20', 'basemapSatellite'],
                 ['relief', 'M3 18l5-8 4 5 3-4 6 7z', 'basemapRelief'],
                 ['antique', 'M9 3 4 5v16l5-2 6 2 5-2V3l-5 2-6-2zM9 3v16M15 5v16', 'basemapAntique'],
-              ] as [BasemapId, string, 'basemapLight' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'][]).map(([id, icon, key]) => (
+              ] as [BasemapId, string, 'basemapDark' | 'basemapLight' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'][]).map(([id, icon, key]) => (
                 <button
                   key={id}
                   onClick={() => setBasemap(id)}
                   title={tr(lang, key)}
                   aria-label={tr(lang, key)}
-                  className={`grid h-9 w-9 place-items-center rounded-xl transition ${
-                    basemap === id ? 'bg-teal text-cream shadow' : 'text-ink-soft hover:bg-cream-2'
-                  }`}
+                  className={`grid h-9 w-9 place-items-center transition ${ basemap === id ? 'bg-signal text-white ' : 'text-white/60 hover:bg-surface' }`}
                 >
                   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d={icon} />

@@ -693,9 +693,7 @@ export default function GraphView({ places, lang }: Props) {
   const Toggle = ({ on, set, label, dot }: { on: boolean; set: (v: boolean) => void; label: string; dot: string }) => (
     <button
       onClick={() => set(!on)}
-      className={`flex items-center gap-1.5 rounded-lg px-2 py-1 text-[11px] font-medium transition ${
-        on ? 'bg-teal text-cream' : 'bg-cream-2 text-ink-soft hover:bg-cream'
-      }`}
+      className={`flex items-center gap-1.5 px-2 py-1 text-[11px] font-medium transition ${ on ? 'bg-signal text-white' : 'bg-surface text-white/60 hover:bg-deepest' }`}
     >
       <span className="h-2 w-2 rounded-full" style={{ background: on ? dot : 'transparent', outline: `1.5px solid ${dot}` }} />
       {label}
@@ -703,23 +701,23 @@ export default function GraphView({ places, lang }: Props) {
   );
 
   return (
-    <div className="absolute inset-0 bg-cream">
+    <div className="absolute inset-0 bg-deepest">
       <div ref={wrapRef} className="absolute inset-0">
         <canvas ref={canvasRef} className="block h-full w-full" style={{ cursor: 'grab' }} />
       </div>
 
       {/* title + controls */}
       <div className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex flex-col gap-2 p-3 pt-20 sm:p-4 sm:pt-24">
-        <div className="pointer-events-auto flex max-w-[min(94vw,40rem)] flex-wrap items-center gap-x-3 gap-y-2 self-start rounded-2xl bg-cream/92 px-3.5 py-2.5 shadow-lg ring-1 ring-teal/10 backdrop-blur">
+        <div className="pointer-events-auto flex max-w-[min(94vw,40rem)] flex-wrap items-center gap-x-3 gap-y-2 self-start bg-deepest/95 px-3.5 py-2.5 ring-1 ring-white/10 backdrop-blur">
           <div className="pr-1">
-            <div className="font-display text-base font-semibold leading-tight text-teal">{t('graphTitle')}</div>
-            <div className="text-[11px] text-ink-soft">{t('graphSubtitle')}</div>
+            <div className="font-display text-base font-semibold leading-tight text-white">{t('graphTitle')}</div>
+            <div className="text-[11px] text-white/60">{t('graphSubtitle')}</div>
           </div>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={t('graphSearch')}
-            className="w-36 rounded-lg bg-cream-2 px-2.5 py-1.5 text-[12px] text-ink outline-none ring-1 ring-teal/10 placeholder:text-ink-soft/60 focus:ring-gold"
+            className="w-36 bg-surface px-2.5 py-1.5 text-[12px] text-white outline-none ring-1 ring-white/10 placeholder:text-white/45 focus:ring-gold"
           />
           <div className="flex flex-wrap items-center gap-1.5">
             <Toggle on={showPlaces} set={setShowPlaces} label={t('graphPlaces')} dot="#2f8f7f" />
@@ -727,7 +725,7 @@ export default function GraphView({ places, lang }: Props) {
             <Toggle on={showPassages} set={setShowPassages} label={t('graphPassages')} dot={PASSAGE_COLOR} />
             <Toggle on={showBookLinks} set={setShowBookLinks} label={t('graphBookLinks')} dot="#c2812a" />
           </div>
-          <label className="flex items-center gap-2 text-[11px] text-ink-soft">
+          <label className="flex items-center gap-2 text-[11px] text-white/60">
             {t('graphPlaces')}
             <input
               type="range"
@@ -743,7 +741,7 @@ export default function GraphView({ places, lang }: Props) {
             />
           </label>
         </div>
-        <div className="pointer-events-none self-start rounded-lg bg-cream/80 px-2.5 py-1 text-[11px] text-ink-soft shadow ring-1 ring-teal/10 backdrop-blur">
+        <div className="pointer-events-none self-start bg-deepest/95 px-2.5 py-1 text-[11px] text-white/60 ring-1 ring-white/10 backdrop-blur">
           {t('graphHint')} · {bookCount} {t('graphBooks')} · {placeCount} {t('graphPlaces')} · {personCount} {t('graphPeople')} · {passageCount} {t('graphPassages')}
           {showBookLinks && ` · ${t('graphBookLinks')}: ${xrefReal ? t('graphXrefReal') : t('graphXrefDerived')}`}
         </div>
@@ -752,7 +750,7 @@ export default function GraphView({ places, lang }: Props) {
       {/* place detail */}
       {selPlace && (
         <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
-          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-cream/95 shadow-2xl ring-1 ring-teal/10 backdrop-blur">
+          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
             <PlaceDetail place={selPlace} lang={lang} onClose={() => setSelPlace(null)} />
           </div>
         </div>
@@ -761,7 +759,7 @@ export default function GraphView({ places, lang }: Props) {
       {/* person detail */}
       {selPerson && (
         <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
-          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-cream/95 shadow-2xl ring-1 ring-teal/10 backdrop-blur">
+          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
             <PersonDetail
               person={GENEALOGY.find((p) => p.id === selPerson)!}
               lang={lang}
@@ -775,28 +773,28 @@ export default function GraphView({ places, lang }: Props) {
       {/* passage detail — title, reference, subtitle, explanation */}
       {selPassage && (
         <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
-          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-cream/95 shadow-2xl ring-1 ring-teal/10 backdrop-blur">
+          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
             <div className="animate-fade-in flex h-full flex-col">
-              <div className="relative px-4 pb-3 pt-4 text-cream" style={{ background: PASSAGE_COLOR }}>
+              <div className="relative px-4 pb-3 pt-4 text-white" style={{ background: PASSAGE_COLOR }}>
                 <button
                   onClick={() => setSelPassage(null)}
                   aria-label={t('close')}
-                  className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/15 text-cream transition hover:bg-black/30"
+                  className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-black/15 text-white transition hover:bg-black/30"
                 >
                   <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
                 </button>
-                <div className="text-[11px] font-medium uppercase tracking-wide text-cream/85">{t('graphPassages')}</div>
+                <div className="text-[11px] font-medium uppercase tracking-wide text-white/75">{t('graphPassages')}</div>
                 <h2 className="mt-0.5 font-display text-2xl font-semibold leading-tight">{lang === 'de' ? selPassage.de : selPassage.en}</h2>
-                <div className="mt-1 text-[13px] italic text-cream/90">{lang === 'de' ? selPassage.subDe : selPassage.subEn}</div>
+                <div className="mt-1 text-[13px] italic text-white/75">{lang === 'de' ? selPassage.subDe : selPassage.subEn}</div>
               </div>
               <div className="scroll-soft flex-1 overflow-y-auto px-4 pb-5 pt-3">
-                <p className="text-sm leading-relaxed text-ink">{lang === 'de' ? selPassage.textDe : selPassage.textEn}</p>
+                <p className="text-sm leading-relaxed text-white">{lang === 'de' ? selPassage.textDe : selPassage.textEn}</p>
                 <div className="mt-4 flex flex-wrap items-center gap-1.5">
                   <a
                     href={bibleRefUrl(selPassage.ref)}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-xs font-medium text-cream transition hover:opacity-90"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium text-white transition hover:opacity-90"
                     style={{ background: PASSAGE_COLOR }}
                   >
                     {selPassage.ref}
@@ -804,7 +802,7 @@ export default function GraphView({ places, lang }: Props) {
                   </a>
                   <button
                     onClick={() => { setBookInfo({ osis: selPassage.book, label: graph.nodes.find((n) => n.kind === 'book' && n.bookOsis === selPassage.book)?.label ?? selPassage.book }); setSelPassage(null); }}
-                    className="rounded-lg bg-cream-2 px-2.5 py-1.5 text-xs font-medium text-teal transition hover:bg-gold/30"
+                    className="bg-surface px-2.5 py-1.5 text-xs font-medium text-white transition hover:bg-gold/30"
                   >
                     {graph.nodes.find((n) => n.kind === 'book' && n.bookOsis === selPassage.book)?.label ?? selPassage.book}
                   </button>
@@ -818,20 +816,20 @@ export default function GraphView({ places, lang }: Props) {
       {/* book → mentioned places/people list */}
       {bookInfo && bookLinks && (
         <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[20rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
-          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden rounded-2xl bg-cream/95 shadow-2xl ring-1 ring-teal/10 backdrop-blur">
-            <div className="flex items-center justify-between border-b border-teal/10 px-4 py-3">
-              <div className="font-display text-lg font-semibold text-teal">{bookInfo.label}</div>
-              <button onClick={() => setBookInfo(null)} aria-label={t('close')} className="grid h-7 w-7 place-items-center rounded-full bg-cream-2 text-teal hover:bg-gold/30">
+          <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
+            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
+              <div className="font-display text-lg font-semibold text-white">{bookInfo.label}</div>
+              <button onClick={() => setBookInfo(null)} aria-label={t('close')} className="grid h-7 w-7 place-items-center rounded-full bg-surface text-white hover:bg-gold/30">
                 <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
               </button>
             </div>
             <div className="scroll-soft flex-1 overflow-y-auto px-4 py-3">
               {bookLinks.passages.length > 0 && (
                 <>
-                  <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{t('graphPassages')} · {bookLinks.passages.length}</div>
+                  <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/60">{t('graphPassages')} · {bookLinks.passages.length}</div>
                   <div className="mb-3 flex flex-wrap gap-1.5">
                     {bookLinks.passages.map((psg) => (
-                      <button key={psg.id} onClick={() => { setSelPassage(psg); setBookInfo(null); }} className="rounded-md px-2 py-0.5 text-[11px] font-medium ring-1 ring-clay/30 hover:bg-clay/15" style={{ color: PASSAGE_COLOR }}>
+                      <button key={psg.id} onClick={() => { setSelPassage(psg); setBookInfo(null); }} className="px-2 py-0.5 text-[11px] font-medium ring-1 ring-clay/30 hover:bg-clay/15" style={{ color: PASSAGE_COLOR }}>
                         {lang === 'de' ? psg.de : psg.en}
                       </button>
                     ))}
@@ -840,10 +838,10 @@ export default function GraphView({ places, lang }: Props) {
               )}
               {bookLinks.places.length > 0 && (
                 <>
-                  <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{t('graphPlaces')} · {bookLinks.places.length}</div>
+                  <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/60">{t('graphPlaces')} · {bookLinks.places.length}</div>
                   <div className="mb-3 flex flex-wrap gap-1.5">
                     {bookLinks.places.map((p) => (
-                      <button key={p.id} onClick={() => { setSelPlace(p); setBookInfo(null); }} className="rounded-md bg-cream-2 px-2 py-0.5 text-[11px] font-medium text-teal-2 ring-1 ring-teal/10 hover:bg-gold/25">
+                      <button key={p.id} onClick={() => { setSelPlace(p); setBookInfo(null); }} className="bg-surface px-2 py-0.5 text-[11px] font-medium text-mint ring-1 ring-white/10 hover:bg-gold/25">
                         {p.name.replace(/ \d+$/, '')}
                       </button>
                     ))}
@@ -852,10 +850,10 @@ export default function GraphView({ places, lang }: Props) {
               )}
               {bookLinks.people.length > 0 && (
                 <>
-                  <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{t('graphPeople')} · {bookLinks.people.length}</div>
+                  <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-white/60">{t('graphPeople')} · {bookLinks.people.length}</div>
                   <div className="flex flex-wrap gap-1.5">
                     {bookLinks.people.map((p) => (
-                      <button key={p.id} onClick={() => { setSelPerson(p.id); setBookInfo(null); }} className="rounded-md bg-cream-2 px-2 py-0.5 text-[11px] font-medium text-teal-2 ring-1 ring-teal/10 hover:bg-gold/25">
+                      <button key={p.id} onClick={() => { setSelPerson(p.id); setBookInfo(null); }} className="bg-surface px-2 py-0.5 text-[11px] font-medium text-mint ring-1 ring-white/10 hover:bg-gold/25">
                         {lang === 'de' ? p.de : p.en}
                       </button>
                     ))}

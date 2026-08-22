@@ -118,17 +118,15 @@ export default function Genealogy({ places, lang, onShowPlace, focusId, onShowOn
   ];
 
   return (
-    <div className="absolute inset-0 bg-cream">
+    <div className="absolute inset-0 bg-deepest">
       {/* sub-tab switcher (floats top-centre so it clears the app header) */}
       <div className="pointer-events-none absolute inset-x-0 top-2 z-[1160] flex justify-center px-2 sm:top-3">
-        <div className="pointer-events-auto flex overflow-hidden rounded-xl bg-cream/92 shadow-lg ring-1 ring-teal/15 backdrop-blur">
+        <div className="pointer-events-auto flex overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
           {TABS.map((tb) => (
             <button
               key={tb.id}
               onClick={() => setTab(tb.id)}
-              className={`px-3 py-1.5 text-xs font-medium transition sm:text-sm ${
-                tab === tb.id ? 'bg-teal text-cream' : 'text-ink-soft hover:bg-cream-2'
-              }`}
+              className={`px-3 py-1.5 text-xs font-medium transition sm:text-sm ${ tab === tb.id ? 'bg-signal text-white' : 'text-white/60 hover:bg-surface' }`}
             >
               {tb.label}
             </button>
@@ -154,21 +152,21 @@ export default function Genealogy({ places, lang, onShowPlace, focusId, onShowOn
       {tab === 'tree' && (
         <div className="absolute inset-0 flex flex-col pt-14 sm:pt-16">
           {/* toolbar */}
-          <div className="flex flex-none flex-wrap items-center gap-2 border-b border-teal/10 bg-cream/95 px-4 py-2.5 backdrop-blur">
+          <div className="flex flex-none flex-wrap items-center gap-2 border-b border-white/10 bg-deepest/95 px-4 py-2.5 backdrop-blur">
             <div className="relative min-w-[10rem] flex-1">
-              <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-soft" fill="currentColor">
+              <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" fill="currentColor">
                 <path d="M10 4a6 6 0 1 0 3.7 10.7l4.3 4.3 1.4-1.4-4.3-4.3A6 6 0 0 0 10 4zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8z" />
               </svg>
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t('genealogySearch')}
-                className="w-full rounded-lg border border-teal/15 bg-cream px-3 py-1.5 pl-8 text-sm text-ink outline-none placeholder:text-ink-soft/60 focus:border-gold"
+                className="w-full border border-white/10 bg-deepest px-3 py-1.5 pl-8 text-sm text-white outline-none placeholder:text-white/45 focus:border-gold"
               />
               {query && (
                 <button
                   onClick={() => setQuery('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-ink-soft hover:text-teal"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-white/60 hover:text-white"
                   aria-label={t('reset')}
                 >
                   ✕
@@ -178,23 +176,23 @@ export default function Genealogy({ places, lang, onShowPlace, focusId, onShowOn
             <button
               onClick={expandAll}
               disabled={!!forcedOpen}
-              className="rounded-lg bg-cream-2 px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold/30 disabled:opacity-40"
+              className="bg-surface px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold/30 disabled:opacity-40"
             >
               {t('expandAll')}
             </button>
             <button
               onClick={collapseAll}
               disabled={!!forcedOpen}
-              className="rounded-lg bg-cream-2 px-3 py-1.5 text-sm font-medium text-teal transition hover:bg-gold/30 disabled:opacity-40"
+              className="bg-surface px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold/30 disabled:opacity-40"
             >
               {t('collapseAll')}
             </button>
           </div>
 
           {/* legend */}
-          <div className="scroll-soft flex flex-none gap-2 overflow-x-auto border-b border-teal/10 bg-cream-2/40 px-4 py-2">
+          <div className="scroll-soft flex flex-none gap-2 overflow-x-auto border-b border-white/10 bg-surface/40 px-4 py-2">
             {LINES.map((l) => (
-              <span key={l.id} className="flex flex-none items-center gap-1.5 text-[11px] text-ink-soft">
+              <span key={l.id} className="flex flex-none items-center gap-1.5 text-[11px] text-white/60">
                 <span className="h-2.5 w-2.5 rounded-full" style={{ background: l.color }} />
                 {lang === 'de' ? l.de : l.en}
               </span>
@@ -204,7 +202,7 @@ export default function Genealogy({ places, lang, onShowPlace, focusId, onShowOn
           {/* tree */}
           <div className="scroll-soft mx-auto w-full max-w-4xl flex-1 overflow-y-auto px-3 py-4 sm:px-6">
             {query && !matches.size && (
-              <p className="mb-3 rounded-xl bg-cream-2/50 px-4 py-3 text-center text-sm text-ink-soft">{t('noResults')}</p>
+              <p className="mb-3 bg-surface/50 px-4 py-3 text-center text-sm text-white/60">{t('noResults')}</p>
             )}
             <TreeNode
               node={GENEALOGY}
@@ -216,7 +214,7 @@ export default function Genealogy({ places, lang, onShowPlace, focusId, onShowOn
               resolvePlace={resolvePlace}
               onShowPlace={onShowPlace}
             />
-            <p className="mt-6 border-t border-teal/10 pt-3 text-[11px] leading-relaxed text-ink-soft">
+            <p className="mt-6 border-t border-white/10 pt-3 text-[11px] leading-relaxed text-white/60">
               {t('genealogyNote')}
             </p>
           </div>
@@ -253,15 +251,13 @@ function TreeNode({ node, depth, lang, open, matches, onToggle, resolvePlace, on
       )}
       <div className="relative pl-3">
         <div
-          className={`group flex flex-wrap items-center gap-x-2 gap-y-1 rounded-lg py-1 pr-2 transition ${
-            isMatch ? 'bg-gold/25' : ''
-          }`}
+          className={`group flex flex-wrap items-center gap-x-2 gap-y-1 py-1 pr-2 transition ${ isMatch ? 'bg-gold/25' : '' }`}
         >
           {/* toggle / bullet */}
           {hasChildren ? (
             <button
               onClick={() => onToggle(node.id)}
-              className="grid h-5 w-5 flex-none place-items-center rounded text-cream transition hover:brightness-110"
+              className="grid h-5 w-5 flex-none place-items-center text-white transition hover:brightness-110"
               style={{ background: color }}
               aria-label={isOpen ? t('collapseAll') : t('expandAll')}
             >
@@ -273,28 +269,28 @@ function TreeNode({ node, depth, lang, open, matches, onToggle, resolvePlace, on
             <span className="h-2.5 w-2.5 flex-none rounded-full" style={{ background: color }} />
           )}
 
-          <span className="font-display text-[15px] font-semibold text-ink">{name}</span>
+          <span className="font-display text-[15px] font-semibold text-white">{name}</span>
 
           {node.people && (
             <span
-              className="rounded-full px-2 py-0.5 text-[11px] font-medium text-cream"
+              className="rounded-full px-2 py-0.5 text-[11px] font-medium text-white"
               style={{ background: color }}
             >
               {lang === 'de' ? node.people.de : node.people.en}
             </span>
           )}
           {node.region && (
-            <span className="rounded-full bg-cream-2 px-2 py-0.5 text-[11px] text-ink-soft">
+            <span className="rounded-full bg-surface px-2 py-0.5 text-[11px] text-white/60">
               {lang === 'de' ? node.region.de : node.region.en}
             </span>
           )}
-          {node.ref && <span className="text-[10px] font-medium text-ink-soft/70">{node.ref}</span>}
+          {node.ref && <span className="text-[10px] font-medium text-white/45">{node.ref}</span>}
 
           {place && (
             <button
               onClick={() => onShowPlace(place)}
               title={t('showOnMap')}
-              className="ml-auto inline-flex items-center gap-1 rounded-full bg-teal/10 px-2 py-0.5 text-[11px] font-medium text-teal opacity-80 transition hover:bg-teal hover:text-cream"
+              className="ml-auto inline-flex items-center gap-1 rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-white opacity-80 transition hover:bg-signal hover:text-white"
             >
               <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor">
                 <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
@@ -305,7 +301,7 @@ function TreeNode({ node, depth, lang, open, matches, onToggle, resolvePlace, on
         </div>
 
         {node.note && (
-          <div className="pl-7 text-[12px] leading-snug text-ink-soft">{lang === 'de' ? node.note.de : node.note.en}</div>
+          <div className="pl-7 text-[12px] leading-snug text-white/60">{lang === 'de' ? node.note.de : node.note.en}</div>
         )}
 
         {/* linear spine (compact breadcrumb of single-child generations) */}
@@ -313,13 +309,13 @@ function TreeNode({ node, depth, lang, open, matches, onToggle, resolvePlace, on
           <div className="mt-1 flex flex-wrap items-center gap-1 pl-7">
             {node.spine.map((s, i) => (
               <span key={i} className="flex items-center gap-1">
-                <span className="text-ink-soft/50">→</span>
-                <span className="rounded-md bg-cream-2/70 px-1.5 py-0.5 text-[12px] text-ink-soft">
+                <span className="text-white/45">→</span>
+                <span className="bg-surface/70 px-1.5 py-0.5 text-[12px] text-white/60">
                   {lang === 'de' ? s.de : s.en}
                 </span>
               </span>
             ))}
-            <span className="text-ink-soft/50">→</span>
+            <span className="text-white/45">→</span>
           </div>
         )}
       </div>

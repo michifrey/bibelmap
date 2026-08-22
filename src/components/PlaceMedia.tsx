@@ -25,18 +25,18 @@ export default function PlaceMedia({ place }: { place: Place }) {
 
   return (
     <div className="mt-5">
-      <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-ink-soft">{t('media')}</div>
+      <div className="bm-eyebrow mb-2">{t('media')}</div>
 
       <div className="space-y-2">
         {groups.map(({ source, episodes }) => {
           const open = expanded === source.id;
           const shown = open ? episodes : episodes.slice(0, 3);
           return (
-            <div key={source.id} className="rounded-xl bg-cream-2/50 p-2.5">
+            <div key={source.id} className="bg-surface/50 p-2.5">
               <div className="mb-1.5 flex items-baseline gap-2">
-                <span className="text-sm font-semibold text-teal">{source.title}</span>
-                {source.author && <span className="text-[11px] text-ink-soft">{source.author}</span>}
-                <span className="ml-auto text-[11px] text-ink-soft">{episodes.length}</span>
+                <span className="text-sm font-bold text-white">{source.title}</span>
+                {source.author && <span className="text-[11px] text-white/60">{source.author}</span>}
+                <span className="ml-auto text-[11px] text-white/60">{episodes.length}</span>
               </div>
 
               <div className="space-y-1">
@@ -46,11 +46,11 @@ export default function PlaceMedia({ place }: { place: Place }) {
                     href={ep.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="group flex items-start gap-2 rounded-lg px-1.5 py-1 transition hover:bg-cream"
+                    className="group flex items-start gap-2 px-1.5 py-1 transition hover:bg-deepest"
                   >
                     <svg
                       viewBox="0 0 24 24"
-                      className="mt-0.5 h-3.5 w-3.5 flex-none text-ink-soft/50 transition group-hover:text-teal"
+                      className="mt-0.5 h-3.5 w-3.5 flex-none text-white/45 transition group-hover:text-white"
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2"
@@ -70,10 +70,10 @@ export default function PlaceMedia({ place }: { place: Place }) {
                       )}
                     </svg>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[12.5px] leading-snug text-ink group-hover:text-teal">
+                      <span className="block text-[12.5px] leading-snug text-white group-hover:text-white">
                         {ep.title}
                       </span>
-                      <span className="mt-0.5 block text-[10.5px] text-ink-soft">
+                      <span className="mt-0.5 block text-[10.5px] text-white/60">
                         {ep.refs.map((r) => r.label).join(' · ')}
                         {ep.date ? ` · ${ep.date}` : ''}
                       </span>
@@ -85,7 +85,7 @@ export default function PlaceMedia({ place }: { place: Place }) {
               {episodes.length > 3 && (
                 <button
                   onClick={() => setExpanded(open ? null : source.id)}
-                  className="mt-1 w-full rounded-lg px-1.5 py-1 text-left text-[11px] font-medium text-teal transition hover:bg-cream"
+                  className="mt-1 w-full px-1.5 py-1 text-left text-[11px] font-medium text-white transition hover:bg-deepest"
                 >
                   {open ? t('showLess') : `${t('showAll')} (${episodes.length})`}
                 </button>
