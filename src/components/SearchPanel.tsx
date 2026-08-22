@@ -1,6 +1,6 @@
 import type { Place } from '../types';
-import { useT } from '../i18n';
-import { erasForPlace } from '../lib/places';
+import { useLang, useT } from '../i18n';
+import { erasForPlace, placeName } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
 
 interface Props {
@@ -26,6 +26,7 @@ function EraDots({ place }: { place: Place }) {
 }
 
 function Row({ p, onSelect, t }: { p: Place; onSelect: (p: Place) => void; t: (k: any) => string }) {
+  const lang = useLang();
   return (
     <button
       onClick={() => onSelect(p)}
@@ -48,7 +49,7 @@ function Row({ p, onSelect, t }: { p: Place; onSelect: (p: Place) => void; t: (k
       )}
       <span className="min-w-0 flex-1">
         <span className="flex items-center gap-2">
-          <span className="truncate font-medium text-ink group-hover:text-teal">{p.name.replace(/ \d+$/, '')}</span>
+          <span className="truncate font-medium text-ink group-hover:text-teal">{placeName(p, lang)}</span>
           <EraDots place={p} />
         </span>
         <span className="mt-0.5 block truncate text-[11px] text-ink-soft">

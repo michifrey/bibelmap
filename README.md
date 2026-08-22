@@ -34,7 +34,7 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   historischen **Volk** und der **Region** zugeordnet, mit Bibelstelle; ein Klick
   auf *Auf Karte* springt zum passenden Ort, und eine Namenssuche klappt den
   betreffenden Zweig automatisch auf.
-- **Zweisprachig** – Oberfläche und Buchnamen auf Deutsch/Englisch.
+- **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
 
@@ -84,6 +84,32 @@ OPEN_BIBLES=/tmp/open-bibles npm run text
 
 **Ortsbilder:** Orte ohne OpenBible-Foto, die eine Wikidata-ID haben, laden ihr Bild
 zur Laufzeit aus Wikidata (P18) → Wikimedia Commons nach (`src/lib/wikidataImage.ts`).
+
+### Deutsche Ortsnamen
+
+Der OpenBible-Datensatz kennt nur englische Namen (`Egypt`, `Babylon 1`), die
+deutsche Oberfläche zeigte sie deshalb unübersetzt an. Die deutschen Namen werden
+aus Daten hergeleitet, die ohnehin im Projekt liegen – nicht von Hand gepflegt:
+
+```bash
+npm run names
+```
+
+Zu jedem Ort ist bekannt, in welchen Versen er vorkommt, und der vollständige
+Luther-Text 1912 liegt bereits unter `public/data/text/`. Der deutsche Name ist
+das Wort, das in fast allen Versen eines Ortes steht und sonst kaum irgendwo –
+gemessen als F1 aus Precision und Recall, abgesichert über die Ähnlichkeit zum
+englischen Namen (`Damascus` → `Damaskus`, `Shechem` → `Sichem`). Übersetzte
+Namen ohne Schreibähnlichkeit (`Red Sea` → `Schilfmeer`) müssen ihre Statistik
+allein tragen.
+
+Das deckt **1.015 der 1.335 Orte** ab. Was das Verfahren nicht sicher entscheiden
+kann, landet in `data/names-de-review.json`; wer einen Fall klärt, trägt ihn in
+`data/names-de-overrides.json` ein – Handeinträge gewinnen immer. Orte ohne
+deutschen Namen zeigen weiter den englischen.
+
+`scripts/build-data.mjs` mischt `data/names-de.json` beim Neubau wieder ein, ein
+`npm run data` wirft die Namen also nicht weg.
 
 ### Epochen & Zeitleiste
 

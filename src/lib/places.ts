@@ -1,4 +1,5 @@
 import type { Place } from '../types';
+import type { Lang } from '../i18n';
 import { BOOK_BY_OSIS } from '../data/books';
 
 let cache: Promise<Place[]> | null = null;
@@ -65,18 +66,40 @@ function norm(s: string): string {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
+/** OpenBible disambiguates repeated names with a trailing number: "Babylon 1". */
+function stripIndex(name: string): string {
+  return name.replace(/ \d+$/, '');
+}
+
+/**
+ * The name to show. German falls back to the English one where the Luther
+ * derivation was not confident enough (see scripts/build-names-de.mjs).
+ */
+export function placeName(place: Place, lang: Lang): string {
+  if (lang === 'de' && place.nameDe) return place.nameDe;
+  return stripIndex(place.name);
+}
+
+/** Every spelling of a place in the given language, for matching it in text. */
+export function placeNames(place: Place, lang: Lang): string[] {
+  const out = lang === 'de' && place.nameDe ? [place.nameDe, ...(place.variantsDe ?? [])] : [];
+  return [...out, stripIndex(place.name), ...place.variants];
+}
+
 /** Substring search over place names + translation variants. Ranked. */
 export function searchPlaces(places: Place[], query: string, limit = 40): Place[] {
   const q = norm(query.trim());
   if (!q) return [];
   const scored: { p: Place; score: number }[] = [];
   for (const p of places) {
-    const name = norm(p.name);
+    // Search both languages regardless of the UI language \u2014 someone typing
+    // "Goshen" should find Gosen and vice versa.
+    const names = [p.name, p.nameDe].filter(Boolean).map((n) => norm(n as string));
     let score = -1;
-    if (name === q) score = 1000;
-    else if (name.startsWith(q)) score = 800;
-    else if (name.includes(q)) score = 500;
-    else if (p.variants.some((v) => norm(v).includes(q))) score = 300;
+    if (names.some((n) => n === q)) score = 1000;
+    else if (names.some((n) => n.startsWith(q))) score = 800;
+    else if (names.some((n) => n.includes(q))) score = 500;
+    else if ([...p.variants, ...(p.variantsDe ?? [])].some((v) => norm(v).includes(q))) score = 300;
     if (score >= 0) {
       // tie-break by how often the place is mentioned
       scored.push({ p, score: score + Math.min(p.mentionCount, 200) / 10 });

@@ -1,0 +1,2562 @@
+[
+  {
+    "id": "a2bb5ef",
+    "en": "Arabah",
+    "mentions": 26,
+    "guess": "Gefilde",
+    "f1": 0.4,
+    "sim": 0.22
+  },
+  {
+    "id": "a9acaaf",
+    "en": "Most Holy Place",
+    "mentions": 24,
+    "guess": "Allerheiligste",
+    "f1": 0.39,
+    "sim": 0.36
+  },
+  {
+    "id": "ab60a74",
+    "en": "Holy Place",
+    "mentions": 23,
+    "guess": "Heilige",
+    "f1": 0.13,
+    "sim": 0.33
+  },
+  {
+    "id": "a8394b8",
+    "en": "Babylonia",
+    "mentions": 15,
+    "guess": "Landschaft",
+    "f1": 0.17,
+    "sim": 0.1
+  },
+  {
+    "id": "a1c0469",
+    "en": "South",
+    "mentions": 12,
+    "guess": "Heereskraft",
+    "f1": 0.2,
+    "sim": 0.09
+  },
+  {
+    "id": "a3e66cd",
+    "en": "Aram",
+    "mentions": 11,
+    "guess": "Sidoniern",
+    "f1": 0.17,
+    "sim": 0.22
+  },
+  {
+    "id": "a244929",
+    "en": "North",
+    "mentions": 10,
+    "guess": "Heereskraft",
+    "f1": 0.22,
+    "sim": 0.09
+  },
+  {
+    "id": "a7a59b4",
+    "en": "Brook of Egypt",
+    "mentions": 9,
+    "guess": "Azmon",
+    "f1": 0.33,
+    "sim": 0.18
+  },
+  {
+    "id": "aa54aa4",
+    "en": "Jordan Valley",
+    "mentions": 8,
+    "guess": "Gegend",
+    "f1": 0.27,
+    "sim": 0.24
+  },
+  {
+    "id": "a890adf",
+    "en": "Syria",
+    "mentions": 8,
+    "guess": "Zilizien",
+    "f1": 0.38,
+    "sim": 0.13
+  },
+  {
+    "id": "ab45bd3",
+    "en": "Ethiopia",
+    "mentions": 7,
+    "guess": "Indien",
+    "f1": 0.44,
+    "sim": 0.33
+  },
+  {
+    "id": "af9cfc9",
+    "en": "En-rogel",
+    "mentions": 6,
+    "guess": "Rogel",
+    "f1": 0.8,
+    "sim": 0.71
+  },
+  {
+    "id": "a966bdf",
+    "en": "House of the Forest of Lebanon",
+    "mentions": 6,
+    "guess": "Trinkgefäße",
+    "f1": 0.44,
+    "sim": 0.19
+  },
+  {
+    "id": "ad41f6e",
+    "en": "Jeshimon",
+    "mentions": 6,
+    "guess": "Hachila",
+    "f1": 0.67,
+    "sim": 0.25
+  },
+  {
+    "id": "a41a054",
+    "en": "Admah",
+    "mentions": 5,
+    "guess": "Adama",
+    "f1": 0.73,
+    "sim": 0.6
+  },
+  {
+    "id": "ae7836a",
+    "en": "Kibroth-hattaavah",
+    "mentions": 5,
+    "guess": "Lustgräbern",
+    "f1": 0.89,
+    "sim": 0.13
+  },
+  {
+    "id": "ad64d75",
+    "en": "Red Sea",
+    "mentions": 5,
+    "guess": "Eloth",
+    "f1": 0.5,
+    "sim": 0.18
+  },
+  {
+    "id": "af79c1d",
+    "en": "Tarshish",
+    "mentions": 5,
+    "guess": "Meerschiffe",
+    "f1": 0.33,
+    "sim": 0.36
+  },
+  {
+    "id": "a31492f",
+    "en": "Valley of Achor",
+    "mentions": 5,
+    "guess": "Achor",
+    "f1": 0.8,
+    "sim": 0.38
+  },
+  {
+    "id": "aa516c2",
+    "en": "Valley of Jezreel",
+    "mentions": 5,
+    "guess": "Grundes",
+    "f1": 0.33,
+    "sim": 0.15
+  },
+  {
+    "id": "af936bd",
+    "en": "Valley of Salt",
+    "mentions": 5,
+    "guess": "Salztal",
+    "f1": 0.8,
+    "sim": 0.5
+  },
+  {
+    "id": "a6c704a",
+    "en": "Antioch",
+    "mentions": 4,
+    "guess": "Ikonion",
+    "f1": 0.44,
+    "sim": 0.19
+  },
+  {
+    "id": "ae04aa8",
+    "en": "Benjamin Gate",
+    "mentions": 4,
+    "guess": "Obertor",
+    "f1": 0.33,
+    "sim": 0.21
+  },
+  {
+    "id": "a1611b6",
+    "en": "Dung Gate",
+    "mentions": 4,
+    "guess": "Misttor",
+    "f1": 1,
+    "sim": 0.1
+  },
+  {
+    "id": "a4e8401",
+    "en": "East Gate",
+    "mentions": 4,
+    "guess": "Kore",
+    "f1": 0.4,
+    "sim": 0.13
+  },
+  {
+    "id": "a7b6270",
+    "en": "Ephraim Gate",
+    "mentions": 4,
+    "guess": "Ecktor",
+    "f1": 0.44,
+    "sim": 0.15
+  },
+  {
+    "id": "a6057f5",
+    "en": "Fish Gate",
+    "mentions": 4,
+    "guess": "Fischtor",
+    "f1": 1,
+    "sim": 0.38
+  },
+  {
+    "id": "a23db8d",
+    "en": "Horesh",
+    "mentions": 4,
+    "guess": "Heide",
+    "f1": 0.73,
+    "sim": 0.17
+  },
+  {
+    "id": "a7184a7",
+    "en": "Italy",
+    "mentions": 4,
+    "guess": "Italien",
+    "f1": 1,
+    "sim": 0.57
+  },
+  {
+    "id": "ac6b210",
+    "en": "Naamah",
+    "mentions": 4,
+    "guess": "Zophar",
+    "f1": 1,
+    "sim": 0.17
+  },
+  {
+    "id": "a5ab519",
+    "en": "Second Quarter",
+    "mentions": 4,
+    "guess": "Hulda",
+    "f1": 0.67,
+    "sim": 0.15
+  },
+  {
+    "id": "aa3d425",
+    "en": "Sheep Gate",
+    "mentions": 4,
+    "guess": "Schaftor",
+    "f1": 1,
+    "sim": 0.11
+  },
+  {
+    "id": "a4199a1",
+    "en": "Tishbe",
+    "mentions": 4,
+    "guess": "Thisbiter",
+    "f1": 0.8,
+    "sim": 0.67
+  },
+  {
+    "id": "af58391",
+    "en": "Tower of Hananel",
+    "mentions": 4,
+    "guess": "Hananeel",
+    "f1": 1,
+    "sim": 0.53
+  },
+  {
+    "id": "a81b7b1",
+    "en": "Valley Gate",
+    "mentions": 4,
+    "guess": "Taltor",
+    "f1": 1,
+    "sim": 0.2
+  },
+  {
+    "id": "a38ecff",
+    "en": "Valley of Eshcol",
+    "mentions": 4,
+    "guess": "Eskol",
+    "f1": 0.89,
+    "sim": 0.67
+  },
+  {
+    "id": "a55c970",
+    "en": "Way of the Red Sea",
+    "mentions": 4,
+    "guess": "Tale",
+    "f1": 0.4,
+    "sim": 0.17
+  },
+  {
+    "id": "a815d89",
+    "en": "Areopagus",
+    "mentions": 3,
+    "guess": "Gerichtsplatz",
+    "f1": 0.8,
+    "sim": 0.23
+  },
+  {
+    "id": "a70e842",
+    "en": "Beer-lahai-roi",
+    "mentions": 3,
+    "guess": "Bared",
+    "f1": 0.5,
+    "sim": 0.25
+  },
+  {
+    "id": "a529e92",
+    "en": "City of Palms",
+    "mentions": 3,
+    "guess": "Palmenstadt",
+    "f1": 0.86,
+    "sim": 0
+  },
+  {
+    "id": "ae733a2",
+    "en": "Decapolis",
+    "mentions": 3,
+    "guess": "Zehn-Städten",
+    "f1": 0.5,
+    "sim": 0.27
+  },
+  {
+    "id": "a2fc4c4",
+    "en": "Fountain Gate",
+    "mentions": 3,
+    "guess": "Brunnentor",
+    "f1": 1,
+    "sim": 0.25
+  },
+  {
+    "id": "a7de69e",
+    "en": "Gennesaret",
+    "mentions": 3,
+    "guess": "Genezareth",
+    "f1": 1,
+    "sim": 0.7
+  },
+  {
+    "id": "a49c017",
+    "en": "Harosheth-hagoyim",
+    "mentions": 3,
+    "guess": "Haroseth",
+    "f1": 1,
+    "sim": 0.5
+  },
+  {
+    "id": "af8b51e",
+    "en": "Horse Gate",
+    "mentions": 3,
+    "guess": "Roßtor",
+    "f1": 0.8,
+    "sim": 0.22
+  },
+  {
+    "id": "a9ac5f9",
+    "en": "Ivvah",
+    "mentions": 3,
+    "guess": "Hena",
+    "f1": 1,
+    "sim": 0.2
+  },
+  {
+    "id": "ac12af9",
+    "en": "Libya",
+    "mentions": 3,
+    "guess": "Libyen",
+    "f1": 0.8,
+    "sim": 0.71
+  },
+  {
+    "id": "a55027d",
+    "en": "Miletus",
+    "mentions": 3,
+    "guess": "Milet",
+    "f1": 1,
+    "sim": 0.71
+  },
+  {
+    "id": "a3ba698",
+    "en": "Red Sea",
+    "mentions": 3,
+    "guess": "Westen",
+    "f1": 0.5,
+    "sim": 0.33
+  },
+  {
+    "id": "a47c817",
+    "en": "Solomon’s Portico",
+    "mentions": 3,
+    "guess": "Lahme",
+    "f1": 0.2,
+    "sim": 0.17
+  },
+  {
+    "id": "a939939",
+    "en": "Tower of Shechem",
+    "mentions": 3,
+    "guess": "Turms",
+    "f1": 0.67,
+    "sim": 0.21
+  },
+  {
+    "id": "ab682e6",
+    "en": "Upper Beth-horon",
+    "mentions": 3,
+    "guess": "Seera",
+    "f1": 0.5,
+    "sim": 0.21
+  },
+  {
+    "id": "a532b99",
+    "en": "Upper Pool",
+    "mentions": 3,
+    "guess": "Walkmüllers",
+    "f1": 1,
+    "sim": 0
+  },
+  {
+    "id": "ab183f8",
+    "en": "Valley of Elah",
+    "mentions": 3,
+    "guess": "Eichgrunde",
+    "f1": 0.67,
+    "sim": 0
+  },
+  {
+    "id": "a84c559",
+    "en": "Washer’s Field",
+    "mentions": 3,
+    "guess": "Walkmüllers",
+    "f1": 1,
+    "sim": 0.27
+  },
+  {
+    "id": "a78e845",
+    "en": "Zaphon",
+    "mentions": 3,
+    "guess": "Leere",
+    "f1": 0.5,
+    "sim": 0
+  },
+  {
+    "id": "a0f4ea8",
+    "en": "Arabia",
+    "mentions": 2,
+    "guess": "Arabien",
+    "f1": 0.5,
+    "sim": 0.71
+  },
+  {
+    "id": "a5c37fd",
+    "en": "Beautiful Gate",
+    "mentions": 2,
+    "guess": "Wunderns",
+    "f1": 0.67,
+    "sim": 0.11
+  },
+  {
+    "id": "a7abec7",
+    "en": "Beth-eked",
+    "mentions": 2,
+    "guess": "Hirtenhaus",
+    "f1": 1,
+    "sim": 0.1
+  },
+  {
+    "id": "ab0d85b",
+    "en": "Broad Wall",
+    "mentions": 2,
+    "guess": "Harhajas",
+    "f1": 0.67,
+    "sim": 0.22
+  },
+  {
+    "id": "ab7bf48",
+    "en": "Caesarea Philippi",
+    "mentions": 2,
+    "guess": "Philippi",
+    "f1": 0.44,
+    "sim": 0.5
+  },
+  {
+    "id": "a33fbde",
+    "en": "Cappadocia",
+    "mentions": 2,
+    "guess": "Kappadozien",
+    "f1": 1,
+    "sim": 0.64
+  },
+  {
+    "id": "aa7bee8",
+    "en": "Cherith",
+    "mentions": 2,
+    "guess": "Krith",
+    "f1": 1,
+    "sim": 0.57
+  },
+  {
+    "id": "af7eb92",
+    "en": "Eglath-shelishiyah",
+    "mentions": 2,
+    "guess": "Eglath",
+    "f1": 1,
+    "sim": 0.35
+  },
+  {
+    "id": "acb3716",
+    "en": "Ezel",
+    "mentions": 2,
+    "guess": "Asel",
+    "f1": 0.67,
+    "sim": 0.5
+  },
+  {
+    "id": "aae626a",
+    "en": "Fair Havens",
+    "mentions": 2,
+    "guess": "Gutfurt",
+    "f1": 0.67,
+    "sim": 0.15
+  },
+  {
+    "id": "a2fa712",
+    "en": "Gate of Yeshanah",
+    "mentions": 2,
+    "guess": "Paseahs",
+    "f1": 0.67,
+    "sim": 0.25
+  },
+  {
+    "id": "a0ac467",
+    "en": "Gath",
+    "mentions": 2,
+    "guess": "Gahtiters",
+    "f1": 0.67,
+    "sim": 0.56
+  },
+  {
+    "id": "abf0690",
+    "en": "Ge-harashim",
+    "mentions": 2,
+    "guess": "Meonothai",
+    "f1": 0.67,
+    "sim": 0.24
+  },
+  {
+    "id": "a9796ee",
+    "en": "Goiim",
+    "mentions": 2,
+    "guess": "Amraphel",
+    "f1": 1,
+    "sim": 0
+  },
+  {
+    "id": "aaa3eca",
+    "en": "Gulloth-mayim",
+    "mentions": 2,
+    "guess": "Quellen",
+    "f1": 0.67,
+    "sim": 0.17
+  },
+  {
+    "id": "a878481",
+    "en": "India",
+    "mentions": 2,
+    "guess": "Indien",
+    "f1": 1,
+    "sim": 0.67
+  },
+  {
+    "id": "ac0f6e7",
+    "en": "Kartah",
+    "mentions": 2,
+    "guess": "Kartha",
+    "f1": 1,
+    "sim": 0.67
+  },
+  {
+    "id": "a057d59",
+    "en": "King’s Highway",
+    "mentions": 2,
+    "guess": "Landstraße",
+    "f1": 1,
+    "sim": 0.17
+  },
+  {
+    "id": "ac9f98d",
+    "en": "King’s Valley",
+    "mentions": 2,
+    "guess": "Königstal",
+    "f1": 0.67,
+    "sim": 0.45
+  },
+  {
+    "id": "af133c0",
+    "en": "Kue",
+    "mentions": 2,
+    "guess": "Ware",
+    "f1": 0.25,
+    "sim": 0.25
+  },
+  {
+    "id": "aacc081",
+    "en": "Lower Gulloth",
+    "mentions": 2,
+    "guess": "Quellen",
+    "f1": 0.67,
+    "sim": 0.25
+  },
+  {
+    "id": "a5bf0bd",
+    "en": "Misrephoth-maim",
+    "mentions": 2,
+    "guess": "Groß-Sidon",
+    "f1": 0.5,
+    "sim": 0.27
+  },
+  {
+    "id": "a11fadd",
+    "en": "Mount Halak",
+    "mentions": 2,
+    "guess": "Baal-Gad",
+    "f1": 0.8,
+    "sim": 0.43
+  },
+  {
+    "id": "a39fe14",
+    "en": "Mount Shepher",
+    "mentions": 2,
+    "guess": "Sepher",
+    "f1": 1,
+    "sim": 0.71
+  },
+  {
+    "id": "a2d9bc8",
+    "en": "Mysia",
+    "mentions": 2,
+    "guess": "Mysien",
+    "f1": 1,
+    "sim": 0.67
+  },
+  {
+    "id": "aa85961",
+    "en": "New Gate",
+    "mentions": 2,
+    "guess": "Kapelle",
+    "f1": 0.5,
+    "sim": 0.14
+  },
+  {
+    "id": "a4b9865",
+    "en": "Pekod",
+    "mentions": 2,
+    "guess": "Edle",
+    "f1": 0.5,
+    "sim": 0.2
+  },
+  {
+    "id": "a3bb384",
+    "en": "River",
+    "mentions": 2,
+    "guess": "Rehoboth",
+    "f1": 0.8,
+    "sim": 0.44
+  },
+  {
+    "id": "a98b02e",
+    "en": "Sela",
+    "mentions": 2,
+    "guess": "Felsens",
+    "f1": 0.5,
+    "sim": 0.29
+  },
+  {
+    "id": "a422f1c",
+    "en": "South",
+    "mentions": 2,
+    "guess": "Salomons",
+    "f1": 0.67,
+    "sim": 0.25
+  },
+  {
+    "id": "a3f0f69",
+    "en": "Spain",
+    "mentions": 2,
+    "guess": "Spanien",
+    "f1": 1,
+    "sim": 0.71
+  },
+  {
+    "id": "a028191",
+    "en": "Taberah",
+    "mentions": 2,
+    "guess": "Thabeera",
+    "f1": 1,
+    "sim": 0.63
+  },
+  {
+    "id": "a50eea4",
+    "en": "Tower of the Hundred",
+    "mentions": 2,
+    "guess": "Mea",
+    "f1": 1,
+    "sim": 0.27
+  },
+  {
+    "id": "a721f7f",
+    "en": "Tower of the Ovens",
+    "mentions": 2,
+    "guess": "Ofenturm",
+    "f1": 1,
+    "sim": 0.27
+  },
+  {
+    "id": "a380434",
+    "en": "Upper Gulloth",
+    "mentions": 2,
+    "guess": "Quellen",
+    "f1": 0.67,
+    "sim": 0.25
+  },
+  {
+    "id": "adfab55",
+    "en": "Uzza",
+    "mentions": 2,
+    "guess": "Usas",
+    "f1": 1,
+    "sim": 0.25
+  },
+  {
+    "id": "a816ed9",
+    "en": "Valley of Gerar",
+    "mentions": 2,
+    "guess": "Gerar",
+    "f1": 0.17,
+    "sim": 0.45
+  },
+  {
+    "id": "a2109c3",
+    "en": "Valley of Hamon-gog",
+    "mentions": 2,
+    "guess": "Gogs",
+    "f1": 1,
+    "sim": 0.25
+  },
+  {
+    "id": "a324282",
+    "en": "Valley of Jehoshaphat",
+    "mentions": 2,
+    "guess": "Mägde",
+    "f1": 0.08,
+    "sim": 0.11
+  },
+  {
+    "id": "ac2192b",
+    "en": "Valley of Lebanon",
+    "mentions": 2,
+    "guess": "Baal-Gad",
+    "f1": 0.8,
+    "sim": 0.31
+  },
+  {
+    "id": "aa24fbf",
+    "en": "Valley of Succoth",
+    "mentions": 2,
+    "guess": "Panier",
+    "f1": 0.06,
+    "sim": 0.13
+  },
+  {
+    "id": "a6ee047",
+    "en": "Waters of Merom",
+    "mentions": 2,
+    "guess": "Merom",
+    "f1": 1,
+    "sim": 0.38
+  },
+  {
+    "id": "ae11a0d",
+    "en": "Wilderness of Maon",
+    "mentions": 2,
+    "guess": "Maon",
+    "f1": 0.57,
+    "sim": 0.33
+  },
+  {
+    "id": "a957c5b",
+    "en": "Abel-keramim",
+    "mentions": 1,
+    "guess": "Plan",
+    "f1": 1,
+    "sim": 0.18
+  },
+  {
+    "id": "a70ac98",
+    "en": "Abel-mizraim",
+    "mentions": 1,
+    "guess": "Atad",
+    "f1": 0.67,
+    "sim": 0.18
+  },
+  {
+    "id": "a184f3a",
+    "en": "Adramyttium",
+    "mentions": 1,
+    "guess": "Aristarchus",
+    "f1": 0.33,
+    "sim": 0.18
+  },
+  {
+    "id": "adc77fb",
+    "en": "Adriatic Sea",
+    "mentions": 1,
+    "guess": "Adria-Meer",
+    "f1": 1,
+    "sim": 0.56
+  },
+  {
+    "id": "ad4ad26",
+    "en": "Alemeth",
+    "mentions": 1,
+    "guess": "Hukok",
+    "f1": 1,
+    "sim": 0
+  },
+  {
+    "id": "a00de1e",
+    "en": "Allon",
+    "mentions": 1,
+    "guess": "Heleph",
+    "f1": 1,
+    "sim": 0.17
+  },
+  {
+    "id": "af9a894",
+    "en": "Allon-bacuth",
+    "mentions": 1,
+    "guess": "Klageeiche",
+    "f1": 1,
+    "sim": 0.25
+  },
+  {
+    "id": "ac5cab3",
+    "en": "Amaw",
+    "mentions": 1,
+    "guess": "Pethor",
+    "f1": 0.67,
+    "sim": 0
+  },
+  {
+    "id": "a79606b",
+    "en": "Ananiah",
+    "mentions": 1,
+    "guess": "Ananja",
+    "f1": 1,
+    "sim": 0.71
+  },
+  {
+    "id": "ad13f27",
+    "en": "Anem",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a2a145b",
+    "en": "Aner",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a3c7b44",
+    "en": "Aram-naharaim",
+    "mentions": 1,
+    "guess": "Rose",
+    "f1": 0.4,
+    "sim": 0.09
+  },
+  {
+    "id": "a1e3eff",
+    "en": "Ashnah",
+    "mentions": 1,
+    "guess": "Asna",
+    "f1": 0.5,
+    "sim": 0.67
+  },
+  {
+    "id": "a9a57b7",
+    "en": "Ashnah",
+    "mentions": 1,
+    "guess": "Nezib",
+    "f1": 1,
+    "sim": 0
+  },
+  {
+    "id": "a2c34ce",
+    "en": "Atharim",
+    "mentions": 1,
+    "guess": "Arad",
+    "f1": 0.33,
+    "sim": 0.29
+  },
+  {
+    "id": "aba3717",
+    "en": "Ayyah",
+    "mentions": 1,
+    "guess": "Naeran",
+    "f1": 1,
+    "sim": 0.33
+  },
+  {
+    "id": "a66f19c",
+    "en": "Baale-judah",
+    "mentions": 1,
+    "guess": "Baal",
+    "f1": 0.05,
+    "sim": 0.4
+  },
+  {
+    "id": "abaa030",
+    "en": "Bath-rabbim",
+    "mentions": 1,
+    "guess": "Rehzwillinge",
+    "f1": 0.67,
+    "sim": 0.17
+  },
+  {
+    "id": "a656cb6",
+    "en": "Beer",
+    "mentions": 1,
+    "guess": "Sammle",
+    "f1": 0.67,
+    "sim": 0
+  },
+  {
+    "id": "ac401ea",
+    "en": "Beer-elim",
+    "mentions": 1,
+    "guess": "Eglaim",
+    "f1": 1,
+    "sim": 0.38
+  },
+  {
+    "id": "a293fbf",
+    "en": "Beeshterah",
+    "mentions": 1,
+    "guess": "Beesthra",
+    "f1": 1,
+    "sim": 0.7
+  },
+  {
+    "id": "a2da675",
+    "en": "Beth-arbel",
+    "mentions": 1,
+    "guess": "Salman",
+    "f1": 1,
+    "sim": 0.11
+  },
+  {
+    "id": "ac0254c",
+    "en": "Beth-ashbea",
+    "mentions": 1,
+    "guess": "Selas",
+    "f1": 1,
+    "sim": 0.3
+  },
+  {
+    "id": "a5f4608",
+    "en": "Beth-car",
+    "mentions": 1,
+    "guess": "Beht-Kar",
+    "f1": 1,
+    "sim": 0.71
+  },
+  {
+    "id": "a84c5a4",
+    "en": "Beth-eden",
+    "mentions": 1,
+    "guess": "Lusthause",
+    "f1": 1,
+    "sim": 0.22
+  },
+  {
+    "id": "ac9fb6d",
+    "en": "Bether",
+    "mentions": 1,
+    "guess": "Scheidebergen",
+    "f1": 1,
+    "sim": 0.23
+  },
+  {
+    "id": "aaa2f54",
+    "en": "Beth-haggan",
+    "mentions": 1,
+    "guess": "Gur",
+    "f1": 1,
+    "sim": 0.1
+  },
+  {
+    "id": "ac959b2",
+    "en": "Bileam",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a5983ec",
+    "en": "Brook of the Arabah",
+    "mentions": 1,
+    "guess": "Hamath",
+    "f1": 0.06,
+    "sim": 0.3
+  },
+  {
+    "id": "a0f88fb",
+    "en": "Brook of the Willows",
+    "mentions": 1,
+    "guess": "Weidenbach",
+    "f1": 1,
+    "sim": 0.19
+  },
+  {
+    "id": "a087a14",
+    "en": "Buz",
+    "mentions": 1,
+    "guess": "Bus",
+    "f1": 0.4,
+    "sim": 0.67
+  },
+  {
+    "id": "abf6e12",
+    "en": "Caleb Ephrathah",
+    "mentions": 1,
+    "guess": "Ashur",
+    "f1": 0.67,
+    "sim": 0.15
+  },
+  {
+    "id": "aee80af",
+    "en": "Calneh",
+    "mentions": 1,
+    "guess": "Akkad",
+    "f1": 1,
+    "sim": 0.17
+  },
+  {
+    "id": "adca4b1",
+    "en": "City of Destruction",
+    "mentions": 1,
+    "guess": "Ir-Heres",
+    "f1": 1,
+    "sim": 0.25
+  },
+  {
+    "id": "ac4ff01",
+    "en": "City of Palms",
+    "mentions": 1,
+    "guess": "Schwagers",
+    "f1": 0.67,
+    "sim": 0.09
+  },
+  {
+    "id": "acc1702",
+    "en": "City of Salt",
+    "mentions": 1,
+    "guess": "Nibsan",
+    "f1": 1,
+    "sim": 0.3
+  },
+  {
+    "id": "a74ee0d",
+    "en": "Cush",
+    "mentions": 1,
+    "guess": "Gihon",
+    "f1": 0.29,
+    "sim": 0.25
+  },
+  {
+    "id": "a567e0e",
+    "en": "Cushan",
+    "mentions": 1,
+    "guess": "Gezelte",
+    "f1": 0.4,
+    "sim": 0
+  },
+  {
+    "id": "a0dc90b",
+    "en": "Diviners’ Oak",
+    "mentions": 1,
+    "guess": "Zaubereiche",
+    "f1": 1,
+    "sim": 0.29
+  },
+  {
+    "id": "ab9580e",
+    "en": "Dragon Spring",
+    "mentions": 1,
+    "guess": "Drachenbrunnen",
+    "f1": 1,
+    "sim": 0.36
+  },
+  {
+    "id": "a6bb890",
+    "en": "East Square",
+    "mentions": 1,
+    "guess": "Gasse",
+    "f1": 0.06,
+    "sim": 0.4
+  },
+  {
+    "id": "a71d65f",
+    "en": "Elishah",
+    "mentions": 1,
+    "guess": "Segel",
+    "f1": 0.5,
+    "sim": 0
+  },
+  {
+    "id": "a8e6824",
+    "en": "Elonbeth-hanan",
+    "mentions": 1,
+    "guess": "Dekers",
+    "f1": 1,
+    "sim": 0.08
+  },
+  {
+    "id": "a0e33a3",
+    "en": "En-hakkore",
+    "mentions": 1,
+    "guess": "Höhlung",
+    "f1": 1,
+    "sim": 0.31
+  },
+  {
+    "id": "ad14500",
+    "en": "Ephraim",
+    "mentions": 1,
+    "guess": "Ephrem",
+    "f1": 1,
+    "sim": 0.71
+  },
+  {
+    "id": "a9a6f72",
+    "en": "Ephron",
+    "mentions": 1,
+    "guess": "Nephthoa",
+    "f1": 0.67,
+    "sim": 0.5
+  },
+  {
+    "id": "a16596e",
+    "en": "Ether",
+    "mentions": 1,
+    "guess": "Ehter",
+    "f1": 1,
+    "sim": 0.6
+  },
+  {
+    "id": "a121d5e",
+    "en": "Forum of Appius",
+    "mentions": 1,
+    "guess": "Appifor",
+    "f1": 1,
+    "sim": 0.7
+  },
+  {
+    "id": "a764256",
+    "en": "Gamad",
+    "mentions": 1,
+    "guess": "Arvad",
+    "f1": 0.67,
+    "sim": 0.5
+  },
+  {
+    "id": "a753c3b",
+    "en": "Gate of the Foundation",
+    "mentions": 1,
+    "guess": "Grundtor",
+    "f1": 1,
+    "sim": 0.36
+  },
+  {
+    "id": "a4eb961",
+    "en": "Gate of the Guard",
+    "mentions": 1,
+    "guess": "Kerkertor",
+    "f1": 1,
+    "sim": 0.27
+  },
+  {
+    "id": "a59b2e2",
+    "en": "Gebal",
+    "mentions": 1,
+    "guess": "Hagariter",
+    "f1": 0.4,
+    "sim": 0.44
+  },
+  {
+    "id": "a0a5b78",
+    "en": "Gederah",
+    "mentions": 1,
+    "guess": "Pflanzungen",
+    "f1": 1,
+    "sim": 0
+  },
+  {
+    "id": "a45b692",
+    "en": "Gibeath-elohim",
+    "mentions": 1,
+    "guess": "Pauke",
+    "f1": 0.67,
+    "sim": 0.15
+  },
+  {
+    "id": "a97126d",
+    "en": "Gibeath-haaraloth",
+    "mentions": 1,
+    "guess": "Araloth",
+    "f1": 1,
+    "sim": 0.44
+  },
+  {
+    "id": "a5dd9e3",
+    "en": "Gimzo",
+    "mentions": 1,
+    "guess": "Mittagslande",
+    "f1": 0.67,
+    "sim": 0.08
+  },
+  {
+    "id": "a3cefc6",
+    "en": "Goiim",
+    "mentions": 1,
+    "guess": "Naphoth-Dor",
+    "f1": 0.67,
+    "sim": 0.1
+  },
+  {
+    "id": "a607415",
+    "en": "Hakkephirim",
+    "mentions": 1,
+    "guess": "Sanaballat",
+    "f1": 1,
+    "sim": 0.09
+  },
+  {
+    "id": "a8c2deb",
+    "en": "Hall of Judgment",
+    "mentions": 1,
+    "guess": "Richtstuhl",
+    "f1": 0.18,
+    "sim": 0.15
+  },
+  {
+    "id": "a493f37",
+    "en": "Hall of Pillars",
+    "mentions": 1,
+    "guess": "Halle",
+    "f1": 0.04,
+    "sim": 0.31
+  },
+  {
+    "id": "a5e2c12",
+    "en": "Hall of the Throne",
+    "mentions": 1,
+    "guess": "Richtstuhl",
+    "f1": 0.18,
+    "sim": 0.13
+  },
+  {
+    "id": "a62236c",
+    "en": "Hammon",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "ad7e819",
+    "en": "Havilah",
+    "mentions": 1,
+    "guess": "Pison",
+    "f1": 1,
+    "sim": 0.14
+  },
+  {
+    "id": "ac5e5c4",
+    "en": "Havilah",
+    "mentions": 1,
+    "guess": "Hevila",
+    "f1": 0.25,
+    "sim": 0.71
+  },
+  {
+    "id": "a1d9047",
+    "en": "Havilah",
+    "mentions": 1,
+    "guess": "Hevila",
+    "f1": 0.25,
+    "sim": 0.71
+  },
+  {
+    "id": "a3f301c",
+    "en": "Hazar-addar",
+    "mentions": 1,
+    "guess": "Akrabbim",
+    "f1": 0.5,
+    "sim": 0.3
+  },
+  {
+    "id": "aae18d7",
+    "en": "Hazer-hatticon",
+    "mentions": 1,
+    "guess": "Berotha",
+    "f1": 1,
+    "sim": 0.23
+  },
+  {
+    "id": "ab5f357",
+    "en": "Helech",
+    "mentions": 1,
+    "guess": "Arvad",
+    "f1": 0.67,
+    "sim": 0
+  },
+  {
+    "id": "a2466e4",
+    "en": "Heres",
+    "mentions": 1,
+    "guess": "Gideon",
+    "f1": 0.05,
+    "sim": 0.17
+  },
+  {
+    "id": "a159029",
+    "en": "Horonaim",
+    "mentions": 1,
+    "guess": "Warte",
+    "f1": 0.29,
+    "sim": 0.13
+  },
+  {
+    "id": "a5c4318",
+    "en": "Hukok",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "ae8fac6",
+    "en": "Idalah",
+    "mentions": 1,
+    "guess": "Kattath",
+    "f1": 1,
+    "sim": 0.29
+  },
+  {
+    "id": "ac405c0",
+    "en": "Illyricum",
+    "mentions": 1,
+    "guess": "Illyrien",
+    "f1": 1,
+    "sim": 0.67
+  },
+  {
+    "id": "a6c0a5f",
+    "en": "Ir-moab",
+    "mentions": 1,
+    "guess": "Arnon",
+    "f1": 0.08,
+    "sim": 0.33
+  },
+  {
+    "id": "a21b934",
+    "en": "Irpeel",
+    "mentions": 1,
+    "guess": "Jerpeel",
+    "f1": 1,
+    "sim": 0.71
+  },
+  {
+    "id": "a8fe6a4",
+    "en": "Jaar",
+    "mentions": 1,
+    "guess": "Ephratha",
+    "f1": 0.4,
+    "sim": 0.13
+  },
+  {
+    "id": "aaa8b2e",
+    "en": "Jokmeam",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "adc9b5a",
+    "en": "Kadesh",
+    "mentions": 1,
+    "guess": "Niederland",
+    "f1": 1,
+    "sim": 0.2
+  },
+  {
+    "id": "adf5c7b",
+    "en": "Karnaim",
+    "mentions": 1,
+    "guess": "Hörnern",
+    "f1": 0.18,
+    "sim": 0.29
+  },
+  {
+    "id": "adb5ae4",
+    "en": "Kedesh",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a8f428d",
+    "en": "Kiriathaim",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "aeb19d6",
+    "en": "Kiriath-huzoth",
+    "mentions": 1,
+    "guess": "Gassenstadt",
+    "f1": 1,
+    "sim": 0.08
+  },
+  {
+    "id": "afe6972",
+    "en": "Koa",
+    "mentions": 1,
+    "guess": "Edle",
+    "f1": 0.67,
+    "sim": 0
+  },
+  {
+    "id": "a9de8b7",
+    "en": "Leb-kamai",
+    "mentions": 1,
+    "guess": "Wind",
+    "f1": 0.02,
+    "sim": 0.11
+  },
+  {
+    "id": "a1ae20f",
+    "en": "Lower Pool",
+    "mentions": 1,
+    "guess": "Risse",
+    "f1": 0.4,
+    "sim": 0.11
+  },
+  {
+    "id": "a422a1f",
+    "en": "Luz",
+    "mentions": 1,
+    "guess": "Lus",
+    "f1": 0.25,
+    "sim": 0.67
+  },
+  {
+    "id": "a19fd03",
+    "en": "Lycia",
+    "mentions": 1,
+    "guess": "Myra",
+    "f1": 1,
+    "sim": 0.4
+  },
+  {
+    "id": "a5e9c87",
+    "en": "Maareh-geba",
+    "mentions": 1,
+    "guess": "Baal-Thamar",
+    "f1": 1,
+    "sim": 0.3
+  },
+  {
+    "id": "ac6f1a8",
+    "en": "Mahalab",
+    "mentions": 1,
+    "guess": "Hosa",
+    "f1": 0.4,
+    "sim": 0.29
+  },
+  {
+    "id": "ab3fd96",
+    "en": "Mahaneh-dan",
+    "mentions": 1,
+    "guess": "Esthaol",
+    "f1": 0.25,
+    "sim": 0.1
+  },
+  {
+    "id": "a67325d",
+    "en": "Mahaneh-dan",
+    "mentions": 1,
+    "guess": "Kirjath-Jearim",
+    "f1": 0.13,
+    "sim": 0.15
+  },
+  {
+    "id": "aa87ef6",
+    "en": "Meconah",
+    "mentions": 1,
+    "guess": "Mechona",
+    "f1": 1,
+    "sim": 0.71
+  },
+  {
+    "id": "a8eaad5",
+    "en": "Merathaim",
+    "mentions": 1,
+    "guess": "Heimsuchung",
+    "f1": 0.17,
+    "sim": 0.18
+  },
+  {
+    "id": "a0a52ec",
+    "en": "Metheg-ammah",
+    "mentions": 1,
+    "guess": "Dienstzaum",
+    "f1": 1,
+    "sim": 0.18
+  },
+  {
+    "id": "abee1b4",
+    "en": "Middle Gate",
+    "mentions": 1,
+    "guess": "Mitteltor",
+    "f1": 1,
+    "sim": 0.3
+  },
+  {
+    "id": "a4335ba",
+    "en": "Migron",
+    "mentions": 1,
+    "guess": "Granatbaum",
+    "f1": 0.67,
+    "sim": 0.1
+  },
+  {
+    "id": "a7719f8",
+    "en": "Misgab",
+    "mentions": 1,
+    "guess": "Kirjathaim",
+    "f1": 0.25,
+    "sim": 0.2
+  },
+  {
+    "id": "adaf385",
+    "en": "Moriah",
+    "mentions": 1,
+    "guess": "Morija",
+    "f1": 0.67,
+    "sim": 0.67
+  },
+  {
+    "id": "abcd5f2",
+    "en": "Mortar",
+    "mentions": 1,
+    "guess": "Krämervolk",
+    "f1": 1,
+    "sim": 0.2
+  },
+  {
+    "id": "aac759d",
+    "en": "Mount Bashan",
+    "mentions": 1,
+    "guess": "Allmächtige",
+    "f1": 0.11,
+    "sim": 0.17
+  },
+  {
+    "id": "a3587ba",
+    "en": "Mount Jearim",
+    "mentions": 1,
+    "guess": "Chesalon",
+    "f1": 1,
+    "sim": 0.25
+  },
+  {
+    "id": "a597123",
+    "en": "Mount Mizar",
+    "mentions": 1,
+    "guess": "Harre",
+    "f1": 0.22,
+    "sim": 0.11
+  },
+  {
+    "id": "aac1fcf",
+    "en": "Mount Moriah",
+    "mentions": 1,
+    "guess": "Morija",
+    "f1": 0.67,
+    "sim": 0.67
+  },
+  {
+    "id": "aa9e65f",
+    "en": "Muster Gate",
+    "mentions": 1,
+    "guess": "Ratstor",
+    "f1": 1,
+    "sim": 0.2
+  },
+  {
+    "id": "ae7bd8b",
+    "en": "Naamah",
+    "mentions": 1,
+    "guess": "Gederoth",
+    "f1": 0.67,
+    "sim": 0.13
+  },
+  {
+    "id": "aaa0f54",
+    "en": "Netaim",
+    "mentions": 1,
+    "guess": "Pflanzungen",
+    "f1": 1,
+    "sim": 0.09
+  },
+  {
+    "id": "a8518f1",
+    "en": "Nimrod",
+    "mentions": 1,
+    "guess": "Tröpflein",
+    "f1": 1,
+    "sim": 0
+  },
+  {
+    "id": "aa4589b",
+    "en": "North Gate",
+    "mentions": 1,
+    "guess": "Meselemja",
+    "f1": 0.5,
+    "sim": 0
+  },
+  {
+    "id": "a51e3b0",
+    "en": "Old Pool",
+    "mentions": 1,
+    "guess": "Teiches",
+    "f1": 0.4,
+    "sim": 0
+  },
+  {
+    "id": "a2ec6b7",
+    "en": "Parah",
+    "mentions": 1,
+    "guess": "Avvim",
+    "f1": 1,
+    "sim": 0
+  },
+  {
+    "id": "a938779",
+    "en": "Parvaim",
+    "mentions": 1,
+    "guess": "Parwaim-Gold",
+    "f1": 1,
+    "sim": 0.55
+  },
+  {
+    "id": "a6f94a6",
+    "en": "People’s Gate",
+    "mentions": 1,
+    "guess": "Tore",
+    "f1": 0.03,
+    "sim": 0.2
+  },
+  {
+    "id": "a70e895",
+    "en": "Potsherd Gate",
+    "mentions": 1,
+    "guess": "Ziegeltor",
+    "f1": 1,
+    "sim": 0.24
+  },
+  {
+    "id": "a57bb2e",
+    "en": "Raamah",
+    "mentions": 1,
+    "guess": "Ragma",
+    "f1": 0.5,
+    "sim": 0.67
+  },
+  {
+    "id": "a28d652",
+    "en": "Rabbah",
+    "mentions": 1,
+    "guess": "Harabba",
+    "f1": 1,
+    "sim": 0.57
+  },
+  {
+    "id": "aaa4c6e",
+    "en": "Ramah",
+    "mentions": 1,
+    "guess": "Baalath-Beer-Ramath",
+    "f1": 1,
+    "sim": 0.35
+  },
+  {
+    "id": "a15bdfd",
+    "en": "Ramah",
+    "mentions": 1,
+    "guess": "Spieß",
+    "f1": 0.06,
+    "sim": 0
+  },
+  {
+    "id": "ada2a0b",
+    "en": "Ramoth",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a63bb26",
+    "en": "Rhegium",
+    "mentions": 1,
+    "guess": "Rhegion",
+    "f1": 1,
+    "sim": 0.71
+  },
+  {
+    "id": "a655b28",
+    "en": "Rimmono",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a669096",
+    "en": "River",
+    "mentions": 1,
+    "guess": "Pethor",
+    "f1": 0.67,
+    "sim": 0.21
+  },
+  {
+    "id": "af9e903",
+    "en": "Sahar",
+    "mentions": 1,
+    "guess": "Helbon",
+    "f1": 1,
+    "sim": 0
+  },
+  {
+    "id": "a702ab6",
+    "en": "Sea of Egypt",
+    "mentions": 1,
+    "guess": "Schuhen",
+    "f1": 0.4,
+    "sim": 0.2
+  },
+  {
+    "id": "af74b9f",
+    "en": "Secacah",
+    "mentions": 1,
+    "guess": "Middin",
+    "f1": 1,
+    "sim": 0
+  },
+  {
+    "id": "aa4e69f",
+    "en": "Sharon",
+    "mentions": 1,
+    "guess": "Fluren",
+    "f1": 1,
+    "sim": 0.33
+  },
+  {
+    "id": "a86d49f",
+    "en": "Shaveh-kiriathaim",
+    "mentions": 1,
+    "guess": "Astharoth-Karnaim",
+    "f1": 1,
+    "sim": 0.38
+  },
+  {
+    "id": "afd2396",
+    "en": "Shikkeron",
+    "mentions": 1,
+    "guess": "Sichron",
+    "f1": 1,
+    "sim": 0.71
+  },
+  {
+    "id": "aa3bc1e",
+    "en": "Shoa",
+    "mentions": 1,
+    "guess": "Edle",
+    "f1": 0.67,
+    "sim": 0
+  },
+  {
+    "id": "ab56451",
+    "en": "Silla",
+    "mentions": 1,
+    "guess": "Chronik",
+    "f1": 0.05,
+    "sim": 0
+  },
+  {
+    "id": "a2d4170",
+    "en": "South",
+    "mentions": 1,
+    "guess": "Gründen",
+    "f1": 0.08,
+    "sim": 0.14
+  },
+  {
+    "id": "a092025",
+    "en": "South Gate",
+    "mentions": 1,
+    "guess": "Vorratshause",
+    "f1": 0.5,
+    "sim": 0.33
+  },
+  {
+    "id": "af23dbb",
+    "en": "Straight Street",
+    "mentions": 1,
+    "guess": "Tarsus",
+    "f1": 0.33,
+    "sim": 0.25
+  },
+  {
+    "id": "af725bb",
+    "en": "Suph",
+    "mentions": 1,
+    "guess": "Tophel",
+    "f1": 1,
+    "sim": 0.33
+  },
+  {
+    "id": "ad36371",
+    "en": "Syrtis",
+    "mentions": 1,
+    "guess": "Syrte",
+    "f1": 1,
+    "sim": 0.67
+  },
+  {
+    "id": "a5948b2",
+    "en": "Tabbur-erez",
+    "mentions": 1,
+    "guess": "Zaubereiche",
+    "f1": 1,
+    "sim": 0.36
+  },
+  {
+    "id": "af614df",
+    "en": "Tabor",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "acfcf28",
+    "en": "Taralah",
+    "mentions": 1,
+    "guess": "Jerpeel",
+    "f1": 1,
+    "sim": 0.14
+  },
+  {
+    "id": "a012194",
+    "en": "The Lord Is There",
+    "mentions": 1,
+    "guess": "Ruten",
+    "f1": 0.07,
+    "sim": 0.21
+  },
+  {
+    "id": "a559399",
+    "en": "The Lord Will Provide",
+    "mentions": 1,
+    "guess": "Daher",
+    "f1": 0.05,
+    "sim": 0.36
+  },
+  {
+    "id": "afef438",
+    "en": "Three Taverns",
+    "mentions": 1,
+    "guess": "Appifor",
+    "f1": 1,
+    "sim": 0.11
+  },
+  {
+    "id": "ae3f164",
+    "en": "Timnah",
+    "mentions": 1,
+    "guess": "Hakain",
+    "f1": 1,
+    "sim": 0
+  },
+  {
+    "id": "aab8f2d",
+    "en": "Tiphsah",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a217cc5",
+    "en": "Uzal",
+    "mentions": 1,
+    "guess": "Mehusal",
+    "f1": 1,
+    "sim": 0.43
+  },
+  {
+    "id": "a57ea5f",
+    "en": "Uzzen-sheerah",
+    "mentions": 1,
+    "guess": "Seera",
+    "f1": 1,
+    "sim": 0.42
+  },
+  {
+    "id": "a1f363e",
+    "en": "Valley of Baca",
+    "mentions": 1,
+    "guess": "Wohl",
+    "f1": 0.05,
+    "sim": 0.1
+  },
+  {
+    "id": "a71f834",
+    "en": "Valley of Beracah",
+    "mentions": 1,
+    "guess": "Lobetal",
+    "f1": 1,
+    "sim": 0.33
+  },
+  {
+    "id": "a49037e",
+    "en": "Valley of Decision",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "ac9a77c",
+    "en": "Valley of Jericho",
+    "mentions": 1,
+    "guess": "Palmenstadt",
+    "f1": 0.4,
+    "sim": 0.27
+  },
+  {
+    "id": "ae32196",
+    "en": "Valley of Mizpeh",
+    "mentions": 1,
+    "guess": "Groß-Sidon",
+    "f1": 0.67,
+    "sim": 0.07
+  },
+  {
+    "id": "a402ee4",
+    "en": "Valley of Shaveh",
+    "mentions": 1,
+    "guess": "Königstal",
+    "f1": 1,
+    "sim": 0.17
+  },
+  {
+    "id": "a01769f",
+    "en": "Valley of Shittim",
+    "mentions": 1,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a339971",
+    "en": "Valley of Sorek",
+    "mentions": 1,
+    "guess": "Sorek",
+    "f1": 1,
+    "sim": 0.45
+  },
+  {
+    "id": "a7c5927",
+    "en": "Valley of Zeboim",
+    "mentions": 1,
+    "guess": "Beth-Horons",
+    "f1": 1,
+    "sim": 0.14
+  },
+  {
+    "id": "a6bf8d4",
+    "en": "Valley of Zephathah",
+    "mentions": 1,
+    "guess": "Unterschied",
+    "f1": 0.13,
+    "sim": 0.13
+  },
+  {
+    "id": "aaa2177",
+    "en": "Valley of Zered",
+    "mentions": 1,
+    "guess": "Sered",
+    "f1": 0.33,
+    "sim": 0.44
+  },
+  {
+    "id": "a70e38b",
+    "en": "Waters of Jericho",
+    "mentions": 1,
+    "guess": "Jericho",
+    "f1": 0.04,
+    "sim": 0.5
+  },
+  {
+    "id": "a207807",
+    "en": "Way of Holiness",
+    "mentions": 1,
+    "guess": "Unreiner",
+    "f1": 0.5,
+    "sim": 0.23
+  },
+  {
+    "id": "a61d405",
+    "en": "West Gate",
+    "mentions": 1,
+    "guess": "Salecheth",
+    "f1": 1,
+    "sim": 0.11
+  },
+  {
+    "id": "adea7b0",
+    "en": "Wildgoats’ Rocks",
+    "mentions": 1,
+    "guess": "Engedi",
+    "f1": 0.29,
+    "sim": 0.16
+  },
+  {
+    "id": "a78b87e",
+    "en": "Yiron",
+    "mentions": 1,
+    "guess": "Jereon",
+    "f1": 1,
+    "sim": 0.5
+  },
+  {
+    "id": "a4e7fa8",
+    "en": "Zaanan",
+    "mentions": 1,
+    "guess": "Saphirs",
+    "f1": 1,
+    "sim": 0.14
+  },
+  {
+    "id": "a93ed69",
+    "en": "Zalmon",
+    "mentions": 1,
+    "guess": "Hürden",
+    "f1": 0.12,
+    "sim": 0.18
+  },
+  {
+    "id": "a0bccbd",
+    "en": "Zererah",
+    "mentions": 1,
+    "guess": "Beth-Sitta",
+    "f1": 1,
+    "sim": 0.22
+  },
+  {
+    "id": "ae7f7b5",
+    "en": "Zophim",
+    "mentions": 1,
+    "guess": "Pisga",
+    "f1": 0.25,
+    "sim": 0.08
+  },
+  {
+    "id": "a818a40",
+    "en": "Abila",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a276d01",
+    "en": "Abila Lysaniou",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a6e831d",
+    "en": "Adasa",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "ab7c40f",
+    "en": "Adulis",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a8527ba",
+    "en": "Ama",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "adc3294",
+    "en": "Amate",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a576db3",
+    "en": "Arbela",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a6bd641",
+    "en": "Arsinoe",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a249453",
+    "en": "Batanea",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a2b2564",
+    "en": "Belamon",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a6c8205",
+    "en": "Bether",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "aa56bd1",
+    "en": "Carthage",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a527d04",
+    "en": "Chalcis",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a08d4af",
+    "en": "Charmande",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a4c6f72",
+    "en": "Eridu",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a5eafe1",
+    "en": "Etruria",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "ab56b36",
+    "en": "Gath-padalla",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "aabf84a",
+    "en": "Gergesa",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a654e6d",
+    "en": "Gutium",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a1d5a28",
+    "en": "Halahha",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "adeff6d",
+    "en": "Harhar",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a4b8b4d",
+    "en": "Hatti",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a542fc2",
+    "en": "Heracleopolis Magna",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "acd64ca",
+    "en": "Heracleopolis Parva",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a72ca28",
+    "en": "Herod’s palace",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "ad1c917",
+    "en": "Hilakku",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "adb6f6b",
+    "en": "Janua",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "adb1dcf",
+    "en": "Kumidi",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a8778a3",
+    "en": "Laash",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a2d7b73",
+    "en": "Lydia",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "abf5daf",
+    "en": "Madiama",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "af75e9e",
+    "en": "Magdala",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a0d1a62",
+    "en": "Magdalsenna",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "ad876c2",
+    "en": "Magdolum",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "acea44c",
+    "en": "Merom",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "ac6cefa",
+    "en": "Nahuru",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "ab66f81",
+    "en": "Nuhashe",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a63c21e",
+    "en": "Pitru",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a737810",
+    "en": "Punt",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a9664ba",
+    "en": "Ragmat",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a49cd82",
+    "en": "Salona",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "acf15b3",
+    "en": "Saparda",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a9042c4",
+    "en": "Saparre",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a8d18cf",
+    "en": "Scythia",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a7aafda",
+    "en": "Sparta",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "abef753",
+    "en": "Sutu",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a86d7c7",
+    "en": "Tartessos",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "acfe0a6",
+    "en": "Tegarama",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "aa4fca2",
+    "en": "Thapsacus",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a2ebfdf",
+    "en": "Thelme",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "aac5280",
+    "en": "Thisbe",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "aab527c",
+    "en": "Tjaru",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a72819f",
+    "en": "Umman Manda",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "ade3503",
+    "en": "Upu",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "abb1e21",
+    "en": "Uqnu",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "aa01373",
+    "en": "Ur",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  },
+  {
+    "id": "a78592e",
+    "en": "Ura",
+    "mentions": 0,
+    "guess": null,
+    "f1": null,
+    "sim": null
+  }
+]

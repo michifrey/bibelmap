@@ -150,7 +150,26 @@ places.sort((a, b) => b.mentionCount - a.mentionCount);
 
 console.log('  places with coords:', places.length, ' skipped (no coord):', skippedNoCoord);
 
-// 3) Write output
+// 3) Merge the German names derived from the Luther text (see
+//     scripts/build-names-de.mjs). Kept in data/ so a rebuild from the
+//     OpenBible source does not throw them away.
+const namesFile = path.join(ROOT, 'data', 'names-de.json');
+if (fs.existsSync(namesFile)) {
+  const namesDe = JSON.parse(fs.readFileSync(namesFile, 'utf8'));
+  let merged = 0;
+  for (const p of places) {
+    const hit = namesDe[p.id];
+    if (!hit) continue;
+    p.nameDe = hit.de;
+    if (hit.variants?.length) p.variantsDe = hit.variants;
+    merged++;
+  }
+  console.log('  deutsche Namen:', merged);
+} else {
+  console.log('  deutsche Namen: data/names-de.json fehlt — "npm run names" nach diesem Lauf.');
+}
+
+// 4) Write output
 fs.mkdirSync(OUT_DIR, { recursive: true });
 const outFile = path.join(OUT_DIR, 'places.json');
 fs.writeFileSync(outFile, JSON.stringify(places));
