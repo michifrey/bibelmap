@@ -6,6 +6,7 @@ import { ERAS } from './data/eras';
 import MapView, { type BasemapId } from './components/MapView';
 import Header, { type Mode, type View } from './components/Header';
 import Timeline from './components/Timeline';
+import YearSlider from './components/YearSlider';
 import SearchPanel from './components/SearchPanel';
 import PlaceDetail from './components/PlaceDetail';
 import Presentation from './components/Presentation';
@@ -49,6 +50,19 @@ export default function App() {
   // the map stays usable on small screens. Desktop ignores these.
   const [sheetOpen, setSheetOpen] = useState(false);
   const [tlOpen, setTlOpen] = useState(false);
+  // Reiche & Grenzen: null = overlay off. Starts at the united kingdom, the one
+  // year where the map most obviously answers "who ruled here?".
+  const [borderYear, setBorderYear] = useState<number | null>(null);
+
+  function toggleBorders() {
+    setBorderYear((y) => (y === null ? -1000 : null));
+  }
+  // Picking the antique basemap is the clearest signal that someone wants the
+  // ancient world rather than today's, so the empires come along with it.
+  function handleBasemap(id: BasemapId) {
+    setBasemap(id);
+    if (id === 'antique' && borderYear === null) setBorderYear(-1000);
+  }
 
   function showPersonOnMap(id: string) {
     setChurchFocus(id);
@@ -142,6 +156,7 @@ export default function App() {
               onSelect={select}
               basemap={basemap}
               flyTo={flyTo}
+              borderYear={borderYear}
             />
 
             {/* Search / detail — left rail on desktop, bottom sheet on mobile */}
@@ -179,7 +194,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* basemap switcher (right edge) */}
+            {/* basemap switcher + empire overlay (right edge) */}
             <div className="pointer-events-auto absolute right-3 top-1/2 z-[1100] flex -translate-y-1/2 flex-col gap-1 bg-deepest/95 p-1 ring-1 ring-white/10 backdrop-blur-xl sm:right-4">
               {([
                 ['dark', 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z', 'basemapDark'],
@@ -190,7 +205,7 @@ export default function App() {
               ] as [BasemapId, string, 'basemapDark' | 'basemapLight' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'][]).map(([id, icon, key]) => (
                 <button
                   key={id}
-                  onClick={() => setBasemap(id)}
+                  onClick={() => handleBasemap(id)}
                   title={tr(lang, key)}
                   aria-label={tr(lang, key)}
                   className={`grid h-9 w-9 place-items-center transition ${ basemap === id ? 'bg-signal text-white ' : 'text-white/60 hover:bg-surface' }`}
@@ -200,17 +215,45 @@ export default function App() {
                   </svg>
                 </button>
               ))}
+
+              {/* overlay, not a basemap — hence the rule above it */}
+              <button
+                onClick={toggleBorders}
+                title={tr(lang, borderYear === null ? 'bordersOn' : 'bordersOff')}
+                aria-label={tr(lang, borderYear === null ? 'bordersOn' : 'bordersOff')}
+                aria-pressed={borderYear !== null}
+                className={`mt-1 grid h-9 w-9 place-items-center border-t border-white/10 pt-1 transition ${
+                  borderYear !== null ? 'bg-gold text-deep' : 'text-white/60 hover:bg-surface'
+                }`}
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <path d="M4 18h16M5 18l-1.6-9 4.6 3.6L12 5l4 7.6 4.6-3.6L19 18" />
+                </svg>
+              </button>
             </div>
 
-            {!heat && (
-              <Timeline
+            {/* One time control at a time — the year slider takes the band while
+                the empires are up, and the era filter comes back when it goes. */}
+            {borderYear !== null ? (
+              <YearSlider
                 lang={lang}
-                selected={era}
-                counts={eraCounts}
-                onSelect={setEra}
+                year={borderYear}
+                onYear={setBorderYear}
+                onClose={() => setBorderYear(null)}
                 open={tlOpen}
                 onToggle={() => setTlOpen((v) => !v)}
               />
+            ) : (
+              !heat && (
+                <Timeline
+                  lang={lang}
+                  selected={era}
+                  counts={eraCounts}
+                  onSelect={setEra}
+                  open={tlOpen}
+                  onToggle={() => setTlOpen((v) => !v)}
+                />
+              )
             )}
 
             {mode === 'present' && <Presentation places={places} lang={lang} onExit={() => setMode(null)} />}

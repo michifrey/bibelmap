@@ -72,6 +72,18 @@ const STRINGS: Dict = {
   basemapSatellite: { de: 'Satellit', en: 'Satellite' },
   basemapRelief: { de: 'Relief', en: 'Terrain' },
   basemapAntique: { de: 'Antike Welt', en: 'Ancient world' },
+  // Reiche & Grenzen / the year slider
+  empires: { de: 'Reiche & Grenzen', en: 'Empires & borders' },
+  bordersOn: { de: 'Reiche einblenden', en: 'Show empires' },
+  bordersOff: { de: 'Ausblenden', en: 'Hide' },
+  year: { de: 'Jahr', en: 'Year' },
+  bordersAsOf: { de: 'Grenzen: Stand', en: 'Borders as of' },
+  prevSnapshot: { de: 'Vorherige Karte', en: 'Previous map' },
+  nextSnapshot: { de: 'Nächste Karte', en: 'Next map' },
+  bordersNote: {
+    de: 'Grenzverläufe sind Annäherungen und werden nach hinten hin unschärfer. Kartengrundlage: aourednik/historical-basemaps (GPL-3.0).',
+    en: 'Borders are approximations and grow vaguer the further back you go. Base data: aourednik/historical-basemaps (GPL-3.0).',
+  },
   showing: { de: 'Sichtbar', en: 'Showing' },
   places: { de: 'Orte', en: 'places' },
   details: { de: 'Alle Details', en: 'All details' },
