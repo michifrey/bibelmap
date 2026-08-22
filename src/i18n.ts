@@ -30,7 +30,7 @@ const STRINGS: Dict = {
   timelineScaleHint: { de: 'Balkenbreite ≈ Dauer der Epoche', en: 'Bar width ≈ length of the era' },
   heatmap: { de: 'Heatmap', en: 'Heatmap' },
   markers: { de: 'Marker', en: 'Markers' },
-  presentation: { de: 'Präsentationsmodus', en: 'Presentation mode' },
+  presentation: { de: 'Entdeckermodus', en: 'Explorer mode' },
   presentationHint: { de: 'Ein Buch Kapitel für Kapitel durchlaufen.', en: 'Walk through a book, chapter by chapter.' },
   chooseBook: { de: 'Buch wählen', en: 'Choose a book' },
   chapter: { de: 'Kapitel', en: 'Chapter' },
@@ -164,12 +164,14 @@ const STRINGS: Dict = {
   // Startseite / landing page
   lStart: { de: 'Start', en: 'Start' },
   lOpenMap: { de: 'Karte öffnen', en: 'Open the map' },
-  lHeadline1: { de: 'Entdecke', en: 'Discover' },
-  lHeadline2: { de: 'jeden Ort', en: 'every place' },
-  lHeadline3: { de: 'der Bibel', en: 'in the Bible' },
+  // Not every biblical place is on the map — about 1.335 are identified. The
+  // headline says what is actually there instead of promising all of them.
+  lHeadline1: { de: 'Entdeckte', en: 'Discovered' },
+  lHeadline2: { de: 'Orte', en: 'places' },
+  lHeadline3: { de: 'in der Bibel', en: 'in the Bible' },
   lLead: {
-    de: 'Wo lag Goschen? Wann wird Samaria zur Hauptstadt? Bibelmap zeigt jeden Ort der Bibel auf einer Karte – nach Epoche gefiltert, mit jeder Bibelstelle, und Kapitel für Kapitel neben dem Bibeltext.',
-    en: 'Where was Goshen? When does Samaria become the capital? Bibelmap puts every place in the Bible on a map – filtered by era, with every passage, and chapter by chapter beside the text.',
+    de: 'Wo lag Goschen? Wann wird Samaria zur Hauptstadt? Bibelmap bringt die Orte der Bibel auf eine Karte – nach Epoche gefiltert, mit jeder Bibelstelle, und Kapitel für Kapitel neben dem Bibeltext.',
+    en: 'Where was Goshen? When does Samaria become the capital? Bibelmap puts the places of the Bible on a map – filtered by era, with every passage, and chapter by chapter beside the text.',
   },
   lNoAccount: { de: 'Ohne Anmeldung · Ortsdaten unter CC-BY 4.0', en: 'No sign-up · place data under CC-BY 4.0' },
   lErasRail: { de: 'Epochen', en: 'eras' },
@@ -182,7 +184,7 @@ const STRINGS: Dict = {
   },
   lCard1Cta: { de: 'Zur Karte', en: 'To the map' },
   lCard2Kicker: { de: '02 — Lesen', en: '02 — Reading' },
-  lCard2Title: { de: 'Präsentationsmodus', en: 'Presentation mode' },
+  lCard2Title: { de: 'Entdeckermodus', en: 'Explorer mode' },
   lCard2Body: {
     de: 'Ein Buch Kapitel für Kapitel: links der Bibeltext, rechts zoomt die Karte auf die Orte, die gerade genannt werden.',
     en: 'A book chapter by chapter: the text on the left, and on the right the map zooms to the places it names.',
@@ -197,7 +199,7 @@ const STRINGS: Dict = {
   lCard3Cta: { de: 'Öffnen', en: 'Open' },
   lStatPlaces: { de: 'Kartierte Orte', en: 'Places mapped' },
   lStatEras: { de: 'Epochen', en: 'Eras' },
-  lStatBooks: { de: 'Bücher im Präsentationsmodus', en: 'Books in presentation mode' },
+  lStatBooks: { de: 'Bücher im Entdeckermodus', en: 'Books in explorer mode' },
   lStatEmpires: { de: 'Reiche auf dem Zeitregler', en: 'Empires on the year slider' },
   lTimelineTitle1: { de: '2000 Jahre', en: '2000 years' },
   lTimelineTitle2: { de: 'auf einem Band', en: 'on one band' },
