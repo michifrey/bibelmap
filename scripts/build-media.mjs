@@ -102,12 +102,37 @@ function parseFeed(xml) {
   return items;
 }
 
+/**
+ * Podcast directories publish the RSS address, so an Apple id is enough to find
+ * a feed we could not verify by hand. Cheaper than guessing a URL and being
+ * wrong about it silently.
+ */
+async function resolveFeed(appleId) {
+  const res = await fetch(`https://itunes.apple.com/lookup?id=${appleId}&entity=podcast`);
+  if (!res.ok) throw new Error(`iTunes-Lookup HTTP ${res.status}`);
+  const data = await res.json();
+  const feed = data?.results?.find((r) => r.feedUrl)?.feedUrl;
+  if (!feed) throw new Error(`iTunes kennt zu ${appleId} keinen Feed`);
+  return feed;
+}
+
 async function loadFeed(source) {
   const cache = path.join(RAW, `${source.id}.xml`);
-  if (FETCH && source.feed) {
-    process.stdout.write(`  ${source.id}: lade ${source.feed} … `);
+  let feed = source.feed;
+  if (FETCH && !feed && source.appleId) {
     try {
-      const res = await fetch(source.feed, { headers: { 'user-agent': 'bibelmap/0.1' } });
+      feed = await resolveFeed(source.appleId);
+      console.log(`  ${source.id}: Feed über Apple-ID ${source.appleId} gefunden`);
+      console.log(`      ${feed}`);
+      console.log(`      → in data/media/sources.json bei "feed" eintragen, dann entfällt der Umweg.`);
+    } catch (err) {
+      console.log(`  ${source.id}: Feed nicht auflösbar (${err.message})`);
+    }
+  }
+  if (FETCH && feed) {
+    process.stdout.write(`  ${source.id}: lade ${feed} … `);
+    try {
+      const res = await fetch(feed, { headers: { 'user-agent': 'bibelmap/0.1' } });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const xml = await res.text();
       fs.mkdirSync(RAW, { recursive: true });

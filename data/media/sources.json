@@ -2,12 +2,15 @@
   "_comment": [
     "Quellen für scripts/build-media.mjs.",
     "",
-    "'feed' ist die RSS-Adresse. Eine Quelle ohne 'feed' wird übersprungen, bis",
-    "die XML-Datei unter data/media/raw/<id>.xml liegt — entweder von Hand",
-    "dorthin gelegt oder mit `npm run media -- --fetch` geholt.",
+    "'feed' ist die RSS-Adresse. Fehlt sie, aber 'appleId' ist gesetzt, löst",
+    "`npm run media -- --fetch` die Adresse über die iTunes-Lookup-API auf und",
+    "meldet sie - dann kann sie hier fest eingetragen werden.",
     "",
-    "Feed-Adressen, die nicht überprüft werden konnten, stehen bewusst auf null,",
-    "statt geraten zu werden: eine falsche URL erzeugt still einen leeren Index."
+    "Feeds werden als XML unter data/media/raw/<id>.xml zwischengespeichert. Wer",
+    "keinen Netzzugriff hat, legt die Datei einfach von Hand dorthin.",
+    "",
+    "Nicht überprüfte Feed-Adressen stehen bewusst auf null statt geraten zu",
+    "werden: eine falsche URL erzeugt still einen leeren Index."
   ],
   "sources": [
     {
@@ -33,23 +36,25 @@
     },
     {
       "id": "comer",
-      "title": "John Mark Comer",
+      "title": "John Mark Comer Teachings",
       "author": "John Mark Comer",
-      "homepage": null,
+      "homepage": "https://practicingtheway.org/",
       "feed": null,
       "lang": "en",
       "kind": "podcast",
-      "note": "Feed-Adresse noch offen. Überwiegend thematisch (Formation, Sabbat, Stille); Folgen ohne Bibelstelle im Titel fallen aus der Ortszuordnung heraus."
+      "note": "Apple-Podcasts-ID 1592847144. Die Feed-Adresse wird daraus beim --fetch aufgelöst. Überwiegend thematisch (Formation, Sabbat, Stille); Folgen ohne Bibelstelle im Titel fallen aus der Ortszuordnung heraus. Alternativen derselben Ecke: Bridgetown Audio Podcast (84246334), Practicing the Way (1729195085), Rule of Life (1646299048).",
+      "appleId": 1592847144
     },
     {
       "id": "keller",
-      "title": "Timothy Keller",
+      "title": "Timothy Keller Sermons Podcast by Gospel in Life",
       "author": "Timothy Keller",
-      "homepage": null,
+      "homepage": "https://gospelinlife.com/",
       "feed": null,
       "lang": "en",
       "kind": "podcast",
-      "note": "Feed-Adresse noch offen. Überwiegend auslegend, die Stelle steht meist im Titel — daher gute Ortsausbeute zu erwarten."
+      "note": "Apple-Podcasts-ID 352660924. Überwiegend auslegend, die Stelle steht meist im Titel - daher gute Ortsausbeute zu erwarten.",
+      "appleId": 352660924
     }
   ]
 }

@@ -129,6 +129,12 @@ und englische Notation - `Markus 6,30-44` wie `Mark 6:30-44`) und löst sie übe
 Epoche des Buches. Folgen ohne Bibelstelle im Titel - bei thematischen
 Predigten häufig - fallen aus der Ortszuordnung heraus; das ist beabsichtigt.
 
+Feed-Adressen, die nicht von Hand geprüft sind, stehen in
+`data/media/sources.json` auf `null` – eine geratene URL erzeugt still einen
+leeren Index. Steht stattdessen eine `appleId` da, löst `--fetch` die Adresse
+über die iTunes-Lookup-API auf und meldet sie zum Eintragen. Ohne Netzzugriff
+genügt es, die RSS-XML von Hand nach `data/media/raw/<id>.xml` zu legen.
+
 Quellen stehen in `data/media/sources.json`, die Feeds werden als XML unter
 `data/media/raw/` zwischengespeichert, damit der Build offline und
 reproduzierbar läuft. **BibleProject** braucht keinen Feed: je Buch eine
