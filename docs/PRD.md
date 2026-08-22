@@ -152,7 +152,9 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [x] „2. Könige" lässt sich Kapitel für Kapitel durchgehen; Karte folgt.
 - [x] **Echter Bibeltext** links eingebettet (siehe 4.7).
 - [x] Tastatursteuerung (← / →).
-- [ ] *(v0.3)* Vollbild-/„Beamer"-Layout (Text größer, Karte optional ausblendbar).
+- [x] **Beamer-Layout**: Schalter in der Kopfleiste legt den Text über die
+      ganze Breite (26 px statt 18,5 px) und blendet die Karte aus; die
+      Einstellung wird gemerkt (LocalStorage).
 
 ### 4.7 Bibeltext einbetten — P0 ✅
 
@@ -351,7 +353,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v1.0** | **Bibeltext eingebettet** (4.7) inkl. Ort-im-Text-Verknüpfung, Tastatur | ✅ erledigt |
 | **v0.3** | Suche über Referenzen (4.3/4.15), State in URL (4.15), reduzierte Bewegung + Escape | ✅ erledigt |
 | **v0.4** | Reisen & Geschichten (4.12), Mission & Ausbreitung (4.13), Bibelquiz (4.14), Offline (4.16), Handout (4.17), Nachbarorte (4.18), Code-Splitting | ✅ erledigt |
-| **offen** | „Beamer"-Layout, kumulative biblische Zeitleiste, Tastatur-Fokus auf Marker, Sprachwahl merken, 3-D-Gelände (MapLibre) | ⬜ offen |
+| **offen** | kumulative biblische Zeitleiste, Tastatur-Fokus auf Marker, Sprachwahl merken, 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
 
@@ -379,7 +381,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 - BibleProject-Guide-Slugs sind heuristisch (`book-of-<name>` + Gruppen-Override);
   einzelne selten gruppierte Bücher könnten ins Leere zeigen → bei Bedarf in
   `bibleProjectUrl` nachpflegen.
-- „Beamer"-Layout und kumulative **biblische** Zeitleiste weiterhin offen.
+- Kumulative **biblische** Zeitleiste weiterhin offen.
 - Tastatur-Fokus auf Kartenmarker (Leaflet-Marker sind nicht fokussierbar).
 - Sprachwahl wird noch nicht gemerkt (weder URL noch LocalStorage).
 - **3-D-Gelände**: Leaflet kann die Karte nicht kippen. Ein Umstieg auf MapLibre

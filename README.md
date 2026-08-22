@@ -41,7 +41,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Kapitel für Kapitel durchgehen: links der **Bibeltext** (Luther 1912 / WEB) mit
   klickbaren Orts-Pins, rechts zoomt die Karte auf die erwähnten Orte
   (Tastatur ← / → blättert Kapitel). **BibleProject-Videos** sind eingebettet,
-  wo vorhanden.
+  wo vorhanden. Der Schalter **Beamer** legt den Text über die ganze Breite und
+  vergrößert ihn zum Vortragen; die Einstellung bleibt gemerkt.
 - **Heilsgeschichte-Modus** – geführte chronologische Reise von der Schöpfung bis
   zur neuen Welt (Schöpfung, Abraham, Exodus, Exil, Jesus, frühe Kirche …) mit
   Karte, Bibelstelle und Video je Station.
