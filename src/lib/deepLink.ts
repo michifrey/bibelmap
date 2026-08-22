@@ -12,8 +12,12 @@ export interface Route {
   placeId?: string;
   /** Reise + Station (Reisen & Geschichten). */
   journey?: { id: string; stop: number };
-  /** Phase + optional Reise (Mission & Ausbreitung). */
-  mission?: { phase: string; journey?: string };
+  /**
+   * Phase + Detail (Mission & Ausbreitung). In der Reisephase ist das zweite
+   * Glied eine Reise, sonst ein Ereignis – beides steht als `#mission=phase,x`
+   * in der Adresse.
+   */
+  mission?: { phase: string; journey?: string; event?: string };
   /** Buch + Kapitel (Präsentationsmodus). */
   reading?: { osis: string; chapter: number };
 }
@@ -63,10 +67,14 @@ export function parseHash(hash: string): Route | null {
         journey: args[0] ? { id: args[0], stop: Math.max(0, num(args[1], 0)) } : undefined,
       };
     case 'mission':
+      if (!args[0]) return { view: 'map', mode: 'mission' };
       return {
         view: 'map',
         mode: 'mission',
-        mission: args[0] ? { phase: args[0], journey: args[1] } : undefined,
+        mission:
+          args[0] === 'journeys'
+            ? { phase: args[0], journey: args[1] }
+            : { phase: args[0], event: args[1] },
       };
     case 'lesen':
       return {
@@ -88,9 +96,10 @@ export function formatRoute(route: Route): string {
   }
   if (mode === 'mission') {
     if (!route.mission) return '#mission';
-    const { phase, journey } = route.mission;
-    // Die Reise gehört nur in die Adresse, wenn sie auch gezeigt wird.
-    return phase === 'journeys' && journey ? `#mission=${phase},${journey}` : `#mission=${phase}`;
+    const { phase, journey, event } = route.mission;
+    // In der Reisephase steht die Reise in der Adresse, sonst das Ereignis.
+    const detail = phase === 'journeys' ? journey : event;
+    return detail ? `#mission=${phase},${detail}` : `#mission=${phase}`;
   }
   if (mode === 'present') {
     return route.reading ? `#lesen=${route.reading.osis},${route.reading.chapter}` : '#lesen';

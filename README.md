@@ -23,7 +23,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   **Zeitschiene** unten; Knoten lassen sich aufklappen und zeigen per Klick
   Lebensdaten, Bibelstellen und eine Kurzbeschreibung. Umschalter **Karte ↔ Zeitbaum**.
 - **Suche** – z. B. `Goschen`: zeigt *wo* (Karte) und *wann* (Epochen/Bücher) ein Ort
-  vorkommt, inkl. aller Bibelstellen.
+  vorkommt, inkl. aller Bibelstellen. Gesucht wird auch in den **Reisen und in
+  der Ausbreitung**: `Emmaus` findet den Ort *und* die Station im Weg nach
+  Jerusalem, `Azusa` das Ereignis von 1906 – ein Klick springt an die passende
+  Stelle im jeweiligen Modus.
 - **Heatmap** – die am häufigsten erwähnten Orte als Wärmebild.
 - **Entdeckermodus** – ein Buch wählen (z. B. *2. Könige*) und chronologisch
   Kapitel für Kapitel durchgehen: links der **Bibeltext** (Luther 1912 / WEB) mit

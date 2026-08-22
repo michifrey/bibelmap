@@ -24,10 +24,10 @@ interface Props {
   places: Place[];
   lang: Lang;
   onShowPlace: (place: Place) => void;
-  /** Phase und Reise aus der Adresse (Deep-Link). */
-  initial?: { phase: string; journey?: string } | null;
-  /** Meldet Phase und Reise, damit die Adresse mitläuft. */
-  onNavigate?: (state: { phase: string; journey: string }) => void;
+  /** Phase, Reise und Ereignis aus der Adresse (Deep-Link). */
+  initial?: { phase: string; journey?: string; event?: string } | null;
+  /** Meldet den Stand, damit die Adresse mitläuft. */
+  onNavigate?: (state: { phase: string; journey: string; event?: string }) => void;
   onExit: () => void;
 }
 
@@ -72,7 +72,7 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
   const [journeyId, setJourneyId] = useState(() =>
     initial?.journey && JOURNEY_BY_ID[initial.journey] ? initial.journey : JOURNEYS[0].id,
   );
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState<string | null>(initial?.event ?? null);
   const [playing, setPlaying] = useState(false);
   const [fit, setFit] = useState<{ points: [number, number][]; key: number } | null>(null);
   const [focus, setFocus] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
@@ -81,8 +81,14 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
   const navRef = useRef(onNavigate);
   navRef.current = onNavigate;
   useEffect(() => {
-    navRef.current?.({ phase: phaseId, journey: journeyId });
-  }, [phaseId, journeyId]);
+    navRef.current?.({
+      phase: phaseId,
+      journey: journeyId,
+      // In den Ausbreitungsphasen ist die Auswahl ein Ereignis – das gehört
+      // in die Adresse, damit ein Treffer der Suche verlinkbar bleibt.
+      event: phaseId === 'journeys' ? undefined : selected ?? undefined,
+    });
+  }, [phaseId, journeyId, selected]);
 
   const phase = PHASE_BY_ID[phaseId];
   const isJourneys = phaseId === 'journeys';
@@ -158,10 +164,16 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
   );
 
   // Beim Wechsel von Phase oder Reise den Ausschnitt neu setzen
+  // Die Auswahl fällt nur, wenn Phase oder Reise sich wirklich ändern – ein
+  // verlinktes Ereignis überlebt so auch den doppelten Effektlauf im
+  // Entwicklungsmodus.
+  const lastKey = useRef(`${phaseId}|${journeyId}`);
   useEffect(() => {
     const pts = items.map((i) => [i.lat, i.lon] as [number, number]);
     for (const i of items) if (i.from) pts.push(i.from);
-    setSelected(null);
+    const key = `${phaseId}|${journeyId}`;
+    if (key !== lastKey.current) setSelected(null);
+    lastKey.current = key;
     panelRef.current?.scrollTo({ top: 0 });
     if (pts.length) setFit({ points: pts, key: Date.now() });
     // eslint-disable-next-line react-hooks/exhaustive-deps
