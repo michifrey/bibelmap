@@ -49,7 +49,15 @@ export function highlightVerse(text: string, candidates: Candidate[]): ReactNode
         <button
           key={key++}
           onClick={cand.onPick}
-          className="bg-gold/25 px-0.5 font-medium text-white underline decoration-gold decoration-1 underline-offset-2 transition hover:bg-gold/45"
+          /*
+           * Der Bibeltext steht auf Papier, nicht auf der dunklen Bühne. Das
+           * `text-white` war von dort übrig geblieben: weiße Schrift auf einem
+           * 25-prozentigen Goldschleier über Weiß ergibt 1,83:1 – die Ortsnamen,
+           * also genau das, was man hier antippen soll, waren das am schlechtesten
+           * Lesbare der ganzen Seite. Dunkle Tinte auf dem Schleier liest sich wie
+           * mit dem Textmarker angestrichen, und das ist es ja auch.
+           */
+          className="bg-gold/30 px-0.5 font-medium text-ink underline decoration-gold-deep decoration-1 underline-offset-2 transition hover:bg-gold/60"
         >
           {m[0]}
         </button>,
