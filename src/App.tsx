@@ -10,10 +10,12 @@ import {
   erasForPlace,
   placeName,
 } from './lib/places';
-import { ERAS } from './data/eras';
+import { ERAS, ERA_BY_ID } from './data/eras';
 import MapView, { type BasemapId } from './components/MapView';
 import Header, { type Mode, type View } from './components/Header';
 import { JOURNEY_BY_ID } from './data/journeys';
+import { JOURNEYS as MISSION_JOURNEYS } from './data/mission';
+import type { TerrainRoute } from './components/TerrainMap';
 import { loadMedia } from './lib/media';
 import Timeline from './components/Timeline';
 import YearSlider from './components/YearSlider';
@@ -484,29 +486,65 @@ export default function App() {
     }
     setNavEpoch((n) => n + 1);
   }
-  /** Die Reise, die im Gelände liegt – nur dort, sonst stört sie die Karte. */
-  const terrainJourney = useMemo(
-    () => (view === 'terrain' && journeyNav ? JOURNEY_BY_ID[journeyNav.id] ?? null : null),
-    [view, journeyNav],
-  );
+  /**
+   * Die Route, die im Gelände liegt – aus den Bibelreisen oder aus der Mission.
+   * Nur in der Geländeansicht, sonst stört sie die flache Karte.
+   */
+  const terrainRoute = useMemo((): TerrainRoute | null => {
+    if (view !== 'terrain') return null;
+    if (missionNav?.journey) {
+      const m = MISSION_JOURNEYS.find((j) => j.id === missionNav.journey);
+      if (m) return { id: m.id, kind: 'mission', de: m.de, en: m.en, color: m.color, stops: m.stops };
+    }
+    const j = journeyNav ? JOURNEY_BY_ID[journeyNav.id] : null;
+    if (!j) return null;
+    // Die Bibelreisen tragen keine eigene Farbe – sie erben die ihrer Epoche.
+    return {
+      id: j.id,
+      kind: 'journey',
+      de: j.de,
+      en: j.en,
+      color: ERA_BY_ID[j.era]?.color ?? '#e0a449',
+      stops: j.stops,
+    };
+  }, [view, journeyNav, missionNav]);
 
-  // Eine Reise, die es nicht gibt, verschwindet auch aus der Adresse – ein
+  // Eine Route, die es nicht gibt, verschwindet auch aus der Adresse – ein
   // Hash, der auf nichts zeigt, ist schlechter als gar keiner.
   useEffect(() => {
-    if (view === 'terrain' && journeyNav && !JOURNEY_BY_ID[journeyNav.id]) setJourneyNav(null);
-  }, [view, journeyNav]);
+    if (view !== 'terrain') return;
+    if (journeyNav && !JOURNEY_BY_ID[journeyNav.id]) setJourneyNav(null);
+    if (missionNav?.journey && !MISSION_JOURNEYS.some((j) => j.id === missionNav.journey)) {
+      setMissionNav(null);
+    }
+  }, [view, journeyNav, missionNav]);
 
-  /** Aus dem Gelände zurück in den Reisemodus – Text, Stellen, Entfernungen. */
-  function openJourneyFromTerrain(id: string) {
-    setJourneyNav({ id, stop: 0 });
+  /** Aus dem Gelände zurück dorthin, wo die Route herkommt. */
+  function openRouteFromTerrain(r: TerrainRoute) {
     setView('map');
-    setMode('journeys');
+    if (r.kind === 'mission') {
+      setMissionNav({ phase: 'journeys', journey: r.id });
+      setMode('mission');
+    } else {
+      setJourneyNav({ id: r.id, stop: 0 });
+      setMode('journeys');
+    }
     setNavEpoch((n) => n + 1);
   }
 
   /** Aus dem Reisemodus ins Gelände – dieselbe Route, nur mit Höhen. */
   function openJourneyInTerrain(id: string) {
+    setMissionNav(null);
     setJourneyNav({ id, stop: 0 });
+    setMode(null);
+    setView('terrain');
+    setNavEpoch((n) => n + 1);
+  }
+
+  /** Aus der Mission ins Gelände – dieselben Wege des Paulus, mit Höhen. */
+  function openMissionInTerrain(id: string) {
+    setJourneyNav(null);
+    setMissionNav({ phase: 'journeys', journey: id });
     setMode(null);
     setView('terrain');
     setNavEpoch((n) => n + 1);
@@ -600,8 +638,8 @@ export default function App() {
                   basemap={basemap}
                   newIds={newIds}
                   flyTo={flyTo}
-                  journey={terrainJourney}
-                  onOpenJourney={openJourneyFromTerrain}
+                  route={terrainRoute}
+                  onOpenRoute={openRouteFromTerrain}
                 />
               </Suspense>
             ) : (
@@ -820,6 +858,7 @@ export default function App() {
                 onShowPlace={showPlaceFromGenealogy}
                 initial={missionNav}
                 onNavigate={setMissionNav}
+                onOpenTerrain={openMissionInTerrain}
                 onExit={() => setMode(null)}
               />
               </Suspense>
