@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
+import { watchTiles } from '../lib/tileNotice';
 import { markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import type { Lang } from '../i18n';
@@ -47,19 +48,24 @@ export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenIn
 
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  /** Abmelder der Kachelwache – ohne ihn bleibt der Hinweis an einer alten Ebene hängen. */
+  const tileWatchRef = useRef<(() => void) | null>(null);
   const overlayRef = useRef<L.LayerGroup | null>(null);
 
   // init map once
   useEffect(() => {
     if (!mapEl.current || mapRef.current) return;
     const map = L.map(mapEl.current, { center: [38, 26], zoom: 5, minZoom: 3, maxZoom: 12, worldCopyJump: true });
-    L.tileLayer(CARTO, {
+    const kacheln = L.tileLayer(CARTO, {
       attribution: '&copy; OpenStreetMap &copy; CARTO · Orte der Kirchenväter & Konzilien: schematisch',
       subdomains: 'abcd',
     }).addTo(map);
+    tileWatchRef.current = watchTiles(kacheln, map, lang);
     overlayRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
     return () => {
+      tileWatchRef.current?.();
+      tileWatchRef.current = null;
       map.remove();
       mapRef.current = null;
     };

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
+import { watchTiles } from '../lib/tileNotice';
 import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions, useReducedMotion } from '../lib/motion';
@@ -66,6 +67,8 @@ export default function RouteMap({
   const reduced = useReducedMotion();
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  /** Abmelder der Kachelwache – ohne ihn bleibt der Hinweis an einer alten Ebene hängen. */
+  const tileWatchRef = useRef<(() => void) | null>(null);
   const baseRef = useRef<L.Polyline | null>(null);
   const trailRef = useRef<L.Polyline | null>(null);
   const travellerRef = useRef<L.Marker | null>(null);
@@ -81,11 +84,12 @@ export default function RouteMap({
   useEffect(() => {
     if (!el.current || mapRef.current) return;
     const map = L.map(el.current, { center: [31.8, 35.2], zoom: 7, minZoom: 2, maxZoom: 13, worldCopyJump: true });
-    L.tileLayer(TILES, {
+    const kacheln = L.tileLayer(TILES, {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY) · Routen: schematisch',
       subdomains: 'abcd',
     }).addTo(map);
+    tileWatchRef.current = watchTiles(kacheln, map, lang);
     mapRef.current = map;
     const offKeys = enableMarkerKeyboard(map.getContainer(), (el) => {
       const i = markersRef.current.findIndex((m) => m.getElement() === el);
@@ -93,6 +97,8 @@ export default function RouteMap({
     });
     return () => {
       offKeys();
+      tileWatchRef.current?.();
+      tileWatchRef.current = null;
       map.remove();
       mapRef.current = null;
     };

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
+import { watchTiles } from '../lib/tileNotice';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import 'leaflet.markercluster';
@@ -258,6 +259,16 @@ export default function MapView({
     layer.on('tileload', onLoad);
     layer.on('tileerror', onError);
     layer.addTo(map);
+    /*
+     * Sagt es selbst, wenn es niemand anders tut. Die Hauptkarte meldet den
+     * Ausfall nach oben (`onTilesUnavailable`) und bekommt dort einen Hinweis
+     * samt Rückfall auf die Nachtkarte. Im Entdeckermodus, im Vergleich und in
+     * der Heilsgeschichte hängt dieselbe Karte ohne diesen Draht – dort blieb
+     * die Fläche grau und stumm.
+     */
+    const eigenerHinweis = onTilesUnavailableRef.current
+      ? null
+      : watchTiles(layer, map, langRef.current);
     tileRef.current = layer;
     tileRef.current.setZIndex(0);
     const c = map.getContainer();
@@ -267,6 +278,7 @@ export default function MapView({
     return () => {
       layer.off('tileload', onLoad);
       layer.off('tileerror', onError);
+      eigenerHinweis?.();
     };
   }, [basemap]);
 

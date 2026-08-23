@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
+import { watchTiles } from '../lib/tileNotice';
 import { flyOptions } from '../lib/motion';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
@@ -42,6 +43,8 @@ export default function QuizMode({ places, lang, onExit }: Props) {
 
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  /** Abmelder der Kachelwache – ohne ihn bleibt der Hinweis an einer alten Ebene hängen. */
+  const tileWatchRef = useRef<(() => void) | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
   const guessRef = useRef(guess);
   guessRef.current = guess;
@@ -62,11 +65,12 @@ export default function QuizMode({ places, lang, onExit }: Props) {
       zoomControl: true,
       // Ohne Beschriftung – sonst steht die Antwort auf der Karte.
     });
-    L.tileLayer(TILES, {
+    const kacheln = L.tileLayer(TILES, {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY)',
       subdomains: 'abcd',
     }).addTo(map);
+    tileWatchRef.current = watchTiles(kacheln, map, lang);
     layerRef.current = L.layerGroup().addTo(map);
     map.on('click', (e: L.LeafletMouseEvent) => {
       if (guessRef.current || !whereRef.current) return; // aufgelöst oder Wissensfrage
@@ -74,6 +78,8 @@ export default function QuizMode({ places, lang, onExit }: Props) {
     });
     mapRef.current = map;
     return () => {
+      tileWatchRef.current?.();
+      tileWatchRef.current = null;
       map.remove();
       mapRef.current = null;
       layerRef.current = null;

@@ -549,7 +549,32 @@ Text der Name vorkommt, nicht seine eigene Seite.
 - [x] Der Religionsvergleich wird bewusst schwächer bewertet – wer „Mose" tippt,
       soll zuerst die Orte und die Reise sehen.
 
-### 4.33 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.33 Jede Karte sagt Bescheid — P2 ✅
+
+**Beschreibung:** Kommt keine Kachel an, sieht eine Karte aus wie ein Fehler der
+App. Die Hauptkarte sagte längst Bescheid – die anderen sechs Karten nicht.
+
+**Gemessen vorher:** Von elf Ansichten mit Karte sagten **zwei** etwas
+(`#karte`, `#gelaende`). In den Vollbild-Modi war der einzige Hinweis der der
+Hauptkarte, seit 4.31 stillgelegt hinter dem Vorhang; auf der Stammeskarte gab
+es ihn nie.
+
+**Anforderungen**
+- Jede Leaflet-Karte meldet den Ausfall in sich selbst.
+- Dieselbe Regel wie bisher: erst nach sechs Fehlschlägen, wieder weg, sobald
+  eine Kachel ankommt.
+- Der Hinweis wechselt die Sprache mit und wird vorgelesen (`role="status"`).
+
+**Akzeptanzkriterien**
+- [x] Alle elf Ansichten mit Karte melden den Ausfall (vorher zwei).
+- [x] Gegenprobe mit ausgelieferten Kacheln: keine einzige Meldung – die
+      Prüfung braucht dafür einen Kontext ohne Dienst-Worker, sonst holt der
+      die Kacheln selbst und läuft an der Umleitung vorbei.
+- [x] Die Hauptkarte behält ihren bisherigen, reicheren Hinweis samt Rückfall
+      auf die Nachtkarte; `MapView` meldet nur selbst, wenn es niemand sonst
+      tut – doppelte Hinweise gibt es nicht.
+
+### 4.34 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

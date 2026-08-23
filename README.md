@@ -55,7 +55,12 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   (Terrain Light von EOX). Beide stehen unter CC-BY 4.0; die früheren
   Esri-Kacheln verlangten außerhalb eines ArcGIS-Kontos einen Vertrag.
   Antwortet ein fremder Kachelserver nicht, fällt die Karte auf die Nachtkarte
-  zurück und sagt, warum – statt eine leere Fläche zu zeigen.
+  zurück und sagt, warum – statt eine leere Fläche zu zeigen. **Das sagt jetzt
+  jede Karte**, nicht nur die erste: Reisen, Mission, Quiz, Kirchengeschichte,
+  Vergleich, Heilsgeschichte, Eigener Weg, Entdeckermodus und die Stammeskarte.
+  Vorher war der einzige Hinweis der der Hauptkarte – im Vollbild-Modus lag er
+  hinter dem Vorhang, auf der Stammeskarte gab es ihn gar nicht: gemessen
+  sagten **zwei von elf Ansichten** Bescheid, jetzt alle elf.
 
 ### Erzählen
 

@@ -1,5 +1,6 @@
 import type L from 'leaflet';
 import { t, type Lang } from '../i18n';
+import { refreshTileNotices } from './tileNotice';
 
 /**
  * Leaflet beschriftet seine eigenen Bedienelemente – und zwar auf Englisch,
@@ -35,6 +36,9 @@ export function localizeMap(map: L.Map, lang: Lang): () => void {
   };
 
   apply();
+  // Ein stehender Kachel-Hinweis wechselt die Sprache mit: er gehört zu den
+  // Beschriftungen der Karte, auch wenn ihn kein Leaflet-Control erzeugt.
+  refreshTileNotices(lang);
   map.on('popupopen', onPopup);
   return () => {
     map.off('popupopen', onPopup);
