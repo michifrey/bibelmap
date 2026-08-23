@@ -496,7 +496,11 @@ Startseite und Seite „Projekte unterstützen".
   Kartenmarker sind mit Tabulator erreichbar und mit Enter/Leertaste
   auslösbar. Jedes Bedienelement trägt einen Namen, jede Grafik ist benannt
   oder als Beiwerk gekennzeichnet – geprüft mit `scripts/a11y-audit.mjs` über
-  alle zwölf Ansichten.
+  alle vierzehn Ansichten. Drei Sprungmarken („Zur Navigation", „Zur Suche",
+  „Zur Karte") stehen am Anfang der Tabulatorreihe und werden erst sichtbar,
+  wenn sie den Fokus haben; ohne sie lag die Kopfzeile auf der Karte 208
+  Tabulatorschritte entfernt, in „Hören & Sehen" noch weiter. Dieselbe Prüfung
+  misst diesen Weg mit und meldet mehr als sechs Tastendrücke als Befund.
 - **i18n:** DE/EN vollständig; Architektur erlaubt weitere Sprachen.
 - **Lizenz-Compliance:** Attribution für Daten (CC-BY), Bilder (je Bild) und
   Kartenkacheln stets sichtbar.
