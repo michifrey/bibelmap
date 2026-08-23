@@ -207,6 +207,12 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   seine Sprache beim nächsten Besuch wieder.
 - **Tastatur** – Marker lassen sich mit Tabulator ansteuern und mit Enter oder
   Leertaste öffnen (Cluster zoomen hinein); Escape schließt von außen nach innen.
+- **Zweisprachig bis in die Bibliotheken** – Leaflet und MapLibre beschriften
+  ihre eigenen Bedienelemente fest auf Englisch („Zoom in", „Close popup",
+  „Map"). `src/lib/mapLocale.ts` setzt sie für alle sechs Leaflet-Karten aus
+  derselben Sprachdatei wie den Rest; die Geländekarte bekommt sie beim Bauen
+  mit. `scripts/a11y-audit.mjs` meldet fremdsprachige Namen jetzt als Befund –
+  vorher fiel es nicht auf, weil ein Name ja **da** war.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
 - **Bildnachweis** – jedes Foto nennt **Urheber und Lizenz**, in der Ortskarte

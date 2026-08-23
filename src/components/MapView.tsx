@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { localizeMap } from '../lib/mapLocale';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import 'leaflet.markercluster';
@@ -211,6 +212,14 @@ export default function MapView({
       mapRef.current = null;
     };
   }, []);
+
+  // Leaflet beschriftet Zoom und Fenster selbst – auf Englisch. Diese eine
+  // Zeile holt die Namen aus derselben Sprachdatei wie der Rest.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    return localizeMap(map, lang);
+  }, [lang]);
 
   // basemap tile layer (swappable)
   useEffect(() => {

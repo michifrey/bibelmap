@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
+import { localizeMap } from '../lib/mapLocale';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { GENO_GEO, type GeoKind } from '../data/genoGeo';
@@ -198,6 +199,14 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
       mapRef.current = null;
     };
   }, []);
+
+  // Leaflet beschriftet Zoom und Fenster selbst – auf Englisch. Diese eine
+  // Zeile holt die Namen aus derselben Sprachdatei wie der Rest.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    return localizeMap(map, lang);
+  }, [lang]);
 
   // ---- basemap ------------------------------------------------------------
   useEffect(() => {

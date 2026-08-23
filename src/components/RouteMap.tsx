@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { localizeMap } from '../lib/mapLocale';
+import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions, useReducedMotion } from '../lib/motion';
 import { pointAt, traveled, type LatLon } from '../lib/route';
@@ -60,6 +62,7 @@ export default function RouteMap({
   onFinish,
   onSelect,
 }: Props) {
+  const lang = useLang();
   const reduced = useReducedMotion();
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -94,6 +97,14 @@ export default function RouteMap({
       mapRef.current = null;
     };
   }, []);
+
+  // Leaflet beschriftet Zoom und Fenster selbst – auf Englisch. Diese eine
+  // Zeile holt die Namen aus derselben Sprachdatei wie der Rest.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    return localizeMap(map, lang);
+  }, [lang]);
 
   /** Strecke, Punkte und Reisender neu aufbauen (andere Reise gewählt). */
   useEffect(() => {
