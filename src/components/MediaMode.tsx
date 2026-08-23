@@ -63,6 +63,13 @@ export default function MediaMode({
   const [chapter, setChapter] = useState<number | null>(initial?.ref?.chapter ?? null);
   const [era, setEra] = useState<string | null>(null);
   const [query, setQuery] = useState('');
+  /**
+   * Zwei Blickwinkel auf denselben Bestand: „Passgenau" stellt die genaue
+   * Stelle vor das ganze Buch, „Neueste" das Sendedatum voran. Beides hat
+   * seinen Ort – wer stöbert, will das Neue; wer zu einer Stelle sucht, das
+   * Genaue.
+   */
+  const [sort, setSort] = useState<'fit' | 'date'>('fit');
   const [limit, setLimit] = useState(PAGE);
 
   useEffect(() => {
@@ -135,12 +142,16 @@ export default function MediaMode({
       }
       out.push({ ep, i });
     });
-    // Wie auf der Ortskarte: die genaue Stelle vor dem ganzen Buch, dann neu vor alt.
-    out.sort(
-      (a, b) => precision(a.ep) - precision(b.ep) || (b.ep.date ?? '').localeCompare(a.ep.date ?? ''),
+    // Passgenau: wie auf der Ortskarte – die genaue Stelle vor dem ganzen Buch,
+    // dann neu vor alt. Nach Datum: umgekehrt, und was kein Datum hat, ans Ende
+    // statt an den Anfang (die Buch-Übersichten haben keins).
+    out.sort((a, b) =>
+      sort === 'fit'
+        ? precision(a.ep) - precision(b.ep) || (b.ep.date ?? '').localeCompare(a.ep.date ?? '')
+        : (b.ep.date ?? '').localeCompare(a.ep.date ?? '') || precision(a.ep) - precision(b.ep),
     );
     return out;
-  }, [index, places, place, book, chapter, era, query]);
+  }, [index, places, place, book, chapter, era, query, sort]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -251,6 +262,17 @@ export default function MediaMode({
               </option>
             ))}
           </select>
+          <div className="flex overflow-hidden">
+            {(['fit', 'date'] as const).map((id) => (
+              <button
+                key={id}
+                onClick={() => setSort(id)}
+                className={`bm-btn ${sort === id ? 'bm-btn-signal' : 'bm-btn-ghost'}`}
+              >
+                {id === 'fit' ? t('mediaSortFit') : t('mediaSortDate')}
+              </button>
+            ))}
+          </div>
           {filtered && (
             <button onClick={reset} className="bm-btn bm-btn-ghost">
               {t('mediaReset')}
@@ -353,7 +375,11 @@ export default function MediaMode({
                       <span key={`${r.osis}-${k}`}>{label}</span>
                     );
                   })}
-                  {ep.date && <span>· {ep.date}</span>}
+                  {ep.date ? (
+                    <span>· {ep.date}</span>
+                  ) : (
+                    sort === 'date' && <span className="text-white/40">· {t('mediaNoDate')}</span>
+                  )}
                 </div>
 
                 {chips.length > 0 && (

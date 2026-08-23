@@ -13,6 +13,7 @@ import {
 import { ERAS } from './data/eras';
 import MapView, { type BasemapId } from './components/MapView';
 import Header, { type Mode, type View } from './components/Header';
+import { loadMedia } from './lib/media';
 import Timeline from './components/Timeline';
 import YearSlider from './components/YearSlider';
 import SearchPanel from './components/SearchPanel';
@@ -215,6 +216,9 @@ export default function App() {
       void import('./components/ChurchMode');
       void import('./components/CompareMode');
       void import('./lib/globalSearch');
+      // Nicht nur der Programmcode, auch der Medien-Index: sonst steht „Hören &
+      // Sehen" ohne Netz leer da, während jede andere Ansicht vollständig ist.
+      void loadMedia();
     };
     // Erst wenn der Service Worker steht: sonst laufen die Dateien an ihm
     // vorbei und fehlen später im Cache, obwohl sie längst geholt wurden.
