@@ -319,6 +319,13 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       gelten für jedes Kapitel und stehen deshalb hinter den genauen Stellen.
 - [x] Ehrlich bleiben: eine genannte Bibelstelle ist nicht zwingend das Thema
       der Folge – der Hinweis steht unter der Liste, nicht im Kleingedruckten.
+- [x] Zwei Reihenfolgen: **Passgenau** (genaue Stelle vor ganzem Buch) und
+      **Neueste** (nach Sendedatum). Was kein Datum hat, steht dann am Ende und
+      sagt das auch – nicht am Anfang, wo eine leere Angabe wie „ganz neu"
+      aussähe.
+- [x] Offline vollständig: der Medien-Index wird im Leerlauf mitgeholt und liegt
+      damit im Cache des Service Workers – sonst stünde der Modus ohne Netz
+      leer da, während jede andere Ansicht vollständig ist.
 
 ### 4.20 Bildnachweis vollständig — P1 ✅
 

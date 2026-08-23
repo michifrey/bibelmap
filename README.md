@@ -103,7 +103,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 - **Hören & Sehen** – ein eigener Modus über alle **473 Folgen** der vier
   eingebundenen Quellen (bibletunes.de, BibleProject, John Mark Comer, Timothy
   Keller): filterbar nach **Quelle, Buch, Epoche** und Freitext – die Suche
-  versteht dabei auch Ortsnamen. Unter jeder Folge stehen die Orte, die sie
+  versteht dabei auch Ortsnamen, und zwei Reihenfolgen stehen zur Wahl:
+  **Passgenau** (die genaue Stelle vor dem ganzen Buch) oder **Neueste** (nach
+  Sendedatum). Unter jeder Folge stehen die Orte, die sie
   berührt; ein Klick darauf führt auf die Karte. Die Verknüpfung gilt in alle
   Richtungen: jede Ortskarte verlinkt mit *Alle Folgen zu diesem Ort* in den
   Modus (`#hoeren=ort,…`), der **Lesemodus** zeigt neben Kapitel und Text, wie
@@ -113,9 +115,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 ### Drumherum
 
 - **Offline & installierbar** – die App meldet einen Service Worker an: Einstieg,
-  Programmdateien und die Ortsdaten liegen nach dem ersten Besuch im Cache,
-  einmal angesehene Kartenkacheln ebenso. Ohne Netz startet Bibelmap weiter,
-  zeigt alle 1.335 Orte und die bereits besuchten Kartenausschnitte. Über das
+  Programmdateien, die Ortsdaten **und der Medien-Index** liegen nach dem ersten
+  Besuch im Cache, einmal angesehene Kartenkacheln ebenso. Ohne Netz startet
+  Bibelmap weiter, zeigt alle 1.335 Orte, alle 473 Folgen und die bereits
+  besuchten Kartenausschnitte. Die Folgen selbst liegen bei ihren Anbietern –
+  abspielen lässt sich ohne Netz nichts. Über das
   Browser-Menü lässt sie sich als App installieren (Manifest + Symbole).
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
   Ohne eigene Wahl entscheidet die Browsersprache; wer einmal umschaltet, bekommt
