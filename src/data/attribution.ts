@@ -121,26 +121,40 @@ export const CREDITS: CreditEntry[] = [
     home: 'https://carto.com/attributions',
   },
   {
-    id: 'esri',
-    name: 'Esri World Imagery & World Shaded Relief',
-    by: 'Esri, Maxar, Earthstar Geographics',
+    id: 's2cloudless',
+    name: 'Sentinel-2 cloudless 2020',
+    by: 'EOX IT Services · Copernicus / ESA',
     group: 'karten',
-    license: null,
-    terms: {
-      de: 'Esri-Nutzungsbedingungen',
-      en: 'Esri terms of use',
-      url: 'https://www.esri.com/en-us/legal/terms/full-master-agreement',
-    },
+    license: 'CC-BY-4.0',
     use: {
-      de: 'Die Satelliten- und die Reliefkarte, umschaltbar über die Kartenwahl.',
-      en: 'The satellite and relief basemaps, switchable in the map picker.',
+      de: 'Die Satellitenkarte: ein wolkenfreies Mosaik aus einem Jahr Sentinel-2-Aufnahmen, 10 m je Bildpunkt.',
+      en: 'The satellite basemap: a cloudless mosaic from a year of Sentinel-2 imagery, 10 m per pixel.',
     },
-    attribution: 'Tiles © Esri — Source: Esri, Maxar, Earthstar Geographics',
+    attribution:
+      'Sentinel-2 cloudless 2020 (s2maps.eu) by EOX IT Services GmbH — Contains modified Copernicus Sentinel data 2020',
     note: {
-      de: 'Kein freies Material: die Kacheln werden von Esri geladen und dürfen nur mit dieser Nennung angezeigt werden.',
-      en: 'Not free material: the tiles are loaded from Esri and may only be shown with this credit.',
+      de: 'Ersetzt die frühere Esri-Satellitenkarte, die außerhalb eines ArcGIS-Kontos nur nach Vertrag genutzt werden darf. Ab Stufe 14 vergrößert die App das Bild, statt schärfere Kacheln zu verlangen, die es nicht gibt.',
+      en: 'Replaces the earlier Esri satellite layer, which outside an ArcGIS account may only be used under contract. From zoom 14 the app scales the imagery up instead of asking for sharper tiles that do not exist.',
     },
-    home: 'https://www.esri.com/',
+    home: 'https://s2maps.eu/',
+  },
+  {
+    id: 'terrain-light',
+    name: 'Terrain Light',
+    by: 'EOX IT Services',
+    group: 'karten',
+    license: 'CC-BY-4.0',
+    use: {
+      de: 'Die Reliefkarte: Höhen und Küsten ohne Beschriftung – der ruhige Untergrund für die Zeitschichten.',
+      en: 'The relief basemap: elevation and coastlines without labels – the quiet ground for the time layers.',
+    },
+    attribution:
+      'Terrain Light © EOX — Data © OpenStreetMap contributors, SRTM, Natural Earth',
+    note: {
+      de: 'Ersetzt Esris Shaded Relief aus demselben Grund wie oben.',
+      en: 'Replaces Esri’s Shaded Relief for the same reason as above.',
+    },
+    home: 'https://maps.eox.at/',
   },
   {
     id: 'dare',

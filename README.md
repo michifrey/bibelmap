@@ -35,8 +35,13 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   23 km NO). Ein Klick wechselt zum Nachbarn.
 - **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
   robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
-- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
-  Imagery) und **Relief/„historisch"** (Esri Shaded Relief).
+- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit**
+  (Sentinel-2 cloudless von EOX – ein wolkenfreies Mosaik aus einem Jahr
+  Copernicus-Aufnahmen, 10 m je Bildpunkt) und **Relief/„historisch"**
+  (Terrain Light von EOX). Beide stehen unter CC-BY 4.0; die früheren
+  Esri-Kacheln verlangten außerhalb eines ArcGIS-Kontos einen Vertrag.
+  Antwortet ein fremder Kachelserver nicht, fällt die Karte auf die Nachtkarte
+  zurück und sagt, warum – statt eine leere Fläche zu zeigen.
 
 ### Erzählen
 
@@ -144,14 +149,14 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
   aus deren Arbeit die Seite besteht – je Projekt mit Beitrag und Nennung.
 - **Nachweise & Lizenzen** – die Rechtsseite zur Unterstützen-Seite (Modi-Menü,
-  Fußzeile der Startseite, Direktlink `#nachweise`): **28 Quellen** in sechs
+  Fußzeile der Startseite, Direktlink `#nachweise`): **29 Quellen** in sechs
   Bereichen – Karte & Kacheln, Orte & Verweise, Bibeltext & Artikel, Bilder,
   Hören & Sehen, Software & Schriften. Je Quelle steht da, was davon in der App
   steckt, unter welcher **Lizenz** sie steht (verlinkt, mit dem, was die Lizenz
   verlangt) und – wo eine Lizenz eine bestimmte Zeile fordert – diese
-  **Nachweiszeile im Wortlaut**. Material ohne freie Lizenz (Esri-Kacheln,
-  YouTube, die Podcast-Feeds) ist als solches gekennzeichnet und verlinkt auf
-  die Bedingungen des Anbieters. Zum Schluss die Seite selbst: GPL-3.0, warum,
+  **Nachweiszeile im Wortlaut**. Material ohne freie Lizenz (YouTube, die
+  Podcast-Feeds, die verlinkten Lesedienste) ist als solches gekennzeichnet und
+  verlinkt auf die Bedingungen des Anbieters. Zum Schluss die Seite selbst: GPL-3.0, warum,
   und wohin ein falscher Nachweis gemeldet wird.
 
 ## Entwicklung
@@ -431,7 +436,10 @@ entfernt, ist an diese Wahl nicht mehr gebunden.
 - Bibeltext: Lutherbibel 1912 & World English Bible (gemeinfrei), aufbereitet in
   [seven1m/open-bibles](https://github.com/seven1m/open-bibles) (MIT)
 - Reichsgrenzen: [aourednik/historical-basemaps](https://github.com/aourednik/historical-basemaps) (GPL-3.0)
-- Kartenkacheln: © OpenStreetMap-Mitwirkende, © CARTO; „Antike Welt“
+- Kartenkacheln: © OpenStreetMap-Mitwirkende, © CARTO; Satellit
+  © [Sentinel-2 cloudless 2020](https://s2maps.eu/) (EOX IT Services, modifizierte
+  Copernicus-Sentinel-Daten 2020, CC-BY 4.0); Relief © [Terrain Light](https://maps.eox.at/)
+  (EOX, CC-BY 4.0); „Antike Welt“
   © [DARE / Imperium](https://imperium.ahlfeldt.se/) (Univ. Göteborg, CC-BY)
 - Bilder: Wikimedia Commons (Lizenz je Bild, siehe Bildnachweis)
 - Podcasts & Videos: bibletunes.de, BibleProject, Practicing the Way, Gospel in

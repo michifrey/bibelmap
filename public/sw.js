@@ -20,7 +20,7 @@ const MATCH = { ignoreVary: true };
 
 const TILE_HOSTS = [
   'basemaps.cartocdn.com',
-  'server.arcgisonline.com',
+  'tiles.maps.eox.at',
   'dh.gu.se',
   'tile.openstreetmap.org',
 ];

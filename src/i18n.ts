@@ -86,6 +86,14 @@ const STRINGS: Dict = {
   basemapSatellite: { de: 'Satellit', en: 'Satellite' },
   basemapRelief: { de: 'Relief', en: 'Terrain' },
   basemapAntique: { de: 'Antike Welt', en: 'Ancient world' },
+  basemapOffline: {
+    de: 'Kartenkacheln sind gerade nicht erreichbar – vermutlich ohne Netz. Orte, Zeitleiste und Texte funktionieren weiter.',
+    en: 'Map tiles cannot be reached right now – probably offline. Places, timeline and texts keep working.',
+  },
+  basemapUnavailable: {
+    de: '„%s" ist gerade nicht erreichbar – der Kachelserver antwortet nicht. Angezeigt wird so lange die Nachtkarte.',
+    en: '"%s" cannot be reached right now – the tile server is not answering. The night map is shown instead.',
+  },
   // Reiche & Grenzen / the year slider
   empires: { de: 'Reiche & Grenzen', en: 'Empires & borders' },
   bordersOn: { de: 'Reiche einblenden', en: 'Show empires' },

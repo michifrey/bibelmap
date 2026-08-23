@@ -19,6 +19,8 @@ interface Props {
   onSelect: (p: Place) => void;
   /** Base map style. */
   basemap?: BasemapId;
+  /** Der gewählte Kachelserver liefert nichts – die Ansicht soll zurückfallen. */
+  onTilesUnavailable?: (id: BasemapId) => void;
   /** Fit the map to exactly these places (presentation mode). */
   fitPlaces?: Place[] | null;
   /** Fly to a single coordinate (search focus). */
@@ -63,16 +65,31 @@ export const BASEMAPS: Record<BasemapId, Basemap> = {
     maxZoom: 19,
     subdomains: 'abcd',
   },
+  // Satellit und Relief kommen von EOX (maps.eox.at), nicht mehr von Esri:
+  // beide unter CC-BY 4.0 frei nutzbar, beide ohne Beschriftung – und damit
+  // ohne die Nutzungsbedingungen, die Esri für Karten außerhalb eines
+  // ArcGIS-Kontos verlangt. Die WMTS-Adresse ist RESTful und zählt Zeile vor
+  // Spalte: .../default/g/{z}/{y}/{x}.jpg.
   satellite: {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics ' + OB_ATTR,
+    url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg',
+    attribution:
+      'Sentinel-2 cloudless 2020 &copy; <a href="https://s2maps.eu">EOX IT Services</a> (modifizierte Copernicus-Sentinel-Daten 2020, CC-BY) ' +
+      OB_ATTR,
+    // Die Aufnahmen lösen 10 m auf – ab Stufe 14 wird vergrößert statt
+    // nachgeladen, sonst liefe die Karte in leere Kacheln.
     maxZoom: 18,
+    maxNativeZoom: 14,
+    subdomains: '',
     dark: true,
   },
   relief: {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Tiles &copy; Esri — Source: Esri ' + OB_ATTR,
-    maxZoom: 13,
+    url: 'https://tiles.maps.eox.at/wmts/1.0.0/terrain-light_3857/default/g/{z}/{y}/{x}.jpg',
+    attribution:
+      'Terrain Light &copy; <a href="https://maps.eox.at">EOX</a> · Daten: OpenStreetMap-Mitwirkende, SRTM, Natural Earth (CC-BY) ' +
+      OB_ATTR,
+    maxZoom: 14,
+    maxNativeZoom: 12,
+    subdomains: '',
   },
   antique: {
     // Digital Atlas of the Roman Empire (DARE / "Imperium"), Univ. of Gothenburg.
@@ -129,6 +146,7 @@ export default function MapView({
   lang,
   onSelect,
   basemap = 'light',
+  onTilesUnavailable,
   fitPlaces,
   flyTo,
   borderYear = null,
@@ -143,6 +161,8 @@ export default function MapView({
   const markerById = useRef<Map<string, L.Marker>>(new Map());
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const onTilesUnavailableRef = useRef(onTilesUnavailable);
+  onTilesUnavailableRef.current = onTilesUnavailable;
   const placesRef = useRef(places);
   placesRef.current = places;
   const langRef = useRef(lang);
@@ -193,12 +213,31 @@ export default function MapView({
     if (!map) return;
     const bm = BASEMAPS[basemap] ?? BASEMAPS.dark;
     if (tileRef.current) map.removeLayer(tileRef.current);
-    tileRef.current = L.tileLayer(bm.url, {
+    const layer = L.tileLayer(bm.url, {
       attribution: bm.attribution,
       subdomains: bm.subdomains ?? 'abc',
       maxZoom: bm.maxZoom,
       maxNativeZoom: bm.maxNativeZoom ?? bm.maxZoom,
-    }).addTo(map);
+    });
+    /*
+     * Fremde Kachelserver können ausfallen – und eine Karte ohne Kacheln sieht
+     * aus wie ein Fehler der App. Kommt von einem Stil gar nichts an, während
+     * es reihenweise Fehler hagelt, sagen wir Bescheid; die Ansicht fällt dann
+     * auf die Karte zurück, die sicher da ist.
+     */
+    let failures = 0;
+    let delivered = false;
+    layer.on('tileload', () => {
+      delivered = true;
+    });
+    layer.on('tileerror', () => {
+      failures += 1;
+      if (delivered || failures < 6) return;
+      failures = -Infinity; // nur einmal melden
+      onTilesUnavailableRef.current?.(basemap);
+    });
+    layer.addTo(map);
+    tileRef.current = layer;
     tileRef.current.setZIndex(0);
     const c = map.getContainer();
     c.classList.toggle('bm-dark', !!bm.dark);
