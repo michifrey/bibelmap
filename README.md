@@ -107,7 +107,16 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Babylons), **die Rückkehr** (8 Stationen über fast hundert Jahre: Kyrus'
   Erlass, der Grundstein, bei dem man Jubel und Weinen nicht unterscheiden
   kann, Esras vier Monate ohne Eskorte und Nehemias zweiundfünfzig Tage),
-  die Flucht nach Ägypten, Jesu Wege in Galiläa und der Weg nach Jerusalem. **Abspielen** lässt
+  **die Flucht nach Ägypten** (7 Stationen: Lukas und Matthäus nebeneinander
+  auf einer Karte, vom Ja in Nazareth über die Turteltauben der Armen und die
+  Sterndeuter, die in der falschen Stadt fragen, bis zu dem Zwölfjährigen, den
+  die Eltern einen Tagesmarsch lang nicht vermissen), **Jesu Wege in Galiläa**
+  (13 Stationen im Umkreis von dreißig Kilometern um einen See: Taufe, Kana,
+  Nain, Kapernaum, der Sturm auf dem See, Magdala, Gennesaret, Betsaida – bis
+  zur Frage in Cäsarea Philippi) und **der Weg nach Jerusalem** (13 Stationen,
+  deren letzte sieben alle in Gehweite liegen: Betanien, Betfage, der Tempel,
+  Gethsemane fünfhundert Meter vor der Stadt, Golgatha, Emmaus, Ölberg).
+  **Abspielen** lässt
   die Route mitwachsen und einen Punkt die Etappen abgehen, während links die
   Station mit Bibelstelle und kurzem Text mitläuft (← / → blättern, Leertaste
   startet). Jede Station verlinkt auf ihre Ortskarte.
