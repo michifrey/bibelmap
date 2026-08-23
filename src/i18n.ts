@@ -113,7 +113,10 @@ const STRINGS: Dict = {
   treeSubtitle: { de: 'Von Adam & Eva bis in die Neuzeit', en: 'From Adam & Eve into the modern era' },
   expandAll: { de: 'Alle ausklappen', en: 'Expand all' },
   collapseAll: { de: 'Einklappen', en: 'Collapse' },
-  expandHint: { de: 'Auf ▸ tippen zum Aufklappen · auf eine Person für Infos', en: 'Tap ▸ to unfold · tap a person for details' },
+  expandHint: {
+    de: 'Auf ▸ tippen zum Aufklappen · auf eine Person für Infos · die Zahl am Knoten zählt die Zeitdokumente',
+    en: 'Tap ▸ to unfold · tap a person for details · the figure on a node counts its documents',
+  },
   born: { de: 'geb.', en: 'b.' },
   lived: { de: 'lebte', en: 'lived' },
   years: { de: 'Jahre', en: 'years' },
@@ -122,6 +125,15 @@ const STRINGS: Dict = {
   epoch: { de: 'Epoche', en: 'Epoch' },
   references: { de: 'Bibelstellen', en: 'Bible passages' },
   faithWitness: { de: 'Glaubenszeuge (Kirchengeschichte)', en: 'Faith witness (church history)' },
+  timeDocs: { de: 'Zeitdokumente', en: 'Documents of the time' },
+  timeDocsHint: {
+    de: 'Was außerhalb der Bibel von dieser Person erhalten ist – Inschriften, Chroniken, Akten, Briefe.',
+    en: 'What survives of this person outside the Bible – inscriptions, chronicles, records, letters.',
+  },
+  docNames: { de: 'nennt die Person', en: 'names the person' },
+  docContext: { de: 'nennt den Namen nicht', en: 'does not name them' },
+  articleSources: { de: 'Artikel & Quellen', en: 'Article & sources' },
+  onWikipedia: { de: 'Artikel bei Wikipedia', en: 'Article on Wikipedia' },
   bloodlineNote: {
     de: 'Die biblische Stammlinie endet bei Jesus Christus. Danach folgen keine Blutsverwandten, sondern bedeutende Glaubenszeugen der Kirchengeschichte (gestrichelte Linien).',
     en: 'The biblical bloodline ends with Jesus Christ. What follows are not blood relatives but key faith witnesses of church history (dashed lines).',

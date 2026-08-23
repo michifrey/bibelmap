@@ -10,9 +10,10 @@
     "preview": "vite preview",
     "data": "node scripts/build-data.mjs",
     "text": "node scripts/build-text.mjs",
-"names": "node scripts/build-names-de.mjs",
+    "names": "node scripts/build-names-de.mjs",
     "media": "node scripts/build-media.mjs",
-    "xrefs": "node scripts/build-xrefs.mjs"
+    "xrefs": "node scripts/build-xrefs.mjs",
+    "sources": "node scripts/check-sources.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

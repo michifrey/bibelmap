@@ -80,6 +80,19 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Calvin, Spurgeon, Bonhoeffer …). Verlauf von links nach rechts mit einer
   **Zeitschiene** unten; Knoten lassen sich aufklappen und zeigen per Klick
   Lebensdaten, Bibelstellen und eine Kurzbeschreibung. Umschalter **Karte ↔ Zeitbaum**.
+- **Zeitdokumente zu einer Person** – die Personenkarte zeigt, was außerhalb der
+  Bibel von diesem Menschen erhalten ist: das Sanherib-Prisma zu Hiskia
+  („wie einen Vogel im Käfig"), die Tel-Dan-Stele zum „Haus Davids", die
+  Rationentafeln Babylons für den gefangenen Jojachin, Tacitus und Josephus zu
+  Jesus, die Gallio-Inschrift, an der die Chronologie des Paulus hängt, das
+  Prozessprotokoll Justins, das Wormser Edikt gegen Luther, die Gestapo-Akte
+  Bonhoeffers. Je Dokument: Art (Inschrift · Chronik · Akte · Brief · Papyrus …),
+  Datierung, was dort über die Person steht, Fundort bzw. Museum, ein Bild und
+  der Weg in den Artikel. **57 Personen, 115 Dokumente.**
+  Zwei Dinge stehen ausdrücklich dabei, damit niemand mehr herausliest, als da
+  steht: ob ein Dokument die Person **nennt** oder nur ihre Welt zeigt, und – wo
+  es nichts gibt (Abraham, Mose, Salomo, Josef von Nazaret) – dass es nichts
+  gibt. Bilder antiker Gestalten sind spätere Kunst; auch das steht an der Karte.
 
 ### Lernen & weitergeben
 
@@ -166,6 +179,30 @@ OPEN_BIBLES=/tmp/open-bibles npm run text
 
 **Ortsbilder:** Orte ohne OpenBible-Foto, die eine Wikidata-ID haben, laden ihr Bild
 zur Laufzeit aus Wikidata (P18) → Wikimedia Commons nach (`src/lib/wikidataImage.ts`).
+
+### Zeitdokumente, Bilder und Artikel zu Personen
+
+`src/data/personSources.ts` sammelt zu den Personen des Zeitbaums, was außerhalb
+der Bibel von ihnen erhalten ist. Pro Dokument stehen Art, Datierung, Aussage,
+Aufbewahrungsort und ein Suchbegriff im Datensatz – **keine Bilder und keine
+Artikeltexte**. Beides holt `src/lib/wikipediaArticle.ts` zur Laufzeit über die
+MediaWiki-API (Einleitungsabsatz + Vorschaubild von Wikimedia Commons, gecacht
+im `sessionStorage`). Das Repository bleibt dadurch frei von Bilddateien und
+Lizenzfragen; ohne Netz fällt die Karte still auf reinen Text zurück.
+
+Der Suchbegriff wird zuerst als exakter Titel aufgelöst (mit Weiterleitungen)
+und erst dann als Suche – ein leicht danebenliegender Begriff landet also
+trotzdem im richtigen Artikel. Links gehen bewusst über die Wikipedia-Suche
+(`/w/index.php?search=`), damit sie auch bei umbenannten Artikeln greifen.
+
+```bash
+npm run sources   # prüft alle Person-IDs gegen den Zeitbaum und zählt die Sammlung
+```
+
+Neue Einträge tragen die Regeln der Datei mit: `named: true` heißt, das Dokument
+nennt die Person (oder ihr Haus) ausdrücklich; `named: false` heißt, es ist ein
+Zeitdokument ihrer Welt. Wo es zu einer Person nichts gibt, sagt das eine
+`noteDe`/`noteEn`-Zeile, statt die Lücke zu füllen.
 
 ### Deutsche Ortsnamen
 
