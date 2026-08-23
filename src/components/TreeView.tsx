@@ -20,7 +20,8 @@ import {
 import PersonDetail from './PersonDetail';
 
 const PAD_X = 28;
-const PAD_TOP = 196;
+/** Untergrenze für den Abstand nach oben – gemessen wird die Werkzeugleiste. */
+const PAD_TOP_MIN = 196;
 const RULER_H = 52;
 
 interface Props {
@@ -78,6 +79,28 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
 
   const layout = useMemo(() => computeLayout(expanded), [expanded]);
 
+  /*
+   * Die Werkzeugleiste schwebt über der Fläche, und wie hoch sie ist, hängt
+   * von der Breite ab: auf dem Telefon bricht sie in fünf Zeilen um. Eine feste
+   * Zahl traf sie nie – die erste Reihe lag darunter, und beim Start stand
+   * Adam hinter der Leiste statt darunter. Also wird sie gemessen.
+   */
+  const chromeRef = useRef<HTMLDivElement>(null);
+  const [padTop, setPadTop] = useState(PAD_TOP_MIN);
+  useEffect(() => {
+    const el = chromeRef.current;
+    if (!el) return;
+    const sync = () => setPadTop(Math.max(PAD_TOP_MIN, Math.round(el.getBoundingClientRect().bottom) + 20));
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    window.addEventListener('resize', sync);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', sync);
+    };
+  }, []);
+
   // keep the custom horizontal scrollbar in sync with the tree's scroll state
   useEffect(() => {
     const el = scrollRef.current;
@@ -132,7 +155,11 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
     const root = layout.nodes.find((n) => !n.person.parent);
     if (!root) return;
     const el = scrollRef.current;
-    el.scrollTop = Math.max(0, root.y + PAD_TOP + CARD_H / 2 - el.clientHeight / 2);
+    // Direkt gemessen statt aus dem Zustand: dieser Lauf ist derselbe wie der,
+    // in dem die Messung erst gesetzt wird – der Zustand trägt hier noch den
+    // Anfangswert.
+    const pad = Math.max(PAD_TOP_MIN, Math.round(chromeRef.current?.getBoundingClientRect().bottom ?? 0) + 20);
+    el.scrollTop = Math.max(0, root.y + pad + CARD_H / 2 - el.clientHeight / 2);
     didCenter.current = true;
   }, [layout]);
 
@@ -159,7 +186,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
     if (!node || !el) return;
     el.scrollTo({
       left: Math.max(0, node.x + PAD_X + CARD_W / 2 - el.clientWidth / 2),
-      top: Math.max(0, node.y + PAD_TOP + CARD_H / 2 - el.clientHeight / 2),
+      top: Math.max(0, node.y + padTop + CARD_H / 2 - el.clientHeight / 2),
       behavior: 'smooth',
     });
     scrolledFocus.current = focusId;
@@ -189,7 +216,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
     if (!node) return;
     el.scrollTo({
       left: Math.max(0, node.x + PAD_X + CARD_W / 2 - el.clientWidth / 2),
-      top: Math.max(0, node.y + PAD_TOP + CARD_H / 2 - el.clientHeight / 2),
+      top: Math.max(0, node.y + padTop + CARD_H / 2 - el.clientHeight / 2),
       behavior: 'smooth',
     });
     scrolledMatch.current = key;
@@ -206,7 +233,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
 
   const selected = selectedId ? PERSON_BY_ID[selectedId] : null;
   const innerW = layout.width + PAD_X * 2;
-  const innerH = layout.height + PAD_TOP + RULER_H + 24;
+  const innerH = layout.height + padTop + RULER_H + 24;
 
   return (
     <div className="relative h-full w-full bg-deepest">
@@ -216,7 +243,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
           {/* tree layer (links + cards) */}
           <div
             className="relative"
-            style={{ width: layout.width, height: layout.height, marginLeft: PAD_X, marginTop: PAD_TOP }}
+            style={{ width: layout.width, height: layout.height, marginLeft: PAD_X, marginTop: padTop }}
           >
             <svg
               aria-hidden="true"
@@ -299,8 +326,14 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
                         e.stopPropagation();
                         toggle(p.id);
                       }}
-                      aria-label={isOpen ? t('collapseAll') : t('expandAll')}
-                      className={`absolute -right-2.5 top-1/2 z-10 grid h-5 w-5 -translate-y-1/2 place-items-center rounded-full text-[11px] font-bold text-white ring-2 ring-deepest transition ${ isOpen ? 'bg-signal' : 'bg-signal' }`}
+                      /*
+                       * Der Name des Knotens, nicht „Alle ausklappen“: es gibt
+                       * 400 dieser Knöpfe, und ein Vorlesegerät las sie alle
+                       * gleich vor. `aria-expanded` sagt dazu, wie er steht.
+                       */
+                      aria-label={lang === 'de' ? p.de : p.en}
+                      aria-expanded={isOpen}
+                      className="absolute -right-2.5 top-1/2 z-10 grid h-5 w-5 -translate-y-1/2 place-items-center rounded-full bg-signal text-[11px] font-bold text-white ring-2 ring-deepest transition"
                       style={{ background: isOpen ? undefined : epoch?.color }}
                     >
                       {isOpen ? '−' : '+'}
@@ -354,36 +387,35 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
         <div
           ref={trackRef}
           onPointerDown={onTrackDown}
-          className="absolute z-[1090] h-2.5 rounded-full bg-white/10 ring-1 ring-white/10"
+          className="absolute z-[1090] h-2.5 rounded-full bg-abyss/80 ring-1 ring-white/10"
           style={{ left: 14, right: 14, bottom: RULER_H + 6 }}
         >
+          {/* Griff und Schiene trugen dieselbe Farbe – man sah nicht, wo man
+              greifen kann, und beim Ziehen änderte sich nichts. */}
           <div
             onPointerDown={onThumbDown}
             onPointerMove={onThumbMove}
             onPointerUp={onThumbUp}
-            className="absolute top-0 h-full min-w-[28px] cursor-grab touch-none rounded-full bg-white/10 transition-colors hover:bg-white/10 active:cursor-grabbing active:bg-white/10"
+            className="absolute top-0 h-full min-w-[28px] cursor-grab touch-none rounded-full bg-white/35 transition-colors hover:bg-white/55 active:cursor-grabbing active:bg-gold"
             style={{ left: `${hbar.left * 100}%`, width: `${hbar.width * 100}%` }}
           />
         </div>
       )}
 
       {/* ---- header / toolbar ---- */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex flex-col gap-2 p-3 pt-20 sm:p-4 sm:pt-24">
-        <div className="pointer-events-auto flex flex-wrap items-center gap-2 self-start bg-deepest/95 px-3 py-2 ring-1 ring-white/10 backdrop-blur">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex flex-col p-3 pt-36 sm:p-4 sm:pt-24">
+        {/* Ein Kasten, nicht zwei: Werkzeuge und Hinweis standen als getrennte
+            Tafeln übereinander in derselben Ecke. */}
+        <div ref={chromeRef} className="pointer-events-auto self-start bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
+        <div className="flex flex-wrap items-center gap-2 px-3 py-2">
           <div className="pr-1">
             <div className="font-display text-base font-semibold leading-tight text-white">{t('treeTitle')}</div>
             <div className="text-[11px] text-white/60">{t('treeSubtitle')}</div>
           </div>
-          <button
-            onClick={() => setExpanded(new Set(ALL_PARENT_IDS))}
-            className="bg-signal px-2.5 py-1.5 text-xs font-medium text-white transition hover:bg-signal"
-          >
+          <button onClick={() => setExpanded(new Set(ALL_PARENT_IDS))} className="bm-btn bm-btn-signal">
             {t('expandAll')}
           </button>
-          <button
-            onClick={() => setExpanded(new Set(LINE_IDS))}
-            className="bg-surface px-2.5 py-1.5 text-xs font-medium text-white/60 transition hover:bg-deepest"
-          >
+          <button onClick={() => setExpanded(new Set(LINE_IDS))} className="bm-btn bm-btn-ghost">
             {t('collapseAll')}
           </button>
 
@@ -410,12 +442,17 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
             )}
           </div>
 
-          {/* filter: epoch */}
+          {/*
+            Der Epochenfilter steht doppelt: rechts als farbige Liste, hier als
+            Auswahlfeld. Die Liste ist die bessere Fassung – sie zeigt die
+            Farben, nach denen die Karten gestreift sind –, aber sie erscheint
+            erst ab lg. Also hier nur darunter.
+          */}
           <select
             value={epochFilter ?? ''}
             onChange={(e) => setEpochFilter(e.target.value || null)}
-            className="border border-white/10 bg-deepest px-2 py-1.5 text-xs text-white outline-none focus:border-gold"
-            title={t('filterEpoch')}
+            className="bm-select py-1.5 text-xs lg:hidden"
+            aria-label={t('filterEpoch')}
           >
             <option value="">{t('allEpochs')}</option>
             {GEN_EPOCHS.map((e) => (
@@ -426,26 +463,23 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
           </select>
 
           {matchSet && (
-            <span className="rounded-full bg-gold/25 px-2 py-0.5 text-[11px] font-medium text-white">
-              {matchSet.size} {t('results')}
+            <span className="bm-chip">
+              <span className="bm-num text-gold">{matchSet.size}</span> {t('results')}
             </span>
           )}
         </div>
-        <div className="pointer-events-none self-start bg-deepest/95 px-2.5 py-1 text-[11px] text-white/60 ring-1 ring-white/10 backdrop-blur">
+        <div className="max-w-[42rem] border-t border-white/10 px-3 py-1.5 text-[11px] leading-snug text-white/60">
           {t('expandHint')}
+          {/* Warum manche Linien gestrichelt sind, gehört zu den Linien – nicht
+              als Kasten in die Mitte der leeren Fläche, wo es vorher schwebte. */}
+          <span className="hidden sm:inline"> · {t('bloodlineNote')}</span>
         </div>
-      </div>
-
-      {/* ---- bloodline → faith note ---- */}
-      <div className="pointer-events-none absolute bottom-24 left-1/2 z-[1100] hidden -translate-x-1/2 sm:block">
-        <div className="pointer-events-auto max-w-xl bg-white/10 px-3.5 py-2 text-center text-[11px] leading-snug text-white/75 ring-1 ring-white/10">
-          {t('bloodlineNote')}
         </div>
       </div>
 
       {/* ---- person detail panel ---- */}
       {selected && (
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-36 sm:p-4 sm:pt-24">
           <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
             <PersonDetail
               person={selected}
@@ -461,7 +495,7 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
       {/* ---- legend ---- */}
       <div className="pointer-events-none absolute right-3 top-20 z-[1090] hidden lg:block sm:top-24">
         <div className="pointer-events-auto max-w-[12rem] bg-deepest/95 p-2.5 ring-1 ring-white/10 backdrop-blur">
-          <div className="mb-1 text-[10px] font-semibold uppercase tracking-wide text-white/60">{t('epoch')}</div>
+          <div className="bm-eyebrow bm-eyebrow-dim mb-1.5">{t('epoch')}</div>
           <div className="flex flex-col gap-0.5">
             {GEN_EPOCHS.map((e) => {
               const active = epochFilter === e.id;
@@ -476,6 +510,15 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
                 </button>
               );
             })}
+          </div>
+
+          {/* Die gestrichelte Linie ist eine eigene Zeichenerklärung – sie
+              gehört zur Legende, nicht in einen schwebenden Kasten. */}
+          <div className="mt-2 flex items-center gap-1.5 border-t border-white/10 pt-2 text-[10px] text-white/60">
+            <svg aria-hidden="true" viewBox="0 0 16 4" className="h-1 w-4 flex-none">
+              <path d="M0 2h16" stroke="currentColor" strokeWidth="2" strokeDasharray="4 4" />
+            </svg>
+            <span>{t('faithLine')}</span>
           </div>
         </div>
       </div>

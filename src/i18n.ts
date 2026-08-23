@@ -224,6 +224,7 @@ const STRINGS: Dict = {
     de: 'Die biblische Stammlinie endet bei Jesus Christus. Danach folgen keine Blutsverwandten, sondern bedeutende Glaubenszeugen der Kirchengeschichte (gestrichelte Linien).',
     en: 'The biblical bloodline ends with Jesus Christ. What follows are not blood relatives but key faith witnesses of church history (dashed lines).',
   },
+  faithLine: { de: 'Glaubenszeugen, keine Blutsverwandten', en: 'Faith witnesses, not blood relatives' },
   showOnMap: { de: 'Auf Karte zeigen', en: 'Show on map' },
   openInTree: { de: 'Im Zeitbaum öffnen', en: 'Open in time tree' },
   // Stammbäume / Völkertafel (nations & tribes overview)
