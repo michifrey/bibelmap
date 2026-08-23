@@ -21,6 +21,8 @@ interface Props {
   basemap?: BasemapId;
   /** Der gewählte Kachelserver liefert nichts – die Ansicht soll zurückfallen. */
   onTilesUnavailable?: (id: BasemapId) => void;
+  /** Derselbe Server liefert wieder – die Meldung darf weg. */
+  onTilesRecovered?: (id: BasemapId) => void;
   /** Fit the map to exactly these places (presentation mode). */
   fitPlaces?: Place[] | null;
   /** Fly to a single coordinate (search focus). */
@@ -147,6 +149,7 @@ export default function MapView({
   onSelect,
   basemap = 'light',
   onTilesUnavailable,
+  onTilesRecovered,
   fitPlaces,
   flyTo,
   borderYear = null,
@@ -163,6 +166,8 @@ export default function MapView({
   onSelectRef.current = onSelect;
   const onTilesUnavailableRef = useRef(onTilesUnavailable);
   onTilesUnavailableRef.current = onTilesUnavailable;
+  const onTilesRecoveredRef = useRef(onTilesRecovered);
+  onTilesRecoveredRef.current = onTilesRecovered;
   const placesRef = useRef(places);
   placesRef.current = places;
   const langRef = useRef(lang);
@@ -223,24 +228,37 @@ export default function MapView({
      * Fremde Kachelserver können ausfallen – und eine Karte ohne Kacheln sieht
      * aus wie ein Fehler der App. Kommt von einem Stil gar nichts an, während
      * es reihenweise Fehler hagelt, sagen wir Bescheid; die Ansicht fällt dann
-     * auf die Karte zurück, die sicher da ist.
+     * auf die Karte zurück, die sicher da ist. Kommt später doch etwas an –
+     * das Netz war nur kurz weg –, nehmen wir die Meldung zurück, statt einen
+     * Hinweis über einer funktionierenden Karte stehen zu lassen.
      */
     let failures = 0;
-    let delivered = false;
-    layer.on('tileload', () => {
-      delivered = true;
-    });
-    layer.on('tileerror', () => {
+    let reported = false;
+    const onLoad = () => {
+      failures = 0;
+      if (!reported) return;
+      reported = false;
+      onTilesRecoveredRef.current?.(basemap);
+    };
+    const onError = () => {
       failures += 1;
-      if (delivered || failures < 6) return;
-      failures = -Infinity; // nur einmal melden
+      if (reported || failures < 6) return;
+      reported = true;
       onTilesUnavailableRef.current?.(basemap);
-    });
+    };
+    layer.on('tileload', onLoad);
+    layer.on('tileerror', onError);
     layer.addTo(map);
     tileRef.current = layer;
     tileRef.current.setZIndex(0);
     const c = map.getContainer();
     c.classList.toggle('bm-dark', !!bm.dark);
+    // Ohne Abmelden feuern die noch laufenden Kachelabrufe einer längst
+    // abgelegten Ebene weiter – und melden einen Stil, den niemand mehr sieht.
+    return () => {
+      layer.off('tileload', onLoad);
+      layer.off('tileerror', onError);
+    };
   }, [basemap]);
 
   // (re)build markers / heat when data or mode changes

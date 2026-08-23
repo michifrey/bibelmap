@@ -154,11 +154,18 @@ export default function App() {
    * Fläche für einen Fehler der App hält.
    */
   function handleTilesUnavailable(id: BasemapId) {
+    // Wer den Stil längst gewechselt hat, braucht die Nachricht nicht mehr.
+    if (basemap !== id) return;
     // Fällt die Nachtkarte selbst aus, ist nicht ein Anbieter stumm, sondern
     // das Netz – dann gibt es nichts, worauf man ausweichen könnte.
     const fellBack = id !== 'dark';
-    if (fellBack) setBasemap((current) => (current === id ? 'dark' : current));
+    if (fellBack) setBasemap('dark');
     setTileNotice({ id, fellBack });
+  }
+
+  /** Der Server ist zurück – der Hinweis darf gehen. */
+  function handleTilesRecovered(id: BasemapId) {
+    setTileNotice((notice) => (notice?.id === id ? null : notice));
   }
 
   function handleBasemap(id: BasemapId) {
@@ -542,6 +549,7 @@ export default function App() {
               onSelect={select}
               basemap={basemap}
               onTilesUnavailable={handleTilesUnavailable}
+              onTilesRecovered={handleTilesRecovered}
               newIds={newIds}
               flyTo={flyTo}
               borderYear={borderYear}

@@ -167,10 +167,14 @@ export default function PersonSources({ personId, lang }: { personId: string; la
 
   return (
     <>
-      {docs.length > 0 && (
+      {/* Auch ohne ein einziges Dokument gehört der Abschnitt hierher: dass zu
+          einem Menschen nichts erhalten ist, ist die Auskunft, für die die
+          Notiz geschrieben wurde. */}
+      {(docs.length > 0 || note) && (
         <section className="mt-5">
           <div className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-white/60">
-            {t('timeDocs')} <span className="text-white/35">· {docs.length}</span>
+            {t('timeDocs')}
+            {docs.length > 0 && <span className="text-white/35"> · {docs.length}</span>}
           </div>
           <p className="text-[11px] leading-snug text-white/45">{t('timeDocsHint')}</p>
           {note && (

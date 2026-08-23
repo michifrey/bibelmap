@@ -25,8 +25,15 @@ export interface WikiArticle {
   fileUrl: string | null;
 }
 
-const mem = new Map<string, WikiArticle | null>();
+const mem = new Map<string, WikiArticle>();
 const inflight = new Map<string, Promise<WikiArticle | null>>();
+/**
+ * Fehlschläge werden nur kurz gemerkt, nicht für die ganze Sitzung: ein
+ * Aussetzer des Netzes soll ein Bild nicht bis zum nächsten Tab-Öffnen
+ * verschwinden lassen. Treffer dagegen halten – die ändern sich nicht.
+ */
+const misses = new Map<string, number>();
+const MISS_TTL = 60_000;
 
 function api(lang: Lang, params: Record<string, string>): string {
   const host = lang === 'de' ? 'de.wikipedia.org' : 'en.wikipedia.org';
@@ -107,9 +114,12 @@ async function load(term: string, lang: Lang): Promise<WikiArticle | null> {
 }
 
 /** Resolve a search term to its Wikipedia article, cached per session. */
-export function fetchArticle(term: string, lang: Lang): Promise<WikiArticle | null> {
+export function fetchArticle(term: string, lang: Lang, now = Date.now()): Promise<WikiArticle | null> {
   const key = `${lang}:${term}`;
-  if (mem.has(key)) return Promise.resolve(mem.get(key)!);
+  const hit = mem.get(key);
+  if (hit) return Promise.resolve(hit);
+  const missedAt = misses.get(key);
+  if (missedAt !== undefined && now - missedAt < MISS_TTL) return Promise.resolve(null);
   const running = inflight.get(key);
   if (running) return running;
 
@@ -117,7 +127,7 @@ export function fetchArticle(term: string, lang: Lang): Promise<WikiArticle | nu
   try {
     const cached = sessionStorage.getItem(sk);
     if (cached) {
-      const v = JSON.parse(cached) as WikiArticle | null;
+      const v = JSON.parse(cached) as WikiArticle;
       mem.set(key, v);
       return Promise.resolve(v);
     }
@@ -126,8 +136,12 @@ export function fetchArticle(term: string, lang: Lang): Promise<WikiArticle | nu
   }
 
   const task = load(term, lang).then((v) => {
-    mem.set(key, v);
     inflight.delete(key);
+    if (!v) {
+      misses.set(key, Date.now());
+      return null;
+    }
+    mem.set(key, v);
     try {
       sessionStorage.setItem(sk, JSON.stringify(v));
     } catch {

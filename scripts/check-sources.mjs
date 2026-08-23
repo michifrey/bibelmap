@@ -7,9 +7,15 @@ import { readFileSync } from 'node:fs';
 const gen = readFileSync(new URL('../src/data/genealogy.ts', import.meta.url), 'utf8');
 const src = readFileSync(new URL('../src/data/personSources.ts', import.meta.url), 'utf8');
 
-const personIds = new Set([...gen.matchAll(/\bid: '([a-z0-9_]+)'/g)].map((m) => m[1]));
+// Nur die Einträge aus GENEALOGY: davor stehen die Epochen, die ebenfalls ein
+// `id:` tragen – zählte man sie mit, ginge ein Eintrag namens „exil" als
+// gültige Person durch.
+const persons = gen.slice(gen.indexOf('export const GENEALOGY'));
+const personIds = new Set([...persons.matchAll(/\bid: '([a-z0-9_]+)'/g)].map((m) => m[1]));
 const body = src.slice(src.indexOf('PERSON_SOURCES: Record'));
-const keys = [...body.matchAll(/^ {2}([a-z0-9_]+): \{$/gm)].map((m) => m[1]);
+// Tolerant gegenüber der Schreibweise: `foo: {` in einer Zeile wie über
+// mehrere. Ein Eintrag, den die Prüfung nicht sieht, ist eine ungeprüfte ID.
+const keys = [...body.matchAll(/^ {2}([a-z0-9_]+):\s*\{/gm)].map((m) => m[1]);
 
 const unknown = keys.filter((k) => !personIds.has(k));
 const docs = [...body.matchAll(/kind: '([a-z]+)'/g)].map((m) => m[1]);
