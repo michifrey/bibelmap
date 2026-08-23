@@ -648,7 +648,27 @@ Bibelatlas. Die Suche beantwortet „wo ist X?" – nicht „welche Orte gibt es
       Jerusalem steht in 37 Büchern. Das sagt der Hinweis unter dem Register.
 - [x] 57 Orte ohne Erwähnung stehen mit dabei, und es steht dabei, warum.
 
-### 4.37 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.37 Der Graph mit der Tastatur — P1 ✅
+
+**Gemessen vorher:** Die Suche im Graphen rückte den ersten Treffer in die
+Mitte und hob ihn hervor. Öffnen ließ er sich nur durch einen Klick auf den
+Punkt der Leinwand. „Jerusalem" tippen und Enter drücken blieb folgenlos, eine
+Trefferliste gab es nicht – ohne Maus war der Graph eine Sackgasse. Die
+Leinwand trug zudem kein `aria-label`.
+
+**Akzeptanzkriterien**
+- [x] Treffer stehen als Knöpfe unter dem Suchfeld, bis zu zwölf, mit der Art
+      des Knotens daneben.
+- [x] Nur mit der Tastatur nachgeprüft: drei Tabulatorschritte zum Suchfeld,
+      „Jerusalem" tippen, weiter zum Treffer, Enter – die Ortskarte steht offen.
+- [x] „Abraham" liefert die Person und die Stellen dazu.
+- [x] Die Leinwand trägt `role="img"` und einen Namen, der sagt, was sie zeigt
+      und wo die Bedienung liegt.
+- [x] Die A11y-Prüfung meldet künftig namenlose Leinwände. Sie standen nur im
+      Durchgang für fremdsprachige Namen – eine ganz ohne Namen fiel durch.
+      Gegenprobe: mit Namen keine Meldung, ohne Namen `canvas`.
+
+### 4.38 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
