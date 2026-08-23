@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
+import { attr, ROUTEN_ATTR } from '../lib/mapAttribution';
 import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions, useReducedMotion } from '../lib/motion';
@@ -85,8 +86,6 @@ export default function RouteMap({
     if (!el.current || mapRef.current) return;
     const map = L.map(el.current, { center: [31.8, 35.2], zoom: 7, minZoom: 2, maxZoom: 13, worldCopyJump: true });
     const kacheln = L.tileLayer(TILES, {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY) · Routen: schematisch',
       subdomains: 'abcd',
     }).addTo(map);
     tileWatchRef.current = watchTiles(kacheln, map, lang);
@@ -109,7 +108,7 @@ export default function RouteMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang);
+    return localizeMap(map, lang, attr(ROUTEN_ATTR, lang));
   }, [lang]);
 
   /** Strecke, Punkte und Reisender neu aufbauen (andere Reise gewählt). */

@@ -76,7 +76,13 @@ export default function PlaceMedia({ place }: { place: Place }) {
                       )}
                     </svg>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-[12.5px] leading-snug text-white group-hover:text-white">
+                      {/* Der Titel gehört der Quelle, nicht uns: eine deutsche
+                          Folge heißt auch in der englischen Oberfläche deutsch.
+                          `lang` sagt das dem Browser und dem Screenreader. */}
+                      <span
+                        lang={source.lang}
+                        className="block text-[12.5px] leading-snug text-white group-hover:text-white"
+                      >
                         {ep.title}
                       </span>
                       <span className="mt-0.5 block text-[10.5px] text-white/60">

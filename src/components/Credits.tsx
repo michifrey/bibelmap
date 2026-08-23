@@ -6,6 +6,7 @@ import {
   CREDIT_GROUPS,
   LICENSE_URL,
   REPO_URL,
+  inSprache,
   type CreditEntry,
 } from '../data/attribution';
 import { licenseInfo } from '../lib/imageCredit';
@@ -85,7 +86,7 @@ function CreditCard({ entry, lang }: { entry: CreditEntry; lang: Lang }) {
         {entry.name}
       </div>
       {entry.by && (
-        <div className="mt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-ink-soft">{entry.by}</div>
+        <div className="mt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-ink-soft">{inSprache(entry.by, lang)}</div>
       )}
 
       <p className="mt-3 text-[12.5px] font-medium leading-[1.7] text-[#5c6b69]">{pick(entry.use)}</p>
@@ -96,7 +97,7 @@ function CreditCard({ entry, lang }: { entry: CreditEntry; lang: Lang }) {
             {t('creditsLine')}
           </div>
           <p className="mt-1 border-l-2 border-[#d8d2c4] pl-2.5 text-[12px] font-semibold leading-[1.6] text-ink">
-            {entry.attribution}
+            {inSprache(entry.attribution, lang)}
           </p>
         </div>
       )}

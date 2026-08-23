@@ -470,6 +470,7 @@ export default function MediaMode({
                       href={ep.url}
                       target="_blank"
                       rel="noreferrer"
+                      lang={sourceById.get(ep.src)?.lang}
                       className="mt-1 block text-[15px] font-semibold leading-snug text-white hover:text-gold"
                     >
                       {ep.title}

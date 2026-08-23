@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
+import { attr, KIRCHE_ATTR } from '../lib/mapAttribution';
 import { markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import type { Lang } from '../i18n';
@@ -57,7 +58,6 @@ export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenIn
     if (!mapEl.current || mapRef.current) return;
     const map = L.map(mapEl.current, { center: [38, 26], zoom: 5, minZoom: 3, maxZoom: 12, worldCopyJump: true });
     const kacheln = L.tileLayer(CARTO, {
-      attribution: '&copy; OpenStreetMap &copy; CARTO · Orte der Kirchenväter & Konzilien: schematisch',
       subdomains: 'abcd',
     }).addTo(map);
     tileWatchRef.current = watchTiles(kacheln, map, lang);
@@ -76,7 +76,7 @@ export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenIn
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang);
+    return localizeMap(map, lang, attr(KIRCHE_ATTR, lang));
   }, [lang]);
 
   // redraw overlay on tab / selection change

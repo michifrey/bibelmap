@@ -14,7 +14,24 @@ import { refreshTileNotices } from './tileNotice';
  * Diese eine Stelle setzt die Namen für alle sechs Leaflet-Karten. Die
  * Rückgabe hängt die Zuhörer wieder ab.
  */
-export function localizeMap(map: L.Map, lang: Lang): () => void {
+/**
+ * Welche Attribution zuletzt an welcher Karte hing. Leaflet kann eine Zeile nur
+ * entfernen, wenn man sie im Wortlaut kennt – also merken wir sie uns, statt in
+ * die Innereien des Controls zu greifen.
+ */
+const ZULETZT = new WeakMap<L.Map, string>();
+
+export function localizeMap(map: L.Map, lang: Lang, attribution?: string): () => void {
+  // Die Zeile unter der Karte gehört zu ihren Beschriftungen: sie stand fest
+  // auf Deutsch und blieb es auch, wenn jemand auf Englisch umschaltete.
+  if (attribution !== undefined) {
+    const alt = ZULETZT.get(map);
+    if (alt && alt !== attribution) map.attributionControl?.removeAttribution(alt);
+    if (alt !== attribution) {
+      map.attributionControl?.addAttribution(attribution);
+      ZULETZT.set(map, attribution);
+    }
+  }
   const apply = () => {
     const c = map.getContainer();
     for (const [sel, key] of [

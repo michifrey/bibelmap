@@ -13,7 +13,7 @@ export interface SupportProject {
   id: string;
   name: string;
   /** the people behind it, as they name themselves */
-  by: string | null;
+  by: string | { de: string; en: string } | null;
   kind: SupportKind;
   /** what this project contributes to Bibelmap */
   role: { de: string; en: string };
@@ -176,7 +176,7 @@ export const SUPPORT_PROJECTS: SupportProject[] = [
   {
     id: 'wikimedia',
     name: 'Wikimedia Commons & Wikidata',
-    by: 'Wikimedia Foundation und Freiwillige',
+    by: { de: 'Wikimedia Foundation und Freiwillige', en: 'Wikimedia Foundation and volunteers' },
     kind: 'data',
     role: {
       de: 'Die Fotos auf den Ortskarten und die Verknüpfung der Orte mit Wikidata-Einträgen.',
@@ -192,7 +192,7 @@ export const SUPPORT_PROJECTS: SupportProject[] = [
   {
     id: 'osm',
     name: 'OpenStreetMap',
-    by: 'OpenStreetMap Foundation und Mitwirkende',
+    by: { de: 'OpenStreetMap Foundation und Mitwirkende', en: 'OpenStreetMap Foundation and contributors' },
     kind: 'data',
     role: {
       de: 'Die Landkarte selbst – Küsten, Flüsse, Städte und Straßen, auf denen die biblischen Orte liegen. Die Kacheln in dieser Darstellung liefert CARTO.',
