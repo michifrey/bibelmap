@@ -25,7 +25,9 @@ interface Props {
 
 type Tab = 'fathers' | 'councils';
 
-const CARTO = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+// The dark basemap, like every other map in the app. A light map inside this
+// dark shell read as two designs stacked on each other.
+const CARTO = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 
 export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenInTree, onOpenMission }: Props) {
   const t = useT();
@@ -79,8 +81,10 @@ export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenIn
         extend([f.lat, f.lon]);
         L.circleMarker([f.lat, f.lon], {
           radius: active ? 9 : 6,
-          color: active ? '#1f3d3a' : '#fff',
-          weight: active ? 3 : 1.5,
+          // Gold marks the one selected thing; on dark ground the old near-black
+          // ring for the active marker was invisible.
+          color: active ? '#e0a449' : 'rgba(255,255,255,.8)',
+          weight: active ? 3.5 : 1.5,
           fillColor: TRADITION_COLOR[f.tradition],
           fillOpacity: 0.95,
         })
@@ -94,8 +98,9 @@ export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenIn
         extend([c.lat, c.lon]);
         L.circleMarker([c.lat, c.lon], {
           radius: active ? 10 : 7,
-          color: active ? '#1f3d3a' : '#fff',
-          weight: active ? 3 : 1.5,
+          // These are gold-filled, so the active ring is white instead.
+          color: active ? '#ffffff' : 'rgba(255,255,255,.5)',
+          weight: active ? 3.5 : 1.5,
           fillColor: '#e0a449',
           fillOpacity: 1,
         })

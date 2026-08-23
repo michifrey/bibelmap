@@ -329,6 +329,12 @@ export default function MapView({
     clusterRef.current = cluster;
   }, [places, heat, selectedId, newIds]);
 
+  // A popup from an earlier marker has nothing to do with the place that is
+  // now selected — and the rail is the surface that answers for it.
+  useEffect(() => {
+    if (selectedId) mapRef.current?.closePopup();
+  }, [selectedId]);
+
   // empire overlay for the selected year
   useEffect(() => {
     const map = mapRef.current;
@@ -421,12 +427,15 @@ export default function MapView({
     const map = mapRef.current;
     if (!map || !flyTo) return;
     map.flyTo([flyTo.lat, flyTo.lon], flyTo.zoom ?? 9, flyOptions({ duration: 0.8 }));
-    // open the cluster spiderfy / highlight after the fly
+    // Spiderfy the cluster so the marker is actually visible — but do not open
+    // its popup. The place is already open in the detail rail; showing the same
+    // name, image, eras and passages a second time on top of the map was the
+    // one place where two surfaces answered the same question at once.
     const id = selectedId;
     const t = window.setTimeout(() => {
       const m = id ? markerById.current.get(id) : null;
       const cluster = clusterRef.current;
-      if (m && cluster) cluster.zoomToShowLayer(m, () => m.openPopup?.());
+      if (m && cluster) cluster.zoomToShowLayer(m, () => {});
     }, 850);
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
