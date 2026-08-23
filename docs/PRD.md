@@ -315,7 +315,20 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [x] Ehrlich bleiben: eine genannte Bibelstelle ist nicht zwingend das Thema
       der Folge – der Hinweis steht unter der Liste, nicht im Kleingedruckten.
 
-### 4.20 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.20 Bildnachweis vollständig — P1 ✅
+
+- [x] Jedes Bild nennt **Urheber und Lizenz** – in der Ortskarte wie im
+      Kartenfenster. Die Lizenz verlinkt auf ihren Text, der Urheber auf die
+      Dateiseite; ein Titel sagt in der jeweiligen Sprache, was sie verlangt.
+- [x] Die 386 Orte ohne eigenes Bild holen Urheber und Lizenz beim
+      Laufzeit-Rückfall über die Commons-API (`extmetadata`) nach – bisher stand
+      dort nur „Wikimedia Commons" und gar keine Lizenz.
+- [x] Der Urheber kommt von Commons als HTML; er wird als **Text** gelesen, nie
+      eingesetzt.
+- [x] Unbekannte Kürzel werden weder verschwiegen noch geraten: sie stehen so
+      da, wie sie in den Daten stehen, mit Verweis auf die Dateiseite.
+
+### 4.21 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
@@ -374,6 +387,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v0.3** | Suche über Referenzen (4.3/4.15), State in URL (4.15), reduzierte Bewegung + Escape | ✅ erledigt |
 | **v0.4** | Reisen & Geschichten (4.12), Mission & Ausbreitung (4.13), Bibelquiz (4.14), Offline (4.16), Handout (4.17), Nachbarorte (4.18), Code-Splitting | ✅ erledigt |
 | **v0.5** | Hören & Sehen als eigener Modus (4.19) mit Verknüpfung in beide Richtungen | ✅ erledigt |
+| **v0.6** | Bildnachweis mit Lizenz (4.20) | ✅ erledigt |
 | **offen** | 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
@@ -397,8 +411,6 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 
 ## 10. Offene Punkte (v0.3)
 
-- Lizenz je Wikidata-Bild aktuell nicht angezeigt (nur „Wikimedia Commons" +
-  Link zur Dateiseite, wo die Lizenz steht).
 - BibleProject-Guide-Slugs sind heuristisch (`book-of-<name>` + Gruppen-Override);
   einzelne selten gruppierte Bücher könnten ins Leere zeigen → bei Bedarf in
   `bibleProjectUrl` nachpflegen.
