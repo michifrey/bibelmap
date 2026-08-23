@@ -462,7 +462,18 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       Telefon **nie** in eine Zeile – „Beenden" lag 116 px außerhalb des
       Bildes und war nicht zu erreichen. Sie bricht jetzt um.
 
-### 4.28 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.28 Alles im Bild, auch auf dem Telefon — P1 ✅
+
+- [x] Alle sechzehn Ansichten auf 390 Pixeln durchgemessen: in **Mission** (62 px)
+      und **Kirchengeschichte** (6 px) lag „Beenden" außerhalb des Bildes – wie
+      zuvor im Entdeckermodus. Die Leisten aller sechs Vollbild-Modi brechen
+      jetzt um.
+- [x] Die A11y-Prüfung geht die Ansichten ein zweites Mal auf Telefonbreite
+      durch und meldet, was aus dem Bild ragt. Was in einem seitlich
+      scrollbaren Streifen liegt, zählt nicht – durch eine Reihe von Ortsmarken
+      wischt man, das ist Absicht.
+
+### 4.29 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

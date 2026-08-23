@@ -314,7 +314,7 @@ export default function Mission({
   return (
     <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
       {/* Kopfzeile */}
-      <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
+      <div className="flex flex-none flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
         <div className="flex items-center gap-2">
           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 flex-none text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
             <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18" />

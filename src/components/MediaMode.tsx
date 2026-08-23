@@ -216,7 +216,7 @@ export default function MediaMode({
 
   return (
     <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
-      <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-4 py-3 text-white sm:px-5 sm:py-3.5">
+      <div className="flex flex-none flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-white/10 bg-abyss px-4 py-3 text-white sm:px-5 sm:py-3.5">
         <div className="flex min-w-0 items-center gap-2">
           <svg
             aria-hidden="true"
