@@ -3,6 +3,7 @@ import type { SearchHit } from '../lib/globalSearch';
 import { useLang, useT } from '../i18n';
 import { erasForPlace, placeName } from '../lib/places';
 import { ERA_BY_ID } from '../data/eras';
+import { readableOnDark } from '../lib/contrast';
 
 interface Props {
   /** Erkannte Bibelstelle im Suchfeld – führt ins Kapitel. */
@@ -50,7 +51,7 @@ function Row({ p, onSelect, t }: { p: Place; onSelect: (p: Place) => void; t: (k
     >
       {/* The mention count is the graphic — it says more about a place than a
           44px thumbnail ever did, and it never fails to load. */}
-      <span className="bm-num w-14 flex-none text-xl" style={{ color: eraColor(p) }}>
+      <span className="bm-num w-14 flex-none text-xl" style={{ color: readableOnDark(eraColor(p)) }}>
         {p.mentionCount}
       </span>
 

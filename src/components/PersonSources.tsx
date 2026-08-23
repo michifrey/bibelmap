@@ -4,6 +4,7 @@ import { useT } from '../i18n';
 import { fetchArticle, wikiLink, type WikiArticle } from '../lib/wikipediaArticle';
 import { DOC_KIND, PERSON_SOURCES, type HistDoc } from '../data/personSources';
 import { licenseInfo } from '../lib/imageCredit';
+import { readableOnDark } from '../lib/contrast';
 
 /** Resolve a Wikipedia article once per term/language, for image + intro. */
 function useArticle(term: string | undefined, lang: Lang): WikiArticle | null {
@@ -124,7 +125,7 @@ function DocRow({ doc, lang }: { doc: HistDoc; lang: Lang }) {
       )}
       <div className="min-w-0">
         <div className="flex flex-wrap items-baseline gap-x-1.5 text-[10px] uppercase tracking-wide">
-          <span style={{ color: kind.color }}>{lang === 'de' ? kind.de : kind.en}</span>
+          <span style={{ color: readableOnDark(kind.color) }}>{lang === 'de' ? kind.de : kind.en}</span>
           <span className="text-white/45">· {lang === 'de' ? doc.dateDe : doc.dateEn}</span>
         </div>
         <a

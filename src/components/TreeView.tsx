@@ -18,6 +18,7 @@ import {
   LINE_IDS,
 } from '../lib/genealogyTree';
 import PersonDetail from './PersonDetail';
+import { readableOnDark } from '../lib/contrast';
 
 const PAD_X = 28;
 /** Untergrenze für den Abstand nach oben – gemessen wird die Werkzeugleiste. */
@@ -369,7 +370,9 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
                     {epochStart && epoch && (
                       <div
                         className="truncate px-1 text-[9px] font-semibold uppercase tracking-wide"
-                        style={{ color: epoch.color }}
+                        // Aufgehellt fürs Lesen – die volle Farbe trägt der
+                        // Balken direkt darüber.
+                        style={{ color: readableOnDark(epoch.color) }}
                       >
                         {lang === 'de' ? epoch.de : epoch.en}
                       </div>

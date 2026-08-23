@@ -6,6 +6,7 @@ import { JOURNEYS, JOURNEY_BY_ID, type BibleJourney } from '../data/journeys';
 import { ERAS, ERA_BY_ID } from '../data/eras';
 import { passageUrl } from '../data/mission';
 import { formatKm, legDistances, walkingDays, type LatLon } from '../lib/route';
+import { readableOnDark } from '../lib/contrast';
 import RouteMap from './RouteMap';
 import ShareLink from './ShareLink';
 
@@ -100,11 +101,27 @@ export default function JourneyMode({ places, lang, onShowPlace, initial, onNavi
       <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
         <Bar title={t('journeys')} onExit={onExit} />
         <div className="scroll-soft mx-auto w-full max-w-5xl flex-1 overflow-y-auto px-5 py-6">
-          <p className="mb-6 max-w-prose text-sm leading-relaxed text-white/70">{t('journeysHint')}</p>
+          {/* Die Zahlen tragen den Kopf: wie viel hier eigentlich liegt. */}
+          <div className="mb-6 flex flex-wrap items-end gap-x-8 gap-y-3">
+            <p className="max-w-prose flex-1 text-sm leading-relaxed text-white/70">{t('journeysHint')}</p>
+            <div className="flex flex-none gap-6">
+              {[
+                [JOURNEYS.length, t('journeyCount')],
+                [JOURNEYS.reduce((n, j) => n + j.stops.length, 0), t('stations')],
+                [formatKm(JOURNEYS.reduce((n, j) => n + journeyKm(j), 0), lang), t('journeyWay')],
+              ].map(([value, label]) => (
+                <div key={String(label)}>
+                  <div className="bm-num text-2xl text-gold">{value}</div>
+                  <div className="bm-eyebrow mt-1">{label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
 
           {ERAS.filter((e) => JOURNEYS.some((j) => j.era === e.id)).map((e) => (
             <section key={e.id} className="mb-7">
-              <div className="bm-eyebrow mb-2.5 flex items-center gap-2" style={{ color: e.color }}>
+              {/* Aufgehellt fürs Lesen – die volle Farbe steht als Fläche daneben. */}
+              <div className="bm-eyebrow mb-2.5 flex items-center gap-2" style={{ color: readableOnDark(e.color) }}>
                 <span className="h-2.5 w-2.5" style={{ background: e.color }} />
                 {lang === 'de' ? e.de : e.en}
                 <span className="bm-eyebrow-dim">{e.range}</span>
