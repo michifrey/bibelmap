@@ -26,6 +26,14 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Vor dem Bauen: die Prüfungen, die ohne Netz auskommen. Ein Tippfehler
+      # in den Buchkürzeln oder eine Stammesgrenze, die einen biblisch
+      # benannten Ort verfehlt, hält die Veröffentlichung auf, statt still
+      # mitzufahren. Was von fremden Servern abhängt (check:bp, check:links),
+      # läuft bewusst nicht hier: ein Anbieter mit Schluckauf darf keinen
+      # Deploy blockieren.
+      - name: Prüfungen
+        run: npm run check
       # Eigene Domain (public/CNAME): die Seite liegt an der Wurzel, nicht mehr
       # unter /bibelmap/. VITE_BASE bleibt als Notausgang in vite.config.ts.
       - name: Build

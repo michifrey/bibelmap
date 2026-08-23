@@ -9,6 +9,7 @@
     "dev": "vite",
     "prebuild": "node scripts/sync-maplibre-worker.mjs",
     "build": "tsc --noEmit && vite build",
+    "check": "node scripts/check-all.mjs",
     "check:aliases": "node scripts/check-aliases.mjs",
     "check:bp": "node scripts/check-bp-guides.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",

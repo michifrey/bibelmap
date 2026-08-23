@@ -408,7 +408,17 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       Ansicht, die ohnehin Höhenkacheln aus dem Netz braucht, rechtfertigt kein
       Megabyte für jeden Besuch.
 
-### 4.24 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.24 Prüfungen laufen von selbst — P2 ✅
+
+- [x] `npm run check` führt die vier netzunabhängigen Prüfungen aus
+      (Buchkürzel, Zeitdokumente, Stammesgrenzen, Farbkontraste) und meldet
+      am Ende, was durchfiel – mit der Ausgabe der fehlgeschlagenen Prüfung.
+- [x] Die CI ruft es **vor** dem Build auf: was durchfällt, wird nicht
+      veröffentlicht.
+- [x] `check:bp` und `check:links` bleiben draußen. Sie fragen fremde Server;
+      ein Anbieter mit Schluckauf darf keinen Deploy blockieren.
+
+### 4.25 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
