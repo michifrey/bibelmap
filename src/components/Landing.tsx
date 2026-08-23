@@ -1,6 +1,7 @@
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
-import { ERAS } from '../data/eras';
+import { ERAS, eraWeight } from '../data/eras';
+import LangToggle from './LangToggle';
 
 export type LandingTarget = 'map' | 'tree' | 'present' | 'support';
 
@@ -15,13 +16,6 @@ interface Props {
 }
 
 const nf = (n: number, lang: Lang) => n.toLocaleString(lang === 'de' ? 'de-DE' : 'en-US');
-
-/** Same square-rooted duration weighting the in-app timeline uses. */
-const YEARS: Record<string, number> = {
-  patriarchs: 500, exodus: 40, conquest: 356, united: 120, divided: 344,
-  exile: 48, return: 138, gospels: 39, church: 67,
-};
-const weight = (id: string) => Math.sqrt(YEARS[id] ?? 100);
 
 /** The gold play triangle that sits inside every primary button. */
 function PlayDot({ bg, fill }: { bg: string; fill: string }) {
@@ -235,22 +229,6 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
     { label: t('genealogy'), target: 'tree' },
   ];
 
-  const langToggle = (
-    <div className="flex gap-0.5 bg-white/10 p-0.5">
-      {(['de', 'en'] as Lang[]).map((l) => (
-        <button
-          key={l}
-          onClick={() => onLang(l)}
-          className={`px-2.5 py-1.5 text-[11px] font-extrabold uppercase transition ${
-            lang === l ? 'bg-gold text-deep' : 'text-white/60 hover:text-white'
-          }`}
-        >
-          {l}
-        </button>
-      ))}
-    </div>
-  );
-
   return (
     <div className="h-full overflow-y-auto bg-paper-2">
       {/* ============================================================ HERO */}
@@ -283,7 +261,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
           <div className="flex-1" />
 
           <div className="flex items-center gap-3">
-            {langToggle}
+            <LangToggle lang={lang} onLang={onLang} variant="inline" />
             <button
               onClick={() => onEnter('map')}
               className="hidden items-center gap-2.5 bg-gold px-5 py-3 text-[13px] font-extrabold uppercase tracking-[0.04em] text-deep transition hover:bg-[#eab662] sm:flex"
@@ -435,7 +413,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
               <span
                 key={e.id}
                 className="flex min-w-0 flex-col justify-end overflow-hidden px-2 py-4 text-left sm:px-4"
-                style={{ flex: `${weight(e.id)} 1 0`, height: big ? 168 : 118, background: e.color }}
+                style={{ flex: `${eraWeight(e.id)} 1 0`, height: big ? 168 : 118, background: e.color }}
               >
                 <span className={`bm-num text-white ${big ? 'text-2xl sm:text-[34px]' : 'text-lg sm:text-[26px]'}`}>
                   {eraCounts[e.id] ?? 0}

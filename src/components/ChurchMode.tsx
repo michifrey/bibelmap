@@ -128,7 +128,10 @@ export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree
               <button
                 key={tb.id}
                 onClick={() => switchTab(tb.id)}
-                className={`flex-1 px-2 py-2 text-[11.5px] font-bold tracking-wide transition ${ tab === tb.id ? 'bg-signal text-white' : 'text-white/55 hover:text-white' }`}
+                // The .bm-seg rules already carry padding, type and colour --
+                // and `.bm-seg > *` overrode a Tailwind bg- utility here, which
+                // is why the active tab looked exactly like the inactive one.
+                className={`flex-1 ${tab === tb.id ? 'is-on' : ''}`}
               >
                 {tb.label}
               </button>

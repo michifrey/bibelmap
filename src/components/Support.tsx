@@ -1,6 +1,7 @@
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { SUPPORT_PROJECTS, SUPPORT_LINKED, type SupportKind, type SupportProject } from '../data/support';
+import LangToggle from './LangToggle';
 
 interface Props {
   lang: Lang;
@@ -109,19 +110,7 @@ export default function Support({ lang, onLang, onExit }: Props) {
           <div className="flex items-start justify-between gap-6">
             <span className="bm-eyebrow text-mint">{t('supportSub')}</span>
             <div className="flex flex-none items-center gap-2">
-              <div className="flex gap-0.5 bg-white/10 p-0.5">
-                {(['de', 'en'] as Lang[]).map((l) => (
-                  <button
-                    key={l}
-                    onClick={() => onLang(l)}
-                    className={`px-2.5 py-1.5 text-[11px] font-extrabold uppercase transition ${
-                      lang === l ? 'bg-gold text-deep' : 'text-white/60 hover:text-white'
-                    }`}
-                  >
-                    {l}
-                  </button>
-                ))}
-              </div>
+              <LangToggle lang={lang} onLang={onLang} variant="inline" />
               <button
                 onClick={onExit}
                 className="bg-white/10 px-4 py-2.5 text-[11px] font-extrabold uppercase tracking-[0.1em] text-white transition hover:bg-white/20"
