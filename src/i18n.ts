@@ -326,6 +326,8 @@ const STRINGS: Dict = {
   newInEra: { de: 'neu in dieser Epoche', en: 'new in this era' },
   allJourneys: { de: 'Alle Reisen', en: 'All journeys' },
   stations: { de: 'Stationen', en: 'stations' },
+  journeyCount: { de: 'Reisen', en: 'journeys' },
+  journeyWay: { de: 'Wegstrecke', en: 'distance' },
   replay: { de: 'Noch einmal', en: 'Replay' },
   mission: { de: 'Mission & Ausbreitung', en: 'Mission & spread' },
   missionSub: {

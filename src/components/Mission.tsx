@@ -19,6 +19,7 @@ import MissionMap, { type MissionMarker, type MissionRoute } from './MissionMap'
 import RouteMap from './RouteMap';
 import { formatKm, legDistances, type LatLon } from '../lib/route';
 import ShareLink from './ShareLink';
+import { readableOnDark } from '../lib/contrast';
 
 interface Props {
   places: Place[];
@@ -336,7 +337,7 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
           className="scroll-soft flex w-full flex-col overflow-y-auto border-b border-white/10 md:w-[26rem] md:flex-none md:border-b-0 md:border-r"
         >
           <div className="border-b border-white/10 px-5 py-5">
-            <div className="bm-eyebrow mb-2" style={{ color: phase.color }}>
+            <div className="bm-eyebrow mb-2" style={{ color: readableOnDark(phase.color) }}>
               {lang === 'de' ? phase.range.de : phase.range.en}
             </div>
             <h2 className="font-display text-3xl uppercase leading-[0.95] text-white">
@@ -395,7 +396,7 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
       {/* Zeitregler: das Jahr als Schieber über die ganze Ausbreitung */}
       {!isJourneys && (
         <div className="flex flex-none items-center gap-3 border-t border-white/10 bg-abyss px-4 py-2">
-          <span className="bm-num w-16 flex-none text-lg" style={{ color: phase.color }}>
+          <span className="bm-num w-16 flex-none text-lg" style={{ color: readableOnDark(phase.color) }}>
             {year ?? phase.to}
           </span>
           <input
@@ -523,7 +524,9 @@ function JourneyList({
                 }`}
               >
                 <span
-                  style={{ background: s.back ? 'transparent' : journey.color, color: s.back ? journey.color : '#fff', borderColor: journey.color }}
+                  // Rückwege stehen als Umriss: dann trägt die Zahl die Farbe
+                  // und braucht sie lesbar. Rand und Fläche bleiben voll.
+                  style={{ background: s.back ? 'transparent' : journey.color, color: s.back ? readableOnDark(journey.color) : '#fff', borderColor: journey.color }}
                   className="bm-num mt-0.5 grid h-6 w-6 flex-none place-items-center border text-[11px]"
                 >
                   {i + 1}
