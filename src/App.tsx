@@ -465,6 +465,15 @@ export default function App() {
     setNavEpoch((n) => n + 1);
   }
 
+  /** Von einer Ortskarte auf das Stammesgebiet, in dem der Ort liegt. */
+  function openTribe(slug: string) {
+    setTreeFocus(null);
+    setTreeNav({ tab: 'map', id: slug });
+    setMode(null);
+    setView('tree');
+    setNavEpoch((n) => n + 1);
+  }
+
   /** Ein Treffer aus Reisen, Ausbreitung oder Stammesgebieten: hin da. */
   function openStory(hit: SearchHit) {
     setAtStart(false);
@@ -684,6 +693,7 @@ export default function App() {
                       lang={lang}
                       neighbours={neighbours}
                       onSelectPlace={select}
+                      onOpenTribe={openTribe}
                       onClose={() => setSelected(null)}
                     />
                   ) : (

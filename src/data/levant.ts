@@ -43,8 +43,8 @@ export const MEDITERRANEAN: [number, number][] = [
 ];
 
 export const SEA_OF_GALILEE: [number, number][] = [
-  [32.89, 35.58],
-  [32.88, 35.64],
+  [32.87, 35.58],
+  [32.86, 35.63],
   [32.8, 35.65],
   [32.73, 35.61],
   [32.7, 35.56],

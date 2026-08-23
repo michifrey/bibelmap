@@ -35,6 +35,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Fuß** zu erreichen war: bis 25 km Luftlinie, mit Entfernung und
   Himmelsrichtung (von Jerusalem: Bethlehem 8 km S, Gibeon 9 km NW, Jericho
   23 km NO). Ein Klick wechselt zum Nachbarn.
+- **In wessen Gebiet** – jede Ortskarte sagt, in welchem der zwölf
+  Stammesgebiete der Ort liegt, und führt mit einem Klick dorthin: Hebron in
+  Juda, Kapernaum in Naftali, Megiddo in Manasse. Wer außerhalb lag, bekommt
+  keine Antwort statt einer geratenen – Tyrus und Sidon blieben phönizisch,
+  Damaskus aramäisch.
 - **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
   robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
 - **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit**
@@ -98,7 +103,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   **Müttern** geordnet (Lea, Rahel, Bilha, Silpa); ein Klick öffnet die Karte des
   Stammes mit Namensbedeutung, **Los**, **Jakobs Segen** (1. Mose 49) und
   **Mose-Segen** (5. Mose 33), den Orten im Gebiet und den **Nachbarstämmen** –
-  jeder davon ein Sprung weiter. Dazu die Sonderfälle, die eine reine Loskarte
+  jeder davon ein Sprung weiter – und **wer von hier kam**: Debora und Gideon,
+  Jona aus Gat-Hefer in Sebulon, Elia aus Tischbe in Gilead, Hanna aus dem
+  Stamm Asser, Paulus aus Benjamin. Wen der Zeitbaum führt, den öffnet ein
+  Klick dort. Jeder Ortsname führt außerdem auf seine Ortskarte.
+  Dazu die Sonderfälle, die eine reine Loskarte
   verschweigt: **Levi** bekommt kein Land, sondern die sechs **Zufluchtsstädte**,
   und **Dan** hält sein Los nicht, sondern zieht ans Nordende des Landes.
   Umschaltbar zwischen Nacht-, Relief- und Satellitenkarte; die Völkertafel und
@@ -443,6 +452,27 @@ Zwei Listen, weil die Lage entscheidet:
 ```bash
 npm run check:aliases   # unbekanntes Buch, doppelte Kurzform, zu kurz, überflüssig
 ```
+
+### Stammesgrenzen
+
+Die dreizehn Ringe in `src/data/tribes.ts` sind von Hand gezeichnet, teilen sich
+ihre Eckpunkte und beantworten auf jeder Ortskarte die Frage „in wessen Gebiet
+liegt dieser Ort?". Das ist eine Behauptung, keine Verzierung: Wer einen Ring
+anfasst, verschiebt die Antwort mit, ohne es zu sehen.
+
+```bash
+npm run check:tribes    # 24 Orte, deren Stamm im Text steht
+```
+
+Geprüft werden Orte, die Josua selbst zuordnet (Jerusalem → Benjamin, Megiddo →
+Manasse, Bet-Schean → Issachar), dazu vier, die zu **keinem** Stamm gehörten:
+Tyrus und Sidon blieben phönizisch, Damaskus aramäisch, Sela edomitisch. Ein
+Ring, der die vier verschluckt, ist zu großzügig gezeichnet.
+
+Genau daran hingen beim Einbau sechs Fehler: Jerusalem lag auf der falschen
+Seite der Grenze, Megiddo in Issachar statt Manasse, Kapernaum und Laisch
+außerhalb jedes Gebiets, Jafo genau auf einem Eckpunkt – und Tyrus mitten in
+Asser.
 
 ### BibleProject-Guides
 

@@ -31,11 +31,16 @@ import {
 } from '../data/tribeHistory';
 import { BASEMAPS, type BasemapId } from './MapView';
 import { flyOptions } from '../lib/motion';
+import { readableOnDark } from '../lib/contrast';
 import ShareLink from './ShareLink';
 
 interface Props {
   lang: Lang;
   onOpenInTree: (id: string) => void;
+  /** Ort auf der Hauptkarte öffnen – dort steht alles, was diese Karte nicht hat. */
+  onOpenPlace?: (term: string) => void;
+  /** Eine Person im Zeitbaum aufdecken. */
+  onOpenInTimeline?: (personId: string) => void;
   /** Vorauswahl aus der Adresse: Stamm und/oder Jahr. */
   initial?: { id?: string; year?: number } | null;
   /** Meldet Stamm und Jahr, damit die Adresse mitläuft. */
@@ -101,7 +106,7 @@ function labelSize(area: number): number {
   return 10;
 }
 
-export default function TribesMap({ lang, onOpenInTree, initial, onNavigate }: Props) {
+export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTimeline, initial, onNavigate }: Props) {
   const t = useT();
   const elRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -270,7 +275,7 @@ export default function TribesMap({ lang, onOpenInTree, initial, onNavigate }: P
         keyboard: false,
         icon: L.divIcon({
           className: '',
-          html: `<span class="bm-tribe-label" data-tribe="${tr.id}" style="--c:${fillFor(tr.id, phase)};font-size:${labelSize(area)}px">${name(tr.mapLabel ?? tr)}</span>`,
+          html: `<span class="bm-tribe-label" data-tribe="${tr.id}" style="--c:${readableOnDark(fillFor(tr.id, phase))};font-size:${labelSize(area)}px">${name(tr.mapLabel ?? tr)}</span>`,
           iconSize: [0, 0],
         }),
       }).addTo(layer);
@@ -537,6 +542,8 @@ export default function TribesMap({ lang, onOpenInTree, initial, onNavigate }: P
               onBack={home}
               onOpenInTree={onOpenInTree}
               onSelect={setSelected}
+              onOpenPlace={onOpenPlace}
+              onOpenInTimeline={onOpenInTimeline}
               onFly={(la, lo) => mapRef.current?.flyTo([la, lo], 11, flyOptions({ duration: 0.6 }))}
             />
           ) : (
@@ -793,9 +800,11 @@ interface CardProps {
   onOpenInTree: (id: string) => void;
   onFly: (lat: number, lon: number) => void;
   onSelect: (id: string) => void;
+  onOpenPlace?: (term: string) => void;
+  onOpenInTimeline?: (personId: string) => void;
 }
 
-function TribeCard({ tribe: tr, lang, phase, onBack, onOpenInTree, onFly, onSelect }: CardProps) {
+function TribeCard({ tribe: tr, lang, phase, onBack, onOpenInTree, onFly, onSelect, onOpenPlace, onOpenInTimeline }: CardProps) {
   const t = useT();
   const name = (o: { de: string; en: string }) => (lang === 'de' ? o.de : o.en);
   const mother = MOTHER_BY_ID[tr.mother];
@@ -845,15 +854,31 @@ function TribeCard({ tribe: tr, lang, phase, onBack, onOpenInTree, onFly, onSele
             <div className="bm-eyebrow bm-eyebrow-dim mt-4 mb-1.5">{t('tribesTowns')}</div>
             <div className="flex flex-wrap gap-1">
               {tr.cities.map((c) => (
-                <button
-                  key={c.de}
-                  onClick={() => onFly(c.lat, c.lon)}
-                  className="bm-chip transition hover:bg-white/20"
-                  title={t('tribesFlyTo')}
-                >
-                  <span className="h-1.5 w-1.5" style={{ background: tr.color }} />
-                  {name(c)}
-                </button>
+                // Zwei Wege aus einem Ortsnamen: der Name zeigt ihn hier, der
+                // Pfeil öffnet seine Ortskarte – dort stehen Bibelstellen,
+                // Bild, Nachbarorte und Folgen, die diese Karte nicht führt.
+                <span key={c.de} className="bm-chip gap-0 p-0">
+                  <button
+                    onClick={() => onFly(c.lat, c.lon)}
+                    className="flex items-center gap-1.5 px-2 py-1 transition hover:bg-white/20"
+                    title={t('tribesFlyTo')}
+                  >
+                    <span className="h-1.5 w-1.5" style={{ background: tr.color }} />
+                    {name(c)}
+                  </button>
+                  {onOpenPlace && (
+                    <button
+                      onClick={() => onOpenPlace(c.de)}
+                      className="border-l border-white/15 px-1.5 py-1 text-white/50 transition hover:bg-white/20 hover:text-white"
+                      title={t('tribesOpenPlace')}
+                      aria-label={`${t('tribesOpenPlace')}: ${name(c)}`}
+                    >
+                      <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor" aria-hidden="true">
+                        <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
+                      </svg>
+                    </button>
+                  )}
+                </span>
               ))}
             </div>
           </>
@@ -870,6 +895,34 @@ function TribeCard({ tribe: tr, lang, phase, onBack, onOpenInTree, onFly, onSele
                 </button>
               ))}
             </div>
+          </>
+        )}
+
+        {tr.people && tr.people.length > 0 && (
+          <>
+            <div className="bm-eyebrow bm-eyebrow-dim mt-4 mb-1.5">{t('tribesPeople')}</div>
+            <ul className="space-y-1.5">
+              {tr.people.map((p) => (
+                <li key={p.de} className="flex items-baseline gap-2 text-[12px] leading-snug">
+                  <span className="mt-1 h-1.5 w-1.5 flex-none" style={{ background: tr.color }} />
+                  <span className="min-w-0 flex-1">
+                    {p.node && onOpenInTimeline ? (
+                      <button
+                        onClick={() => onOpenInTimeline(p.node!)}
+                        className="font-semibold text-white underline decoration-white/30 underline-offset-2 transition hover:decoration-gold"
+                        title={t('tribesInTimeline')}
+                      >
+                        {name(p)}
+                      </button>
+                    ) : (
+                      <span className="font-semibold text-white">{name(p)}</span>
+                    )}
+                    <span className="text-white/55"> — {name(p.role)}</span>{' '}
+                    <span className="whitespace-nowrap font-semibold text-mint">{p.ref}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
           </>
         )}
 
