@@ -677,6 +677,14 @@ export default function App() {
     );
   }
 
+  /*
+   * Ein offener Vollbild-Modus liegt über allem – dann gehört der Hintergrund
+   * niemandem mehr: weder der Tabulatortaste noch dem Screenreader. Die Modi
+   * werden nur im Karten- und Geländezweig gezeigt, deshalb steht die
+   * Bedingung genauso.
+   */
+  const hintergrundStill = !!mode && view !== 'tree' && view !== 'graph';
+
   return (
     <LangContext.Provider value={lang}>
       <div className="relative h-full w-full overflow-hidden">
@@ -701,6 +709,14 @@ export default function App() {
           </Suspense>
         ) : (
           <>
+            {/*
+              Was der Vollbild-Modus verdeckt, ist auch stillgelegt.
+              Gemessen lagen sonst 117 der ersten 120 Tabulatorhalte hinter dem
+              Vorhang – auf Ortsmarken, Zeitleiste und Suchfeld der Hauptkarte,
+              die niemand sieht. `inert` nimmt den ganzen Zweig aus der
+              Tabulatorreihe und aus dem Vorlesebaum; Escape bringt ihn zurück.
+            */}
+            <div className="contents" inert={hintergrundStill}>
             {view === 'terrain' ? (
               <Suspense fallback={<ViewFallback lang={lang} note="terrain" />}>
                 <TerrainMap
@@ -873,6 +889,7 @@ export default function App() {
               )
             )}
 
+            </div>
             {mode === 'present' && (
               <Suspense fallback={<ModeFallback />}>
                 <Presentation
@@ -995,6 +1012,7 @@ export default function App() {
         )}
 
 
+        <div className="contents" inert={hintergrundStill}>
         <Header
           lang={lang}
           onLang={setLang}
@@ -1005,6 +1023,7 @@ export default function App() {
           onView={handleView}
           onHome={() => setAtStart(true)}
         />
+        </div>
       </div>
     </LangContext.Provider>
   );

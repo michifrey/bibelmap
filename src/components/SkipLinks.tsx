@@ -33,7 +33,16 @@ export default function SkipLinks({ stand }: { stand: string }) {
   const [da, setDa] = useState<string[]>([ZIELE[0].auswahl]);
 
   const pruefen = useCallback(() => {
-    setDa(ZIELE.filter((z) => document.querySelector(z.auswahl)).map((z) => z.auswahl));
+    // Ein stillgelegter Zweig (offener Vollbild-Modus) zählt nicht: dorthin zu
+    // springen hieße, den Fokus auf etwas zu setzen, das niemand sieht und das
+    // die Tastatur gar nicht mehr annimmt. Im Modus bleibt keine Marke übrig –
+    // der erste Tabulatorschlag führt dann direkt hinein.
+    setDa(
+      ZIELE.filter((z) => {
+        const el = document.querySelector(z.auswahl);
+        return !!el && !el.closest('[inert]');
+      }).map((z) => z.auswahl),
+    );
   }, []);
 
   // Der Tabulator setzt nicht immer oben an: die Reiseansicht rollt beim

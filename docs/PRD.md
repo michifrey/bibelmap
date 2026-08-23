@@ -507,7 +507,19 @@ der sieben Sendschreiben, fünf Stationen für den Hauskreis).
 - [x] Entfernungen sind Luftlinien, Tagesmärsche eine Größenordnung – beides
       steht in der Ansicht.
 
-### 4.31 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.31 Hinter dem Vorhang ist zu — P1 ✅
+
+- [x] Gemessen: in **allen elf Vollbild-Modi** lagen **117 der ersten 120
+      Tabulatorhalte** hinter dem Modus – auf Ortsmarken, Zeitleiste und
+      Suchfeld der verdeckten Hauptkarte.
+- [x] Der Hintergrund trägt bei offenem Modus `inert`: aus Tabulatorreihe und
+      Vorlesebaum genommen. Nachgemessen: alle Halte liegen im Modus.
+- [x] Im Modus bleibt keine Sprungmarke stehen – eine Marke in einen
+      stillgelegten Zweig wäre ein toter Knopf.
+- [x] Die A11y-Prüfung kennt die Regel: kein Halt hinter dem Vorhang, und
+      Escape gibt den Weg zur Kopfzeile wieder frei.
+
+### 4.32 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
