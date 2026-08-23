@@ -20,6 +20,8 @@ interface Props {
   onNavigate?: (state: { id: string; stop: number } | null) => void;
   /** Paulus’ Reisen stehen im Missionsmodus – dorthin verweisen statt doppeln. */
   onOpenMission?: () => void;
+  /** Dieselbe Route über dem Gelände – dort sieht man die Pässe. */
+  onOpenTerrain?: (id: string) => void;
   onExit: () => void;
 }
 
@@ -28,7 +30,16 @@ function journeyKm(j: BibleJourney): number {
   return legDistances(j.stops.map((s) => [s.lat, s.lon] as LatLon)).reduce((a, b) => a + b, 0);
 }
 
-export default function JourneyMode({ places, lang, onShowPlace, initial, onNavigate, onOpenMission, onExit }: Props) {
+export default function JourneyMode({
+  places,
+  lang,
+  onShowPlace,
+  initial,
+  onNavigate,
+  onOpenMission,
+  onOpenTerrain,
+  onExit,
+}: Props) {
   const t = useT();
   const [id, setId] = useState<string | null>(initial && JOURNEY_BY_ID[initial.id] ? initial.id : null);
   const [index, setIndex] = useState(() => {
@@ -176,6 +187,7 @@ export default function JourneyMode({ places, lang, onShowPlace, initial, onNavi
         onBack={() => setId(null)}
         backLabel={t('allJourneys')}
         onPrint={() => window.print()}
+        onTerrain={onOpenTerrain ? () => onOpenTerrain(journey.id) : undefined}
         onExit={onExit}
       />
 
@@ -322,6 +334,7 @@ function Bar({
   onBack,
   backLabel,
   onPrint,
+  onTerrain,
   onExit,
 }: {
   title: string;
@@ -329,6 +342,7 @@ function Bar({
   onBack?: () => void;
   backLabel?: string;
   onPrint?: () => void;
+  onTerrain?: () => void;
   onExit: () => void;
 }) {
   const t = useT();
@@ -352,6 +366,15 @@ function Bar({
               <path d="M7 9V4h10v5M7 19H5v-6h14v6h-2M8 15h8v5H8z" />
             </svg>
             {t('print')}
+          </button>
+        )}
+        {/* Der Weg ins Gelände: dieselbe Route, nur mit Höhen. */}
+        {onTerrain && (
+          <button onClick={onTerrain} className="bm-btn hidden sm:inline-flex" title={t('terrainView')}>
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M3 18l5-8 4 5 3-4 6 7z" />
+            </svg>
+            {t('terrain')}
           </button>
         )}
         <ShareLink className="bm-btn hidden sm:inline-flex" />
