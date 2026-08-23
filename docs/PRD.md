@@ -691,7 +691,28 @@ Antworten sind echte Orte.
 - [x] Im Browser gesehen: „Von Tal von Hebron nach Sichem – Jerusalem,
       Sepharvaim, Kyrene, Elath."
 
-### 4.39 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.39 Prüfungen lesen den echten Code — P2 ✅
+
+**Beschreibung:** Die erzeugten Quizfragen prüft künftig `npm run check` mit –
+und zwar gegen das echte Modul, nicht gegen eine zweite Aufschreibung der
+Regeln.
+
+**Anforderungen**
+- `scripts/lib/ts-loader.mjs`: Node 22 versteht TypeScript, es fehlten nur die
+  endungslosen Importe und die Art-Angabe bei JSON. Beides ergänzt ein
+  Auflöser-Haken, ohne dass die App etwas dafür tun muss.
+- `scripts/check-quiz.mjs`: 400 Runden, jede Wegfrage nachgerechnet.
+- Aufgenommen in `npm run check` (jetzt fünf Prüfungen) und damit in CI.
+
+**Akzeptanzkriterien**
+- [x] 400 von 400 Runden enthalten eine Wegfrage; keine Verletzung.
+- [x] Die Prüfung meldet, wenn sie nichts zu prüfen fand – zu wenige Wegfragen
+      oder zu viele, die sich keiner Etappe zuordnen lassen, sind selbst ein
+      Fehler.
+- [x] Gegenprobe: Korridor in `quiz.ts` von 8 auf 30 km geweitet → Exit 1 mit
+      Befunden; zurückgestellt → Exit 0.
+
+### 4.40 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

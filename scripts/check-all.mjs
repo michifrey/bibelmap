@@ -24,17 +24,23 @@ const CHECKS = [
   { name: 'Zeitdokumente', script: 'check-sources.mjs' },
   { name: 'Stammesgrenzen', script: 'check-tribes.mjs' },
   { name: 'Farbkontraste', script: 'check-contrast.mjs' },
+  // Liest den echten Code statt einer Nachbildung und braucht dafür Node mit
+  // TypeScript und den Auflöser aus scripts/lib.
+  { name: 'Quizfragen', script: 'check-quiz.mjs', ts: true },
 ];
 
 const results = [];
 for (const check of CHECKS) {
-  const r = spawnSync(process.execPath, [path.join(ROOT, 'scripts', check.script)], {
+  const args = check.ts
+    ? ['--experimental-strip-types', '--import', './scripts/lib/ts-loader.mjs']
+    : [];
+  const r = spawnSync(process.execPath, [...args, path.join(ROOT, 'scripts', check.script)], {
     cwd: ROOT,
     encoding: 'utf8',
   });
   const ok = r.status === 0;
   results.push({ ...check, ok, status: r.status, out: `${r.stdout ?? ''}${r.stderr ?? ''}`.trim() });
-  // Die letzte Zeile ist bei allen vier das Ergebnis in einem Satz.
+  // Die letzte Zeile ist bei allen das Ergebnis in einem Satz.
   const last = (results.at(-1).out.split('\n').filter(Boolean).at(-1) ?? '').slice(0, 96);
   console.log(`${ok ? '✓' : '✗'} ${check.name.padEnd(16)} ${last}`);
 }

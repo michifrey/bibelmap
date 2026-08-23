@@ -691,6 +691,24 @@ node scripts/a11y-audit.mjs
 
 ### Zweisprachigkeit prüfen
 
+### Erzeugte Quizfragen prüfen
+
+Die Wissensfragen entstehen zur Laufzeit aus den Daten – niemand hat sie
+geschrieben, niemand liest sie gegen. `npm run check:quiz` erzeugt 400 Runden
+und rechnet jede Wegfrage nach: die richtige Antwort muss bis 8 km neben der
+Luftlinie der Etappe liegen, jede falsche mindestens 60 km daneben und über
+100 km von beiden Stationen entfernt.
+
+Die Prüfung liest dafür den **echten Code**, keine Nachbildung:
+`scripts/lib/ts-loader.mjs` erlaubt Node, `src/lib/quiz.ts` samt allem, was
+daran hängt, zu importieren – Node 22 versteht TypeScript, es fehlten nur die
+Dateiendungen, die Bundler weglassen dürfen. Die älteren Prüfungen lesen ihre
+Daten noch mit regulären Ausdrücken aus dem Quelltext; das hat schon einmal
+still versagt, als eine Konstante in eine JSON-Datei umzog.
+
+Gegenprobe: den Korridor in `quiz.ts` von 8 auf 30 km geweitet – die Prüfung
+meldet Verstöße und endet mit Exit 1. Zurückgestellt: Exit 0.
+
 `scripts/check-i18n.mjs` schaltet die Oberfläche auf Englisch und geht alle
 achtzehn Ansichten durch – Text wie Beschriftungen, die nur ein Screenreader
 liest. Gesucht wird nach deutschen Funktionswörtern; was ein eigenes `lang`
