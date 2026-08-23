@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
+import LangToggle from './LangToggle';
 
 export type Mode = 'present' | 'history' | 'journeys' | 'mission' | 'compare' | 'church' | 'quiz' | 'nations' | 'media' | 'support';
 export type View = 'map' | 'tree' | 'graph';
@@ -33,20 +34,6 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
     { id: 'support', label: t('support'), hint: t('supportSub'), icon: 'M12 20.3 4.6 13a4.7 4.7 0 0 1 0-6.7 4.7 4.7 0 0 1 6.7 0l.7.7.7-.7a4.7 4.7 0 0 1 6.7 0 4.7 4.7 0 0 1 0 6.7z' },
   ];
 
-  const langToggle = (
-    <div className="flex overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur-xl">
-      {(['de', 'en'] as Lang[]).map((l) => (
-        <button
-          key={l}
-          onClick={() => onLang(l)}
-          className={`px-2.5 py-2 text-xs font-semibold uppercase transition sm:px-3 sm:py-2.5 sm:text-sm ${lang === l ? 'bg-gold text-white' : 'text-white/60 hover:bg-surface'}`}
-        >
-          {l}
-        </button>
-      ))}
-    </div>
-  );
-
   // Mobile: two rows (logo + language on top, view switch + modi below).
   // Desktop (sm+): a single row, logo left / all controls right.
   return (
@@ -69,7 +56,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
           </div>
         </button>
         {/* language: top-right on mobile only */}
-        <div className="pointer-events-auto sm:hidden">{langToggle}</div>
+        <div className="pointer-events-auto sm:hidden"><LangToggle lang={lang} onLang={onLang} /></div>
       </div>
 
       {/* controls: own row on mobile, right side on desktop */}
@@ -154,7 +141,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
         )}
 
         {/* language: inline on desktop (mobile shows it in the top row) */}
-        <div className="hidden sm:block">{langToggle}</div>
+        <div className="hidden sm:block"><LangToggle lang={lang} onLang={onLang} /></div>
       </div>
     </header>
   );

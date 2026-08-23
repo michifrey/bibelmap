@@ -93,6 +93,8 @@ const STRINGS: Dict = {
   year: { de: 'Jahr', en: 'Year' },
   bordersAsOf: { de: 'Grenzen: Stand', en: 'Borders as of' },
   prevSnapshot: { de: 'Vorherige Karte', en: 'Previous map' },
+  betweenEras: { de: 'Zwischen den Epochen', en: 'Between the eras' },
+  bordersLayer: { de: 'Reiche', en: 'Empires' },
   nextSnapshot: { de: 'Nächste Karte', en: 'Next map' },
   bordersNote: {
     de: 'Grenzverläufe sind Annäherungen und werden nach hinten hin unschärfer. Kartengrundlage: aourednik/historical-basemaps (GPL-3.0).',
