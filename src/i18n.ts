@@ -42,6 +42,8 @@ const STRINGS: Dict = {
     en: 'Loading the terrain map – it arrives once, as its own bundle.',
   },
   terrainExaggeration: { de: 'Überhöhung', en: 'Exaggeration' },
+  terrainTilted: { de: 'Schräg', en: 'Tilted' },
+  terrainFlat: { de: 'Von oben', en: 'Top-down' },
   terrainReset: { de: 'Blick zurücksetzen', en: 'Reset view' },
   terrainNote: {
     de: 'Gelände-Ansicht: Höhen überzeichnet, ohne Ballung, Wärmekarte und Reichsgrenzen.',

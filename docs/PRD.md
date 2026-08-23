@@ -402,6 +402,10 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       beide Richtungen – aus beiden Modi ein **3D**-Knopf, aus dem Gelände
       zurück zu Text, Stellen und Entfernungen. Eine Route, die es nicht gibt,
       verschwindet aus der Adresse statt auf nichts zu zeigen.
+- [x] **Schräg ↔ von oben** als Knopf, nicht nur als Geste: Kippen verlangt auf
+      dem Telefon zwei Finger senkrecht: unauffindbar, und damit bliebe die
+      Karte dort für immer schräg. Der Knopf folgt der Karte, wer doch mit den
+      Fingern kippt, sieht ihn mitgehen.
 - [x] Die Ausbreitung bekommt **keinen** 3D-Knopf: Bögen zwischen Kontinenten
       über 2.000 Jahre sind keine Wege, die ein Gelände erklären würde.
 - [x] Erst auf Abruf geladen (950 kB) und **nicht** im Leerlauf vorgeholt – eine

@@ -142,6 +142,12 @@ export default function TerrainMap({
   const [ready, setReady] = useState(false);
   /** Wie stark das Gelände überzeichnet wird. 1 wäre wahr, aber flach. */
   const [exaggeration, setExaggeration] = useState(1.6);
+  /**
+   * Die Neigung als Knopf, nicht nur als Geste. Kippen geht auf dem Telefon
+   * nur mit zwei Fingern senkrecht – das weiß niemand, der es nicht zufällig
+   * probiert, und damit bliebe die Karte auf einem Gerät für immer schräg.
+   */
+  const [pitched, setPitched] = useState(true);
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
   const langRef = useRef(lang);
@@ -257,6 +263,8 @@ export default function TerrainMap({
     map.on('error', (e) => {
       console.warn('[bibelmap] Karte:', e.error?.message ?? e);
     });
+
+    map.on('pitchend', () => setPitched(map.getPitch() > 15));
 
     map.on('load', () => {
       map.setTerrain({ source: 'dem', exaggeration });
@@ -427,11 +435,32 @@ export default function TerrainMap({
               className="min-w-[7rem] flex-1 accent-[var(--color-gold)]"
             />
             <span className="bm-num w-9 flex-none text-right text-white">{exaggeration.toFixed(1)}×</span>
+            {/* Von oben oder schräg – der einzige Weg zur Neigung, der mit
+                einem Finger geht. */}
+            <div className="flex flex-none overflow-hidden">
+              {([true, false] as const).map((wantPitch) => (
+                <button
+                  key={String(wantPitch)}
+                  onClick={() => {
+                    const map = mapRef.current;
+                    setPitched(wantPitch);
+                    if (!map) return;
+                    const target = { pitch: wantPitch ? 62 : 0 };
+                    if (reduced) map.jumpTo(target);
+                    else map.easeTo({ ...target, duration: 700 });
+                  }}
+                  className={`bm-btn ${pitched === wantPitch ? 'bm-btn-signal' : 'bm-btn-ghost'}`}
+                >
+                  {wantPitch ? t('terrainTilted') : t('terrainFlat')}
+                </button>
+              ))}
+            </div>
             <button
               onClick={() => {
                 const map = mapRef.current;
                 if (!map) return;
                 const target = { pitch: 62, bearing: -15 };
+                setPitched(true);
                 if (reduced) map.jumpTo(target);
                 else map.easeTo({ ...target, duration: 600 });
               }}
