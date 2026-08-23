@@ -121,6 +121,50 @@ export function precision(ep: MediaEpisode): number {
 }
 
 /**
+ * Der kurze Name einer Quelle. Auf der Karte steht der volle Titel einmal, in
+ * einer Liste steht er 40-mal – und „Timothy Keller Sermons Podcast by Gospel
+ * in Life“ ist dort breiter und lauter als die Folge, um die es geht. Der Teil
+ * vor dem Gedankenstrich, sonst der Autor, wenn er kürzer ist.
+ */
+export function sourceLabel(s: MediaSource): string {
+  const head = s.title.split(/[–—-]/)[0].trim();
+  if (head.length <= 22) return head;
+  return s.author && s.author.length < head.length ? s.author : head;
+}
+
+/**
+ * Eine Stelle so, wie sie hier gelesen wird. Die Quellen liefern englische
+ * Etiketten mit („Ephesians 2:4-10“) – in einer deutschen Oberfläche steht
+ * daneben aber „Epheser 2,4–10“. Nur wenn das Buch unbekannt ist, bleibt das
+ * mitgelieferte Etikett stehen.
+ */
+export function refLabel(r: MediaRef, book: { de: string; en: string } | undefined, lang: 'de' | 'en'): string {
+  if (!book) return r.label || r.osis;
+  // Die Klammer hinter „1. Mose (Genesis)“ trägt in einer Zeile mit Kapitel
+  // und Vers nichts bei.
+  const name = lang === 'de' ? book.de.replace(/\s*\(.*\)$/, '') : book.en;
+  if (r.chapter == null) return name;
+  const sep = lang === 'de' ? ',' : ':';
+  const verse =
+    r.verseStart == null
+      ? ''
+      : `${sep}${r.verseStart}${r.verseEnd != null && r.verseEnd !== r.verseStart ? `–${r.verseEnd}` : ''}`;
+  return `${name} ${r.chapter}${verse}`;
+}
+
+/** Ein Sendedatum, wie man es hier schreibt – nicht als ISO-Kette. */
+export function mediaDate(iso: string | null, lang: 'de' | 'en'): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return new Intl.DateTimeFormat(lang === 'de' ? 'de-DE' : 'en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(d);
+}
+
+/**
  * Folgen zu einer Stelle: alles, was dieses Kapitel nennt, dazu die
  * Buch-Übersichten. Sortiert wie überall – die genaue Stelle vor dem ganzen
  * Buch, dann neu vor alt.

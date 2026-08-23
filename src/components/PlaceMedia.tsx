@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import type { Place } from '../types';
-import { useT } from '../i18n';
-import { loadMedia, mediaForPlace, type MediaGroup } from '../lib/media';
+import { useLang, useT } from '../i18n';
+import { BOOK_BY_OSIS } from '../data/books';
+import { loadMedia, mediaDate, mediaForPlace, refLabel, sourceLabel, type MediaGroup } from '../lib/media';
 
 /** Podcast episodes and videos that deal with a passage this place occurs in. */
 export default function PlaceMedia({ place }: { place: Place }) {
   const t = useT();
+  const lang = useLang();
   const [groups, setGroups] = useState<MediaGroup[] | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
 
@@ -34,8 +36,12 @@ export default function PlaceMedia({ place }: { place: Place }) {
           return (
             <div key={source.id} className="bg-surface/50 p-2.5">
               <div className="mb-1.5 flex items-baseline gap-2">
-                <span className="text-sm font-bold text-white">{source.title}</span>
-                {source.author && <span className="text-[11px] text-white/60">{source.author}</span>}
+                <span className="text-sm font-bold text-white" title={source.title}>{sourceLabel(source)}</span>
+                {/* Bei „Timothy Keller“ heißt die Quelle wie ihr Autor – dann
+                    steht der Name einmal, nicht zweimal nebeneinander. */}
+                {source.author && source.author !== sourceLabel(source) && (
+                  <span className="text-[11px] text-white/60">{source.author}</span>
+                )}
                 <span className="ml-auto text-[11px] text-white/60">{episodes.length}</span>
               </div>
 
@@ -74,8 +80,12 @@ export default function PlaceMedia({ place }: { place: Place }) {
                         {ep.title}
                       </span>
                       <span className="mt-0.5 block text-[10.5px] text-white/60">
-                        {ep.refs.map((r) => r.label).join(' · ')}
-                        {ep.date ? ` · ${ep.date}` : ''}
+                        {[
+                          ...ep.refs.map((r) => refLabel(r, BOOK_BY_OSIS[r.osis], lang)),
+                          mediaDate(ep.date, lang),
+                        ]
+                          .filter(Boolean)
+                          .join(' · ')}
                       </span>
                     </span>
                   </a>
