@@ -113,9 +113,18 @@ for (const hash of ANSICHTEN) {
 // Tabulatorschritte, bis sie den Fokus hatte. Sichtbar ist das nie, spürbar
 // sofort.
 //
-// Geprüft wird darum zweierlei, beides schlicht:
+// Geprüft wird darum dreierlei, alles schlicht:
 //   1. Wie viele Tabulatorschritte liegen zwischen Seitenanfang und Kopfzeile?
 //   2. Setzt jede Sprungmarke den Fokus wirklich – und nicht ins Leere?
+//   3. Liegt bei offenem Vollbild-Modus ein Halt hinter dem Vorhang?
+//
+// Zu (3): Ein Vollbild-Modus deckt die Karte zu, aber sie blieb im Baum stehen
+// – mit der Maus unerreichbar, mit der Tastatur nicht. Gemessen lagen 117 der
+// ersten 120 Halte dort: Ortsmarken, Zeitleiste, Suchfeld, alles unsichtbar.
+// Seit der Hintergrund `inert` trägt, darf kein Halt mehr dort landen; dafür
+// ist im Modus die Kopfzeile selbst nicht mehr erreichbar, und das ist richtig
+// so. Geprüft wird stattdessen, dass Escape den Modus schließt und den Weg
+// zur Kopfzeile wieder freigibt.
 const MAX_WEG = 6;
 
 /** Zurück an den Seitenanfang, ohne neu zu laden. */
@@ -126,31 +135,43 @@ const anfang = () =>
     else document.body.focus();
   });
 
+/** Der oberste feste Kasten über der ganzen Fläche – der Vollbild-Modus. */
+const vorhangDa = () =>
+  p.evaluate(() =>
+    [...document.body.querySelectorAll('div')].some((d) => {
+      const st = getComputedStyle(d);
+      if (st.position !== 'fixed' || Number(st.zIndex) < 2000) return false;
+      const r = d.getBoundingClientRect();
+      return r.width >= innerWidth - 2 && r.height >= innerHeight - 2;
+    }),
+  );
+
 const fokus = () =>
   p.evaluate(() => {
     const el = document.activeElement;
     if (!el || el === document.body) return { leer: true };
+    const vorhang = [...document.body.querySelectorAll('div')].find((d) => {
+      const st = getComputedStyle(d);
+      if (st.position !== 'fixed' || Number(st.zIndex) < 2000) return false;
+      const r = d.getBoundingClientRect();
+      return r.width >= innerWidth - 2 && r.height >= innerHeight - 2;
+    });
     return {
       leer: false,
       marke: !!el.closest('#sprungmarken'),
       imKopf: !!el.closest('header'),
+      // Hinter dem Vorhang: es gibt einen Vollbild-Modus, und der Fokus liegt
+      // nicht darin. Sprungmarken stehen davor, die zählen nicht mit.
+      hinten: !!vorhang && !vorhang.contains(el) && !el.closest('#sprungmarken'),
       name: (el.getAttribute('aria-label') || el.getAttribute('placeholder') || el.textContent || el.tagName).trim().slice(0, 24),
     };
   });
 
-console.log('\nMit der Tastatur allein – wie weit ist es zur Navigation?');
-await p.setViewportSize({ width: 1440, height: 950 });
-for (const hash of ANSICHTEN) {
-  await p.goto(base + '/' + hash, { waitUntil: 'networkidle' });
-  await p.waitForTimeout(2200);
-  const funde = [];
-
-  // 1. Weg zur Kopfzeile – gezählt wird jeder Tastendruck, den ein Mensch
-  //    tatsächlich tut. Wer auf eine Sprungmarke gerät, nimmt sie: dafür sind
-  //    sie da. Ohne sie sind es auf der Karte über 200.
+/** Weg zur Kopfzeile in Tastendrücken; eine genommene Sprungmarke zählt mit. */
+async function wegZurKopfzeile() {
   await anfang();
   let weg = 0;
-  for (let i = 0; i < 80 && !weg; i++) {
+  for (let i = 0; i < 80; i++) {
     await p.keyboard.press('Tab');
     let f = await fokus();
     weg++;
@@ -160,32 +181,71 @@ for (const hash of ANSICHTEN) {
       f = await fokus();
       weg++;
     }
-    if (!f.leer && f.imKopf) break;
-    if (weg >= 80) weg = 0;
+    if (!f.leer && f.imKopf) return weg;
   }
-  if (!weg) funde.push('Kopfzeile in 80 Tastendrücken nicht erreicht');
-  else if (weg > MAX_WEG) funde.push(`${weg} Tastendrücke bis zur Kopfzeile`);
+  return 0;
+}
 
-  // 2. Sprungmarken: greift jede?
-  let marken = 0;
-  for (let n = 1; n <= 4; n++) {
+console.log('\nMit der Tastatur allein – wie weit ist es zur Navigation?');
+await p.setViewportSize({ width: 1440, height: 950 });
+for (const hash of ANSICHTEN) {
+  await p.goto(base + '/' + hash, { waitUntil: 'networkidle' });
+  await p.waitForTimeout(2200);
+  const funde = [];
+
+  const imModus = await vorhangDa();
+  let bericht = '';
+
+  if (imModus) {
+    // Im Vollbild-Modus: kein Halt darf hinter dem Vorhang liegen.
     await anfang();
-    for (let i = 0; i < n; i++) await p.keyboard.press('Tab');
-    const m = await fokus();
-    if (m.leer || !m.marke) break;
-    marken++;
-    await p.keyboard.press('Enter');
-    await p.waitForTimeout(250);
-    const ziel = await fokus();
-    if (ziel.leer) funde.push(`„${m.name}" verliert den Fokus`);
-    else if (ziel.marke) funde.push(`„${m.name}" springt nirgendwohin`);
+    const hinten = [];
+    let halte = 0;
+    for (let i = 0; i < 60; i++) {
+      await p.keyboard.press('Tab');
+      const f = await fokus();
+      if (f.leer) break;
+      halte++;
+      if (f.hinten) hinten.push(f.name || '(ohne Namen)');
+    }
+    if (hinten.length) {
+      funde.push(`${hinten.length} von ${halte} Halten hinter dem Vorhang: ${[...new Set(hinten)].slice(0, 3).join(' · ')}`);
+    }
+
+    // Und Escape muss den Weg zur Kopfzeile wieder freigeben.
+    await p.keyboard.press('Escape');
+    await p.waitForTimeout(600);
+    const nachEscape = await wegZurKopfzeile();
+    if (!nachEscape) funde.push('nach Escape keine Kopfzeile erreichbar');
+    else if (nachEscape > MAX_WEG) funde.push(`nach Escape ${nachEscape} Tastendrücke bis zur Kopfzeile`);
+    bericht = `${halte} Halte, alle im Modus · nach Escape ${nachEscape} Tastendrücke zur Kopfzeile`;
+  } else {
+    // 1. Weg zur Kopfzeile – gezählt wird jeder Tastendruck, den ein Mensch
+    //    tatsächlich tut. Wer auf eine Sprungmarke gerät, nimmt sie: dafür sind
+    //    sie da. Ohne sie sind es auf der Karte über 200.
+    const weg = await wegZurKopfzeile();
+    if (!weg) funde.push('Kopfzeile in 80 Tastendrücken nicht erreicht');
+    else if (weg > MAX_WEG) funde.push(`${weg} Tastendrücke bis zur Kopfzeile`);
+
+    // 2. Sprungmarken: greift jede?
+    let marken = 0;
+    for (let n = 1; n <= 4; n++) {
+      await anfang();
+      for (let i = 0; i < n; i++) await p.keyboard.press('Tab');
+      const m = await fokus();
+      if (m.leer || !m.marke) break;
+      marken++;
+      await p.keyboard.press('Enter');
+      await p.waitForTimeout(250);
+      const ziel = await fokus();
+      if (ziel.leer) funde.push(`„${m.name}" verliert den Fokus`);
+      else if (ziel.marke) funde.push(`„${m.name}" springt nirgendwohin`);
+    }
+    bericht = `${weg} Tastendrücke zur Kopfzeile, ${marken} Sprungmarken greifen`;
   }
 
   if (funde.length) offen += funde.length;
-  console.log(
-    (hash || '(Startseite)').padEnd(20),
-    funde.length ? funde.join(' · ') : `${weg} Tastendrücke zur Kopfzeile, ${marken} Sprungmarken greifen`,
-  );
+  console.log((hash || '(Startseite)').padEnd(20), funde.length ? funde.join(' · ') : bericht);
 }
 
 console.log('Konsolenfehler:', [...new Set(errs)].slice(0, 4));

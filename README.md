@@ -224,6 +224,13 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   seine Sprache beim nächsten Besuch wieder.
 - **Tastatur** – Marker lassen sich mit Tabulator ansteuern und mit Enter oder
   Leertaste öffnen (Cluster zoomen hinein); Escape schließt von außen nach innen.
+- **Hinter dem Vorhang ist zu** – ein Vollbild-Modus deckt die Karte zu, aber
+  sie blieb im Baum stehen: mit der Maus unerreichbar, mit der Tastatur nicht.
+  Gemessen lagen in **jedem der elf Modi 117 der ersten 120 Tabulatorhalte
+  dort** – auf Ortsmarken, Zeitleiste und Suchfeld, die niemand sieht. Der
+  Hintergrund ist jetzt stillgelegt (`inert`), also aus Tabulatorreihe und
+  Vorlesebaum genommen; Escape gibt ihn wieder frei. Im Modus bleibt darum auch
+  keine Sprungmarke übrig – der erste Schlag führt direkt hinein.
 - **Sprungmarken** – der erste Tabulatorschlag zeigt „Zur Navigation springen",
   „Zur Suche springen", „Zur Karte springen". Vorher lag die Kopfzeile im
   Quelltext hinter Zeitleiste, Markern und Ortsliste: gemessen das 205. von 208
@@ -611,6 +618,9 @@ dreimal:
    Seitenanfang und Kopfzeile, und setzt jede Sprungmarke den Fokus wirklich?
    Eine Marke, die man nimmt, zählt als ein Druck; mehr als sechs gelten als
    Befund. Zur Gegenprobe ohne Marken gemessen: 208 Schritte auf der Karte.
+   Steht ein Vollbild-Modus offen, gilt die andere Frage: **kein Halt darf
+   hinter dem Vorhang liegen**, und Escape muss den Weg zur Kopfzeile wieder
+   freigeben.
 
 Braucht Playwright (`npm i -D playwright`), läuft gegen den Dev-Server oder
 gegen eine gebaute Vorschau:
