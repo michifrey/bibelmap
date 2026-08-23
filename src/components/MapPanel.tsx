@@ -30,6 +30,7 @@ export default function MapPanel({ title, open = false, onToggle, actions, child
           <button onClick={onToggle} className="flex items-center gap-1.5 sm:pointer-events-none">
             <span className="bm-eyebrow whitespace-nowrap">{title}</span>
             <svg
+              aria-hidden="true"
               viewBox="0 0 24 24"
               className={`h-4 w-4 text-white/60 transition-transform sm:hidden ${open ? '' : 'rotate-180'}`}
               fill="currentColor"

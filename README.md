@@ -96,16 +96,19 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 - **Teilen & Deep-Links** – jede Ansicht hat eine Adresse: `#ort=a15257a`
   (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
   `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`, `#hoeren=keller`
-  (Folgen einer Quelle) und `#hoeren=ort,a15257a` (Folgen zu einem Ort). Der Hash läuft beim
+  (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
+  `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel). Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
 - **Hören & Sehen** – ein eigener Modus über alle **473 Folgen** der vier
   eingebundenen Quellen (bibletunes.de, BibleProject, John Mark Comer, Timothy
   Keller): filterbar nach **Quelle, Buch, Epoche** und Freitext – die Suche
   versteht dabei auch Ortsnamen. Unter jeder Folge stehen die Orte, die sie
-  berührt; ein Klick darauf führt auf die Karte. Die Verknüpfung gilt in beide
-  Richtungen: jede Ortskarte zeigt weiter ihre Folgen und verlinkt mit
-  *Alle Folgen zu diesem Ort* zurück in den Modus (`#hoeren=ort,…`).
+  berührt; ein Klick darauf führt auf die Karte. Die Verknüpfung gilt in alle
+  Richtungen: jede Ortskarte verlinkt mit *Alle Folgen zu diesem Ort* in den
+  Modus (`#hoeren=ort,…`), der **Lesemodus** zeigt neben Kapitel und Text, wie
+  viele Folgen genau diese Stelle behandeln (`#hoeren=stelle,Mark,6`), und von
+  dort führt jede Bibelstelle wieder in den Text zurück.
 
 ### Drumherum
 

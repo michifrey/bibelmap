@@ -375,6 +375,20 @@ export default function App() {
       .sort((a, b) => a.km - b.km);
   }, [places, selected, lang]);
 
+  /** Aus „Hören & Sehen" in den Lesemodus – dieselbe Stelle, nur als Text. */
+  function openReading(osis: string, chapter: number) {
+    setReadingNav({ osis, chapter });
+    setMode('present');
+    setNavEpoch((n) => n + 1);
+  }
+
+  /** Aus dem Lesemodus zu den Folgen, die dieses Kapitel behandeln. */
+  function openMediaForRef(osis: string, chapter: number) {
+    setMediaNav({ ref: { osis, chapter } });
+    setMode('media');
+    setNavEpoch((n) => n + 1);
+  }
+
   function openRef() {
     if (!ref) return;
     setReadingNav({ osis: ref.osis, chapter: ref.chapter });
@@ -609,6 +623,7 @@ export default function App() {
                 initialBook={readingNav?.osis ?? null}
                 initialChapter={readingNav?.chapter}
                 onNavigate={setReadingNav}
+                onOpenMedia={openMediaForRef}
                 onExit={() => setMode(null)}
               />
               </Suspense>
@@ -627,6 +642,7 @@ export default function App() {
                   initial={mediaNav}
                   onNavigate={setMediaNav}
                   onShowPlace={showPlaceFromGenealogy}
+                  onOpenReading={openReading}
                   onExit={() => setMode(null)}
                 />
               </Suspense>
