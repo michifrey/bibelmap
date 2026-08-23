@@ -441,7 +441,10 @@ function PresentationBar({
             {t('beamer')}
           </button>
         )}
-        <button onClick={onExit} className="bg-gold px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold-deep">
+        {/* Weiß auf Gold sind 2,19:1 – dieselbe Paarung war im
+            Sprachschalter schon einmal fällig. `.bm-btn-gold` setzt die
+            dunkle Tinte darauf und kommt auf 5,30:1. */}
+        <button onClick={onExit} className="bm-btn bm-btn-gold">
           {t('exit')} ✕
         </button>
       </div>
