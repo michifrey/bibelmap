@@ -60,16 +60,46 @@ const placeById = new Map(places.map((p) => [p.id, p]));
 
 // --- feeds -----------------------------------------------------------------
 
+const NAMED_ENTITIES = {
+  lt: '<',
+  gt: '>',
+  amp: '&',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+};
+
+/**
+ * Entities auflösen – benannte wie numerische, in *einem* Durchgang. Der
+ * Unterschied ist nicht kosmetisch: der Feed von Practicing the Way schreibt
+ * die Zeitzone seiner Sendedaten als `&#43;0000`, und ein Datum, das als
+ * „09:00:32 &#43;0000" beim Datumsleser ankommt, ist keines. Genau daran haben
+ * 229 Folgen ihr Datum verloren.
+ *
+ * Ein Durchgang, damit aus `&amp;#43;` nicht `+` wird: was der Feed als Text
+ * meint, bleibt Text.
+ */
+function decodeEntities(s) {
+  return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, body) => {
+    if (body[0] === '#') {
+      const code =
+        body[1] === 'x' || body[1] === 'X' ? parseInt(body.slice(2), 16) : Number(body.slice(1));
+      if (!Number.isFinite(code) || code < 1 || code > 0x10ffff) return match;
+      try {
+        return String.fromCodePoint(code);
+      } catch {
+        return match;
+      }
+    }
+    // Unbekannte Namen bleiben stehen; raten hilft niemandem.
+    return NAMED_ENTITIES[body.toLowerCase()] ?? match;
+  });
+}
+
 function stripTags(s) {
-  return s
-    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;|&apos;/g, "'")
-    .replace(/&nbsp;/g, ' ')
+  return decodeEntities(
+    s.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').replace(/<[^>]+>/g, ' '),
+  )
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -190,11 +220,14 @@ for (const source of sources) {
   }
   const items = parseFeed(xml);
   let withRef = 0;
+  /** Wie viele Folgen ein lesbares Sendedatum mitbringen. */
+  let withDate = 0;
   for (const item of items) {
     if (!item.title) continue;
     const refs = findRefs(`${item.title} ${item.summary}`, lexicon, books);
     if (!refs.length) continue; // topical episode — no passage, no place
     withRef++;
+    if (isoDate(item.date)) withDate++;
 
     const placeIds = new Set();
     const eras = new Set();
@@ -214,18 +247,24 @@ for (const source of sources) {
       eras: [...eras],
     });
   }
-  report.push({ id: source.id, items: items.length, withRef });
+  report.push({ id: source.id, items: items.length, withRef, withDate });
 }
 
-// Read BP_GUIDE_OVERRIDE straight out of books.ts rather than keeping a second
-// copy here — one of the two would drift.
-const bpOverrides = (() => {
-  const src = fs.readFileSync(path.join(ROOT, 'src', 'data', 'books.ts'), 'utf8');
-  const block = src.match(/BP_GUIDE_OVERRIDE[^=]*=\s*\{([\s\S]*?)\};/);
-  const map = {};
-  if (block) for (const m of block[1].matchAll(/'([^']+)':\s*'([^']+)'/g)) map[m[1]] = m[2];
-  return map;
-})();
+// Die Ausnahmen der Guide-Adressen stehen in `src/data/bpGuides.json` – dieselbe
+// Datei liest die App und `npm run check:bp`.
+//
+// Vorher stand hier ein Regex, der sie aus `books.ts` schnitt. Als die Tabelle
+// dort zu einem JSON-Import wurde, fand er nichts mehr, und die sechs
+// zusammengefassten Bücher bekamen still `book-of-1-samuel` statt
+// `books-of-samuel`. Still ist das Wort, auf das es ankommt: aufgefallen ist es
+// erst beim nächsten Neubau. Eine Datei zu lesen kann so nicht scheitern – und
+// wenn sie leer ist, sagt der Lauf es.
+const bpOverrides = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'src', 'data', 'bpGuides.json'), 'utf8'),
+);
+if (!Object.keys(bpOverrides).length) {
+  console.warn('Hinweis: src/data/bpGuides.json ist leer – keine zusammengefassten Guides.');
+}
 
 function bookSlug(book) {
   return (
@@ -281,7 +320,10 @@ console.log('\nQuellen:');
 for (const r of report) {
   console.log(
     `  ${r.id.padEnd(16)} ${String(r.items).padStart(5)} Einträge, ` +
-      `${String(r.withRef).padStart(5)} mit Bibelstelle${r.note ? '  — ' + r.note : ''}`,
+      `${String(r.withRef).padStart(5)} mit Bibelstelle, ` +
+      // Steht hier plötzlich 0, wo gestern 229 stand, ist der Datumsleser
+      // kaputt – genau so ist es einmal unbemerkt passiert.
+      `${String(r.withDate ?? 0).padStart(5)} mit Datum${r.note ? '  — ' + r.note : ''}`,
   );
 }
 const placesCovered = placesCoveredCount;
