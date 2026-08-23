@@ -233,7 +233,18 @@ npm install
 npm run dev        # Vite Dev-Server
 npm run build      # Typecheck + Production-Build
 npm run preview    # Build lokal anschauen
+npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
+
+`npm run check` bündelt die vier Prüfungen, die von sich aus immer dasselbe
+Ergebnis liefern – Buchkürzel, Zeitdokumente, Stammesgrenzen, Farbkontraste –
+und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
+eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
+Veröffentlichung auf, statt still mitzufahren.
+
+Bewusst nicht dabei sind `npm run check:bp` und `npm run check:links`. Beide
+fragen fremde Server; ein Anbieter mit Schluckauf darf keinen Deploy blockieren
+und keinen falschen Befund erzeugen. Die laufen von Hand.
 
 ### Deployment (GitHub Pages)
 
