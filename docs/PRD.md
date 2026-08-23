@@ -756,7 +756,139 @@ zu ihrem Tod mit 127 Jahren.
       umstritten", „Salem wird traditionell mit Jerusalem gleichgesetzt".
 - [x] Im Browser: 3.494 km, 140 Tagesmärsche, 16 Etappen mit „Orte am Weg".
 
-### 4.43 Jesus – Leben und Wege (eigene Sektion) — P1 ✅
+### 4.42 Mose als eigener Weg, der Auszug nach 4. Mose 33 — P1 ✅
+
+**Mose (neu, 12 Stationen)** – ein Leben als Route, nicht ein Ereignis: Nil,
+Totschlag, Midian, brennender Busch, Rückkehr mit achtzig, Zoan vor dem Pharao,
+Passanacht, Schilfmeer, Sinai, Kadesch, Berg Hor (Aarons Tod), Nebo.
+
+**Der Auszug: 10 → 11 Stationen**, Text je Station 85 → 161 Zeichen. Die
+Stationen folgen jetzt ausdrücklich der Liste in 4. Mose 33; die Bibelstellen
+nennen beide Quellen (2. Mose und 4. Mose 33).
+
+**Akzeptanzkriterien**
+- [x] Jede Station trägt eine echte Bibelstelle; alle `placeId` und Koordinaten
+      gegen `places.json` geprüft, keine Abweichung.
+- [x] Keine Station ohne Weg: „Vor dem Pharao" lag zunächst auf denselben
+      Koordinaten wie „Zurück nach Ägypten" und „Ramses" – drei Punkte, zwei
+      Etappen der Länge null. Gelöst nicht durch geratene Koordinaten, sondern
+      durch **Zoan**: Psalm 78,12.43 verortet die Wunder „auf dem Felde Zoan".
+- [x] Was die Liste nennt und niemand lokalisieren kann, steht als solches da:
+      „Von Alusch weiß niemand, wo es lag."
+- [x] Umstrittenes bleibt umstritten: die Lage von Sinai und Meer steht im
+      Vorspann der Reise.
+- [x] Im Browser: Mose 1.800 km / 72 Tagesmärsche, der Auszug 751 km / 30 –
+      keine Nulletappe, keine Konsolenfehler.
+
+**Bekannt und nicht angerührt:** In der Exil-Reise teilen sich „Am Fluss Kebar"
+und „Babylon" einen Punkt im Ortsdatensatz. Das zu trennen hieße, Koordinaten
+zu erfinden.
+
+### 4.43 Vierzig Jahre Wüste: 10 → 14 Stationen — P1 ✅
+
+Damit ist der Mose-Bogen fertig erzählt: Auszug (11), Mose selbst (12), die
+Wüstenjahre (14). Text je Station 77 → 180 Zeichen.
+
+Neu dabei: **Kibroth-Hattaawa** (die Wachteln, und der Name „Lustgräber"),
+**Hazeroth** (Mirjam und Aaron gegen ihren Bruder, und das Lager wartet sieben
+Tage auf sie), die **Wüste Paran** als Ausgangspunkt der Kundschafter, die
+**Wüste Zin** (Mirjams Grab, und der Schlag auf den Felsen) und der **Berg
+Hor** (Aarons Tod).
+
+**Akzeptanzkriterien**
+- [x] Alle 14 Stationen mit echter Bibelstelle, `placeId` und Koordinate gegen
+      `places.json` geprüft – keine Abweichung, keine Nulletappe.
+- [x] Die Lücke steht als Lücke da: „Zwischen Kadesch und hier liegen in der
+      Liste achtzehn Lager, von denen kein einziges sicher zu zeigen ist."
+      Und im Vorspann: 4. Mose 33 zählt 42 Lager, die meisten unlokalisierbar.
+- [x] Im Browser: 992 km, 40 Tagesmärsche, 13 Etappen mit „Orte am Weg".
+
+### 4.44 Die vier übrigen Wege des Alten Testaments — P1 ✅
+
+Nach Abraham, Mose, Auszug und Wüste blieben vier alttestamentliche Reisen
+stehen, die zwar auf der Karte lagen, aber je Station nur einen Satz trugen.
+Alle vier auf einmal, damit das Alte Testament nicht länger die dünnere Hälfte
+ist:
+
+- **Jakob** 11 → 14 Stationen, jetzt das ganze Leben von 1. Mose 25 bis 50:
+  Beerscheba (das Linsengericht und der erschlichene Segen), Bethel (die
+  Leiter), Haran (zwanzig Jahre bei Laban), Gilead, Mahanajim, Pnuël (der Kampf
+  am Jabbok), Sukkot (die Versöhnung mit Esau), Sichem, Bethel zurück, Efrata
+  (Rahels Grab), Hebron (Isaaks Tod), Beerscheba (der Aufbruch nach Ägypten),
+  Gosen, Hebron (Machpela).
+- **Landnahme** 9 → 14: neu **Ebal und Garizim** (der Segen und der Fluch
+  vorgelesen), **Lachis**, **Debir**, die **Wasser von Merom** und **Silo**
+  (die Verteilung des Landes).
+- **David** 9 → 15: neu **Gibea** (das Fenster, durch das Michal ihn
+  hinunterlässt), **Mizpe in Moab**, die **Wüste Maon**, die **Wüste Sif** (der
+  Speer am Kopfende), **Hebron** (die Salbung über Juda) und **Jerusalem**.
+- **Elia** 8 → 13: neu **Jesreel** (Nabots Weinberg), **Samaria**, **Gilgal und
+  Bethel**, **Jericho** und **der Jordan** (der Wagen aus Feuer).
+
+Text je Station: Jakob 196, Landnahme 177, David 187, Elia 191 Zeichen. Damit
+tragen elf der fünfzehn Reisen ausgeführte Stationstexte; dünn blieben Josef
+(6), Jona (6), Exil (6) und Rückkehr (4) – nachgeholt in § 4.45.
+
+**Akzeptanzkriterien**
+- [x] Jede neue Station mit Bibelstelle, `placeId` und Koordinate gegen
+      `places.json` geprüft: 0 unbekannte IDs, 0 Koordinatenabweichungen,
+      0 Stationen ohne Stelle.
+- [x] Keine neue Nulletappe – zwei Stationen auf demselben Punkt gäbe eine
+      Etappe von 0 km. (Damals noch offen: im Exil lagen „Am Fluss Kebar" und
+      „Babylon" auf einem Punkt; behoben in § 4.45.)
+- [x] Umstrittenes steht als umstritten da (Debir, Merom), Überliefertes als
+      Überlieferung.
+- [x] Im Browser gemessen: Jakob 2.109 km / 84 Tagesmärsche, Landnahme 532 km /
+      21, David 429 km / 17, Elia 1.373 km / 55 – keine Etappe ohne Länge,
+      keine Fehlermeldung in der Konsole.
+
+### 4.45 Die letzten vier dünnen Reisen: Josef, Jona, Exil, Rückkehr — P1 ✅
+
+Damit trägt jede der fünfzehn Reisen ausgeführte Stationstexte; keine steht mehr
+mit einem Satz je Station da.
+
+- **Josef** 6 → 12 Stationen, jetzt 1. Mose 37–50 statt 37–47: Noph (Potifars
+  Haus und das Gefängnis), **On** (der Traumdeuter wird Wesir und heiratet die
+  Tochter des Priesters von On), der Hunger in Hebron, der Becher in Benjamins
+  Sack, die **Tenne Atad** jenseits des Jordans (sieben Tage Klage, und die
+  Kanaaniter nennen den Ort Abel-Mizrajim), **Machpela** – und als Schluss
+  **Sichem: das Grab**, wo Josua nach Josua 24,32 Josefs Gebeine begräbt, an
+  genau der Stelle, an der die Geschichte schiefging.
+- **Exil** 6 → 9: **Lachis** und **Aseka**, die nach Jeremia 34,7 zuletzt noch
+  hielten – mit der Tonscherbe von 1935, auf der ein Vorposten meldet, die
+  Feuerzeichen von Aseka seien nicht mehr zu sehen; die **Ebene von Jericho**,
+  wo Zedekia eingeholt wird; das **große Wasser bei Gibeon** (Jeremia 41).
+- **Rückkehr** 4 → 8: **Jericho** (die Heimkehrerliste zählt Ort für Ort),
+  **Jerusalem: der Grundstein** getrennt von **Jerusalem: die Mauer**, und die
+  **Ebene Ono**, in die Sanballat viermal einlädt und in die Nehemia viermal
+  nicht geht.
+- **Jona** bleibt bei 6 Stationen. Das Buch hat nicht mehr Geographie: vier
+  Orte und zwei Punkte auf See. Statt Stationen zu erfinden, wuchs der Text von
+  93 auf 233 Zeichen je Station.
+
+**Akzeptanzkriterien**
+- [x] 0 unbekannte `placeId`s, 0 Koordinatenabweichungen gegen `places.json`,
+      0 Stationen ohne Bibelstelle.
+- [x] **Keine Nulletappe mehr in der ganzen Datei.** Die bekannte Ausnahme —
+      „Am Fluss Kebar" und „Babylon" lagen im Exil auf einem Punkt — ist
+      behoben, indem beide zu einer Station „Babylonien: am Fluss Kebar"
+      zusammengefasst wurden. Sie zu trennen hätte geheißen, Koordinaten zu
+      erfinden; wo der Kanal Kebar lief, steht jetzt als Unbekanntes im Text.
+- [x] Umstrittenes bleibt umstritten: Tarsis („Südspanien oder Kilikien"), der
+      Verlauf des Kebar, die ungenannte Stadt in 1. Mose 39 („Die Bibel nennt
+      keine Stadt; Hauptstadt war damals Memphis").
+- [x] Was nicht stattfand, steht nicht als Reise da: Nehemia ging nicht nach
+      Ono, und der Stationstext sagt das ausdrücklich samt Hinweis, dass die
+      Linie schematisch ist.
+- [x] Behauptete Entfernungen nachgerechnet: Gat-Hefer → Ninive 826 km („gut
+      achthundert"), Hebron → Sichem 78 km („gut siebzig"), Jericho → Ribla
+      306 km („gut dreihundert").
+- [x] Im Browser in **beiden** Sprachen gezählt, nicht geschätzt: Josef 12
+      Stationen / 2.555 km / 102 Tagesmärsche, Jona 6 / 2.871 km / 115, Exil
+      9 / 2.173 km / 87, Rückkehr 8 / 4.883 km / 195 – keine Etappe ohne
+      Länge, kein JavaScript-Fehler.
+
+### 4.46 Jesus – Leben und Wege (eigene Sektion) — P1 ✅
 
 **Anlass:** Die Evangelien waren drei Routen unter fünfzehn in „Reisen &
 Geschichten“: 5 + 8 + 7 Stationen für dreißig Jahre. Wer wissen wollte, was in
@@ -800,7 +932,7 @@ Serienseite.
       als unbestätigt aus. Ebenso offen: Folgen aus Staffel 2 und 5, die hier
       bewusst fehlen, statt geraten zu werden.
 
-### 4.42 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.47 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
