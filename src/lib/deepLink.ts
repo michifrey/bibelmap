@@ -34,6 +34,12 @@ export interface Route {
   /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
   compare?: string;
   /**
+   * Der selbst zusammengestellte Weg: `#weg=a15257a,a13122`. Die Adresse
+   * trägt ihn mit, damit ein Weg weitergegeben werden kann – gespeichert wird
+   * er sonst nirgends als im Browser dessen, der ihn gebaut hat.
+   */
+  own?: string[];
+  /**
    * Reiter und Stand der Stammbaum-Ansicht. `#stammbaum=gebiete,juda,722`
    * zeigt Juda auf der Stammeskarte im Jahr des Falls von Samaria. Stamm und
    * Jahr stehen in beliebiger Reihenfolge – eine reine Zahl ist das Jahr,
@@ -125,6 +131,10 @@ export function parseHash(hash: string): Route | null {
             ? { phase: args[0], journey: args[1] }
             : { phase: args[0], event: args[1] },
       };
+    case 'weg':
+      return args.length
+        ? { view: 'map', mode: 'route', own: args.filter(Boolean) }
+        : { view: 'map', mode: 'route' };
     case 'vergleich':
       return args[0]
         ? { view: 'map', mode: 'compare', compare: args[0] }
@@ -175,6 +185,9 @@ export function formatRoute(route: Route): string {
   }
   if (mode === 'compare') {
     return route.compare ? `#vergleich=${route.compare}` : '#vergleich';
+  }
+  if (mode === 'route') {
+    return route.own?.length ? `#weg=${route.own.join(',')}` : '#weg';
   }
   if (mode === 'church') {
     const c = route.church;
