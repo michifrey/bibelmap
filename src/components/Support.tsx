@@ -107,7 +107,12 @@ export default function Support({ lang, onLang, onExit }: Props) {
         </svg>
 
         <div className="relative">
-          <div className="flex items-start justify-between gap-6">
+          {/*
+            Auf dem Telefon untereinander: nebeneinander blieb der Vorspann in
+            einer 150 Pixel schmalen Spalte neben den Knöpfen stehen und brach
+            in sechs Zeilen um.
+          */}
+          <div className="flex flex-col-reverse items-start gap-4 sm:flex-row sm:justify-between sm:gap-6">
             <span className="bm-eyebrow text-mint">{t('supportSub')}</span>
             <div className="flex flex-none items-center gap-2">
               <LangToggle lang={lang} onLang={onLang} variant="inline" />

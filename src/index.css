@@ -162,6 +162,11 @@ body {
        separately — setting `color: transparent` would erase the stroke too. */
     -webkit-text-stroke: 2px currentColor;
     -webkit-text-fill-color: transparent;
+    /* Outlined type needs more room than filled type, not less. `.font-display`
+       sets -0.025em, and the stroke grows every glyph by another 1px on each
+       side — so neighbouring letters overlapped by about 4px and their outlines
+       cut through each other. "VON FREMDER ARBEIT" read as a tangle. */
+    letter-spacing: 0.04em;
   }
   @supports not (-webkit-text-stroke: 2px currentColor) {
     .bm-outline {
