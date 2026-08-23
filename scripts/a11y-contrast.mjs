@@ -40,10 +40,13 @@ try {
   ({ chromium } = await import('playwright-core'));
 }
 
+// Nicht nur je Modus, sondern je Reiter: `#stammbaum` öffnet den Zeitstrahl,
+// und die Stammesgebiete daneben wurden beim ersten Durchgang nie gemessen.
 const VIEWS = [
-  '', '#karte', '#reise=exodus,2', '#mission=modern', '#quiz', '#lesen=Acts,13',
-  '#stammbaum', '#graph', '#kirche', '#vergleich', '#hoeren', '#gelaende',
-  '#heilsgeschichte', '#unterstuetzen', '#nachweise',
+  '', '#karte', '#reise=exodus,2', '#mission=modern', '#mission=journeys',
+  '#quiz', '#lesen=Acts,13', '#stammbaum', '#stammbaum=baum', '#stammbaum=gebiete',
+  '#graph', '#kirche', '#kirche=konzil,chalcedon', '#vergleich', '#hoeren',
+  '#gelaende', '#heilsgeschichte', '#unterstuetzen', '#nachweise',
 ];
 
 const measure = () => {
