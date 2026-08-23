@@ -297,6 +297,23 @@ Antworten kommen von Filtern und Proxys, nicht von der Seite, und bleiben
 deshalb **unentschieden**. Antwortet keine einzige Adresse, endet der Lauf mit
 Code 2 und ohne Urteil.
 
+### Spendenlinks der Unterstützen-Seite
+
+`src/data/support.ts` verlinkt zu jedem Projekt die Startseite und, wo es eine
+gibt, die Spendenseite. Ein toter Spendenlink ist die eine Sorte Fehler, die
+diese Seite nicht haben darf – sie hat genau den Zweck, Geld zu den Projekten zu
+leiten:
+
+```bash
+npm run check:links              # alle Adressen aus support.ts
+npm run check:links -- --donate  # nur die Spendenseiten
+```
+
+Dieselben Regeln wie bei `check:bp`: nur `404`/`410` sind eine Aussage, alles
+andere bleibt unentschieden, und ein vollständig geblockter Lauf endet mit Code
+2 statt mit einem Fehlurteil. In der Agenten-Umgebung sind fast alle diese Hosts
+gesperrt; wer Netzzugriff hat, klärt die Frage damit in einer Minute.
+
 ### Reisen & Geschichten
 
 Die Stationen stehen in `src/data/journeys.ts`: je Station Name, Bibelstelle,
