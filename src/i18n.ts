@@ -301,6 +301,13 @@ const STRINGS: Dict = {
     en: 'The Table of Nations from 1 Chronicles 1–9 as an unfolding tree – from Adam to the twelve tribes of Israel.',
   },
   lCard3Cta: { de: 'Öffnen', en: 'Open' },
+  lCard4Kicker: { de: '04 — Vertiefen', en: '04 — Go deeper' },
+  lCard4Title: { de: 'Hören & Sehen', en: 'Listen & watch' },
+  lCard4Body: {
+    de: '473 Folgen aus vier Quellen, geordnet nach den Bibelstellen, die sie nennen – und unter jeder stehen die Orte, um die es geht.',
+    en: '473 episodes from four sources, indexed by the passages they cite – and each one lists the places it touches.',
+  },
+  lCard4Cta: { de: 'Stöbern', en: 'Browse' },
   lStatPlaces: { de: 'Kartierte Orte', en: 'Places mapped' },
   lStatEras: { de: 'Epochen', en: 'Eras' },
   lStatBooks: { de: 'Bücher im Entdeckermodus', en: 'Books in explorer mode' },

@@ -145,7 +145,8 @@ export default function App() {
     }
     setAtStart(false);
     setView(target === 'tree' ? 'tree' : 'map');
-    setMode(target === 'present' ? 'present' : null);
+    if (target === 'media') setMediaNav(null);
+    setMode(target === 'present' ? 'present' : target === 'media' ? 'media' : null);
   }
 
   function openSupport() {

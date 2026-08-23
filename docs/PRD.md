@@ -323,6 +323,8 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       **Neueste** (nach Sendedatum). Was kein Datum hat, steht dann am Ende und
       sagt das auch – nicht am Anfang, wo eine leere Angabe wie „ganz neu"
       aussähe.
+- [x] Auf der Startseite als vierter Weg hinein (Karte 04) und in der Kopfzeile –
+      ein Modus, den man nur über das Modi-Menü findet, findet kaum jemand.
 - [x] Offline vollständig: der Medien-Index wird im Leerlauf mitgeholt und liegt
       damit im Cache des Service Workers – sonst stünde der Modus ohne Netz
       leer da, während jede andere Ansicht vollständig ist.

@@ -133,6 +133,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   die Lizenz auf ihren Text. Bilder, die erst zur Laufzeit über Wikidata
   gefunden werden, holen beides über die Commons-API nach – die Lizenzen
   verlangen die Nennung, ein „© Name" allein genügt ihnen nicht.
+- **Startseite** – vier Wege hinein: Karte, Entdeckermodus, Stammbäume und
+  Hören & Sehen, dazu die Kopfzeile mit denselben Zielen.
 - **Projekte unterstützen** – eine eigene Seite (Startseite, Modi-Menü, Direktlink
   `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
   selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
