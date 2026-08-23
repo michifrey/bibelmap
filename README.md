@@ -80,6 +80,20 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Calvin, Spurgeon, Bonhoeffer …). Verlauf von links nach rechts mit einer
   **Zeitschiene** unten; Knoten lassen sich aufklappen und zeigen per Klick
   Lebensdaten, Bibelstellen und eine Kurzbeschreibung. Umschalter **Karte ↔ Zeitbaum**.
+- **Das verteilte Land** – die Karte zum Stammbaum: die **zwölf Stämme Israels**
+  als Gebiete statt als Punkte (Josua 13–21). Die Grenzen teilen sich ihre
+  Eckpunkte, folgen der Küste, dem Jordan und dem Toten Meer und stoßen deshalb
+  aneinander, statt sich zu überlappen. Die Stammesnamen stehen wie auf einer
+  Atlasseite direkt im Gebiet – und treten von selbst zurück, wo das Gebiet auf
+  dem Bildschirm gerade zu klein für den Namen ist. Links stehen die Zwölf nach
+  **Müttern** geordnet (Lea, Rahel, Bilha, Silpa); ein Klick öffnet die Karte des
+  Stammes mit Namensbedeutung, **Los**, **Jakobs Segen** (1. Mose 49) und
+  **Mose-Segen** (5. Mose 33), den Orten im Gebiet und den **Nachbarstämmen** –
+  jeder davon ein Sprung weiter. Dazu die Sonderfälle, die eine reine Loskarte
+  verschweigt: **Levi** bekommt kein Land, sondern die sechs **Zufluchtsstädte**,
+  und **Dan** hält sein Los nicht, sondern zieht ans Nordende des Landes.
+  Umschaltbar zwischen Nacht-, Relief- und Satellitenkarte; die Völkertafel und
+  die Personen der Linie lassen sich darüberlegen.
 
 ### Lernen & weitergeben
 
