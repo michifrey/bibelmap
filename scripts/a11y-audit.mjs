@@ -1,5 +1,6 @@
-// Prüft, ob jedes Bedienelement einen Namen hat und jede Grafik entweder
-// benannt oder als Beiwerk gekennzeichnet ist – über alle Ansichten hinweg.
+// Prüft dreierlei über alle Ansichten hinweg: ob jedes Bedienelement einen
+// Namen hat (und einen deutschen), ob auf Telefonbreite alles im Bild liegt,
+// und ob man mit der Tastatur allein zur Navigation kommt.
 //
 //   npm run dev                        # in einem Fenster
 //   node scripts/a11y-audit.mjs        # in einem zweiten
@@ -102,6 +103,91 @@ for (const hash of ANSICHTEN) {
   if (r.length) offen += r.length;
   console.log((hash || '(Startseite)').padEnd(20), r.length ? r.length + ' offen: ' + r.slice(0, 3).join(' · ') : 'alles im Bild');
 }
+
+// Dritter Durchgang: mit der Tastatur allein.
+//
+// Der Kontrast wird geprüft, die Namen werden geprüft, die Erreichbarkeit auch
+// – aber ob jemand ohne Maus überhaupt zur Navigation kommt, hat lange niemand
+// gemessen. Auf der Karte lag die Kopfzeile im Quelltext hinter Zeitleiste,
+// Markern und Ortsliste: das 205. von 208 ansteuerbaren Elementen, 208
+// Tabulatorschritte, bis sie den Fokus hatte. Sichtbar ist das nie, spürbar
+// sofort.
+//
+// Geprüft wird darum zweierlei, beides schlicht:
+//   1. Wie viele Tabulatorschritte liegen zwischen Seitenanfang und Kopfzeile?
+//   2. Setzt jede Sprungmarke den Fokus wirklich – und nicht ins Leere?
+const MAX_WEG = 6;
+
+/** Zurück an den Seitenanfang, ohne neu zu laden. */
+const anfang = () =>
+  p.evaluate(() => {
+    const nav = document.getElementById('sprungmarken');
+    if (nav) nav.focus({ preventScroll: true });
+    else document.body.focus();
+  });
+
+const fokus = () =>
+  p.evaluate(() => {
+    const el = document.activeElement;
+    if (!el || el === document.body) return { leer: true };
+    return {
+      leer: false,
+      marke: !!el.closest('#sprungmarken'),
+      imKopf: !!el.closest('header'),
+      name: (el.getAttribute('aria-label') || el.getAttribute('placeholder') || el.textContent || el.tagName).trim().slice(0, 24),
+    };
+  });
+
+console.log('\nMit der Tastatur allein – wie weit ist es zur Navigation?');
+await p.setViewportSize({ width: 1440, height: 950 });
+for (const hash of ANSICHTEN) {
+  await p.goto(base + '/' + hash, { waitUntil: 'networkidle' });
+  await p.waitForTimeout(2200);
+  const funde = [];
+
+  // 1. Weg zur Kopfzeile – gezählt wird jeder Tastendruck, den ein Mensch
+  //    tatsächlich tut. Wer auf eine Sprungmarke gerät, nimmt sie: dafür sind
+  //    sie da. Ohne sie sind es auf der Karte über 200.
+  await anfang();
+  let weg = 0;
+  for (let i = 0; i < 80 && !weg; i++) {
+    await p.keyboard.press('Tab');
+    let f = await fokus();
+    weg++;
+    if (!f.leer && f.marke) {
+      await p.keyboard.press('Enter');
+      await p.waitForTimeout(200);
+      f = await fokus();
+      weg++;
+    }
+    if (!f.leer && f.imKopf) break;
+    if (weg >= 80) weg = 0;
+  }
+  if (!weg) funde.push('Kopfzeile in 80 Tastendrücken nicht erreicht');
+  else if (weg > MAX_WEG) funde.push(`${weg} Tastendrücke bis zur Kopfzeile`);
+
+  // 2. Sprungmarken: greift jede?
+  let marken = 0;
+  for (let n = 1; n <= 4; n++) {
+    await anfang();
+    for (let i = 0; i < n; i++) await p.keyboard.press('Tab');
+    const m = await fokus();
+    if (m.leer || !m.marke) break;
+    marken++;
+    await p.keyboard.press('Enter');
+    await p.waitForTimeout(250);
+    const ziel = await fokus();
+    if (ziel.leer) funde.push(`„${m.name}" verliert den Fokus`);
+    else if (ziel.marke) funde.push(`„${m.name}" springt nirgendwohin`);
+  }
+
+  if (funde.length) offen += funde.length;
+  console.log(
+    (hash || '(Startseite)').padEnd(20),
+    funde.length ? funde.join(' · ') : `${weg} Tastendrücke zur Kopfzeile, ${marken} Sprungmarken greifen`,
+  );
+}
+
 console.log('Konsolenfehler:', [...new Set(errs)].slice(0, 4));
 await b.close();
 process.exit(offen ? 1 : 0);

@@ -211,10 +211,18 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   seine Sprache beim nächsten Besuch wieder.
 - **Tastatur** – Marker lassen sich mit Tabulator ansteuern und mit Enter oder
   Leertaste öffnen (Cluster zoomen hinein); Escape schließt von außen nach innen.
-- **Alles erreichbar** – die A11y-Prüfung geht jede Ansicht zweimal durch:
+- **Sprungmarken** – der erste Tabulatorschlag zeigt „Zur Navigation springen",
+  „Zur Suche springen", „Zur Karte springen". Vorher lag die Kopfzeile im
+  Quelltext hinter Zeitleiste, Markern und Ortsliste: gemessen das 205. von 208
+  ansteuerbaren Elementen, **208 Tabulatorschritte**, bis sie den Fokus hatte –
+  in „Hören & Sehen" das 303. Jetzt sind es in jeder Ansicht **zwei
+  Tastendrücke**. Wer die Maus benutzt, sieht die Marken nie – sie werden erst
+  sichtbar, wenn sie den Fokus haben.
+- **Alles erreichbar** – die A11y-Prüfung geht jede Ansicht dreimal durch:
   einmal auf Namen, einmal auf 390 Pixeln daraufhin, ob ein Bedienelement aus
-  dem Bild ragt. Ein Knopf, der 116 Pixel rechts danebensteht, lässt sich nicht
-  drücken – und genau das blieb in drei Vollbild-Modi lange unbemerkt.
+  dem Bild ragt, und einmal nur mit der Tastatur. Ein Knopf, der 116 Pixel
+  rechts danebensteht, lässt sich nicht drücken – und genau das blieb in drei
+  Vollbild-Modi lange unbemerkt.
 - **Zweisprachig bis in die Bibliotheken** – Leaflet und MapLibre beschriften
   ihre eigenen Bedienelemente fest auf Englisch („Zoom in", „Close popup",
   „Map"). `src/lib/mapLocale.ts` setzt sie für alle sechs Leaflet-Karten aus
@@ -579,9 +587,20 @@ angaben folgen einer gängigen konservativen Chronologie.
 
 ### Barrierefreiheit prüfen
 
-`scripts/a11y-audit.mjs` geht mit einem Browser durch alle zwölf Ansichten und
-meldet, was keinen Namen hat – Icon-Knöpfe, Regler, Grafiken. Braucht Playwright
-(`npm i -D playwright`), läuft gegen den Dev-Server:
+`scripts/a11y-audit.mjs` geht mit einem Browser durch alle vierzehn Ansichten,
+dreimal:
+
+1. **Namen** – was keinen hat (Icon-Knöpfe, Regler, Grafiken) und was einen
+   englischen hat, den eine Bibliothek mitbringt.
+2. **390 Pixel** – ragt ein Bedienelement seitlich aus dem Bild? Was in einem
+   scrollbaren Streifen liegt, zählt nicht.
+3. **Nur mit der Tastatur** – wie viele Tastendrücke liegen zwischen
+   Seitenanfang und Kopfzeile, und setzt jede Sprungmarke den Fokus wirklich?
+   Eine Marke, die man nimmt, zählt als ein Druck; mehr als sechs gelten als
+   Befund. Zur Gegenprobe ohne Marken gemessen: 208 Schritte auf der Karte.
+
+Braucht Playwright (`npm i -D playwright`), läuft gegen den Dev-Server oder
+gegen eine gebaute Vorschau:
 
 ```bash
 npm run dev

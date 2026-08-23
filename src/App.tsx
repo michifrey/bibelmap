@@ -13,6 +13,7 @@ import {
 import { ERAS, ERA_BY_ID } from './data/eras';
 import MapView, { type BasemapId } from './components/MapView';
 import Header, { type Mode, type View } from './components/Header';
+import SkipLinks from './components/SkipLinks';
 import { JOURNEY_BY_ID } from './data/journeys';
 import { JOURNEYS as MISSION_JOURNEYS } from './data/mission';
 import type { TerrainRoute } from './components/TerrainMap';
@@ -647,6 +648,8 @@ export default function App() {
   return (
     <LangContext.Provider value={lang}>
       <div className="relative h-full w-full overflow-hidden">
+        {/* Das Erste, was die Tabulatortaste findet. */}
+        <SkipLinks stand={`${view}:${mode}`} />
         {view === 'tree' ? (
           <Suspense fallback={<ViewFallback lang={lang} />}>
           <Genealogy
