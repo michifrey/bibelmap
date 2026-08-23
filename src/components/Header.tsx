@@ -3,7 +3,7 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import LangToggle from './LangToggle';
 
-export type Mode = 'present' | 'history' | 'journeys' | 'mission' | 'compare' | 'church' | 'quiz' | 'nations' | 'media' | 'support';
+export type Mode = 'present' | 'history' | 'journeys' | 'mission' | 'compare' | 'church' | 'quiz' | 'nations' | 'media' | 'support' | 'credits';
 export type View = 'map' | 'tree' | 'graph';
 
 interface Props {
@@ -32,6 +32,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
     { id: 'compare', label: t('compareMode'), hint: t('compareIntro'), icon: 'M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z' },
     { id: 'media', label: t('media'), hint: t('mediaHint'), icon: 'M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zM5 11a7 7 0 0 0 14 0M12 18v3' },
     { id: 'support', label: t('support'), hint: t('supportSub'), icon: 'M12 20.3 4.6 13a4.7 4.7 0 0 1 0-6.7 4.7 4.7 0 0 1 6.7 0l.7.7.7-.7a4.7 4.7 0 0 1 6.7 0 4.7 4.7 0 0 1 0 6.7z' },
+    { id: 'credits', label: t('credits'), hint: t('creditsSub'), icon: 'M7 3h7l5 5v13H7zM14 3v5h5M10 12h7M10 16h7' },
   ];
 
   // Mobile: two rows (logo + language on top, view switch + modi below).

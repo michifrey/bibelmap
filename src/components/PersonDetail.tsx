@@ -9,6 +9,7 @@ import {
   bibleRefUrl,
   wikipediaSearchUrl,
 } from '../data/genealogy';
+import PersonSources, { PersonPortrait } from './PersonSources';
 
 interface Props {
   person: Person;
@@ -60,6 +61,9 @@ export default function PersonDetail({ person, lang, onClose, onSelect, onShowOn
         </div>
         {reign && <div className="mt-0.5 text-[12px] text-white/75">{reign}</div>}
       </div>
+
+      {/* Bild aus dem Wikipedia-Artikel – erscheint nur, wenn es eines gibt. */}
+      <PersonPortrait personId={person.id} name={name} lang={lang} />
 
       <div className="scroll-soft flex-1 overflow-y-auto px-4 pb-5 pt-3">
         {person.faith && (
@@ -153,6 +157,9 @@ export default function PersonDetail({ person, lang, onClose, onSelect, onShowOn
             </div>
           </div>
         )}
+
+        {/* Zeitdokumente, Bilder und Artikel – außerhalb der Bibel. */}
+        <PersonSources personId={person.id} lang={lang} />
       </div>
     </div>
   );

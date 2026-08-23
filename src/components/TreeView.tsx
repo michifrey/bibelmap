@@ -8,6 +8,7 @@ import {
   PERSON_BY_ID,
   formatYear,
 } from '../data/genealogy';
+import { docsFor } from '../data/personSources';
 import {
   computeLayout,
   hasChildren,
@@ -253,6 +254,9 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
               const isSel = selectedId === p.id;
               const isHit = matchSet ? matchSet.has(p.id) : false;
               const isDim = matchSet ? !matchSet.has(p.id) : false;
+              // Wer Zeitdokumente hat, trägt sie als kleine Zahl am Knoten –
+              // sonst findet man sie nur durch Ausprobieren.
+              const docCount = docsFor(p.id).length;
               return (
                 <div
                   key={p.id}
@@ -276,6 +280,17 @@ export default function TreeView({ lang, focusId, onShowOnMap }: Props) {
                         {p.born !== undefined ? formatYear(p.born, lang) : epoch ? (lang === 'de' ? epoch.de : epoch.en) : ''}
                       </span>
                     </span>
+                    {docCount > 0 && (
+                      <span
+                        className="flex shrink-0 items-center gap-0.5 self-center pr-1.5 text-[9.5px] font-semibold tabular-nums text-gold-deep"
+                        title={`${docCount} ${t('timeDocs')}`}
+                      >
+                        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-2.5 w-2.5" fill="currentColor">
+                          <path d="M6 2h8l4 4v16H6zm7 1.5V7h3.5zM8 10h8v1.5H8zm0 3.5h8V15H8zm0 3.5h5v1.5H8z" />
+                        </svg>
+                        {docCount}
+                      </span>
+                    )}
                   </button>
 
                   {expandable && (

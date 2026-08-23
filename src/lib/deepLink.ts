@@ -38,6 +38,7 @@ export interface Route {
 /** Schlüssel im Hash → Modus ohne weitere Angaben. */
 const MODE_KEYS: Record<string, Mode> = {
   unterstuetzen: 'support',
+  nachweise: 'credits',
   heilsgeschichte: 'history',
   quiz: 'quiz',
 };
