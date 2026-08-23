@@ -625,7 +625,30 @@ Foundation und Mitwirkende", „Historische Karte © DARE, Universität Götebor
 - [x] Die Gegenprobe hat einen Fehler in der Prüfung selbst gefunden: sie hielt
       `<html lang="de">` für eine fremdsprachige Insel und übersprang alles.
 
-### 4.36 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.36 Ortsregister — P2 ✅
+
+**Beschreibung:** Alle Orte von A bis Z, wie im Anhang eines gedruckten
+Bibelatlas. Die Suche beantwortet „wo ist X?" – nicht „welche Orte gibt es
+überhaupt?".
+
+**Anforderungen**
+- Alphabetisch gruppiert, Umlaute unter ihrem Grundbuchstaben.
+- Je Ort: Erwähnungen, Epochen als Punkte, Spanne der Bücher in Kanonreihenfolge.
+- Filter nach Epoche und nach Namensteil.
+- Druckbar als Anhang: ohne Filterleiste, zweispaltig.
+
+**Akzeptanzkriterien**
+- [x] 1.335 Orte, Buchstaben A–Z (kein Ort beginnt mit Q oder X).
+- [x] „Frühe Kirche" filtert auf 135 Orte, „beth" auf 65.
+- [x] Ein Klick öffnet die Ortskarte (`#ort=…`).
+- [x] Im Druck: Kopfzeile da, Filterleiste weg, zwei Spalten statt drei –
+      bei 16 mm Rand auf A4 wären drei Spalten 59 mm breit, zu wenig für
+      „Abel-Beth-Maacha".
+- [x] Die Spanne nennt erstes und letztes Buch, nicht jedes dazwischen:
+      Jerusalem steht in 37 Büchern. Das sagt der Hinweis unter dem Register.
+- [x] 57 Orte ohne Erwähnung stehen mit dabei, und es steht dabei, warum.
+
+### 4.37 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

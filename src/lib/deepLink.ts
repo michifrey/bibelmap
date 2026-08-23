@@ -52,6 +52,7 @@ export interface Route {
 
 /** Schlüssel im Hash → Modus ohne weitere Angaben. */
 const MODE_KEYS: Record<string, Mode> = {
+  register: 'index',
   unterstuetzen: 'support',
   nachweise: 'credits',
   quiz: 'quiz',

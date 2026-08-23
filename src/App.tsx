@@ -29,6 +29,7 @@ const JourneyMode = lazy(() => import('./components/JourneyMode'));
 const QuizMode = lazy(() => import('./components/QuizMode'));
 const MediaMode = lazy(() => import('./components/MediaMode'));
 const OwnRoute = lazy(() => import('./components/OwnRoute'));
+const PlaceIndex = lazy(() => import('./components/PlaceIndex'));
 // MapLibre wiegt schwer – die Geländeansicht kommt erst, wenn jemand sie öffnet.
 const TerrainMap = lazy(() => import('./components/TerrainMap'));
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
@@ -1023,6 +1024,17 @@ export default function App() {
                   ids={ownIds}
                   onChange={setOwnIds}
                   onShowPlace={showPlaceFromGenealogy}
+                  onExit={() => setMode(null)}
+                />
+              </Suspense>
+            )}
+            {mode === 'index' && (
+              <Suspense fallback={<ModeFallback />}>
+                <PlaceIndex
+                  key={`index-${navEpoch}`}
+                  places={places}
+                  lang={lang}
+                  onSelect={showPlaceFromGenealogy}
                   onExit={() => setMode(null)}
                 />
               </Suspense>

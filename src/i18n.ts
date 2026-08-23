@@ -42,6 +42,17 @@ const STRINGS: Dict = {
     en: 'Loading the terrain map – it arrives once, as its own bundle.',
   },
   terrainExaggeration: { de: 'Überhöhung', en: 'Exaggeration' },
+  placeIndex: { de: 'Ortsregister', en: 'Index of places' },
+  placeIndexHint: {
+    de: 'Alle Orte alphabetisch – mit Erwähnungen, Epochen und der Spanne der Bücher.',
+    en: 'Every place from A to Z – with mentions, eras and the span of books.',
+  },
+  placeIndexFilter: { de: 'Im Register suchen …', en: 'Search the index …' },
+  placeIndexOf: { de: 'von', en: 'of' },
+  placeIndexNote: {
+    de: 'Die Zahl nennt die Erwähnungen, die Punkte die Epochen, in denen der Ort vorkommt. Die Spanne nennt das erste und das letzte Buch in der Reihenfolge des Kanons – nicht jedes dazwischen: Jerusalem steht in 37 Büchern. 57 Orte tragen keine Erwähnung; sie stehen in den Daten, weil andere Orte auf sie verweisen.',
+    en: 'The number gives the mentions, the dots the eras in which the place appears. The span names the first and the last book in canonical order – not every book between: Jerusalem appears in 37 of them. 57 places carry no mention; they are in the data because other places refer to them.',
+  },
   landingCredits: {
     de: 'Orte © OpenBible.info, CC-BY 4.0 · Grenzen © historical-basemaps, GPL-3.0 · Kacheln © OpenStreetMap, © CARTO',
     en: 'Places © OpenBible.info, CC-BY 4.0 · Borders © historical-basemaps, GPL-3.0 · Tiles © OpenStreetMap, © CARTO',
