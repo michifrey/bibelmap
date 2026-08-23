@@ -148,6 +148,13 @@ export default function TerrainMap({
    * probiert, und damit bliebe die Karte auf einem Gerät für immer schräg.
    */
   const [pitched, setPitched] = useState(true);
+  /**
+   * Welche Station gerade dran ist. Die Punkte auf der Karte liegen in einer
+   * Leinwand – mit der Tastatur ist dort nichts zu erreichen. Zwei Knöpfe
+   * führen deshalb durch die Route, und das hilft nicht nur der Tastatur:
+   * eine Route Station für Station abzugehen ist ohnehin, was man tun will.
+   */
+  const [stop, setStop] = useState<number | null>(null);
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
   const langRef = useRef(lang);
@@ -168,6 +175,16 @@ export default function TerrainMap({
       minZoom: 2,
       maxZoom: 16,
       attributionControl: false,
+      // MapLibre beschriftet seine Bedienelemente selbst – auf Englisch. In
+      // einer zweisprachigen App ist „Zoom in" neben „Näher heran" ein Bruch,
+      // und für einen Screenreader ist es schlicht die falsche Sprache.
+      locale: {
+        'Map.Title': t('terrainMapTitle'),
+        'NavigationControl.ZoomIn': t('terrainZoomIn'),
+        'NavigationControl.ZoomOut': t('terrainZoomOut'),
+        'NavigationControl.ResetBearing': t('terrainResetBearing'),
+        'Popup.Close': t('terrainClosePopup'),
+      },
       style: {
         version: 8,
         sources: {
@@ -366,6 +383,22 @@ export default function TerrainMap({
     });
   }, [route, ready, reduced]);
 
+  // Eine neue Route beginnt ohne gewählte Station – die alte Nummer gehörte
+  // zu einem anderen Weg.
+  useEffect(() => {
+    setStop(null);
+  }, [route?.id]);
+
+  // Zur gewählten Station fliegen, ohne die Neigung aufzugeben.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready || stop === null || !route?.stops[stop]) return;
+    const s = route.stops[stop];
+    const target = { center: [s.lon, s.lat] as [number, number], zoom: Math.max(map.getZoom(), 8) };
+    if (reduced) map.jumpTo(target);
+    else map.easeTo({ ...target, duration: 900 });
+  }, [stop, route, ready, reduced]);
+
   // Kartenwahl: dasselbe Tuch wie flach, nur über dem Gelände.
   useEffect(() => {
     const map = mapRef.current;
@@ -413,11 +446,46 @@ export default function TerrainMap({
               <span className="text-[11px] text-white/55">
                 {route.stops.length} {t('stations')}
               </span>
-              {onOpenRoute && (
-                <button onClick={() => onOpenRoute(route)} className="bm-btn bm-btn-ghost ml-auto">
-                  {route.kind === 'mission' ? t('mission') : t('journeys')} →
+              <span className="ml-auto flex items-center gap-1.5">
+                <button
+                  onClick={() => setStop((n) => Math.max(0, (n ?? 0) - 1))}
+                  disabled={stop === null || stop === 0}
+                  aria-label={t('terrainPrevStop')}
+                  className="bm-btn bm-btn-ghost disabled:opacity-30"
+                >
+                  ‹
                 </button>
-              )}
+                {/* Feste Breite, nicht nur eine Mindestbreite: sonst wandern
+                    die Pfeile mit jeder Stationslänge, und wer sich durch die
+                    Route klickt, tippt beim nächsten Mal daneben. */}
+                <span
+                  className="w-[9.5rem] truncate text-center text-[11px] text-white/70"
+                  title={
+                    stop === null
+                      ? undefined
+                      : lang === 'de'
+                        ? route.stops[stop].de
+                        : route.stops[stop].en
+                  }
+                >
+                  {stop === null
+                    ? `${t('terrainStop')} 1–${route.stops.length}`
+                    : `${stop + 1}. ${lang === 'de' ? route.stops[stop].de : route.stops[stop].en}`}
+                </span>
+                <button
+                  onClick={() => setStop((n) => Math.min(route.stops.length - 1, (n ?? -1) + 1))}
+                  disabled={stop !== null && stop >= route.stops.length - 1}
+                  aria-label={t('terrainNextStop')}
+                  className="bm-btn bm-btn-ghost disabled:opacity-30"
+                >
+                  ›
+                </button>
+                {onOpenRoute && (
+                  <button onClick={() => onOpenRoute(route)} className="bm-btn bm-btn-ghost">
+                    {route.kind === 'mission' ? t('mission') : t('journeys')} →
+                  </button>
+                )}
+              </span>
             </div>
           ) : (
             <div className="text-[11px] leading-snug text-white/70">{t('terrainNote')}</div>
