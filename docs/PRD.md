@@ -328,7 +328,22 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [x] Unbekannte Kürzel werden weder verschwiegen noch geraten: sie stehen so
       da, wie sie in den Daten stehen, mit Verweis auf die Dateiseite.
 
-### 4.21 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.21 Buchkürzel an einer Stelle — P2 ✅
+
+- [x] Die Kurzformen der Bibelbücher standen an **drei** Stellen im Repo
+      (`parseRef.ts`, `bookAbbr.ts`, `scripts/lib/bibleref.mjs`). Jetzt an
+      einer: `src/data/bookAliases.json`, gelesen von allen dreien.
+- [x] Zwei Listen, weil die Lage entscheidet: `text` gilt überall, `typed` nur
+      dort, wo jemand einen Buchnamen eingibt – „Am 3" ist im Suchfeld Amos, im
+      Fließtext fast immer „am 3.".
+- [x] `npm run check:aliases` prüft die Liste: unbekanntes Buchkürzel, dieselbe
+      Kurzform für zwei Bücher, zu kurze Formen, überflüssige Wiederholung des
+      vollen Namens.
+- [x] Nachgewiesen unverändert: `media.json` nach dem Neubau **byte-identisch**,
+      alle 268 bisherigen Kurzformen lösen auf dasselbe Buch auf, alle 325
+      Stammbaum-Referenzen ebenso.
+
+### 4.22 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
@@ -388,6 +403,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v0.4** | Reisen & Geschichten (4.12), Mission & Ausbreitung (4.13), Bibelquiz (4.14), Offline (4.16), Handout (4.17), Nachbarorte (4.18), Code-Splitting | ✅ erledigt |
 | **v0.5** | Hören & Sehen als eigener Modus (4.19) mit Verknüpfung in beide Richtungen | ✅ erledigt |
 | **v0.6** | Bildnachweis mit Lizenz (4.20) | ✅ erledigt |
+| **v0.7** | Buchkürzel an einer Stelle (4.21) | ✅ erledigt |
 | **offen** | 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
@@ -417,5 +433,3 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 - **3-D-Gelände**: Leaflet kann die Karte nicht kippen. Ein Umstieg auf MapLibre
   würde Terrain und Neigung erlauben, betrifft aber alle fünf Kartenansichten –
   bewusst zurückgestellt.
-- Die Kurzformen der Bibelbücher stehen zweimal im Repo (`src/lib/parseRef.ts`
-  für die Oberfläche, `scripts/lib/bibleref.mjs` für den Build).

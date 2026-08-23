@@ -243,6 +243,25 @@ Was der Index nicht behauptet: dass eine genannte Stelle das Thema der Folge
 ist. Eine Predigt, die Jerusalem im Vorbeigehen zitiert, steht damit unter
 Jerusalem - der Hinweis darauf steht im Modus unter der Liste.
 
+### Kurzformen der Bibelbücher
+
+Die vollen Namen stehen in `src/data/books.ts`. Was sich daraus nicht ableiten
+lässt – `1Mo`, `Klgl`, `Offb`, `Apg` –, steht in **`src/data/bookAliases.json`**,
+und zwar nur dort: Suche (`src/lib/parseRef.ts`), Stammbaum-Referenzen
+(`src/lib/bookAbbr.ts`) und der Medien-Build (`scripts/lib/bibleref.mjs`) lesen
+alle dieselbe Datei.
+
+Zwei Listen, weil die Lage entscheidet:
+
+- **`text`** – im Fließtext eindeutig. `Ri 4` in einem Folgentitel meint Richter.
+- **`typed`** – nur dort, wo jemand einen Buchnamen *eingibt* und sonst nichts
+  danebensteht. `Am 3` ist im Suchfeld Amos, in einem Satz aber fast immer
+  „am 3.". Dasselbe gilt für `Hi`, `Off` und `1Th`.
+
+```bash
+npm run check:aliases   # unbekanntes Buch, doppelte Kurzform, zu kurz, überflüssig
+```
+
 ### Reisen & Geschichten
 
 Die Stationen stehen in `src/data/journeys.ts`: je Station Name, Bibelstelle,
