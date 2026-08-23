@@ -93,6 +93,10 @@ export function parseHash(hash: string): Route | null {
     }
     case 'graph':
       return { view: 'graph', mode: null };
+    case 'gelaende':
+      return args[0]
+        ? { view: 'terrain', mode: null, placeId: args[0] }
+        : { view: 'terrain', mode: null };
     case 'reise':
       return {
         view: 'map',
@@ -175,6 +179,7 @@ export function formatRoute(route: Route): string {
   if (mode === 'present') {
     return route.reading ? `#lesen=${route.reading.osis},${route.reading.chapter}` : '#lesen';
   }
+  if (view === 'terrain') return route.placeId ? `#gelaende=${route.placeId}` : '#gelaende';
   if (view === 'tree') {
     const tr = route.tree;
     if (!tr) return '#stammbaum';

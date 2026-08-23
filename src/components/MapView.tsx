@@ -38,7 +38,7 @@ interface Props {
 
 export type BasemapId = 'dark' | 'light' | 'satellite' | 'relief' | 'antique';
 
-interface Basemap {
+export interface Basemap {
   url: string;
   attribution: string;
   maxZoom: number;

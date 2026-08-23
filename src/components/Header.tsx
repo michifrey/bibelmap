@@ -4,7 +4,7 @@ import { useT } from '../i18n';
 import LangToggle from './LangToggle';
 
 export type Mode = 'present' | 'history' | 'journeys' | 'mission' | 'compare' | 'church' | 'quiz' | 'nations' | 'media' | 'support' | 'credits';
-export type View = 'map' | 'tree' | 'graph';
+export type View = 'map' | 'terrain' | 'tree' | 'graph';
 
 interface Props {
   lang: Lang;
@@ -71,6 +71,13 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
             {t('map')}
           </button>
           <button
+            onClick={() => onView('terrain')}
+            title={t('terrainView')}
+            className={`px-2.5 py-2 text-xs font-medium transition sm:px-3 sm:py-2.5 sm:text-sm ${view === 'terrain' ? 'bg-signal text-white' : 'text-white/60 hover:bg-surface'}`}
+          >
+            {t('terrain')}
+          </button>
+          <button
             onClick={() => onView('tree')}
             className={`px-2.5 py-2 text-xs font-medium transition sm:px-3 sm:py-2.5 sm:text-sm ${view === 'tree' ? 'bg-signal text-white' : 'text-white/60 hover:bg-surface'}`}
           >
@@ -85,7 +92,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
         </div>
 
         {/* modes dropdown — only on the map */}
-        {view === 'map' && (
+        {(view === 'map' || view === 'terrain') && (
           <div className="relative">
             <button
               onClick={() => setOpen((v) => !v)}

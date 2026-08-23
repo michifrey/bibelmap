@@ -24,6 +24,8 @@ const Mission = lazy(() => import('./components/Mission'));
 const JourneyMode = lazy(() => import('./components/JourneyMode'));
 const QuizMode = lazy(() => import('./components/QuizMode'));
 const MediaMode = lazy(() => import('./components/MediaMode'));
+// MapLibre wiegt schwer – die Geländeansicht kommt erst, wenn jemand sie öffnet.
+const TerrainMap = lazy(() => import('./components/TerrainMap'));
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
 import type { SearchHit } from './lib/globalSearch';
 import { parseRef } from './lib/parseRef';
@@ -559,19 +561,33 @@ export default function App() {
           </Suspense>
         ) : (
           <>
-            <MapView
-              places={visible}
-              heat={heat}
-              selectedId={selected?.id ?? null}
-              lang={lang}
-              onSelect={select}
-              basemap={basemap}
-              onTilesUnavailable={handleTilesUnavailable}
-              onTilesRecovered={handleTilesRecovered}
-              newIds={newIds}
-              flyTo={flyTo}
-              borderYear={borderYear}
-            />
+            {view === 'terrain' ? (
+              <Suspense fallback={<ModeFallback />}>
+                <TerrainMap
+                  places={visible}
+                  selectedId={selected?.id ?? null}
+                  lang={lang}
+                  onSelect={select}
+                  basemap={basemap}
+                  newIds={newIds}
+                  flyTo={flyTo}
+                />
+              </Suspense>
+            ) : (
+              <MapView
+                places={visible}
+                heat={heat}
+                selectedId={selected?.id ?? null}
+                lang={lang}
+                onSelect={select}
+                basemap={basemap}
+                onTilesUnavailable={handleTilesUnavailable}
+                onTilesRecovered={handleTilesRecovered}
+                newIds={newIds}
+                flyTo={flyTo}
+                borderYear={borderYear}
+              />
+            )}
 
             {/* Search / detail — left rail on desktop, bottom sheet on mobile */}
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1110] flex flex-col p-2 sm:inset-y-0 sm:left-0 sm:right-auto sm:z-[1100] sm:w-full sm:max-w-[22rem] sm:p-4 sm:pt-24">

@@ -31,7 +31,7 @@ const p = await ctx.newPage();
 const errs = [];
 let offen = 0;
 p.on('pageerror', (e) => errs.push(e.message));
-for (const hash of ['', '#karte', '#reise=exodus,2', '#mission=modern', '#quiz', '#lesen=Acts,13', '#stammbaum', '#graph', '#kirche', '#vergleich', '#hoeren', '#heilsgeschichte', '#unterstuetzen']) {
+for (const hash of ['', '#karte', '#reise=exodus,2', '#mission=modern', '#quiz', '#lesen=Acts,13', '#stammbaum', '#graph', '#kirche', '#vergleich', '#hoeren', '#gelaende', '#heilsgeschichte', '#unterstuetzen']) {
   await p.goto(base + '/' + hash, { waitUntil: 'networkidle' });
   await p.waitForTimeout(2200);
   const r = await p.evaluate(audit);

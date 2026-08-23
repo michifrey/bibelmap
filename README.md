@@ -146,7 +146,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   (ein Stamm auf der Stammeskarte in einem bestimmten Jahr; `zeit` und `baum`
   sind die beiden anderen Reiter), `#nachweise`, `#hoeren=keller`
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
-  `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#kirche=vater,augustinus`
+  `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
+  (Jerusalem im Gelände), `#kirche=vater,augustinus`
   `#kirche=konzil,chalcedon` und `#vergleich=abraham`. Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
@@ -164,12 +165,21 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 
 ### Drumherum
 
+- **Gelände in 3D** – eine vierte Ansicht neben Karte, Zeitbaum und Graph
+  (`#gelaende`): dieselben Orte über echtem Höhengelände, kippbar und drehbar.
+  Wer wissen will, warum ein Weg über einen Pass führt und nicht geradeaus,
+  sieht es hier. Die **Überhöhung** ist einstellbar (1×–3×), die Kartenwahl gilt
+  weiter und liegt als Tuch über dem Gelände. Bewusst weniger als die flache
+  Karte: keine Ballung, keine Wärmekarte, keine Reichsgrenzen – das steht auch
+  in der Ansicht. Höhen von den **Terrain Tiles** (AWS Open Data, aus SRTM u. a.),
+  ohne Schlüssel und ohne Anmeldung.
 - **Offline & installierbar** – die App meldet einen Service Worker an: Einstieg,
   Programmdateien, die Ortsdaten **und der Medien-Index** liegen nach dem ersten
   Besuch im Cache, einmal angesehene Kartenkacheln ebenso. Ohne Netz startet
   Bibelmap weiter, zeigt alle 1.335 Orte, alle 473 Folgen und die bereits
   besuchten Kartenausschnitte. Die Folgen selbst liegen bei ihren Anbietern –
-  abspielen lässt sich ohne Netz nichts. Über das
+  abspielen lässt sich ohne Netz nichts, und die Geländeansicht braucht ihre
+  Höhenkacheln ebenfalls aus dem Netz. Über das
   Browser-Menü lässt sie sich als App installieren (Manifest + Symbole).
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
   Ohne eigene Wahl entscheidet die Browsersprache; wer einmal umschaltet, bekommt
@@ -388,6 +398,25 @@ gespeichert ist nur die Richtung Ort → Folgen.
 Was der Index nicht behauptet: dass eine genannte Stelle das Thema der Folge
 ist. Eine Predigt, die Jerusalem im Vorbeigehen zitiert, steht damit unter
 Jerusalem - der Hinweis darauf steht im Modus unter der Liste.
+
+### Gelände in 3D (MapLibre)
+
+Die flache Karte bleibt bei Leaflet; die Geländeansicht ist eine eigene
+Komponente auf **MapLibre GL** (`src/components/TerrainMap.tsx`), die erst
+geladen wird, wenn jemand sie öffnet – das Bündel wiegt rund 950 kB
+(gzip 250 kB) und gehört nicht in den Startpfad.
+
+Eine Eigenheit muss man kennen: MapLibre sucht seinen Worker **neben der
+eigenen Datei** (`new URL('./maplibre-gl-worker.mjs', import.meta.url)`). Im
+Bündel liegt die Bibliothek unter `assets/TerrainMap-<hash>.js`, und dorthin legt
+der Build den Worker nicht – die Anfrage landet auf der `index.html`, der Worker
+stirbt an einem `<`, und die Karte bleibt *still* stehen: Kacheln erscheinen,
+aber kein Gelände und keine Ortspunkte, weil beides den Worker braucht. Kein
+Fehler, keine Meldung.
+
+Deshalb legt `scripts/sync-maplibre-worker.mjs` die zwei Dateien unverändert
+nach `public/vendor/maplibre/` (als `predev` und `prebuild`, nicht im Git), und
+`TerrainMap.tsx` sagt MapLibre per `setWorkerUrl`, wo sie liegen.
 
 ### Kurzformen der Bibelbücher
 
