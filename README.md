@@ -187,30 +187,47 @@ Ein Workflow (`.github/workflows/deploy.yml`) baut und deployt automatisch bei j
 Push auf den Default-Branch. **Einmalig** in den Repo-Einstellungen aktivieren:
 *Settings → Pages → Source: GitHub Actions*.
 
-Die Seite läuft unter der eigenen Domain **www.biblemap.ch** (`public/CNAME`) und
-damit an der Wurzel, nicht in einem Unterverzeichnis. Der Build braucht deshalb
-kein `VITE_BASE` mehr; die Umgebungsvariable bleibt in `vite.config.ts` nur als
+Die Seite läuft unter der eigenen Domain **www.biblemap.ch** und damit an der
+Wurzel, nicht in einem Unterverzeichnis. Der Build braucht deshalb kein
+`VITE_BASE` mehr; die Umgebungsvariable bleibt in `vite.config.ts` nur als
 Notausgang, falls die Seite einmal wieder unter einem Pfad liegt.
 
-Nötige DNS-Einträge bei `biblemap.ch`:
+Die Domain steht **nicht** im Repo, sondern unter *Settings → Pages → Custom
+domain*. Eine `CNAME`-Datei wäre hier wirkungslos: wer über einen eigenen
+Actions-Workflow veröffentlicht, bei dem legt GitHub keine an und ignoriert eine
+vorhandene ([Doku][gh-cname]). Wer die Domain sucht, sucht sie also in den
+Einstellungen, nicht im Dateibaum.
+
+[gh-cname]: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
+
+DNS-Einträge bei `biblemap.ch` (Swizzonic):
 
 | Typ | Name | Wert |
 | --- | --- | --- |
-| CNAME | `www` | `michifrey.github.io.` |
-| A | `@` | `185.199.108.153` |
-| A | `@` | `185.199.109.153` |
-| A | `@` | `185.199.110.153` |
-| A | `@` | `185.199.111.153` |
+| CNAME | `www.biblemap.ch` | `michifrey.github.io.` |
+| A | `biblemap.ch` | `185.199.108.153` |
+| A | `biblemap.ch` | `185.199.109.153` |
+| A | `biblemap.ch` | `185.199.110.153` |
+| A | `biblemap.ch` | `185.199.111.153` |
+
+**Kein `@` als Name.** Viele Anleitungen schreiben `@` für die Wurzel; das
+Swizzonic-Panel führt Namen aber vollqualifiziert und legt daraus brav einen
+Host namens `@.biblemap.ch` an, den nie jemand aufruft. Der Fehler ist still –
+das Panel nimmt ihn an, und die Domain bleibt einfach tot.
 
 Die vier A-Records auf die Wurzel sind nicht doppelt gemoppelt: GitHub leitet
 `biblemap.ch` von dort auf `www.biblemap.ch` weiter, sonst liefe die nackte
-Domain ins Leere. `bibelmap.ch` – die deutsche Schreibweise – zeigt am besten
-per Weiterleitung des Registrars auf `https://www.biblemap.ch`; eine zweite
-Domain kann GitHub Pages nicht selbst bedienen.
+Domain ins Leere. `bibelmap.ch` – die deutsche Schreibweise – leitet per
+Weiterleitung des Registrars auf `https://www.biblemap.ch`; eine zweite Domain
+kann GitHub Pages nicht selbst bedienen.
 
-Nach dem ersten Deploy in *Settings → Pages* **Enforce HTTPS** anhaken, sobald
-das Zertifikat ausgestellt ist (dauert nach der DNS-Umstellung einige Minuten
-bis zu einer Stunde).
+Die E-Mail-Einträge der Domain (MX, SPF-TXT, der SRV `_autodiscover` und die
+CNAMEs `autoconfig`, `imap`, `pop`, `smtp`) haben mit der Seite nichts zu tun
+und bleiben unangetastet.
+
+In *Settings → Pages* **Enforce HTTPS** anhaken, sobald das Zertifikat
+ausgestellt ist (dauert nach der DNS-Umstellung einige Minuten bis zu einer
+Stunde).
 
 ## Daten
 
