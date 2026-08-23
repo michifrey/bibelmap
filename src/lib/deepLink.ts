@@ -94,6 +94,13 @@ export function parseHash(hash: string): Route | null {
     case 'graph':
       return { view: 'graph', mode: null };
     case 'gelaende':
+      // `#gelaende=reise,exodus` zeigt eine Route über dem Gelände, ein
+      // einzelnes Kürzel bleibt der Ort.
+      if (args[0] === 'reise') {
+        return args[1]
+          ? { view: 'terrain', mode: null, journey: { id: args[1], stop: 0 } }
+          : { view: 'terrain', mode: null };
+      }
       return args[0]
         ? { view: 'terrain', mode: null, placeId: args[0] }
         : { view: 'terrain', mode: null };
@@ -179,7 +186,10 @@ export function formatRoute(route: Route): string {
   if (mode === 'present') {
     return route.reading ? `#lesen=${route.reading.osis},${route.reading.chapter}` : '#lesen';
   }
-  if (view === 'terrain') return route.placeId ? `#gelaende=${route.placeId}` : '#gelaende';
+  if (view === 'terrain') {
+    if (route.journey) return `#gelaende=reise,${route.journey.id}`;
+    return route.placeId ? `#gelaende=${route.placeId}` : '#gelaende';
+  }
   if (view === 'tree') {
     const tr = route.tree;
     if (!tr) return '#stammbaum';
