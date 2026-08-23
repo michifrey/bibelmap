@@ -71,13 +71,29 @@ function colorsIn(file) {
 
 const DATA = ['src/data/eras.ts', 'src/data/mission.ts', 'src/data/genealogy.ts', 'src/data/personSources.ts'];
 let worst = Infinity;
+let geprueft = 0;
 const tooDark = [];
 for (const rel of DATA) {
   for (const c of colorsIn(path.join(ROOT, rel))) {
+    geprueft++;
     const r = ratio(readableOnDark(c), STAGE);
     worst = Math.min(worst, r);
     if (r < MIN - 0.005) tooDark.push(`${rel}: ${c} bleibt bei ${r.toFixed(2)}:1`);
   }
+}
+
+/*
+ * Diese Prüfung liest Farben als Zeichenkette aus dem Quelltext – anders geht
+ * es nicht, denn gesucht wird auch, WO eine Farbe steht (Zeile für Zeile), und
+ * nicht nur, welche es gibt. Umso wichtiger ist die Untergrenze: findet der
+ * Ausdruck nichts mehr, weil jemand die Schreibweise ändert, wäre „keine
+ * schlechte Farbe gefunden" die falscheste aller Entwarnungen.
+ */
+const MIN_FARBEN = 20;
+if (geprueft < MIN_FARBEN) {
+  console.error(`✗ Nur ${geprueft} Farben gefunden – erwartet mindestens ${MIN_FARBEN}.`);
+  console.error('  Das ist kein bestandener Lauf, sondern eine Prüfung ohne Quelle.');
+  process.exit(1);
 }
 
 /* --- 2. ungefilterte Datenfarben als Schrift ----------------------------- */
@@ -122,4 +138,4 @@ if (raw.length) {
   console.error('  Grund gehört sie durch readableOnDark() aus src/lib/contrast.ts.');
 }
 if (tooDark.length || raw.length) process.exit(1);
-console.log('Keine ungefilterte Datenfarbe als Schrift.');
+console.log(`${geprueft} Datenfarben geprüft – keine ungefilterte als Schrift.`);

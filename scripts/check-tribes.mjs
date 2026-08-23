@@ -12,52 +12,23 @@
 // Stamm gehören: Tyrus und Sidon blieben phönizisch, Damaskus aramäisch, Sela
 // edomitisch. Ein Ring, der die vier verschluckt, ist zu großzügig gezeichnet.
 //
-// Die Ringe werden aus der Quelldatei gelesen statt importiert, damit das
-// Skript ohne Übersetzungsschritt läuft – wie check-contrast.mjs.
+// Gelesen wird der echte Code, nicht der Quelltext als Zeichenkette. Vorher
+// stand hier ein regulärer Ausdruck für die Ringe und – schwerer wiegend – eine
+// zweite Fassung von `tribeAt()`. Eine Prüfung, die den Algorithmus noch einmal
+// aufschreibt, prüft am Ende nur, ob ihre eigene Fassung zu ihrer eigenen
+// Lesart passt: Wer das Strahlenverfahren in der App ändert, bekommt hier
+// weiterhin ein Häkchen.
+//
+// `scripts/lib/ts-loader.mjs` erlaubt Node, `src/data/tribes.ts` direkt zu
+// importieren – dieselben Ringe, dieselbe Funktion, die auch die Ortskarte
+// fragt.
 
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const SRC = path.join(ROOT, 'src/data/tribes.ts');
+const { TRIBES, tribeAt } = await import(path.join(ROOT, 'src/data/tribes.ts'));
 
-/* --- Ringe aus der Quelle lesen ------------------------------------------ */
-
-function readRings() {
-  const text = fs.readFileSync(SRC, 'utf8');
-  const rings = [];
-  // Jeder Eintrag beginnt mit `id: '…'`; sein `polygon:` gehört ihm bis zum
-  // nächsten `id:`. Levi hat keins und fällt damit von selbst heraus.
-  const parts = text.split(/\n {4}id: '/).slice(1);
-  for (const part of parts) {
-    const id = part.slice(0, part.indexOf("'"));
-    const de = (part.match(/\n {4}de: '([^']*)'/) ?? [])[1] ?? id;
-    const poly = part.match(/\n {4}polygon: \[([\s\S]*?)\n {4}\],/);
-    if (!poly) continue;
-    const ring = [...poly[1].matchAll(/\[\s*(-?[\d.]+),\s*(-?[\d.]+)\s*\]/g)].map((m) => [
-      Number(m[1]),
-      Number(m[2]),
-    ]);
-    if (ring.length >= 3) rings.push({ id, de, ring });
-  }
-  return rings;
-}
-
-/** Dasselbe Strahlenverfahren wie `tribeAt()` in src/data/tribes.ts. */
-function tribeAt(rings, lat, lon) {
-  for (const t of rings) {
-    let inside = false;
-    const r = t.ring;
-    for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
-      const [yi, xi] = r[i];
-      const [yj, xj] = r[j];
-      if (yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
-    }
-    if (inside) return t;
-  }
-  return null;
-}
 
 /* --- Die Fälle ----------------------------------------------------------- */
 
@@ -91,24 +62,24 @@ const CASES = [
 
 /* --- Lauf ---------------------------------------------------------------- */
 
-const rings = readRings();
+// Levi bekommt kein Land und hat darum keinen Ring – erwartet werden 13.
+const rings = TRIBES.filter((t) => t.polygon?.length >= 3);
 if (rings.length < 13) {
-  console.error(`Nur ${rings.length} Ringe gelesen – erwartet 13. Ist das Format von tribes.ts anders?`);
+  console.error(`Nur ${rings.length} Gebiete mit Grenzen – erwartet 13. Fehlt ein polygon in tribes.ts?`);
   process.exit(2);
 }
 
 const wrong = [];
 for (const [name, lat, lon, want, why] of CASES) {
-  const got = tribeAt(rings, lat, lon)?.de ?? null;
+  const got = tribeAt(lat, lon)?.de ?? null;
   if (got !== want) {
     wrong.push(`${name}: ${got ?? 'kein Gebiet'} statt ${want ?? 'kein Gebiet'} (${why})`);
   }
 }
 
-console.log(`${rings.length} Gebiete, ${CASES.length} Orte geprüft.`);
 if (wrong.length) {
   console.error('\nGrenzen stimmen nicht mit dem Text überein:');
   for (const w of wrong) console.error('  · ' + w);
   process.exit(1);
 }
-console.log('Jeder Ort liegt in dem Gebiet, das die Bibel ihm gibt.');
+console.log(`${rings.length} Gebiete, ${CASES.length} Orte – jeder liegt in dem Gebiet, das die Bibel ihm gibt.`);
