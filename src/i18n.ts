@@ -45,6 +45,7 @@ const STRINGS: Dict = {
   zoomIn: { de: 'Näher heran', en: 'Zoom in' },
   zoomOut: { de: 'Weiter weg', en: 'Zoom out' },
   closePopup: { de: 'Fenster schließen', en: 'Close popup' },
+  terrainAttribution: { de: 'Quellenangaben ein- und ausblenden', en: 'Toggle attribution' },
   terrainMapTitle: { de: 'Karte', en: 'Map' },
   terrainZoomIn: { de: 'Näher heran', en: 'Zoom in' },
   terrainZoomOut: { de: 'Weiter weg', en: 'Zoom out' },
