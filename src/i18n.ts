@@ -42,6 +42,8 @@ const STRINGS: Dict = {
     en: 'Loading the terrain map – it arrives once, as its own bundle.',
   },
   terrainExaggeration: { de: 'Überhöhung', en: 'Exaggeration' },
+  textSmaller: { de: 'Schrift kleiner', en: 'Smaller text' },
+  textLarger: { de: 'Schrift größer', en: 'Larger text' },
   zoomIn: { de: 'Näher heran', en: 'Zoom in' },
   zoomOut: { de: 'Weiter weg', en: 'Zoom out' },
   closePopup: { de: 'Fenster schließen', en: 'Close popup' },

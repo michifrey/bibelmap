@@ -145,6 +145,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   oder ab 3 Erwähnungen. Dazwischen **Wissensfragen** aus den Reisen und der
   Ausbreitung („Zu welcher Reise gehört diese Station?", „In welche Zeit gehört
   das?"), die nach der Antwort die Stelle auf der Karte zeigen; abschaltbar.
+- **Schriftgröße** – im Entdeckermodus lässt sich der Bibeltext stufenweise
+  vergrößern (80 % bis 200 %), auch im Beamer-Modus; die Einstellung bleibt
+  gemerkt. Fünf Meter vom Fernseher entfernt ist die Vorgabe zu klein, auf dem
+  Telefon in der Hand manchmal zu groß.
 - **Handout drucken** – jede Reise lässt sich als Blatt ausgeben: Titel, Epoche,
   Bibelstelle, Gesamtstrecke und alle Stationen mit Stelle, Text und Entfernung
   – ohne Karte, Knöpfe und dunklen Hintergrund. Für den Hauskreis, der lieber
