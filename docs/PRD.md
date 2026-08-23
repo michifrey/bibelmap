@@ -418,7 +418,18 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [x] `check:bp` und `check:links` bleiben draußen. Sie fragen fremde Server;
       ein Anbieter mit Schluckauf darf keinen Deploy blockieren.
 
-### 4.25 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.25 Warten, ohne den Bildschirm zu leeren — P2 ✅
+
+- [x] Eine **Ansicht** (Gelände, Zeitbaum, Graph) zeigt beim Nachladen eine
+      Anzeige, die nur die Fläche belegt. Kopfzeile, Seitenleiste und
+      Zeitleiste bleiben stehen und bedienbar – wer sich anders entscheidet,
+      kann zurück, statt zu warten.
+- [x] Für die **Modi** bleibt die alte Anzeige: sie decken danach ohnehin
+      alles ab, ein durchblitzender Kartenrand wäre schlechter.
+- [x] Beim Gelände steht dabei, worauf man wartet: die Karte kommt einmalig
+      als eigenes Paket (950 kB).
+
+### 4.26 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

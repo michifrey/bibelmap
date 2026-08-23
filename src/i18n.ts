@@ -37,6 +37,10 @@ const STRINGS: Dict = {
   mediaNoneForChapter: { de: 'Keine Folge zu diesem Kapitel', en: 'No episode for this chapter' },
   terrain: { de: '3D', en: '3D' },
   terrainView: { de: 'Gelände in 3D', en: 'Terrain in 3D' },
+  terrainLoading: {
+    de: 'Die Geländekarte wird geladen – sie kommt einmalig als eigenes Paket.',
+    en: 'Loading the terrain map – it arrives once, as its own bundle.',
+  },
   terrainExaggeration: { de: 'Überhöhung', en: 'Exaggeration' },
   terrainReset: { de: 'Blick zurücksetzen', en: 'Reset view' },
   terrainNote: {
