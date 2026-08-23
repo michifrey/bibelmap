@@ -14,14 +14,23 @@ import {
   type MediaSource,
 } from '../lib/media';
 
+export interface MediaNav {
+  source?: string;
+  place?: string;
+  /** Buch und Kapitel, aus dem Lesemodus heraus verlinkt. */
+  ref?: { osis: string; chapter: number };
+}
+
 interface Props {
   places: Place[];
   lang: Lang;
-  /** Vorauswahl aus der Adresse: eine Quelle oder ein Ort. */
-  initial: { source?: string; place?: string } | null;
-  onNavigate: (nav: { source?: string; place?: string } | null) => void;
+  /** Vorauswahl aus der Adresse: Quelle, Ort oder Stelle. */
+  initial: MediaNav | null;
+  onNavigate: (nav: MediaNav | null) => void;
   /** Zurück zur Karte, auf den angetippten Ort. */
   onShowPlace: (p: Place) => void;
+  /** Der Weg in den Lesemodus – dieselbe Stelle, nur als Text. */
+  onOpenReading: (osis: string, chapter: number) => void;
   onExit: () => void;
 }
 
@@ -36,12 +45,22 @@ const CHIPS = 6;
  * bleibt in beide Richtungen – von hier führt jede Ortsmarke auf die Karte,
  * und die Ortskarte führt mit `#hoeren=ort,…` hierher zurück.
  */
-export default function MediaMode({ places, lang, initial, onNavigate, onShowPlace, onExit }: Props) {
+export default function MediaMode({
+  places,
+  lang,
+  initial,
+  onNavigate,
+  onShowPlace,
+  onOpenReading,
+  onExit,
+}: Props) {
   const t = useT();
   const [index, setIndex] = useState<MediaIndex | null>(null);
   const [source, setSource] = useState<string | null>(initial?.source ?? null);
   const [place, setPlace] = useState<string | null>(initial?.place ?? null);
-  const [book, setBook] = useState<string | null>(null);
+  const [book, setBook] = useState<string | null>(initial?.ref?.osis ?? null);
+  /** Aus dem Lesemodus verlinkt: genau dieses Kapitel. */
+  const [chapter, setChapter] = useState<number | null>(initial?.ref?.chapter ?? null);
   const [era, setEra] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [limit, setLimit] = useState(PAGE);
@@ -56,15 +75,20 @@ export default function MediaMode({ places, lang, initial, onNavigate, onShowPla
     };
   }, []);
 
-  // Die Adresse hält Quelle und Ort fest – der Rest ist Feinarbeit im Modus.
+  // Die Adresse hält Quelle, Ort und Stelle fest – der Rest ist Feinarbeit.
   useEffect(() => {
-    onNavigate(source || place ? { source: source ?? undefined, place: place ?? undefined } : null);
+    const ref = book && chapter !== null ? { osis: book, chapter } : undefined;
+    onNavigate(
+      source || place || ref
+        ? { source: source ?? undefined, place: place ?? undefined, ref }
+        : null,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [source, place]);
+  }, [source, place, book, chapter]);
 
   useEffect(() => {
     setLimit(PAGE);
-  }, [source, place, book, era, query]);
+  }, [source, place, book, chapter, era, query]);
 
   const placeById = useMemo(() => new Map(places.map((p) => [p.id, p])), [places]);
   const byEpisode = useMemo(() => (index ? placesByEpisode(index) : new Map<number, string[]>()), [index]);
@@ -95,7 +119,14 @@ export default function MediaMode({ places, lang, initial, onNavigate, onShowPla
     const out: { ep: MediaEpisode; i: number }[] = [];
     index.episodes.forEach((ep, i) => {
       if (onlyPlace && !onlyPlace.has(i)) return;
-      if (book && !ep.refs.some((r) => r.osis === book)) return;
+      if (book) {
+        // Mit Kapitel: was dieses Kapitel nennt – und die Buch-Übersichten,
+        // die für jedes Kapitel gelten.
+        const hit = chapter
+          ? ep.refs.some((r) => r.osis === book && (r.chapter === null || r.chapter === chapter))
+          : ep.refs.some((r) => r.osis === book);
+        if (!hit) return;
+      }
       if (era && !ep.eras.includes(era)) return;
       if (q) {
         const inText =
@@ -109,7 +140,7 @@ export default function MediaMode({ places, lang, initial, onNavigate, onShowPla
       (a, b) => precision(a.ep) - precision(b.ep) || (b.ep.date ?? '').localeCompare(a.ep.date ?? ''),
     );
     return out;
-  }, [index, places, place, book, era, query]);
+  }, [index, places, place, book, chapter, era, query]);
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {};
@@ -129,6 +160,7 @@ export default function MediaMode({ places, lang, initial, onNavigate, onShowPla
     setSource(null);
     setPlace(null);
     setBook(null);
+    setChapter(null);
     setEra(null);
     setQuery('');
   }
@@ -191,7 +223,12 @@ export default function MediaMode({ places, lang, initial, onNavigate, onShowPla
           <select
             value={book ?? ''}
             aria-label={t('mediaAllBooks')}
-            onChange={(e) => setBook(e.target.value || null)}
+            onChange={(e) => {
+              setBook(e.target.value || null);
+              // Von Hand ein Buch wählen heißt: das ganze Buch, nicht das
+              // Kapitel, aus dem der Link kam.
+              setChapter(null);
+            }}
             className="bg-surface px-2.5 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-gold"
           >
             <option value="">{t('mediaAllBooks')}</option>
@@ -220,6 +257,23 @@ export default function MediaMode({ places, lang, initial, onNavigate, onShowPla
             </button>
           )}
         </div>
+
+        {book && chapter !== null && (
+          <div className="mt-2 flex flex-wrap items-center gap-2 bg-surface/60 px-3 py-2">
+            <span className="bm-eyebrow">{t('mediaAtRef')}</span>
+            <span className="text-sm font-bold text-white">
+              {(lang === 'de' ? BOOK_BY_OSIS[book]?.de.replace(/\s*\(.*\)$/, '') : BOOK_BY_OSIS[book]?.en) ??
+                book}{' '}
+              {chapter}
+            </span>
+            <button onClick={() => onOpenReading(book, chapter)} className="bm-btn bm-btn-ghost">
+              {t('readChapter')} →
+            </button>
+            <button onClick={() => setChapter(null)} className="ml-auto bm-btn bm-btn-ghost">
+              ✕
+            </button>
+          </div>
+        )}
 
         {selectedPlace && (
           <div className="mt-2 flex flex-wrap items-center gap-2 bg-surface/60 px-3 py-2">
@@ -278,11 +332,28 @@ export default function MediaMode({ places, lang, initial, onNavigate, onShowPla
                   {ep.title}
                 </a>
 
-                <div className="mt-0.5 text-[11px] text-white/60">
-                  {ep.refs
-                    .map((r) => r.label || (lang === 'de' ? BOOK_BY_OSIS[r.osis]?.de : BOOK_BY_OSIS[r.osis]?.en))
-                    .filter(Boolean)
-                    .join(' · ')}
+                {/* Die Stellen sind der Weg zum Text: was eine Folge bespricht,
+                    lässt sich daneben lesen. Ohne Kapitel geht das nicht. */}
+                <div className="mt-0.5 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[11px] text-white/60">
+                  {ep.refs.map((r, k) => {
+                    const label =
+                      r.label ||
+                      (lang === 'de' ? BOOK_BY_OSIS[r.osis]?.de : BOOK_BY_OSIS[r.osis]?.en) ||
+                      r.osis;
+                    return r.chapter ? (
+                      <button
+                        key={`${r.osis}-${r.chapter}-${k}`}
+                        onClick={() => onOpenReading(r.osis, r.chapter as number)}
+                        title={t('readChapter')}
+                        className="underline decoration-white/25 underline-offset-2 transition hover:text-gold hover:decoration-gold"
+                      >
+                        {label}
+                      </button>
+                    ) : (
+                      <span key={`${r.osis}-${k}`}>{label}</span>
+                    );
+                  })}
+                  {ep.date && <span>· {ep.date}</span>}
                 </div>
 
                 {chips.length > 0 && (

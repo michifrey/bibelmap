@@ -311,7 +311,12 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       nur die eigene – sonst zeigte jede Quelle nach dem Klick nur sich selbst.
 - [x] Verknüpfung in **beide Richtungen**: unter jeder Folge stehen ihre Orte
       (Klick → Karte), jede Ortskarte verlinkt zurück in den gefilterten Modus.
-- [x] Verlinkbar: `#hoeren`, `#hoeren=<quelle>`, `#hoeren=ort,<ortsid>`.
+- [x] Verlinkbar: `#hoeren`, `#hoeren=<quelle>`, `#hoeren=ort,<ortsid>`,
+      `#hoeren=stelle,<buch>,<kapitel>`.
+- [x] Auch der Lesemodus hängt daran: neben dem Kapitel steht, wie viele Folgen
+      genau diese Stelle behandeln; ein Klick öffnet sie, und von dort führt
+      jede Bibelstelle in den Text zurück. Buch-Übersichten zählen mit – sie
+      gelten für jedes Kapitel und stehen deshalb hinter den genauen Stellen.
 - [x] Ehrlich bleiben: eine genannte Bibelstelle ist nicht zwingend das Thema
       der Folge – der Hinweis steht unter der Liste, nicht im Kleingedruckten.
 
