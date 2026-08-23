@@ -184,6 +184,9 @@ export default function TerrainMap({
         'NavigationControl.ZoomOut': t('terrainZoomOut'),
         'NavigationControl.ResetBearing': t('terrainResetBearing'),
         'Popup.Close': t('terrainClosePopup'),
+        // Den hatte meine handgeschriebene Liste übersehen – die Prüfung, die
+        // ihre Namen aus MapLibre selbst liest, fand ihn im ersten Lauf.
+        'AttributionControl.ToggleAttribution': t('terrainAttribution'),
       },
       style: {
         version: 8,

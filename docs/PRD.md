@@ -450,6 +450,9 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       Sprache – gegen den alten Stand meldet sie 11 von 14 Ansichten.
 - [x] Auf Englisch bleibt „Zoom in" stehen: übersetzt wird in die gewählte
       Sprache, nicht stur ins Deutsche.
+- [x] Die Prüfung liest die fremden Namen aus den Bibliotheken selbst statt aus
+      einer Handpflege – und fand damit im ersten Lauf einen, den die
+      Handpflege übersehen hatte („Toggle attribution").
 
 ### 4.27 Weitere Ansichten (aus parallelen Arbeiten)
 
