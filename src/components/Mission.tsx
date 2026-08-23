@@ -16,11 +16,18 @@ import {
   type SpreadEvent,
 } from '../data/mission';
 import MissionMap, { type MissionMarker, type MissionRoute } from './MissionMap';
+import RouteMap from './RouteMap';
+import { formatKm, legDistances, type LatLon } from '../lib/route';
+import ShareLink from './ShareLink';
 
 interface Props {
   places: Place[];
   lang: Lang;
   onShowPlace: (place: Place) => void;
+  /** Phase, Reise und Ereignis aus der Adresse (Deep-Link). */
+  initial?: { phase: string; journey?: string; event?: string } | null;
+  /** Meldet den Stand, damit die Adresse mitläuft. */
+  onNavigate?: (state: { phase: string; journey: string; event?: string }) => void;
   onExit: () => void;
 }
 
@@ -35,7 +42,16 @@ interface Item {
 }
 
 const PHASE_ORDER: Record<string, number> = Object.fromEntries(PHASES.map((p, i) => [p.id, i]));
-const STEP_MS = 3200;
+
+/** Die Phasen der Ausbreitung, ohne die Reisen – sie tragen den Zeitregler. */
+const SPREAD_PHASES = PHASES.filter((p) => p.id !== 'journeys');
+const FIRST_YEAR = SPREAD_PHASES[0].from;
+const LAST_YEAR = SPREAD_PHASES[SPREAD_PHASES.length - 1].to;
+
+function phaseForYear(y: number): string {
+  const hit = SPREAD_PHASES.find((p) => y >= p.from && y <= p.to);
+  return hit?.id ?? (y < FIRST_YEAR ? SPREAD_PHASES[0].id : SPREAD_PHASES[SPREAD_PHASES.length - 1].id);
+}
 
 function journeyItems(journey: MissionJourney, lang: Lang): Item[] {
   return journey.stops.map((s, i) => ({
@@ -57,15 +73,33 @@ function eventItems(events: SpreadEvent[], lang: Lang): Item[] {
   }));
 }
 
-export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
+export default function Mission({ places, lang, onShowPlace, initial, onNavigate, onExit }: Props) {
   const t = useT();
-  const [phaseId, setPhaseId] = useState('journeys');
-  const [journeyId, setJourneyId] = useState(JOURNEYS[0].id);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [phaseId, setPhaseId] = useState(() =>
+    initial && PHASE_BY_ID[initial.phase] ? initial.phase : 'journeys',
+  );
+  const [journeyId, setJourneyId] = useState(() =>
+    initial?.journey && JOURNEY_BY_ID[initial.journey] ? initial.journey : JOURNEYS[0].id,
+  );
+  const [selected, setSelected] = useState<string | null>(initial?.event ?? null);
   const [playing, setPlaying] = useState(false);
+  /** Zeitregler: null = ganze Phase zeigen, sonst Stand des Zeitraffers. */
+  const [year, setYear] = useState<number | null>(null);
   const [fit, setFit] = useState<{ points: [number, number][]; key: number } | null>(null);
   const [focus, setFocus] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+
+  const navRef = useRef(onNavigate);
+  navRef.current = onNavigate;
+  useEffect(() => {
+    navRef.current?.({
+      phase: phaseId,
+      journey: journeyId,
+      // In den Ausbreitungsphasen ist die Auswahl ein Ereignis – das gehört
+      // in die Adresse, damit ein Treffer der Suche verlinkbar bleibt.
+      event: phaseId === 'journeys' ? undefined : selected ?? undefined,
+    });
+  }, [phaseId, journeyId, selected]);
 
   const phase = PHASE_BY_ID[phaseId];
   const isJourneys = phaseId === 'journeys';
@@ -86,6 +120,19 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
   );
 
   const markers = useMemo<MissionMarker[]>(() => {
+    if (!isJourneys && year !== null) {
+      // Zeitraffer: alles, was bis zu diesem Jahr geschehen ist. Was gerade
+      // geschieht, leuchtet; was länger her ist, verblasst.
+      return SPREAD_EVENTS.filter((e) => e.year <= year).map((e) => ({
+        id: e.id,
+        lat: e.lat,
+        lon: e.lon,
+        label: lang === 'de' ? e.de : e.en,
+        color: PHASE_BY_ID[e.phase]?.color ?? '#1f3d3a',
+        tone: e.id === selected ? 'active' : year - e.year <= 80 ? 'current' : 'past',
+        from: e.from,
+      }));
+    }
     const past: MissionMarker[] = pastEvents.map((e) => ({
       id: e.id,
       lat: e.lat,
@@ -105,7 +152,13 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
       from: it.from,
     }));
     return [...past, ...current];
-  }, [pastEvents, items, selected, isJourneys, journey, phase, lang]);
+  }, [pastEvents, items, selected, isJourneys, journey, phase, lang, year]);
+
+  const activeIndex = useMemo(() => {
+    if (!isJourneys || !selected) return 0;
+    const i = items.findIndex((it) => it.key === selected);
+    return i < 0 ? 0 : i;
+  }, [isJourneys, selected, items]);
 
   const routes = useMemo<MissionRoute[]>(() => {
     if (!isJourneys) return [];
@@ -117,11 +170,34 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
     }));
   }, [isJourneys, journeyId]);
 
+  const journeyStops = useMemo(
+    () => journey.stops.map((st) => ({ lat: st.lat, lon: st.lon, label: lang === 'de' ? st.de : st.en })),
+    [journey, lang],
+  );
+  const otherJourneys = useMemo(
+    () =>
+      JOURNEYS.filter((j) => j.id !== journeyId).map((j) => ({
+        points: j.stops.map((st) => [st.lat, st.lon] as LatLon),
+        color: j.color,
+      })),
+    [journeyId],
+  );
+  const journeyLegs = useMemo(
+    () => legDistances(journey.stops.map((st) => [st.lat, st.lon] as LatLon)),
+    [journey],
+  );
+
   // Beim Wechsel von Phase oder Reise den Ausschnitt neu setzen
+  // Die Auswahl fällt nur, wenn Phase oder Reise sich wirklich ändern – ein
+  // verlinktes Ereignis überlebt so auch den doppelten Effektlauf im
+  // Entwicklungsmodus.
+  const lastKey = useRef(`${phaseId}|${journeyId}`);
   useEffect(() => {
     const pts = items.map((i) => [i.lat, i.lon] as [number, number]);
     for (const i of items) if (i.from) pts.push(i.from);
-    setSelected(null);
+    const key = `${phaseId}|${journeyId}`;
+    if (key !== lastKey.current) setSelected(null);
+    lastKey.current = key;
     panelRef.current?.scrollTo({ top: 0 });
     if (pts.length) setFit({ points: pts, key: Date.now() });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -134,9 +210,23 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
   }, [selected]);
 
   function pick(key: string) {
+    setYear(null); // von Hand gewählt: der Zeitraffer tritt zurück
     setSelected(key);
+    if (isJourneys) return; // die Reisekarte führt den Ausschnitt selbst nach
     const it = items.find((i) => i.key === key);
-    if (it) setFocus({ lat: it.lat, lon: it.lon, zoom: isJourneys ? 7 : 4, key: Date.now() });
+    if (it) setFocus({ lat: it.lat, lon: it.lon, zoom: 4, key: Date.now() });
+  }
+
+  /** Reise zu Ende gespielt: die nächste, sonst die nächste Phase. */
+  function afterJourney() {
+    const ji = JOURNEYS.findIndex((j) => j.id === journeyId);
+    if (ji < JOURNEYS.length - 1) {
+      setJourneyId(JOURNEYS[ji + 1].id);
+      return;
+    }
+    const pi = PHASES.findIndex((p) => p.id === phaseId);
+    if (pi < PHASES.length - 1) setPhaseId(PHASES[pi + 1].id);
+    else setPlaying(false);
   }
 
   /** Einen Schritt weiter – über Reisen und Phasen hinweg. */
@@ -167,14 +257,37 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
   const stepRef = useRef(step);
   stepRef.current = step;
 
-  // Abspielen: Station für Station durch die ganze Geschichte
+  // Abspielen der Ausbreitung: als Zeitraffer über die Jahrhunderte. Jede
+  // Phase bekommt dabei ungefähr gleich viel Zeit – sonst kröchen die vier
+  // Jahrhunderte des Römischen Reiches und die Moderne bliebe ein Wimpernschlag.
   useEffect(() => {
-    if (!playing) return;
+    if (!playing || isJourneys) return;
     const id = window.setInterval(() => {
-      if (!stepRef.current(1)) setPlaying(false);
-    }, STEP_MS);
+      setYear((y) => {
+        const cur = y ?? PHASE_BY_ID[phaseId]?.from ?? FIRST_YEAR;
+        const p = PHASE_BY_ID[phaseForYear(cur)];
+        const perTick = Math.max(1, Math.round((p.to - p.from) / 100));
+        const next = cur + perTick;
+        if (next >= LAST_YEAR) {
+          setPlaying(false);
+          return LAST_YEAR;
+        }
+        return next;
+      });
+    }, 110);
     return () => window.clearInterval(id);
-  }, [playing]);
+  }, [playing, isJourneys, phaseId]);
+
+  // Der Zeitregler führt die Phase und die Auswahl mit sich.
+  useEffect(() => {
+    if (year === null || isJourneys) return;
+    const p = phaseForYear(year);
+    if (p !== phaseId) setPhaseId(p);
+    const reached = SPREAD_EVENTS.filter((e) => e.year <= year);
+    const newest = reached[reached.length - 1];
+    if (newest && newest.id !== selected) setSelected(newest.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [year]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -192,7 +305,7 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
       {/* Kopfzeile */}
       <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
         <div className="flex items-center gap-2">
-          <svg viewBox="0 0 24 24" className="h-5 w-5 flex-none text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 flex-none text-gold" fill="none" stroke="currentColor" strokeWidth="1.8">
             <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18" />
           </svg>
           <div>
@@ -201,11 +314,12 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <ShareLink className="bm-btn hidden sm:inline-flex" />
           <button onClick={() => setPlaying((p) => !p)} className="bm-btn">
             {playing ? (
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z" /></svg>
             ) : (
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M7 4v16l13-8z" /></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M7 4v16l13-8z" /></svg>
             )}
             {playing ? t('pause') : t('play')}
           </button>
@@ -243,6 +357,7 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
               onSelect={pick}
               placeById={placeById}
               onShowPlace={onShowPlace}
+              legs={journeyLegs}
             />
           ) : (
             <EventList
@@ -259,9 +374,48 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
 
         {/* Karte */}
         <div className="relative min-h-[45vh] flex-1">
-          <MissionMap markers={markers} routes={routes} fit={fit} focus={focus} onSelect={pick} />
+          {isJourneys ? (
+            <RouteMap
+              key={journeyId}
+              stops={journeyStops}
+              color={journey.color}
+              context={otherJourneys}
+              activeIndex={activeIndex}
+              playing={playing}
+              onArrive={(i) => setSelected(items[i]?.key ?? null)}
+              onFinish={afterJourney}
+              onSelect={(i) => pick(items[i].key)}
+            />
+          ) : (
+            <MissionMap markers={markers} routes={routes} fit={fit} focus={focus} onSelect={pick} />
+          )}
         </div>
       </div>
+
+      {/* Zeitregler: das Jahr als Schieber über die ganze Ausbreitung */}
+      {!isJourneys && (
+        <div className="flex flex-none items-center gap-3 border-t border-white/10 bg-abyss px-4 py-2">
+          <span className="bm-num w-16 flex-none text-lg" style={{ color: phase.color }}>
+            {year ?? phase.to}
+          </span>
+          <input
+            type="range"
+            min={FIRST_YEAR}
+            max={LAST_YEAR}
+            value={year ?? phase.to}
+            onChange={(e) => setYear(Number(e.target.value))}
+            className="h-1 w-full accent-[var(--color-gold)]"
+            aria-label={t('year')}
+          />
+          <button
+            onClick={() => setYear(null)}
+            disabled={year === null}
+            className="bm-btn bm-btn-ghost flex-none disabled:opacity-30"
+          >
+            {t('wholePhase')}
+          </button>
+        </div>
+      )}
 
       {/* Zeitleiste der Phasen */}
       <div className="scroll-soft flex flex-none gap-px overflow-x-auto border-t border-white/10 bg-abyss px-2 py-2">
@@ -270,7 +424,10 @@ export default function Mission({ places, lang, onShowPlace, onExit }: Props) {
           return (
             <button
               key={p.id}
-              onClick={() => setPhaseId(p.id)}
+              onClick={() => {
+                setYear(null);
+                setPhaseId(p.id);
+              }}
               style={on ? { background: p.color } : undefined}
               className={`flex-none border-t-2 px-3 py-1.5 text-left transition ${
                 on ? 'text-white' : 'border-transparent text-white/55 hover:bg-white/8 hover:text-white'
@@ -299,6 +456,7 @@ function JourneyList({
   onSelect,
   placeById,
   onShowPlace,
+  legs,
 }: {
   journey: MissionJourney;
   journeyId: string;
@@ -308,6 +466,7 @@ function JourneyList({
   onSelect: (key: string) => void;
   placeById: Map<string, Place>;
   onShowPlace: (p: Place) => void;
+  legs: number[];
 }) {
   const t = useT();
   return (
@@ -354,6 +513,9 @@ function JourneyList({
           const place = s.placeId ? placeById.get(s.placeId) : undefined;
           return (
             <li key={key} data-item={key}>
+              {i > 0 && legs[i - 1] !== undefined && (
+                <div className="py-0.5 pl-10 text-[11px] text-white/35">↓ {formatKm(legs[i - 1], lang)}</div>
+              )}
               <button
                 onClick={() => onSelect(key)}
                 className={`flex w-full items-start gap-2.5 px-2.5 py-2 text-left transition ${

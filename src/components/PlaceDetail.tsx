@@ -3,14 +3,19 @@ import type { Place, PlaceImage, VerseRef } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { booksForPlace, erasForPlace, placeName, placeNames } from '../lib/places';
+import { formatKm } from '../lib/route';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { ERA_BY_ID, ERAS } from '../data/eras';
 import PlaceThumb from './PlaceThumb';
 import PlaceMedia from './PlaceMedia';
+import ShareLink from './ShareLink';
 
 interface Props {
   place: Place;
   lang: Lang;
+  /** Orte in Gehweite, schon sortiert – berechnet in App.tsx. */
+  neighbours?: { place: Place; km: number; dir: string }[];
+  onSelectPlace?: (p: Place) => void;
   onClose: () => void;
 }
 
@@ -34,14 +39,14 @@ function SourceLink({ href, children }: { href: string; children: React.ReactNod
       className="inline-flex items-center gap-1 bg-surface px-2.5 py-1.5 text-xs font-medium text-white transition hover:bg-gold/30"
     >
       {children}
-      <svg viewBox="0 0 24 24" className="h-3 w-3 opacity-60" fill="currentColor">
+      <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3 opacity-60" fill="currentColor">
         <path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14zM5 5h5v2H7v10h10v-3h2v5H5z" />
       </svg>
     </a>
   );
 }
 
-export default function PlaceDetail({ place, lang, onClose }: Props) {
+export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlace, onClose }: Props) {
   const t = useT();
   const [img, setImg] = useState<PlaceImage | null>(place.img);
   const grouped = useMemo(() => groupByBook(place.verses), [place]);
@@ -70,21 +75,24 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
           onResolved={setImg}
           placeholder={
             <div className="flex h-28 w-full items-center justify-center bg-gradient-to-br from-signal to-deepest">
-              <svg viewBox="0 0 24 24" className="h-10 w-10 text-gold/70" fill="currentColor">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-10 w-10 text-gold/70" fill="currentColor">
                 <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
               </svg>
             </div>
           }
         />
-        <button
-          onClick={onClose}
-          aria-label={t('close')}
-          className="absolute right-2 top-2 grid h-8 w-8 place-items-center rounded-full bg-deepest/95 text-white ring-1 ring-white/10 transition hover:bg-deepest"
-        >
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
-            <path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" />
-          </svg>
-        </button>
+        <div className="absolute right-2 top-2 flex items-center gap-1.5">
+          <ShareLink className="bm-btn bg-deepest/95 px-2.5 py-1.5 text-[11px] ring-1 ring-white/10 hover:bg-deepest" />
+          <button
+            onClick={onClose}
+            aria-label={t('close')}
+            className="grid h-8 w-8 place-items-center rounded-full bg-deepest/95 text-white ring-1 ring-white/10 transition hover:bg-deepest"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+              <path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" />
+            </svg>
+          </button>
+        </div>
         {img?.credit && (
           <a
             href={img.creditUrl ?? '#'}
@@ -174,6 +182,29 @@ export default function PlaceDetail({ place, lang, onClose }: Props) {
         </div>
 
         <PlaceMedia place={place} />
+
+        {/* Nachbarorte: was an einem Tag zu Fuß erreichbar war */}
+        {neighbours.length > 0 && onSelectPlace && (
+          <div className="border-t border-white/10 px-4 py-3.5">
+            <div className="bm-eyebrow mb-2">{t('withinWalk')}</div>
+            <div className="flex flex-wrap gap-1.5">
+              {neighbours.map((n) => (
+                <button
+                  key={n.place.id}
+                  onClick={() => onSelectPlace(n.place)}
+                  className="bg-white/8 px-2.5 py-1.5 text-[11.5px] font-bold text-white transition hover:bg-gold/30"
+                  title={`${formatKm(n.km, lang)} ${n.dir}`}
+                >
+                  {placeName(n.place, lang)}
+                  <span className="ml-1.5 font-medium text-white/50">
+                    {formatKm(n.km, lang)} {n.dir}
+                  </span>
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-[11px] text-white/40">{t('withinWalkNote')}</p>
+          </div>
+        )}
 
         {/* sources */}
         <div className="mt-5">

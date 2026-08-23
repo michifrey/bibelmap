@@ -33,7 +33,7 @@ export default function CompareMode({ places, lang, onExit }: Props) {
     <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
       <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
         <div className="flex items-center gap-2">
-          <svg viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="currentColor"><path d="M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z" stroke="currentColor" strokeWidth="1.6" fill="none"/></svg>
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="currentColor"><path d="M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z" stroke="currentColor" strokeWidth="1.6" fill="none"/></svg>
           <div className="font-display text-xl uppercase leading-none">{t('compareMode')}</div>
         </div>
         <button onClick={onExit} className="bm-btn bm-btn-gold">

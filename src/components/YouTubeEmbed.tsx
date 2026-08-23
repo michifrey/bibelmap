@@ -54,7 +54,7 @@ export default function YouTubeEmbed({ ids, title }: Props) {
             />
             <span className="absolute inset-0 grid place-items-center">
               <span className="grid h-14 w-14 place-items-center rounded-full bg-black/60 ring-2 ring-white/10 transition group-hover:bg-clay">
-                <svg viewBox="0 0 24 24" className="ml-1 h-7 w-7 text-white" fill="currentColor">
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="ml-1 h-7 w-7 text-white" fill="currentColor">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </span>

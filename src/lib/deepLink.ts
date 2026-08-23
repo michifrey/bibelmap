@@ -1,0 +1,127 @@
+import type { Mode, View } from '../components/Header';
+
+/**
+ * Zustand, den eine Adresse festhalten kann. Jede Ansicht bekommt einen
+ * sprechenden Schlüssel im Hash – `#reise=exodus,5` ist auch dann noch
+ * lesbar, wenn jemand den Link in einer Nachricht sieht.
+ */
+export interface Route {
+  view: View;
+  mode: Mode | null;
+  /** Ort auf der Hauptkarte. */
+  placeId?: string;
+  /** Reise + Station (Reisen & Geschichten). */
+  journey?: { id: string; stop: number };
+  /**
+   * Phase + Detail (Mission & Ausbreitung). In der Reisephase ist das zweite
+   * Glied eine Reise, sonst ein Ereignis – beides steht als `#mission=phase,x`
+   * in der Adresse.
+   */
+  mission?: { phase: string; journey?: string; event?: string };
+  /** Buch + Kapitel (Präsentationsmodus). */
+  reading?: { osis: string; chapter: number };
+  /**
+   * Quelle oder Ort (Hören & Sehen). `#hoeren=ort,jerusalem` zeigt die Folgen
+   * zu einem Ort, `#hoeren=keller` die einer Quelle.
+   */
+  media?: { source?: string; place?: string };
+}
+
+/** Schlüssel im Hash → Modus ohne weitere Angaben. */
+const MODE_KEYS: Record<string, Mode> = {
+  unterstuetzen: 'support',
+  heilsgeschichte: 'history',
+  quiz: 'quiz',
+  kirche: 'church',
+  vergleich: 'compare',
+};
+
+const KEY_BY_MODE: Record<string, string> = Object.fromEntries(
+  Object.entries(MODE_KEYS).map(([k, m]) => [m, k]),
+);
+
+function num(value: string | undefined, fallback: number): number {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : fallback;
+}
+
+/**
+ * Adresse lesen. `null` heißt: kein Ziel im Hash – die Startseite bleibt
+ * stehen. Unbekannte Schlüssel werden ignoriert statt zu raten.
+ */
+export function parseHash(hash: string): Route | null {
+  const raw = hash.replace(/^#/, '').trim();
+  if (!raw) return null;
+  const [key, value = ''] = raw.split('=');
+  const args = value ? value.split(',') : [];
+
+  if (MODE_KEYS[key]) return { view: 'map', mode: MODE_KEYS[key] };
+
+  switch (key) {
+    case 'karte':
+      return { view: 'map', mode: null };
+    case 'ort':
+      return args[0] ? { view: 'map', mode: null, placeId: args[0] } : { view: 'map', mode: null };
+    case 'stammbaum':
+      return { view: 'tree', mode: null };
+    case 'graph':
+      return { view: 'graph', mode: null };
+    case 'reise':
+      return {
+        view: 'map',
+        mode: 'journeys',
+        journey: args[0] ? { id: args[0], stop: Math.max(0, num(args[1], 0)) } : undefined,
+      };
+    case 'mission':
+      if (!args[0]) return { view: 'map', mode: 'mission' };
+      return {
+        view: 'map',
+        mode: 'mission',
+        mission:
+          args[0] === 'journeys'
+            ? { phase: args[0], journey: args[1] }
+            : { phase: args[0], event: args[1] },
+      };
+    case 'hoeren':
+      if (!args[0]) return { view: 'map', mode: 'media' };
+      return {
+        view: 'map',
+        mode: 'media',
+        media: args[0] === 'ort' ? { place: args[1] } : { source: args[0] },
+      };
+    case 'lesen':
+      return {
+        view: 'map',
+        mode: 'present',
+        reading: args[0] ? { osis: args[0], chapter: Math.max(1, num(args[1], 1)) } : undefined,
+      };
+    default:
+      return null;
+  }
+}
+
+/** Adresse schreiben – die Umkehrung von `parseHash`. */
+export function formatRoute(route: Route): string {
+  const { view, mode } = route;
+  if (mode && KEY_BY_MODE[mode]) return `#${KEY_BY_MODE[mode]}`;
+  if (mode === 'journeys') {
+    return route.journey ? `#reise=${route.journey.id},${route.journey.stop}` : '#reise';
+  }
+  if (mode === 'mission') {
+    if (!route.mission) return '#mission';
+    const { phase, journey, event } = route.mission;
+    // In der Reisephase steht die Reise in der Adresse, sonst das Ereignis.
+    const detail = phase === 'journeys' ? journey : event;
+    return detail ? `#mission=${phase},${detail}` : `#mission=${phase}`;
+  }
+  if (mode === 'media') {
+    if (route.media?.place) return `#hoeren=ort,${route.media.place}`;
+    return route.media?.source ? `#hoeren=${route.media.source}` : '#hoeren';
+  }
+  if (mode === 'present') {
+    return route.reading ? `#lesen=${route.reading.osis},${route.reading.chapter}` : '#lesen';
+  }
+  if (view === 'tree') return '#stammbaum';
+  if (view === 'graph') return '#graph';
+  return route.placeId ? `#ort=${route.placeId}` : '#karte';
+}

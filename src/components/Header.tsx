@@ -3,7 +3,7 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import LangToggle from './LangToggle';
 
-export type Mode = 'present' | 'history' | 'mission' | 'compare' | 'church' | 'nations' | 'support';
+export type Mode = 'present' | 'history' | 'journeys' | 'mission' | 'compare' | 'church' | 'quiz' | 'nations' | 'media' | 'support';
 export type View = 'map' | 'tree' | 'graph';
 
 interface Props {
@@ -25,9 +25,12 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
   const modes: { id: Mode; label: string; hint: string; icon: string }[] = [
     { id: 'present', label: t('presentation'), hint: t('presentationHint'), icon: 'M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z' },
     { id: 'history', label: t('historyMode'), hint: t('historyHint'), icon: 'M12 8v5l3 2' },
+    { id: 'journeys', label: t('journeys'), hint: t('journeysSub'), icon: 'M5 20c4-10 10-10 14-16M5 20h.01M19 4h.01M9 15l1.5 1.5' },
     { id: 'mission', label: t('mission'), hint: t('missionHint'), icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18' },
     { id: 'church', label: t('churchMode'), hint: t('churchHint'), icon: 'M12 3v18M7 8h10M5 21h14' },
+    { id: 'quiz', label: t('quiz'), hint: t('quizSub'), icon: 'M12 17h.01M9.5 9a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1 1-1.1 1.8M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z' },
     { id: 'compare', label: t('compareMode'), hint: t('compareIntro'), icon: 'M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z' },
+    { id: 'media', label: t('media'), hint: t('mediaHint'), icon: 'M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zM5 11a7 7 0 0 0 14 0M12 18v3' },
     { id: 'support', label: t('support'), hint: t('supportSub'), icon: 'M12 20.3 4.6 13a4.7 4.7 0 0 1 0-6.7 4.7 4.7 0 0 1 6.7 0l.7.7.7-.7a4.7 4.7 0 0 1 6.7 0 4.7 4.7 0 0 1 0 6.7z' },
   ];
 
@@ -43,7 +46,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
           className="pointer-events-auto flex items-center gap-2 bg-deepest/95 px-3 py-2 text-left ring-1 ring-white/10 backdrop-blur-xl transition hover:bg-deepest sm:gap-3 sm:px-4 sm:py-2.5"
         >
           <div className="grid h-8 w-8 place-items-center bg-gradient-to-br from-signal to-deepest text-gold shadow-inner sm:h-9 sm:w-9">
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor">
               <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
             </svg>
           </div>
@@ -87,9 +90,9 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
               onClick={() => setOpen((v) => !v)}
               className="flex items-center gap-1.5 bg-signal px-2.5 py-2 text-xs font-medium text-white ring-1 ring-white/10 transition hover:bg-signal sm:px-3.5 sm:py-2.5 sm:text-sm"
             >
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2"/></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2"/></svg>
               <span className="hidden sm:inline">{t('modes')}</span>
-              <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
             </button>
             {open && (
               <>
@@ -105,7 +108,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
                       className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-surface"
                     >
                       <span className="mt-0.5 grid h-8 w-8 flex-none place-items-center bg-white/10 text-white">
-                        <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d={m.icon} stroke="currentColor" strokeWidth="1.6" fill={m.id === 'present' || m.id === 'support' ? 'currentColor' : 'none'} /></svg>
+                        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d={m.icon} stroke="currentColor" strokeWidth="1.6" fill={m.id === 'present' || m.id === 'support' ? 'currentColor' : 'none'} /></svg>
                       </span>
                       <span className="min-w-0">
                         <span className="block text-sm font-semibold text-white">{m.label}</span>

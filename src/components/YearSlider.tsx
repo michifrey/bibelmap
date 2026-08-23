@@ -86,7 +86,7 @@ export default function YearSlider({
               aria-label={t('prevSnapshot')}
               className="bm-btn bm-btn-ghost px-2 py-1.5"
             >
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
                 <path d="M15 5l-7 7 7 7z" />
               </svg>
             </button>
@@ -99,7 +99,7 @@ export default function YearSlider({
               aria-label={t('nextSnapshot')}
               className="bm-btn bm-btn-ghost px-2 py-1.5"
             >
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor">
                 <path d="M9 5l7 7-7 7z" />
               </svg>
             </button>

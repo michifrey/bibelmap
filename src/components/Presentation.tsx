@@ -14,19 +14,47 @@ interface Props {
   places: Place[];
   lang: Lang;
   initialBook?: string | null;
+  /** Kapitel aus der Adresse (Deep-Link). */
+  initialChapter?: number;
+  /** Meldet Buch und Kapitel, damit die Adresse mitläuft. */
+  onNavigate?: (state: { osis: string; chapter: number } | null) => void;
   onExit: () => void;
 }
 
-export default function Presentation({ places, lang, initialBook, onExit }: Props) {
+export default function Presentation({ places, lang, initialBook, initialChapter, onNavigate, onExit }: Props) {
   const t = useT();
   const available = useMemo(() => new Set(booksWithPlaces(places)), [places]);
   const [book, setBook] = useState<string | null>(initialBook ?? null);
-  const [chapter, setChapter] = useState(1);
+  const [chapter, setChapter] = useState(initialChapter ?? 1);
   const [selected, setSelected] = useState<Place | null>(null);
+  /**
+   * Beamer: Text groß, Karte weg. Wer einmal so vorgetragen hat, will es beim
+   * nächsten Mal wieder – deshalb gemerkt.
+   */
+  const [beamer, setBeamer] = useState(() => {
+    try {
+      return localStorage.getItem('bibelmap:beamer') === '1';
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem('bibelmap:beamer', beamer ? '1' : '0');
+    } catch {
+      // Ohne Speicher bleibt es bei der Voreinstellung – kein Grund zu scheitern.
+    }
+  }, [beamer]);
 
   const [bookText, setBookText] = useState<BookText | null>(null);
   const [textLoading, setTextLoading] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+
+  const navRef = useRef(onNavigate);
+  navRef.current = onNavigate;
+  useEffect(() => {
+    navRef.current?.(book ? { osis: book, chapter } : null);
+  }, [book, chapter]);
 
   const meta = book ? BOOK_BY_OSIS[book] : null;
   const chapterPlaces = useMemo(
@@ -143,12 +171,18 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
         title={lang === 'de' ? meta.de : meta.en}
         subtitle={era ? `${lang === 'de' ? era.de : era.en} · ${era.range}` : undefined}
         onBack={() => setBook(null)}
+        beamer={beamer}
+        onBeamer={() => setBeamer((v) => !v)}
         onExit={onExit}
       />
 
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         {/* Left: text / places */}
-        <div className="scroll-soft flex w-full flex-col overflow-y-auto bg-paper text-ink border-b border-white/10 md:w-[42%] md:max-w-xl md:border-b-0 md:border-r">
+        <div
+          className={`scroll-soft flex w-full flex-col overflow-y-auto border-b border-white/10 bg-paper text-ink md:border-b-0 ${
+            beamer ? 'md:w-full md:max-w-none md:border-r-0' : 'md:w-[42%] md:max-w-xl md:border-r'
+          }`}
+        >
           <div className="sticky top-0 z-10 border-b-4 border-deep bg-paper px-6 py-4">
             <div className="flex items-center justify-between gap-2">
               <button
@@ -174,6 +208,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
             </div>
             <input
               type="range"
+              aria-label={`${t('chapter')} ${chapter} / ${meta.chapters}`}
               min={1}
               max={meta.chapters}
               value={chapter}
@@ -197,7 +232,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                   onClick={() => setShowVideo(true)}
                   className="inline-flex items-center gap-1 bg-deep px-3 py-1.5 text-[11px] font-extrabold tracking-wide text-white transition hover:bg-signal"
                 >
-                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
                   {t('video')}
                 </button>
               ) : (
@@ -236,7 +271,11 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
             ) : verses.length === 0 ? (
               <p className="bg-surface/50 px-4 py-6 text-center text-sm text-white/60">{t('noText')}</p>
             ) : (
-              <div className="font-scripture text-[18.5px] leading-[1.85] text-ink">
+              <div
+                className={`font-scripture text-ink ${
+                  beamer ? 'mx-auto max-w-4xl text-[26px] leading-[1.7]' : 'text-[18.5px] leading-[1.85]'
+                }`}
+              >
                 {verses.map((vs) => {
                   const vp = versePlaces.get(vs.v) ?? [];
                   const candidates: Candidate[] = vp.map((p) => ({
@@ -257,7 +296,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                           title={placeName(p, lang)}
                           className={`ml-1 inline-flex translate-y-[1px] items-center rounded-full px-1 align-middle text-[10px] font-sans transition ${ selected?.id === p.id ? 'bg-signal text-white' : 'bg-gold/30 text-white hover:bg-gold/55' }`}
                         >
-                          <svg viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" /></svg>
+                          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" /></svg>
                           {placeName(p, lang)}
                         </button>
                       ))}
@@ -269,7 +308,10 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
           </div>
         </div>
 
-        {/* Right: map */}
+        {/* Right: map. Im Beamer-Layout gar nicht erst gebaut – eine per CSS
+            versteckte Leaflet-Karte rechnet mit Größe 0 weiter und wirft
+            „Invalid LatLng (NaN, NaN)". */}
+        {!beamer && (
         <div className="relative min-h-[40vh] flex-1">
           <MapView
             places={fitPlaces}
@@ -281,6 +323,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
             flyTo={selected ? { lat: selected.lat, lon: selected.lon, zoom: 9, key: Date.now() } : null}
           />
         </div>
+        )}
       </div>
 
       {showVideo && bibleProjectVideoIds(meta.osis).length > 0 && (
@@ -298,7 +341,7 @@ export default function Presentation({ places, lang, initialBook, onExit }: Prop
                 className="grid h-8 w-8 place-items-center rounded-full bg-surface text-white transition hover:bg-gold/30"
                 aria-label={t('close')}
               >
-                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
+                <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
               </button>
             </div>
             <YouTubeEmbed ids={bibleProjectVideoIds(meta.osis)} title={lang === 'de' ? meta.de : meta.en} />
@@ -313,11 +356,15 @@ function PresentationBar({
   title,
   subtitle,
   onBack,
+  beamer,
+  onBeamer,
   onExit,
 }: {
   title: string;
   subtitle?: string;
   onBack?: () => void;
+  beamer?: boolean;
+  onBeamer?: () => void;
   onExit: () => void;
 }) {
   const t = useT();
@@ -334,9 +381,23 @@ function PresentationBar({
           {subtitle && <div className="text-[11px] text-white/75">{subtitle}</div>}
         </div>
       </div>
-      <button onClick={onExit} className="bg-gold px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold-deep">
-        {t('exit')} ✕
-      </button>
+      <div className="flex items-center gap-2">
+        {onBeamer && (
+          <button
+            onClick={onBeamer}
+            title={t('beamerHint')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 text-sm transition ${beamer ? 'bg-white text-signal' : 'bg-white/10 hover:bg-white/20'}`}
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M3 6h18v10H3zM8 20h8M12 16v4" />
+            </svg>
+            {t('beamer')}
+          </button>
+        )}
+        <button onClick={onExit} className="bg-gold px-3 py-1.5 text-sm font-medium text-white transition hover:bg-gold-deep">
+          {t('exit')} ✕
+        </button>
+      </div>
     </div>
   );
 }

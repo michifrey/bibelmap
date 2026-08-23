@@ -8,12 +8,24 @@ interface Props {
   selected: string | null;
   counts: Record<string, number>;
   onSelect: (eraId: string | null) => void;
+  /** „Alles bis hierhin" statt „nur diese Epoche". */
+  cumulative?: boolean;
+  onCumulative?: () => void;
   /** Mobile-only: collapsed by default; desktop always shows the band. */
   open?: boolean;
   onToggle?: () => void;
 }
 
-export default function Timeline({ lang, selected, counts, onSelect, open = false, onToggle }: Props) {
+export default function Timeline({
+  lang,
+  selected,
+  counts,
+  onSelect,
+  cumulative = false,
+  onCumulative,
+  open = false,
+  onToggle,
+}: Props) {
   const t = useT();
   const active = selected ? ERAS.find((e) => e.id === selected) : null;
 
@@ -28,8 +40,17 @@ export default function Timeline({ lang, selected, counts, onSelect, open = fals
           </span>
         </span>
       )}
-      <div className="ml-auto flex items-center gap-3">
+      <div className="ml-auto flex items-center gap-2 sm:gap-3">
         <span className="hidden text-[10.5px] text-white/40 sm:block">{t('timelineScaleHint')}</span>
+        {onCumulative && (
+          <button
+            onClick={onCumulative}
+            title={t('cumulativeHint')}
+            className={`bm-btn ${cumulative ? 'bm-btn-signal' : 'bm-btn-ghost'} px-3 py-1.5 text-[11px]`}
+          >
+            {t('cumulative')}
+          </button>
+        )}
         <button
           onClick={() => onSelect(null)}
           className={`bm-btn ${selected === null ? 'bm-btn-signal' : 'bm-btn-ghost'} px-3 py-1.5 text-[11px]`}

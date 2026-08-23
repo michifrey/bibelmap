@@ -1,7 +1,15 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import type { Place } from './types';
 import { LangContext, type Lang, useT, t as tr } from './i18n';
-import { loadPlaces, placesInEra, searchPlaces, erasForPlace, placeName } from './lib/places';
+import {
+  loadPlaces,
+  placesInEra,
+  placesUpToEra,
+  placesInChapter,
+  searchPlaces,
+  erasForPlace,
+  placeName,
+} from './lib/places';
 import { ERAS } from './data/eras';
 import MapView, { type BasemapId } from './components/MapView';
 import Header, { type Mode, type View } from './components/Header';
@@ -9,25 +17,35 @@ import Timeline from './components/Timeline';
 import YearSlider from './components/YearSlider';
 import SearchPanel from './components/SearchPanel';
 import PlaceDetail from './components/PlaceDetail';
-import Presentation from './components/Presentation';
-import HistoryMode from './components/HistoryMode';
-import Mission from './components/Mission';
-import CompareMode from './components/CompareMode';
-import ChurchMode from './components/ChurchMode';
-import GraphView from './components/GraphView';
-import Genealogy from './components/Genealogy';
+const Presentation = lazy(() => import('./components/Presentation'));
+const HistoryMode = lazy(() => import('./components/HistoryMode'));
+const Mission = lazy(() => import('./components/Mission'));
+const JourneyMode = lazy(() => import('./components/JourneyMode'));
+const QuizMode = lazy(() => import('./components/QuizMode'));
+const MediaMode = lazy(() => import('./components/MediaMode'));
+import { formatRoute, parseHash, type Route } from './lib/deepLink';
+import type { SearchHit } from './lib/globalSearch';
+import { parseRef } from './lib/parseRef';
+import { bearing, compass, distanceKm, KM_PER_DAY } from './lib/route';
+const CompareMode = lazy(() => import('./components/CompareMode'));
+const ChurchMode = lazy(() => import('./components/ChurchMode'));
+const GraphView = lazy(() => import('./components/GraphView'));
+const Genealogy = lazy(() => import('./components/Genealogy'));
 import Landing, { type LandingTarget } from './components/Landing';
-import Support from './components/Support';
+const Support = lazy(() => import('./components/Support'));
 
 /** The support page is worth linking to from outside, so it lives on a hash. */
 const SUPPORT_HASH = '#unterstuetzen';
+
+/** Jede Ansicht ist verlinkbar: der Hash hält fest, wo man gerade steht. */
+const INITIAL_ROUTE: Route | null = parseHash(window.location.hash);
 
 function Loading() {
   const t = useT();
   return (
     <div className="flex h-full w-full items-center justify-center bg-deepest">
       <div className="flex flex-col items-center gap-3 text-white">
-        <svg viewBox="0 0 24 24" className="h-8 w-8 animate-pulse" fill="currentColor">
+        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-8 w-8 animate-pulse" fill="currentColor">
           <path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" />
         </svg>
         <span className="font-display text-sm">{t('loading')}</span>
@@ -36,24 +54,68 @@ function Loading() {
   );
 }
 
+/**
+ * Während eine Ansicht nachgeladen wird, steht schon ihre Bühne da – so
+ * flackert die Karte darunter nicht weg.
+ */
+function ModeFallback() {
+  return (
+    <div className="fixed inset-0 z-[2000] grid place-items-center bg-deepest">
+      <div className="h-8 w-8 animate-pulse rounded-full bg-gold/60" />
+    </div>
+  );
+}
+
 export default function App() {
-  const [lang, setLang] = useState<Lang>('de');
+  /**
+   * Sprache: die einmal getroffene Wahl gilt weiter. Ohne gespeicherte Wahl
+   * entscheidet die Browsersprache – wer Englisch eingestellt hat, sollte nicht
+   * erst auf EN klicken müssen.
+   */
+  const [lang, setLang] = useState<Lang>(() => {
+    try {
+      const saved = localStorage.getItem('bibelmap:lang');
+      if (saved === 'de' || saved === 'en') return saved;
+    } catch {
+      // Kein Speicher – dann eben die Browsersprache.
+    }
+    return navigator.language?.toLowerCase().startsWith('en') ? 'en' : 'de';
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('bibelmap:lang', lang);
+      document.documentElement.lang = lang;
+    } catch {
+      // Nicht schlimm: die Wahl gilt dann nur für diesen Besuch.
+    }
+  }, [lang]);
   const [places, setPlaces] = useState<Place[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const [heat, setHeat] = useState(false);
   const [era, setEra] = useState<string | null>(null);
+  /** Zeitleiste: „nur diese Epoche" oder „alles bis hierhin". */
+  const [cumulative, setCumulative] = useState(false);
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
-  const [mode, setMode] = useState<Mode | null>(() =>
-    window.location.hash === SUPPORT_HASH ? 'support' : null,
-  );
+  const [mode, setMode] = useState<Mode | null>(INITIAL_ROUTE?.mode ?? null);
   const [basemap, setBasemap] = useState<BasemapId>('dark');
-  const [view, setView] = useState<View>('map');
+  const [view, setView] = useState<View>(INITIAL_ROUTE?.view ?? 'map');
   // The start page is the front door: it is what the app opens on, and the
   // wordmark in the header is the way back to it.
-  const [atStart, setAtStart] = useState(() => window.location.hash !== SUPPORT_HASH);
+  const [atStart, setAtStart] = useState(!INITIAL_ROUTE);
+  // Unterzustand der Nebenansichten, damit die Adresse ihn mitschreibt.
+  const [journeyNav, setJourneyNav] = useState(INITIAL_ROUTE?.journey ?? null);
+  const [missionNav, setMissionNav] = useState(INITIAL_ROUTE?.mission ?? null);
+  const [readingNav, setReadingNav] = useState(INITIAL_ROUTE?.reading ?? null);
+  const [mediaNav, setMediaNav] = useState(INITIAL_ROUTE?.media ?? null);
+  // Zählt hoch, wenn die Adresse von außen kommt (Zurück-Taste, getippter Link):
+  // die Nebenansichten hängen daran und übernehmen den Stand neu.
+  const [navEpoch, setNavEpoch] = useState(0);
+  const pendingPlace = useRef<string | null>(INITIAL_ROUTE?.placeId ?? null);
+  const ownHash = useRef<string>(window.location.hash);
   // Cross-links between the time tree and the church-history map (shared data).
   const [treeFocus, setTreeFocus] = useState<string | null>(null);
   const [churchFocus, setChurchFocus] = useState<string | null>(null);
@@ -127,6 +189,7 @@ export default function App() {
       return;
     }
     if (m === 'church') setChurchFocus(null);
+    if (m === 'media') setMediaNav(null);
     setMode(m);
   }
 
@@ -134,36 +197,100 @@ export default function App() {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
   }, []);
 
-  // Escape backs out of whatever is on top: first the overlay mode, then the
-  // selected place. Every mode has its own exit button, but nothing answered
-  // the key everyone tries first.
+  /*
+   * Die Ansichten liegen in eigenen Dateien und kommen erst, wenn sie
+   * gebraucht werden – der Start bleibt so leicht. Sobald der Browser Ruhe
+   * hat, werden sie trotzdem geholt: dann liegen sie im Cache des Service
+   * Workers, und die App bleibt auch ohne Netz vollständig.
+   */
   useEffect(() => {
-    function onKey(e: KeyboardEvent) {
-      if (e.key !== 'Escape') return;
-      if (mode === 'support') {
-        // has its own hash to clear — closing it any other way strands the URL
-        closeSupport();
-      } else if (mode) {
-        setMode(null);
-        setChurchFocus(null);
-      } else if (selected) {
-        setSelected(null);
+    const prefetch = () => {
+      void import('./components/Presentation');
+      void import('./components/JourneyMode');
+      void import('./components/Mission');
+      void import('./components/HistoryMode');
+      void import('./components/QuizMode');
+      void import('./components/MediaMode');
+      void import('./components/Genealogy');
+      void import('./components/ChurchMode');
+      void import('./components/CompareMode');
+      void import('./lib/globalSearch');
+    };
+    // Erst wenn der Service Worker steht: sonst laufen die Dateien an ihm
+    // vorbei und fehlen später im Cache, obwohl sie längst geholt wurden.
+    let cancel = () => {};
+    const start = () => {
+      const idle = window.requestIdleCallback;
+      if (idle) {
+        const id = idle(prefetch, { timeout: 8000 });
+        cancel = () => window.cancelIdleCallback?.(id);
+      } else {
+        const t = window.setTimeout(prefetch, 3000);
+        cancel = () => window.clearTimeout(t);
       }
-    }
+    };
+    if ('serviceWorker' in navigator) navigator.serviceWorker.ready.then(start).catch(start);
+    else start();
+    return () => cancel();
+  }, []);
+
+  // Die Adresse schreibt mit, wo man steht – ohne Verlaufseinträge zu häufen.
+  useEffect(() => {
+    const hash = atStart
+      ? ''
+      : formatRoute({
+          view,
+          mode,
+          placeId: selected?.id,
+          journey: journeyNav ?? undefined,
+          mission: missionNav ?? undefined,
+          reading: readingNav ?? undefined,
+          media: mediaNav ?? undefined,
+        });
+    if (hash === window.location.hash) return;
+    ownHash.current = hash;
+    window.history.replaceState(null, '', hash || window.location.pathname + window.location.search);
+  }, [atStart, view, mode, selected, journeyNav, missionNav, readingNav, mediaNav]);
+
+  /*
+   * Escape schließt, was gerade offen ist – von außen nach innen: erst der
+   * Modus, dann die Nebenansicht, zuletzt die Ortskarte. Ein Griff, der in
+   * jedem Vollbild funktioniert, ohne dass jede Ansicht ihn selbst kennt.
+   */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+      if (mode) setMode(null);
+      else if (view !== 'map') setView('map');
+      else if (selected) setSelected(null);
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [mode, selected]);
+  }, [mode, view, selected]);
 
-  // Keep the hash and the support page in step. popstate covers back/forward,
-  // hashchange a hand-edited address.
+  // Zurück-Taste und von Hand geänderte Adressen anwenden.
   useEffect(() => {
     const sync = () => {
-      if (window.location.hash === SUPPORT_HASH) {
-        setAtStart(false);
-        setMode('support');
-      } else {
-        setMode((m) => (m === 'support' ? null : m));
+      if (window.location.hash === ownHash.current) return;
+      const route = parseHash(window.location.hash);
+      if (!route) {
+        setAtStart(true);
+        setMode(null);
+        setSelected(null);
+        return;
       }
+      setAtStart(false);
+      setView(route.view);
+      setMode(route.mode);
+      setJourneyNav(route.journey ?? null);
+      setMissionNav(route.mission ?? null);
+      setReadingNav(route.reading ?? null);
+      setMediaNav(route.media ?? null);
+      pendingPlace.current = route.placeId ?? null;
+      if (!route.placeId) setSelected(null);
+      setNavEpoch((n) => n + 1);
     };
     window.addEventListener('popstate', sync);
     window.addEventListener('hashchange', sync);
@@ -173,8 +300,101 @@ export default function App() {
     };
   }, []);
 
-  const visible = useMemo(() => (places ? placesInEra(places, era) : []), [places, era]);
+  // Ein verlinkter Ort wartet, bis places.json geladen ist.
+  useEffect(() => {
+    const id = pendingPlace.current;
+    if (!places || !id) return;
+    pendingPlace.current = null;
+    const p = places.find((x) => x.id === id);
+    if (p) select(p);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [places, navEpoch]);
+
+  const visible = useMemo(
+    () => (places ? (cumulative ? placesUpToEra(places, era) : placesInEra(places, era)) : []),
+    [places, era, cumulative],
+  );
+  /** In der kumulativen Ansicht: was in der gewählten Epoche neu dazukommt. */
+  const newIds = useMemo(() => {
+    if (!places || !cumulative || !era) return null;
+    return new Set(placesInEra(places, era).map((p) => p.id));
+  }, [places, cumulative, era]);
   const results = useMemo(() => (places ? searchPlaces(places, query) : []), [places, query]);
+  // Der Index über Reisen und Ausbreitung hängt an den großen Datendateien.
+  // Er wird geladen, sobald jemand tippt – nicht schon beim Start.
+  const [stories, setStories] = useState<SearchHit[]>([]);
+  useEffect(() => {
+    if (query.trim().length < 2) {
+      setStories([]);
+      return;
+    }
+    let alive = true;
+    import('./lib/globalSearch')
+      .then((m) => alive && setStories(m.searchStories(query, lang)))
+      .catch(() => alive && setStories([]));
+    return () => {
+      alive = false;
+    };
+  }, [query, lang]);
+
+  // „Apg 13" ist keine Ortssuche, sondern eine Bibelstelle: dann zeigt die
+  // Liste die Orte dieses Kapitels und führt auf Wunsch in den Text.
+  const ref = useMemo(() => parseRef(query, lang), [query, lang]);
+  const refPlaces = useMemo(
+    () => (ref && places ? placesInChapter(places, ref.osis, ref.chapter).map((x) => x.place) : []),
+    [ref, places],
+  );
+
+  /*
+   * Was von hier aus an einem Tag zu erreichen war. Nur Siedlungen: Tore,
+   * Stadtviertel und Bauwerke teilen sich die Koordinaten ihres Ortes und
+   * wären keine Nachbarn, sondern derselbe Fleck. Alles unter 1,5 km fällt
+   * aus demselben Grund heraus.
+   */
+  const neighbours = useMemo(() => {
+    if (!places || !selected) return [];
+    const seen = new Set<string>();
+    return places
+      .filter((p) => p.id !== selected.id && p.types.includes('settlement'))
+      .map((p) => ({
+        place: p,
+        km: distanceKm([selected.lat, selected.lon], [p.lat, p.lon]),
+        dir: compass(bearing([selected.lat, selected.lon], [p.lat, p.lon]), lang),
+      }))
+      .filter((n) => n.km >= 1.5 && n.km <= KM_PER_DAY)
+      // Nach Bedeutung auswählen, nach Entfernung zeigen: in Jerusalems Umkreis
+      // sagen Bethlehem und Jericho mehr als der nächstgelegene Weiler.
+      .sort((a, b) => b.place.mentionCount - a.place.mentionCount)
+      .filter((n) => {
+        const name = placeName(n.place, lang);
+        if (seen.has(name)) return false;
+        seen.add(name);
+        return true;
+      })
+      .slice(0, 8)
+      .sort((a, b) => a.km - b.km);
+  }, [places, selected, lang]);
+
+  function openRef() {
+    if (!ref) return;
+    setReadingNav({ osis: ref.osis, chapter: ref.chapter });
+    setMode('present');
+    setNavEpoch((n) => n + 1);
+  }
+
+  /** Ein Treffer aus Reisen oder Ausbreitung: Modus öffnen, Stand setzen. */
+  function openStory(hit: SearchHit) {
+    setAtStart(false);
+    setView('map');
+    if (hit.target.mode === 'journeys') {
+      setJourneyNav(hit.target.journey);
+      setMode('journeys');
+    } else {
+      setMissionNav(hit.target.mission);
+      setMode('mission');
+    }
+    setNavEpoch((n) => n + 1);
+  }
   const topPlaces = useMemo(() => (places ? places.slice(0, 30) : []), [places]);
 
   const eraCounts = useMemo(() => {
@@ -235,6 +455,7 @@ export default function App() {
     <LangContext.Provider value={lang}>
       <div className="relative h-full w-full overflow-hidden">
         {view === 'tree' ? (
+          <Suspense fallback={<ModeFallback />}>
           <Genealogy
             places={places}
             lang={lang}
@@ -242,8 +463,11 @@ export default function App() {
             onShowOnMap={showPersonOnMap}
             onShowPlace={showPlaceFromGenealogy}
           />
+          </Suspense>
         ) : view === 'graph' ? (
-          <GraphView places={places} lang={lang} />
+          <Suspense fallback={<ModeFallback />}>
+            <GraphView places={places} lang={lang} />
+          </Suspense>
         ) : (
           <>
             <MapView
@@ -253,6 +477,7 @@ export default function App() {
               lang={lang}
               onSelect={select}
               basemap={basemap}
+              newIds={newIds}
               flyTo={flyTo}
               borderYear={borderYear}
             />
@@ -266,26 +491,36 @@ export default function App() {
                   className="flex items-center gap-2 border-b border-white/10 px-3 py-2 text-left sm:hidden"
                   aria-label={tr(lang, 'search')}
                 >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="11" cy="11" r="7" /><path d="M21 21l-4.3-4.3" />
                   </svg>
                   <span className="flex-1 truncate text-sm text-white/60">
                     {selected ? placeName(selected, lang) : tr(lang, 'search')}
                   </span>
-                  <svg viewBox="0 0 24 24" className={`h-4 w-4 flex-none text-white/60 transition-transform ${sheetOpen ? 'rotate-180' : ''}`} fill="currentColor">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className={`h-4 w-4 flex-none text-white/60 transition-transform ${sheetOpen ? 'rotate-180' : ''}`} fill="currentColor">
                     <path d="M7 14l5-5 5 5z" />
                   </svg>
                 </button>
                 <div className={`min-h-0 flex-col overflow-hidden ${sheetOpen ? 'flex max-h-[58vh]' : 'hidden'} sm:flex sm:max-h-none sm:flex-1`}>
                   {selected ? (
-                    <PlaceDetail place={selected} lang={lang} onClose={() => setSelected(null)} />
+                    <PlaceDetail
+                      place={selected}
+                      lang={lang}
+                      neighbours={neighbours}
+                      onSelectPlace={select}
+                      onClose={() => setSelected(null)}
+                    />
                   ) : (
                     <SearchPanel
                       query={query}
                       onQuery={setQuery}
-                      results={results}
+                      results={ref ? refPlaces : results}
                       topPlaces={topPlaces}
                       onSelect={select}
+                      stories={stories}
+                      onOpenStory={openStory}
+                      refHit={ref ? { label: ref.label, count: refPlaces.length } : null}
+                      onOpenRef={openRef}
                     />
                   )}
                 </div>
@@ -308,7 +543,7 @@ export default function App() {
                   aria-label={tr(lang, key)}
                   className={`grid h-9 w-9 place-items-center transition ${ basemap === id ? 'bg-signal text-white ' : 'text-white/60 hover:bg-surface' }`}
                 >
-                  <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
                     <path d={icon} />
                   </svg>
                 </button>
@@ -330,7 +565,7 @@ export default function App() {
                 borderYear !== null ? 'bg-gold text-deep' : 'bg-deepest/95 text-white/70 hover:text-white'
               }`}
             >
-              <svg viewBox="0 0 24 24" className="h-4 w-4 flex-none" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 flex-none" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <path d="M4 18h16M5 18l-1.6-9 4.6 3.6L12 5l4 7.6 4.6-3.6L19 18" />
               </svg>
               <span className="bm-eyebrow hidden text-current sm:block">{tr(lang, 'bordersLayer')}</span>
@@ -357,24 +592,80 @@ export default function App() {
                   selected={era}
                   counts={eraCounts}
                   onSelect={setEra}
+                  cumulative={cumulative}
+                  onCumulative={() => setCumulative((v) => !v)}
                   open={tlOpen}
                   onToggle={() => setTlOpen((v) => !v)}
                 />
               )
             )}
 
-            {mode === 'present' && <Presentation places={places} lang={lang} onExit={() => setMode(null)} />}
-            {mode === 'history' && <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />}
-            {mode === 'mission' && (
-              <Mission
+            {mode === 'present' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Presentation
+                key={`present-${navEpoch}`}
+                places={places}
+                lang={lang}
+                initialBook={readingNav?.osis ?? null}
+                initialChapter={readingNav?.chapter}
+                onNavigate={setReadingNav}
+                onExit={() => setMode(null)}
+              />
+              </Suspense>
+            )}
+            {mode === 'history' && (
+              <Suspense fallback={<ModeFallback />}>
+                <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />
+              </Suspense>
+            )}
+            {mode === 'media' && (
+              <Suspense fallback={<ModeFallback />}>
+                <MediaMode
+                  key={`media-${navEpoch}`}
+                  places={places}
+                  lang={lang}
+                  initial={mediaNav}
+                  onNavigate={setMediaNav}
+                  onShowPlace={showPlaceFromGenealogy}
+                  onExit={() => setMode(null)}
+                />
+              </Suspense>
+            )}
+            {mode === 'quiz' && (
+              <Suspense fallback={<ModeFallback />}>
+                <QuizMode places={places} lang={lang} onExit={() => setMode(null)} />
+              </Suspense>
+            )}
+            {mode === 'journeys' && (
+              <Suspense fallback={<ModeFallback />}>
+                <JourneyMode
+                key={`journeys-${navEpoch}`}
                 places={places}
                 lang={lang}
                 onShowPlace={showPlaceFromGenealogy}
+                initial={journeyNav}
+                onNavigate={setJourneyNav}
+                onOpenMission={() => setMode('mission')}
                 onExit={() => setMode(null)}
               />
+              </Suspense>
+            )}
+            {mode === 'mission' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Mission
+                key={`mission-${navEpoch}`}
+                places={places}
+                lang={lang}
+                onShowPlace={showPlaceFromGenealogy}
+                initial={missionNav}
+                onNavigate={setMissionNav}
+                onExit={() => setMode(null)}
+              />
+              </Suspense>
             )}
             {mode === 'church' && (
-              <ChurchMode
+              <Suspense fallback={<ModeFallback />}>
+                <ChurchMode
                 lang={lang}
                 onExit={() => {
                   setMode(null);
@@ -384,9 +675,18 @@ export default function App() {
                 onOpenInTree={openPersonInTree}
                 onOpenMission={() => setMode('mission')}
               />
+              </Suspense>
             )}
-            {mode === 'compare' && <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />}
-            {mode === 'support' && <Support lang={lang} onLang={setLang} onExit={closeSupport} />}
+            {mode === 'compare' && (
+              <Suspense fallback={<ModeFallback />}>
+                <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />
+              </Suspense>
+            )}
+            {mode === 'support' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Support lang={lang} onLang={setLang} onExit={closeSupport} />
+              </Suspense>
+            )}
           </>
         )}
 

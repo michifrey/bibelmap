@@ -200,6 +200,9 @@ export interface SpreadPhase {
   de: string;
   en: string;
   range: Bilingual;
+  /** Jahre, die die Phase umspannt – für den Zeitregler. */
+  from: number;
+  to: number;
   color: string;
   lead: Bilingual;
   /** Kartenausschnitt, wenn die Phase geöffnet wird. */
@@ -230,6 +233,8 @@ export const PHASES: SpreadPhase[] = [
     de: 'Die Reisen des Paulus',
     en: "Paul's journeys",
     range: { de: '30–62 n. Chr.', en: 'AD 30–62' },
+    from: 30,
+    to: 62,
     color: '#b8742e',
     lead: {
       de: 'Die Apostelgeschichte erzählt die Ausbreitung als Reisebericht: von Jerusalem über Antiochia bis nach Rom.',
@@ -242,6 +247,8 @@ export const PHASES: SpreadPhase[] = [
     de: 'Die anderen Wege',
     en: 'The other roads',
     range: { de: '30–100 n. Chr.', en: 'AD 30–100' },
+    from: 30,
+    to: 100,
     color: '#9a4ba0',
     lead: {
       de: 'Neben Paulus zogen andere los – nach Ägypten, Mesopotamien, Armenien, bis nach Indien. Für diese Wege gibt es keine Apostelgeschichte, nur frühe Überlieferung.',
@@ -254,6 +261,8 @@ export const PHASES: SpreadPhase[] = [
     de: 'Im Römischen Reich',
     en: 'Across the Roman Empire',
     range: { de: '100–500 n. Chr.', en: 'AD 100–500' },
+    from: 100,
+    to: 500,
     color: '#2f8f7f',
     lead: {
       de: 'Aus einer verfolgten Minderheit wird in vier Jahrhunderten die Religion des Reiches – und zugleich wächst die Kirche jenseits seiner Grenzen: in Armenien, Persien, Äthiopien, Georgien.',
@@ -266,6 +275,8 @@ export const PHASES: SpreadPhase[] = [
     de: 'Über Europa und Asien',
     en: 'Across Europe and Asia',
     range: { de: '500–1500', en: '500–1500' },
+    from: 500,
+    to: 1500,
     color: '#3a6ea8',
     lead: {
       de: 'Mönche, Händler und Übersetzer tragen die Botschaft nach Irland, an den Rhein, zu den Slawen und die Seidenstraße entlang bis nach China.',
@@ -278,6 +289,8 @@ export const PHASES: SpreadPhase[] = [
     de: 'Über die Weltmeere',
     en: 'Across the oceans',
     range: { de: '1500–1800', en: '1500–1800' },
+    from: 1500,
+    to: 1800,
     color: '#c2812a',
     lead: {
       de: 'Mit den Schiffen der Kolonialmächte reisen auch Missionare – nach Amerika, Afrika und Asien. Mission und Kolonialgewalt liegen in dieser Zeit oft dicht beieinander.',
@@ -290,6 +303,8 @@ export const PHASES: SpreadPhase[] = [
     de: 'Das große Missionsjahrhundert',
     en: 'The great century of missions',
     range: { de: '1800–1900', en: '1800–1900' },
+    from: 1800,
+    to: 1900,
     color: '#b0436b',
     lead: {
       de: 'Bibelgesellschaften, Missionsgesellschaften und Tausende Freiwillige – und immer öfter tragen einheimische Christen die Botschaft selbst weiter.',
@@ -302,6 +317,8 @@ export const PHASES: SpreadPhase[] = [
     de: 'Weltweite Kirche',
     en: 'A worldwide church',
     range: { de: '1900–heute', en: '1900–today' },
+    from: 1900,
+    to: 2025,
     color: '#5c8a3a',
     lead: {
       de: 'Im 20. Jahrhundert verschiebt sich der Schwerpunkt der Christenheit nach Süden: Afrika, Lateinamerika und Asien senden heute selbst aus – „von überall nach überall“.',

@@ -1,7 +1,7 @@
 # Bibelmap
 
 Eine interaktive Karte biblischer Orte – mit **Zeitleiste**, **Suche**,
-**Heatmap** und einem **Präsentationsmodus**, der ein Bibelbuch Kapitel für
+**Heatmap** und einem **Entdeckermodus**, der ein Bibelbuch Kapitel für
 Kapitel durchläuft (links die Orte/Stellen, rechts die Karte).
 
 > An interactive map of biblical places – with a timeline, search, heatmap and a
@@ -12,55 +12,119 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 
 ## Funktionen
 
+### Karte & Orte
+
 - **Karte & Marker** – ~1.335 kartierte Orte; Marker sind nach Epoche eingefärbt
   und nach Häufigkeit der Erwähnung größer. Klick öffnet eine Infokarte mit Bild,
   Bibelstellen, alternativen Schreibweisen und Quellen.
 - **Zeitleiste** – filtert die Orte nach biblischer Epoche (Erzväter → Frühe Kirche).
-- **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
-  (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
-  Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
-  Calvin, Spurgeon, Bonhoeffer …). Verlauf von links nach rechts mit einer
-  **Zeitschiene** unten; Knoten lassen sich aufklappen und zeigen per Klick
-  Lebensdaten, Bibelstellen und eine Kurzbeschreibung. Umschalter **Karte ↔ Zeitbaum**.
-- **Suche** – z. B. `Goschen`: zeigt *wo* (Karte) und *wann* (Epochen/Bücher) ein Ort
-  vorkommt, inkl. aller Bibelstellen.
+  Mit **Bis hierhin** wird daraus ein Aufbau statt eines Filters: Die Karte zeigt
+  alles bis einschließlich dieser Epoche, und was in ihr **neu** dazukommt, steht
+  vorn – alles Ältere tritt kleiner und blasser zurück.
 - **Heatmap** – die am häufigsten erwähnten Orte als Wärmebild.
-- **Präsentationsmodus** – ein Buch wählen (z. B. *2. Könige*) und chronologisch
+- **Suche** – z. B. `Goschen`: zeigt *wo* (Karte) und *wann* (Epochen/Bücher) ein Ort
+  vorkommt, inkl. aller Bibelstellen. Gesucht wird auch in den **Reisen und in
+  der Ausbreitung**: `Emmaus` findet den Ort *und* die Station im Weg nach
+  Jerusalem, `Azusa` das Ereignis von 1906 – ein Klick springt an die passende
+  Stelle im jeweiligen Modus. Wer eine **Bibelstelle** eintippt (`Apg 13`,
+  `Mk 6,30`, `1. Mose 12`, `Acts 27`), bekommt die Orte dieses Kapitels und
+  einen Weg direkt in den Bibeltext.
+- **Nachbarorte** – jede Ortskarte zeigt, was von dort aus **an einem Tag zu
+  Fuß** zu erreichen war: bis 25 km Luftlinie, mit Entfernung und
+  Himmelsrichtung (von Jerusalem: Bethlehem 8 km S, Gibeon 9 km NW, Jericho
+  23 km NO). Ein Klick wechselt zum Nachbarn.
+- **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
+  robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
+- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
+  Imagery) und **Relief/„historisch"** (Esri Shaded Relief).
+
+### Erzählen
+
+- **Entdeckermodus** – ein Buch wählen (z. B. *2. Könige*) und chronologisch
   Kapitel für Kapitel durchgehen: links der **Bibeltext** (Luther 1912 / WEB) mit
   klickbaren Orts-Pins, rechts zoomt die Karte auf die erwähnten Orte
   (Tastatur ← / → blättert Kapitel). **BibleProject-Videos** sind eingebettet,
-  wo vorhanden.
+  wo vorhanden. Der Schalter **Beamer** legt den Text über die ganze Breite und
+  vergrößert ihn zum Vortragen; die Einstellung bleibt gemerkt.
 - **Heilsgeschichte-Modus** – geführte chronologische Reise von der Schöpfung bis
   zur neuen Welt (Schöpfung, Abraham, Exodus, Exil, Jesus, frühe Kirche …) mit
   Karte, Bibelstelle und Video je Station.
-- **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
-  Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
-  Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
-- **Kirchengeschichte-Modus** – **Kirchenväter** (westlich/lateinisch ·
-  östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
-  7 ökumenischen) auf der Karte. Paulus’ Reisen stehen nicht hier, sondern in
-  *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
+- **Reisen & Geschichten** – die großen Wege der Bibel als erzählte Reise:
+  Abraham von Ur nach Kanaan, Jakobs Flucht, Josef nach Ägypten, der Auszug und
+  die vierzig Jahre Wüste, die Landnahme, David auf der Flucht, Elia zum Horeb,
+  Jona in die falsche Richtung, das Exil und die Rückkehr, die Flucht nach
+  Ägypten, Jesu Wege in Galiläa und der Weg nach Jerusalem. **Abspielen** lässt
+  die Route mitwachsen und einen Punkt die Etappen abgehen, während links die
+  Station mit Bibelstelle und kurzem Text mitläuft (← / → blättern, Leertaste
+  startet). Jede Station verlinkt auf ihre Ortskarte.
 - **Mission & Ausbreitung** – wie das Evangelium in die Welt kam: die vier
   Reisen des Paulus (plus die Wege vor ihm, Apg 1–11) als Route mit nummerierten
   Stationen und Bibelstellen – und danach die Ausbreitung bis heute, in sieben
   Phasen von der apostolischen Zeit über Armenien, Äthiopien und die Seidenstraße
   bis zu Pfingstbewegung, Bibelübersetzung und den Kirchen des globalen Südens.
   Bögen auf der Weltkarte zeigen, von wo nach wo; **Abspielen** läuft die ganze
-  Geschichte Station für Station ab (Tastatur ← / →). Ein Klick auf *Auf Karte*
-  springt von einer Reisestation zur Ortskarte.
-- **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
-  robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
-- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
-  Imagery) und **Relief/„historisch"** (Esri Shaded Relief).
+  Geschichte ab – die Reisen als Bewegung entlang der Route, die Ausbreitung als
+  **Zeitraffer**: ein Jahresregler von 30 bis heute, die Karte füllt sich mit
+  jedem Jahrhundert, die Phase wechselt von selbst mit (Tastatur ← / →). Jede Reisestation nennt Entfernung
+  und Tagesmärsche zur vorigen, ein Klick auf *Auf Karte* springt zur Ortskarte.
+- **Kirchengeschichte-Modus** – **Kirchenväter** (westlich/lateinisch ·
+  östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
+  7 ökumenischen) auf der Karte. Paulus’ Reisen stehen nicht hier, sondern in
+  *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
+- **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
+  Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
+  Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
+- **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
+  (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
+  Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
+  Calvin, Spurgeon, Bonhoeffer …). Verlauf von links nach rechts mit einer
+  **Zeitschiene** unten; Knoten lassen sich aufklappen und zeigen per Klick
+  Lebensdaten, Bibelstellen und eine Kurzbeschreibung. Umschalter **Karte ↔ Zeitbaum**.
+
+### Lernen & weitergeben
+
+- **Bibelquiz** – ein Lernmodus: „Wo liegt Kapernaum?" Der Klick auf eine
+  **unbeschriftete** Karte ist die Antwort, die Entfernung gibt die Punkte
+  (bis 25 km Volltreffer). Drei Stufen nach Bekanntheit der Orte – ab 50, ab 15
+  oder ab 3 Erwähnungen. Dazwischen **Wissensfragen** aus den Reisen und der
+  Ausbreitung („Zu welcher Reise gehört diese Station?", „In welche Zeit gehört
+  das?"), die nach der Antwort die Stelle auf der Karte zeigen; abschaltbar.
+- **Handout drucken** – jede Reise lässt sich als Blatt ausgeben: Titel, Epoche,
+  Bibelstelle, Gesamtstrecke und alle Stationen mit Stelle, Text und Entfernung
+  – ohne Karte, Knöpfe und dunklen Hintergrund. Für den Hauskreis, der lieber
+  Papier in der Hand hat.
+- **Teilen & Deep-Links** – jede Ansicht hat eine Adresse: `#ort=a15257a`
+  (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
+  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`, `#hoeren=keller`
+  (Folgen einer Quelle) und `#hoeren=ort,a15257a` (Folgen zu einem Ort). Der Hash läuft beim
+  Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
+  Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
+- **Hören & Sehen** – ein eigener Modus über alle **473 Folgen** der vier
+  eingebundenen Quellen (bibletunes.de, BibleProject, John Mark Comer, Timothy
+  Keller): filterbar nach **Quelle, Buch, Epoche** und Freitext – die Suche
+  versteht dabei auch Ortsnamen. Unter jeder Folge stehen die Orte, die sie
+  berührt; ein Klick darauf führt auf die Karte. Die Verknüpfung gilt in beide
+  Richtungen: jede Ortskarte zeigt weiter ihre Folgen und verlinkt mit
+  *Alle Folgen zu diesem Ort* zurück in den Modus (`#hoeren=ort,…`).
+
+### Drumherum
+
+- **Offline & installierbar** – die App meldet einen Service Worker an: Einstieg,
+  Programmdateien und die Ortsdaten liegen nach dem ersten Besuch im Cache,
+  einmal angesehene Kartenkacheln ebenso. Ohne Netz startet Bibelmap weiter,
+  zeigt alle 1.335 Orte und die bereits besuchten Kartenausschnitte. Über das
+  Browser-Menü lässt sie sich als App installieren (Manifest + Symbole).
+- **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
+  Ohne eigene Wahl entscheidet die Browsersprache; wer einmal umschaltet, bekommt
+  seine Sprache beim nächsten Besuch wieder.
+- **Tastatur** – Marker lassen sich mit Tabulator ansteuern und mit Enter oder
+  Leertaste öffnen (Cluster zoomen hinein); Escape schließt von außen nach innen.
+- **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
+  BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
 - **Projekte unterstützen** – eine eigene Seite (Startseite, Modi-Menü, Direktlink
   `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
   selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
   aus deren Arbeit die Seite besteht – je Projekt mit Beitrag und Nennung.
-- **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
-- **Hören & Sehen** – zu jedem Ort die Podcast-Folgen und Videos, die eine
-  Bibelstelle behandeln, in der der Ort vorkommt.
-- **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
-  BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
 
 ## Entwicklung
 
@@ -97,7 +161,7 @@ Das Skript (`scripts/build-data.mjs`) extrahiert pro Ort: Koordinaten, Namen +
 Schreibvarianten, Bibelstellen (mit kanonischer Sortierung `BBCCCVVV`), ein
 Wikimedia-Vorschaubild sowie Links zu Wikidata und Biblia.
 
-**Bibeltext** (`public/data/text/<Buch>.json`) für den Präsentationsmodus stammt aus
+**Bibeltext** (`public/data/text/<Buch>.json`) für den Entdeckermodus stammt aus
 [seven1m/open-bibles](https://github.com/seven1m/open-bibles) – **Lutherbibel 1912**
 (OSIS) und **World English Bible** (USFX), beide gemeinfrei:
 
@@ -137,8 +201,9 @@ deutschen Namen zeigen weiter den englischen.
 
 ### Podcasts & Videos zu Orten
 
-Jede Ortskarte zeigt unter **Hören & Sehen**, welche Podcast-Folgen und Videos
-eine Bibelstelle behandeln, in der dieser Ort vorkommt:
+Der Modus **Hören & Sehen** stöbert durch alle Folgen, jede Ortskarte zeigt die
+zu ihrem Ort. Gemeinsame Grundlage ist ein Index, der Bibelstellen aus den
+Folgentiteln in Orte auflöst:
 
 ```bash
 npm run media            # baut aus data/media/raw/*.xml
@@ -164,8 +229,27 @@ Quellen stehen in `data/media/sources.json`, die Feeds werden als XML unter
 reproduzierbar läuft. **BibleProject** braucht keinen Feed: je Buch eine
 Übersichtsseite, deren URL sich aus dem Buchkürzel baut.
 
-`public/data/media.json` wird erst geladen, wenn jemand eine Ortskarte öffnet -
-der Index wächst mit jeder Staffel und gehört nicht in den Startpfad.
+`public/data/media.json` wird erst geladen, wenn jemand eine Ortskarte oder den
+Modus öffnet - der Index wächst mit jeder Staffel und gehört nicht in den
+Startpfad. Der Modus dreht ihn beim Öffnen einmal um (`placesByEpisode`), denn
+gespeichert ist nur die Richtung Ort → Folgen.
+
+Was der Index nicht behauptet: dass eine genannte Stelle das Thema der Folge
+ist. Eine Predigt, die Jerusalem im Vorbeigehen zitiert, steht damit unter
+Jerusalem - der Hinweis darauf steht im Modus unter der Liste.
+
+### Reisen & Geschichten
+
+Die Stationen stehen in `src/data/journeys.ts`: je Station Name, Bibelstelle,
+ein bis zwei Sätze Erzählung und – wo vorhanden – die `placeId` aus
+`public/data/places.json`, also dieselben Koordinaten wie auf der Hauptkarte.
+Die Farbe einer Route kommt aus der Epoche (`src/data/eras.ts`).
+
+Die Reihenfolge folgt dem biblischen Bericht, nicht einer Rekonstruktion der
+tatsächlichen Marschrouten; einige Orte sind nicht sicher lokalisiert (Sinai,
+Kadesch, Emmaus). Die Animation (`src/components/RouteMap.tsx`) läuft
+imperativ über `requestAnimationFrame` und fasst nur die Leaflet-Ebenen an –
+React rendert währenddessen nicht mit.
 
 ### Mission & Ausbreitung
 
@@ -187,6 +271,52 @@ Die Zuordnung von Büchern zu historischen Epochen (`src/data/books.ts`,
 `src/data/eras.ts`) ist eine bewusste Vereinfachung, um der Zeitleiste eine
 Struktur zu geben – kein Anspruch auf wissenschaftliche Datierung. Die Datums-
 angaben folgen einer gängigen konservativen Chronologie.
+
+### Barrierefreiheit prüfen
+
+`scripts/a11y-audit.mjs` geht mit einem Browser durch alle zwölf Ansichten und
+meldet, was keinen Namen hat – Icon-Knöpfe, Regler, Grafiken. Braucht Playwright
+(`npm i -D playwright`), läuft gegen den Dev-Server:
+
+```bash
+npm run dev
+node scripts/a11y-audit.mjs
+```
+
+### Bewegung und Tastatur
+
+Wer im System **weniger Bewegung** eingestellt hat, bekommt dieselben Inhalte
+ohne die Fahrt dazwischen: Die Karte setzt ihren Ausschnitt, statt ihn
+anzufliegen, der Reisende springt von Station zu Station, Pulsringe und
+Übergänge stehen still.
+
+**Escape** schließt, was gerade offen ist – von außen nach innen: erst der
+Modus, dann die Nebenansicht, zuletzt die Ortskarte. In den Reisen blättern
+← / →, die Leertaste startet und pausiert.
+
+### Ladezeit
+
+Die Ansichten (Präsentation, Reisen, Mission, Kirchengeschichte, Vergleich,
+Quiz, Stammbaum, Graph) liegen in eigenen Dateien und werden erst geladen,
+wenn sie geöffnet werden – ebenso der Suchindex über Reisen und Ausbreitung,
+der an den großen Datendateien hängt. Das erste Bündel schrumpft damit von
+855 kB auf 462 kB (gzip: 267 → 136 kB).
+
+Sobald der Browser Ruhe hat **und** der Service Worker steht, werden die
+Ansichten im Hintergrund nachgeholt. So bleibt der Start leicht und die App
+trotzdem vollständig offline benutzbar.
+
+### Offline
+
+`public/sw.js` pflegt zwei Caches: die App samt Ortsdaten und – getrennt und auf
+600 Einträge begrenzt – die Kartenkacheln. Weil Vite an jeden Dateinamen einen
+Hash hängt, pflegt der Worker keine Liste, sondern liest die gebauten Dateien
+beim Einbau aus `index.html` heraus. Seitenaufrufe gehen erst ans Netz und
+fallen auf den gespeicherten Einstieg zurück, eigene Dateien kommen sofort aus
+dem Cache und werden im Hintergrund erneuert.
+
+Im Dev-Server wird nichts angemeldet – dort würde der Worker den Hot-Reload
+aushebeln.
 
 ## Technik
 

@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
+import { flyOptions } from '../lib/motion';
 import 'leaflet.markercluster';
 import 'leaflet.heat';
 import type { Place } from '../types';
@@ -23,6 +25,11 @@ interface Props {
   flyTo?: { lat: number; lon: number; zoom?: number; key: number } | null;
   /** Draw the empires of this year underneath the places; null = off. */
   borderYear?: number | null;
+  /**
+   * Kumulative Zeitleiste: Orte, die in der gewählten Epoche neu vorkommen.
+   * Alles andere ist „schon vorher da" und tritt zurück.
+   */
+  newIds?: Set<string> | null;
 }
 
 export type BasemapId = 'dark' | 'light' | 'satellite' | 'relief' | 'antique';
@@ -97,13 +104,18 @@ function markerSize(p: Place): number {
   return 12;
 }
 
-function makeIcon(p: Place, focused: boolean): L.DivIcon {
-  const size = markerSize(p);
+/**
+ * `earlier` heißt: in der kumulativen Ansicht war der Ort schon vorher da. Er
+ * bleibt sichtbar, tritt aber zurück – neu Hinzugekommenes soll auffallen.
+ */
+function makeIcon(p: Place, focused: boolean, earlier = false): L.DivIcon {
+  const full = markerSize(p);
+  const size = earlier ? Math.max(9, Math.round(full * 0.65)) : full;
   const color = primaryEraColor(p);
-  const label = p.mentionCount >= 20 ? `<span>${p.mentionCount}</span>` : '';
+  const label = !earlier && p.mentionCount >= 20 ? `<span>${p.mentionCount}</span>` : '';
   return L.divIcon({
     className: '',
-    html: `<div class="bm-marker ${focused ? 'bm-marker--focus' : ''}" style="background:${color};width:${size}px;height:${size}px">${label}</div>`,
+    html: `<div class="bm-marker ${focused ? 'bm-marker--focus' : ''} ${earlier ? 'bm-marker--earlier' : ''}" style="background:${color};width:${size}px;height:${size}px">${label}</div>`,
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],
   });
@@ -111,6 +123,7 @@ function makeIcon(p: Place, focused: boolean): L.DivIcon {
 
 export default function MapView({
   places,
+  newIds,
   heat,
   selectedId,
   lang,
@@ -130,6 +143,8 @@ export default function MapView({
   const markerById = useRef<Map<string, L.Marker>>(new Map());
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const placesRef = useRef(places);
+  placesRef.current = places;
   const langRef = useRef(lang);
   langRef.current = lang;
 
@@ -150,7 +165,23 @@ export default function MapView({
     map.createPane('bmBorderLabels').style.zIndex = '380';
     map.getPane('bmBorderLabels')!.style.pointerEvents = 'none';
     mapRef.current = map;
+    const offKeys = enableMarkerKeyboard(map.getContainer(), (el) => {
+      // Ein Ortsmarker: denselben Weg gehen wie ein Klick.
+      for (const [id, marker] of markerById.current) {
+        if (marker.getElement() === el) {
+          const place = placesRef.current.find((p) => p.id === id);
+          if (place) onSelectRef.current(place);
+          return;
+        }
+      }
+      // Sonst ein Cluster: an dieser Stelle hineinzoomen.
+      const box = el.getBoundingClientRect();
+      const frame = map.getContainer().getBoundingClientRect();
+      const point = L.point(box.left - frame.left + box.width / 2, box.top - frame.top + box.height / 2);
+      map.setZoomAround(map.containerPointToLatLng(point), map.getZoom() + 2);
+    });
     return () => {
+      offKeys();
       map.remove();
       mapRef.current = null;
     };
@@ -219,7 +250,7 @@ export default function MapView({
     });
     for (const p of places) {
       const marker = L.marker([p.lat, p.lon], {
-        icon: makeIcon(p, p.id === selectedId),
+        icon: makeIcon(p, p.id === selectedId, newIds ? !newIds.has(p.id) : false),
         title: placeName(p, lang),
       });
       // Rich on-map popup (thumbnail, passages, links) – built lazily on open so
@@ -237,8 +268,9 @@ export default function MapView({
       cluster.addLayer(marker);
     }
     cluster.addTo(map);
+    markVectorsDecorative(map.getContainer());
     clusterRef.current = cluster;
-  }, [places, heat, selectedId]);
+  }, [places, heat, selectedId, newIds]);
 
   // empire overlay for the selected year
   useEffect(() => {
@@ -324,14 +356,14 @@ export default function MapView({
     const map = mapRef.current;
     if (!map || !fitPlaces || fitPlaces.length === 0) return;
     const bounds = L.latLngBounds(fitPlaces.map((p) => [p.lat, p.lon] as [number, number]));
-    map.flyToBounds(bounds.pad(0.35), { maxZoom: 9, duration: 0.8 });
+    map.flyToBounds(bounds.pad(0.35), flyOptions({ maxZoom: 9, duration: 0.8 }));
   }, [fitPlaces]);
 
   // fly to single point (search)
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !flyTo) return;
-    map.flyTo([flyTo.lat, flyTo.lon], flyTo.zoom ?? 9, { duration: 0.8 });
+    map.flyTo([flyTo.lat, flyTo.lon], flyTo.zoom ?? 9, flyOptions({ duration: 0.8 }));
     // open the cluster spiderfy / highlight after the fly
     const id = selectedId;
     const t = window.setTimeout(() => {

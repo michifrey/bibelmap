@@ -38,7 +38,7 @@ export default function PersonDetail({ person, lang, onClose, onSelect, onShowOn
           aria-label={t('close')}
           className="absolute right-0 top-0 grid h-9 w-9 place-items-center bg-black/25 text-white transition hover:bg-black/45"
         >
-          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
             <path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" />
           </svg>
         </button>
@@ -75,7 +75,7 @@ export default function PersonDetail({ person, lang, onClose, onSelect, onShowOn
             onClick={() => onShowOnMap(person.id)}
             className="bm-btn bm-btn-signal mt-4"
           >
-            <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 21s-6-5.7-6-10a6 6 0 1112 0c0 4.3-6 10-6 10z" /><circle cx="12" cy="11" r="2" /></svg>
+            <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 21s-6-5.7-6-10a6 6 0 1112 0c0 4.3-6 10-6 10z" /><circle cx="12" cy="11" r="2" /></svg>
             {t('showOnMap')}
             {person.city ? ` · ${person.city}` : ''}
           </button>

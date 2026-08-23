@@ -89,3 +89,33 @@ export function mediaForPlace(index: MediaIndex, place: Place): MediaGroup[] {
   groups.sort((a, b) => (a.source.kind === 'generated' ? 1 : 0) - (b.source.kind === 'generated' ? 1 : 0));
   return groups;
 }
+
+/**
+ * Umgekehrter Weg: zu jeder Folge die Orte, die sie berührt. Der Index kennt
+ * nur die Richtung Ort → Folgen; für den Stöbermodus wird sie einmal gedreht.
+ */
+export function placesByEpisode(index: MediaIndex): Map<number, string[]> {
+  const out = new Map<number, string[]>();
+  for (const [placeId, list] of Object.entries(index.byPlace)) {
+    for (const i of list) {
+      const known = out.get(i);
+      if (known) known.push(placeId);
+      else out.set(i, [placeId]);
+    }
+  }
+  return out;
+}
+
+/** Bücher, die in den Folgen vorkommen – in kanonischer Reihenfolge der Daten. */
+export function booksInMedia(index: MediaIndex): string[] {
+  const seen = new Set<string>();
+  for (const ep of index.episodes) for (const r of ep.refs) if (r.osis) seen.add(r.osis);
+  return [...seen];
+}
+
+/** Wie genau eine Folge auf eine Stelle zeigt: Vers > Kapitel > ganzes Buch. */
+export function precision(ep: MediaEpisode): number {
+  if (ep.refs.some((r) => r.verseStart != null)) return 0;
+  if (ep.refs.some((r) => r.chapter != null)) return 1;
+  return 2;
+}
