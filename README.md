@@ -184,6 +184,14 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Gespeichert wird er sonst nirgends als im Browser dessen, der ihn baut.
   Verschieben geht mit Knöpfen statt mit der Maus – eine Liste, die sich nur
   ziehen lässt, ist mit der Tastatur nicht zu ordnen.
+- **Ortsregister** – die eine Seite, die jeder gedruckte Bibelatlas hinten hat:
+  alle **1.335 Orte** von A bis Z (`#register`). Je Zeile die Erwähnungen, die
+  Epochen als Punkte und die **Spanne der Bücher** – „Abel-Beth-Maacha · 6 ·
+  2. Samuel – 2. Chronik". Filterbar nach Epoche (die frühe Kirche bringt 135
+  Orte) und nach Namensteil („beth" findet 65). Die Suche beantwortet „wo ist
+  X?"; das Register beantwortet „welche Orte gibt es überhaupt?" – die Frage
+  stellt jeder, der eine Stunde vorbereitet. Auf Papier zweispaltig, ohne
+  Filterleiste, als Anhang.
 - **Handout drucken** – jede Reise lässt sich als Blatt ausgeben: Titel, Epoche,
   Bibelstelle, Gesamtstrecke und alle Stationen mit Stelle, Text und Entfernung
   – ohne Karte, Knöpfe und dunklen Hintergrund. Für den Hauskreis, der lieber
@@ -197,7 +205,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
   (Jerusalem im Gelände), `#gelaende=reise,exodus` (der Auszug über dem
   Gelände), `#gelaende=mission,second` (die zweite Missionsreise), `#weg=a15257a,a112427`
-  (ein selbst gebauter Weg), `#heilsgeschichte=exodus` (eine Station der
+  (ein selbst gebauter Weg), `#register` (das Ortsregister),
+  `#heilsgeschichte=exodus` (eine Station der
   Heilsgeschichte), `#stammbaum=zeit,bonhoeffer` (ein Mensch im Zeitbaum),
   `#kirche=vater,augustinus`
   `#kirche=konzil,chalcedon` und `#vergleich=abraham`. Der Hash läuft beim

@@ -21,9 +21,13 @@ import { chromium } from 'playwright';
  * Wörter, die es im Englischen nicht gibt. Bewusst Funktionswörter und ein
  * paar Fachwörter der App, keine Namen: „Karte" wäre als Name einer Kartenwahl
  * ein Fehlalarm, „und" ist keiner.
+ *
+ * Kein `\b` als Grenze, sondern eine, die auch den Bindestrich ausschließt:
+ * das Ortsregister enthält „Beth-zur", und `\bzur\b` hielt das für ein
+ * deutsches „zur". Ein Wort in einem Namen ist kein Wort.
  */
 const DEUTSCH =
-  /\b(und|oder|nicht|wird|werden|sind|waren|eine|einen|einer|dem|den|des|der|die|das|mit|von|für|auf|aus|zum|zur|bei|nach|über|unter|zwischen|durch|ohne|gegen|noch|schon|kein|keine|mehr|hier|dort|diese|dieser|dieses|jeder|jede|alle|Orte|Reise|Reisen|Kapitel|Erwähnungen|Stationen|Tagesmärsche|Luftlinie|schematisch|Konzilien|Kirchenväter|Mitwirkende|Freiwillige|Universität)\b/;
+  /(?<![-\w])(und|oder|nicht|wird|werden|sind|waren|eine|einen|einer|dem|den|des|der|die|das|mit|von|für|auf|aus|zum|zur|bei|nach|über|unter|zwischen|durch|ohne|gegen|noch|schon|kein|keine|mehr|hier|dort|diese|dieser|dieses|jeder|jede|alle|Orte|Reise|Reisen|Kapitel|Erwähnungen|Stationen|Tagesmärsche|Luftlinie|schematisch|Konzilien|Kirchenväter|Mitwirkende|Freiwillige|Universität)(?![-\w])/;
 
 const ANSICHTEN = [
   '',
@@ -42,6 +46,7 @@ const ANSICHTEN = [
   '#weg=a15257a,a112427',
   '#heilsgeschichte=exodus',
   '#gelaende',
+  '#register',
   '#unterstuetzen',
   '#nachweise',
 ];

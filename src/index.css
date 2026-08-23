@@ -979,6 +979,12 @@ body {
   .bm-print-sheet li {
     break-inside: avoid;
   }
+  /* Das Register steht auf dem Schirm in bis zu drei Spalten. Auf A4 bleiben
+     bei 16 mm Rand rund 178 mm – drei Spalten wären 59 mm breit, zu wenig für
+     „Abel-Beth-Maacha". */
+  .bm-print-sheet ul {
+    columns: 2 !important;
+  }
   @page {
     margin: 16mm;
   }
