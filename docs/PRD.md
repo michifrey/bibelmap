@@ -302,7 +302,20 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [x] Nur Siedlungen, nichts unter 1,5 km (Tore und Stadtviertel teilen die
       Koordinaten ihres Ortes); ausgewählt nach Bedeutung, gezeigt nach Nähe.
 
-### 4.19 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.19 Hören & Sehen — P2 ✅
+
+- [x] Eigener Modus über **alle 473 Folgen** der vier Quellen, filterbar nach
+      Quelle, Buch, Epoche und Freitext; die Suche greift auch auf Ortsnamen zu
+      und zieht deren Folgen herein.
+- [x] Die Zahlen an den Quellenknöpfen zählen die **übrige** Auswahl mit, nicht
+      nur die eigene – sonst zeigte jede Quelle nach dem Klick nur sich selbst.
+- [x] Verknüpfung in **beide Richtungen**: unter jeder Folge stehen ihre Orte
+      (Klick → Karte), jede Ortskarte verlinkt zurück in den gefilterten Modus.
+- [x] Verlinkbar: `#hoeren`, `#hoeren=<quelle>`, `#hoeren=ort,<ortsid>`.
+- [x] Ehrlich bleiben: eine genannte Bibelstelle ist nicht zwingend das Thema
+      der Folge – der Hinweis steht unter der Liste, nicht im Kleingedruckten.
+
+### 4.20 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
@@ -360,6 +373,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v1.0** | **Bibeltext eingebettet** (4.7) inkl. Ort-im-Text-Verknüpfung, Tastatur | ✅ erledigt |
 | **v0.3** | Suche über Referenzen (4.3/4.15), State in URL (4.15), reduzierte Bewegung + Escape | ✅ erledigt |
 | **v0.4** | Reisen & Geschichten (4.12), Mission & Ausbreitung (4.13), Bibelquiz (4.14), Offline (4.16), Handout (4.17), Nachbarorte (4.18), Code-Splitting | ✅ erledigt |
+| **v0.5** | Hören & Sehen als eigener Modus (4.19) mit Verknüpfung in beide Richtungen | ✅ erledigt |
 | **offen** | 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
