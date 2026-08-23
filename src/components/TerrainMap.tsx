@@ -6,6 +6,8 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { useReducedMotion } from '../lib/motion';
 import { BASEMAPS, type BasemapId } from './MapView';
+import { ERA_BY_ID } from '../data/eras';
+import type { BibleJourney } from '../data/journeys';
 
 interface Props {
   places: Place[];
@@ -17,6 +19,10 @@ interface Props {
   flyTo?: { lat: number; lon: number; zoom?: number; key: number } | null;
   /** Kumulative Zeitleiste: was in der gewählten Epoche neu dazukommt. */
   newIds?: Set<string> | null;
+  /** Eine Reise, die über dem Gelände liegt – der eigentliche Grund für 3D. */
+  journey?: BibleJourney | null;
+  /** Zurück zur Reise als Text und Karte. */
+  onOpenJourney?: (id: string) => void;
 }
 
 /**
@@ -33,6 +39,9 @@ maplibregl.setWorkerUrl(`${import.meta.env.BASE_URL}vendor/maplibre/maplibre-gl-
  * Höhe steckt in den Farbwerten („terrarium"), MapLibre rechnet sie zurück.
  */
 const DEM_TILES = 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png';
+/** Die Reiseroute trägt die Farbe des Weges, nicht die der Orte. */
+const ROUTE_COLOR = '#e0a449';
+
 const DEM_ATTR =
   'Höhen: <a href="https://registry.opendata.aws/terrain-tiles/">Terrain Tiles</a> (AWS Open Data, SRTM u. a.)';
 
@@ -66,6 +75,34 @@ function toGeoJSON(places: Place[], newIds: Set<string> | null | undefined) {
   };
 }
 
+/** Die Route als Linie, die Stationen als nummerierte Punkte. */
+function journeyGeoJSON(j: BibleJourney | null | undefined) {
+  const line = {
+    type: 'FeatureCollection' as const,
+    features: j
+      ? [
+          {
+            type: 'Feature' as const,
+            geometry: {
+              type: 'LineString' as const,
+              coordinates: j.stops.map((s) => [s.lon, s.lat]),
+            },
+            properties: {},
+          },
+        ]
+      : [],
+  };
+  const stops = {
+    type: 'FeatureCollection' as const,
+    features: (j?.stops ?? []).map((s, i) => ({
+      type: 'Feature' as const,
+      geometry: { type: 'Point' as const, coordinates: [s.lon, s.lat] },
+      properties: { nr: i + 1, de: s.de, en: s.en, sea: !!s.sea },
+    })),
+  };
+  return { line, stops };
+}
+
 /**
  * Die Karte in drei Dimensionen. Sie ersetzt die flache nicht, sie steht
  * daneben: wer wissen will, warum ein Weg über einen Pass führt und nicht
@@ -74,7 +111,17 @@ function toGeoJSON(places: Place[], newIds: Set<string> | null | undefined) {
  * Bewusst weniger als die flache Karte: keine Ballung, keine Wärmekarte,
  * keine Reichsgrenzen. Was hier zählt, ist das Gelände.
  */
-export default function TerrainMap({ places, selectedId, lang, onSelect, basemap = 'satellite', flyTo, newIds }: Props) {
+export default function TerrainMap({
+  places,
+  selectedId,
+  lang,
+  onSelect,
+  basemap = 'satellite',
+  flyTo,
+  newIds,
+  journey,
+  onOpenJourney,
+}: Props) {
   const t = useT();
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -122,6 +169,8 @@ export default function TerrainMap({ places, selectedId, lang, onSelect, basemap
             attribution: DEM_ATTR,
           },
           places: { type: 'geojson', data: toGeoJSON(places, newIds) },
+          route: { type: 'geojson', data: journeyGeoJSON(journey).line },
+          routeStops: { type: 'geojson', data: journeyGeoJSON(journey).stops },
         },
         layers: [
           { id: 'base', type: 'raster', source: 'base' },
@@ -145,6 +194,30 @@ export default function TerrainMap({ places, selectedId, lang, onSelect, basemap
               'circle-stroke-width': 1.5,
               'circle-stroke-color': '#03302f',
               'circle-opacity': 0.92,
+            },
+          },
+          {
+            // Die Route liegt auf dem Gelände, nicht darüber: `line-cap` rund,
+            // damit sie über Kuppen nicht ausfranst.
+            id: 'route',
+            type: 'line',
+            source: 'route',
+            layout: { 'line-cap': 'round', 'line-join': 'round' },
+            paint: {
+              'line-color': ROUTE_COLOR,
+              'line-width': ['interpolate', ['linear'], ['zoom'], 4, 2, 10, 5],
+              'line-opacity': 0.9,
+            },
+          },
+          {
+            id: 'route-stops',
+            type: 'circle',
+            source: 'routeStops',
+            paint: {
+              'circle-radius': 7,
+              'circle-color': ROUTE_COLOR,
+              'circle-stroke-width': 2,
+              'circle-stroke-color': '#03302f',
             },
           },
           {
@@ -206,6 +279,23 @@ export default function TerrainMap({ places, selectedId, lang, onSelect, basemap
         .setText(langRef.current === 'de' ? props.de : props.en)
         .addTo(map);
     });
+    map.on('mouseenter', 'route-stops', (e: maplibregl.MapLayerMouseEvent) => {
+      map.getCanvas().style.cursor = 'pointer';
+      const f = e.features?.[0];
+      if (!f) return;
+      const props = f.properties as { nr: number; de: string; en: string };
+      const [lon, lat] = (f.geometry as GeoJSON.Point).coordinates;
+      popupRef.current?.remove();
+      popupRef.current = new maplibregl.Popup({ closeButton: false, closeOnClick: false, offset: 12 })
+        .setLngLat([lon, lat])
+        .setText(`${props.nr}. ${langRef.current === 'de' ? props.de : props.en}`)
+        .addTo(map);
+    });
+    map.on('mouseleave', 'route-stops', () => {
+      map.getCanvas().style.cursor = '';
+      popupRef.current?.remove();
+      popupRef.current = null;
+    });
     map.on('mouseleave', 'places', () => {
       map.getCanvas().style.cursor = '';
       popupRef.current?.remove();
@@ -229,6 +319,31 @@ export default function TerrainMap({ places, selectedId, lang, onSelect, basemap
     const src = map.getSource('places') as maplibregl.GeoJSONSource | undefined;
     src?.setData(toGeoJSON(places, newIds));
   }, [places, newIds, ready]);
+
+  // Reise nachführen und den Blick auf sie richten.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    const { line, stops } = journeyGeoJSON(journey);
+    (map.getSource('route') as maplibregl.GeoJSONSource | undefined)?.setData(line);
+    (map.getSource('routeStops') as maplibregl.GeoJSONSource | undefined)?.setData(stops);
+    // Die Route trägt die Farbe ihrer Epoche – dieselbe Ordnung wie überall.
+    const color = (journey && ERA_BY_ID[journey.era]?.color) || ROUTE_COLOR;
+    map.setPaintProperty('route', 'line-color', color);
+    map.setPaintProperty('route-stops', 'circle-color', color);
+    if (!journey?.stops.length) return;
+    const b = new maplibregl.LngLatBounds();
+    for (const s of journey.stops) b.extend([s.lon, s.lat]);
+    // Die Neigung bleibt: eine Route, die flach eingepasst wird, verliert
+    // genau das, wofür man sie hier ansieht.
+    map.fitBounds(b, {
+      padding: { top: 190, bottom: 120, left: 80, right: 80 },
+      pitch: map.getPitch(),
+      bearing: map.getBearing(),
+      maxZoom: 9,
+      duration: reduced ? 0 : 1400,
+    });
+  }, [journey, ready, reduced]);
 
   // Kartenwahl: dasselbe Tuch wie flach, nur über dem Gelände.
   useEffect(() => {
@@ -268,7 +383,27 @@ export default function TerrainMap({ places, selectedId, lang, onSelect, basemap
           darunter beginnen, sonst schneidet sie den Hinweis ab. */}
       <div className="pointer-events-none absolute inset-x-0 top-28 z-[1100] flex justify-center px-2 sm:top-24">
         <div className="pointer-events-auto flex max-w-[min(92vw,34rem)] flex-col gap-2 bg-deepest/95 px-3 py-2 ring-1 ring-white/10 backdrop-blur-xl">
-          <div className="text-[11px] leading-snug text-white/70">{t('terrainNote')}</div>
+          {journey ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className="h-2.5 w-6 flex-none"
+                style={{ background: ERA_BY_ID[journey.era]?.color ?? ROUTE_COLOR }}
+              />
+              <span className="text-[12.5px] font-bold text-white">
+                {lang === 'de' ? journey.de : journey.en}
+              </span>
+              <span className="text-[11px] text-white/55">
+                {journey.stops.length} {t('stations')}
+              </span>
+              {onOpenJourney && (
+                <button onClick={() => onOpenJourney(journey.id)} className="bm-btn bm-btn-ghost ml-auto">
+                  {t('journeys')} →
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="text-[11px] leading-snug text-white/70">{t('terrainNote')}</div>
+          )}
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
             <span className="bm-eyebrow whitespace-nowrap">{t('terrainExaggeration')}</span>
             <input

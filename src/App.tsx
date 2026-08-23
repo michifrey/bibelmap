@@ -13,6 +13,7 @@ import {
 import { ERAS } from './data/eras';
 import MapView, { type BasemapId } from './components/MapView';
 import Header, { type Mode, type View } from './components/Header';
+import { JOURNEY_BY_ID } from './data/journeys';
 import { loadMedia } from './lib/media';
 import Timeline from './components/Timeline';
 import YearSlider from './components/YearSlider';
@@ -492,6 +493,34 @@ export default function App() {
     }
     setNavEpoch((n) => n + 1);
   }
+  /** Die Reise, die im Gelände liegt – nur dort, sonst stört sie die Karte. */
+  const terrainJourney = useMemo(
+    () => (view === 'terrain' && journeyNav ? JOURNEY_BY_ID[journeyNav.id] ?? null : null),
+    [view, journeyNav],
+  );
+
+  // Eine Reise, die es nicht gibt, verschwindet auch aus der Adresse – ein
+  // Hash, der auf nichts zeigt, ist schlechter als gar keiner.
+  useEffect(() => {
+    if (view === 'terrain' && journeyNav && !JOURNEY_BY_ID[journeyNav.id]) setJourneyNav(null);
+  }, [view, journeyNav]);
+
+  /** Aus dem Gelände zurück in den Reisemodus – Text, Stellen, Entfernungen. */
+  function openJourneyFromTerrain(id: string) {
+    setJourneyNav({ id, stop: 0 });
+    setView('map');
+    setMode('journeys');
+    setNavEpoch((n) => n + 1);
+  }
+
+  /** Aus dem Reisemodus ins Gelände – dieselbe Route, nur mit Höhen. */
+  function openJourneyInTerrain(id: string) {
+    setJourneyNav({ id, stop: 0 });
+    setMode(null);
+    setView('terrain');
+    setNavEpoch((n) => n + 1);
+  }
+
   const topPlaces = useMemo(() => (places ? places.slice(0, 30) : []), [places]);
 
   const eraCounts = useMemo(() => {
@@ -580,6 +609,8 @@ export default function App() {
                   basemap={basemap}
                   newIds={newIds}
                   flyTo={flyTo}
+                  journey={terrainJourney}
+                  onOpenJourney={openJourneyFromTerrain}
                 />
               </Suspense>
             ) : (
@@ -785,6 +816,7 @@ export default function App() {
                 initial={journeyNav}
                 onNavigate={setJourneyNav}
                 onOpenMission={() => setMode('mission')}
+                onOpenTerrain={openJourneyInTerrain}
                 onExit={() => setMode(null)}
               />
               </Suspense>

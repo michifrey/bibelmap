@@ -396,6 +396,11 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       Kartenwahl und Ortsauswahl mit der flachen Karte.
 - [x] Was sie nicht kann, steht in der Ansicht: keine Ballung, keine Wärmekarte,
       keine Reichsgrenzen.
+- [x] **Reisen im Gelände** (`#gelaende=reise,<id>`): die Route folgt den Höhen,
+      in der Farbe ihrer Epoche, mit anklickbaren Stationen. Der Weg geht in
+      beide Richtungen – aus der Reise ein **3D**-Knopf, aus dem Gelände zurück
+      zu Text, Stellen und Entfernungen. Eine Reise, die es nicht gibt,
+      verschwindet aus der Adresse statt auf nichts zu zeigen.
 - [x] Erst auf Abruf geladen (950 kB) und **nicht** im Leerlauf vorgeholt – eine
       Ansicht, die ohnehin Höhenkacheln aus dem Netz braucht, rechtfertigt kein
       Megabyte für jeden Besuch.

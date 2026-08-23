@@ -156,7 +156,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   sind die beiden anderen Reiter), `#nachweise`, `#hoeren=keller`
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
-  (Jerusalem im Gelände), `#kirche=vater,augustinus`
+  (Jerusalem im Gelände), `#gelaende=reise,exodus` (der Auszug über dem
+  Gelände), `#kirche=vater,augustinus`
   `#kirche=konzil,chalcedon` und `#vergleich=abraham`. Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
@@ -176,6 +177,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 
 - **Gelände in 3D** – eine vierte Ansicht neben Karte, Zeitbaum und Graph
   (`#gelaende`): dieselben Orte über echtem Höhengelände, kippbar und drehbar.
+  **Jede Reise lässt sich hineinlegen** (`#gelaende=reise,exodus`): die Route
+  folgt dem Gelände, die Stationen sind anklickbar, und ein Knopf führt zurück
+  in den Reisemodus mit Text, Stellen und Entfernungen. Umgekehrt steht in jeder
+  Reise ein **3D**-Knopf – dort sieht man, warum ein Weg über einen Pass führt
+  und nicht geradeaus.
   Wer wissen will, warum ein Weg über einen Pass führt und nicht geradeaus,
   sieht es hier. Die **Überhöhung** ist einstellbar (1×–3×), die Kartenwahl gilt
   weiter und liegt als Tuch über dem Gelände. Bewusst weniger als die flache
