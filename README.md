@@ -156,7 +156,14 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   (bis 25 km Volltreffer). Drei Stufen nach Bekanntheit der Orte – ab 50, ab 15
   oder ab 3 Erwähnungen. Dazwischen **Wissensfragen** aus den Reisen und der
   Ausbreitung („Zu welcher Reise gehört diese Station?", „In welche Zeit gehört
-  das?"), die nach der Antwort die Stelle auf der Karte zeigen; abschaltbar.
+  das?", **„Welcher dieser Orte lag auf dem Weg?"**), die nach der Antwort die
+  Stelle auf der Karte zeigen; abschaltbar. Die Wegfrage kommt aus denselben
+  Daten wie die Ortsliste an jeder Etappe – auch die falschen Antworten sind
+  nicht erfunden, sondern echte Orte, die mindestens 60 km neben derselben
+  Linie und über 100 km von beiden Stationen liegen: „Von Tal von Hebron nach
+  Sichem – Jerusalem, Sepharvaim, Kyrene oder Elath?" Zur Auflösung steht
+  dabei, wie weit der richtige Ort neben der Luftlinie liegt und dass die
+  Luftlinie nicht der Weg ist.
 - **Schriftgröße** – im Entdeckermodus lässt sich der Bibeltext stufenweise
   vergrößern (80 % bis 200 %), auch im Beamer-Modus; die Einstellung bleibt
   gemerkt. Fünf Meter vom Fernseher entfernt ist die Vorgabe zu klein, auf dem
