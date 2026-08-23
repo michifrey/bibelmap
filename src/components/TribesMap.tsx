@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
+import { watchTiles } from '../lib/tileNotice';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { GENO_GEO, type GeoKind } from '../data/genoGeo';
@@ -111,6 +112,8 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
   const t = useT();
   const elRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
+  /** Abmelder der Kachelwache – ohne ihn bleibt der Hinweis an einer alten Ebene hängen. */
+  const tileWatchRef = useRef<(() => void) | null>(null);
   const tribeLayer = useRef<L.LayerGroup | null>(null);
   const overlayLayer = useRef<L.LayerGroup | null>(null);
   const shapes = useRef(new Map<string, L.Polygon>());
@@ -195,6 +198,8 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
     overlayLayer.current = L.layerGroup().addTo(map);
     mapRef.current = map;
     return () => {
+      tileWatchRef.current?.();
+      tileWatchRef.current = null;
       map.remove();
       mapRef.current = null;
     };
@@ -214,6 +219,7 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
     if (!map) return;
     tileRef.current?.remove();
     const bm = BASEMAPS[basemap];
+    tileWatchRef.current?.();
     tileRef.current = L.tileLayer(bm.url, {
       attribution: bm.attribution,
       subdomains: bm.subdomains ?? 'abc',
@@ -222,6 +228,7 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
       opacity: basemap === 'dark' ? 1 : 0.75,
     }).addTo(map);
     tileRef.current.getContainer()?.style.setProperty('filter', basemap === 'dark' ? 'none' : 'saturate(.65)');
+    tileWatchRef.current = watchTiles(tileRef.current, map, lang);
   }, [basemap]);
 
   // ---- the allotment plate ------------------------------------------------

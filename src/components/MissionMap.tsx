@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
+import { watchTiles } from '../lib/tileNotice';
 import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
@@ -83,6 +84,8 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
   const lang = useLang();
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
+  /** Abmelder der Kachelwache – ohne ihn bleibt der Hinweis an einer alten Ebene hängen. */
+  const tileWatchRef = useRef<(() => void) | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
@@ -99,11 +102,12 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
       worldCopyJump: true,
       zoomControl: true,
     });
-    L.tileLayer(CARTO, {
+    const kacheln = L.tileLayer(CARTO, {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY)',
       subdomains: 'abcd',
     }).addTo(map);
+    tileWatchRef.current = watchTiles(kacheln, map, lang);
     layerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
     const offKeys = enableMarkerKeyboard(map.getContainer(), (el) => {
@@ -112,6 +116,8 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
     });
     return () => {
       offKeys();
+      tileWatchRef.current?.();
+      tileWatchRef.current = null;
       map.remove();
       mapRef.current = null;
       layerRef.current = null;
