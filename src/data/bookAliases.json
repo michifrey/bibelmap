@@ -1,0 +1,332 @@
+{
+  "Gen": {
+    "text": [
+      "1Mo",
+      "1 Mo"
+    ]
+  },
+  "Exod": {
+    "text": [
+      "2Mo",
+      "2 Mo",
+      "Ex"
+    ]
+  },
+  "Lev": {
+    "text": [
+      "3Mo",
+      "3 Mo"
+    ]
+  },
+  "Num": {
+    "text": [
+      "4Mo",
+      "4 Mo"
+    ]
+  },
+  "Deut": {
+    "text": [
+      "5Mo",
+      "5 Mo",
+      "Dtn",
+      "Dt"
+    ]
+  },
+  "Josh": {
+    "text": [
+      "Jos"
+    ]
+  },
+  "Judg": {
+    "text": [
+      "Ri"
+    ],
+    "typed": [
+      "richt"
+    ]
+  },
+  "1Sam": {
+    "text": [
+      "1 Sam"
+    ]
+  },
+  "2Sam": {
+    "text": [
+      "2 Sam"
+    ]
+  },
+  "1Kgs": {
+    "text": [
+      "1Kön",
+      "1 Kön",
+      "1Kge"
+    ],
+    "typed": [
+      "1koen"
+    ]
+  },
+  "2Kgs": {
+    "text": [
+      "2Kön",
+      "2 Kön",
+      "2Kge"
+    ],
+    "typed": [
+      "2koen"
+    ]
+  },
+  "1Chr": {
+    "text": [
+      "1 Chr"
+    ],
+    "typed": [
+      "1chron"
+    ]
+  },
+  "2Chr": {
+    "text": [
+      "2 Chr"
+    ],
+    "typed": [
+      "2chron"
+    ]
+  },
+  "Ezra": {
+    "typed": [
+      "esr"
+    ]
+  },
+  "Esth": {
+    "typed": [
+      "est"
+    ]
+  },
+  "Job": {
+    "typed": [
+      "ijob",
+      "hi"
+    ]
+  },
+  "Ps": {
+    "text": [
+      "Psalm"
+    ]
+  },
+  "Prov": {
+    "text": [
+      "Spr"
+    ]
+  },
+  "Eccl": {
+    "text": [
+      "Pred",
+      "Koh",
+      "Kohelet"
+    ]
+  },
+  "Song": {
+    "text": [
+      "Hld"
+    ],
+    "typed": [
+      "hohelied"
+    ]
+  },
+  "Isa": {
+    "text": [
+      "Jes"
+    ]
+  },
+  "Lam": {
+    "text": [
+      "Klgl"
+    ]
+  },
+  "Ezek": {
+    "text": [
+      "Hes",
+      "Ez"
+    ]
+  },
+  "Amos": {
+    "typed": [
+      "am"
+    ]
+  },
+  "Obad": {
+    "text": [
+      "Obd"
+    ]
+  },
+  "Mic": {
+    "text": [
+      "Mi"
+    ]
+  },
+  "Zeph": {
+    "text": [
+      "Zef"
+    ]
+  },
+  "Zech": {
+    "text": [
+      "Sach"
+    ]
+  },
+  "Matt": {
+    "text": [
+      "Mt",
+      "Matth"
+    ]
+  },
+  "Mark": {
+    "text": [
+      "Mk"
+    ],
+    "typed": [
+      "mr"
+    ]
+  },
+  "Luke": {
+    "text": [
+      "Lk",
+      "Luk"
+    ]
+  },
+  "John": {
+    "text": [
+      "Joh",
+      "Jh"
+    ],
+    "typed": [
+      "jn"
+    ]
+  },
+  "Acts": {
+    "text": [
+      "Apg",
+      "Apostelgesch"
+    ]
+  },
+  "Rom": {
+    "text": [
+      "Röm",
+      "Rö"
+    ],
+    "typed": [
+      "roem"
+    ]
+  },
+  "1Cor": {
+    "text": [
+      "1Kor",
+      "1 Kor"
+    ]
+  },
+  "2Cor": {
+    "text": [
+      "2Kor",
+      "2 Kor"
+    ]
+  },
+  "Phil": {
+    "text": [
+      "Php"
+    ]
+  },
+  "Col": {
+    "text": [
+      "Kol"
+    ]
+  },
+  "1Thess": {
+    "text": [
+      "1 Thess"
+    ],
+    "typed": [
+      "1th"
+    ]
+  },
+  "2Thess": {
+    "text": [
+      "2 Thess"
+    ],
+    "typed": [
+      "2th"
+    ]
+  },
+  "1Tim": {
+    "text": [
+      "1 Tim"
+    ]
+  },
+  "2Tim": {
+    "text": [
+      "2 Tim"
+    ]
+  },
+  "Titus": {
+    "text": [
+      "Tit"
+    ]
+  },
+  "Phlm": {
+    "text": [
+      "Philem"
+    ]
+  },
+  "Heb": {
+    "text": [
+      "Hebr"
+    ]
+  },
+  "Jas": {
+    "text": [
+      "Jak"
+    ]
+  },
+  "1Pet": {
+    "text": [
+      "1Petr",
+      "1 Petr"
+    ]
+  },
+  "2Pet": {
+    "text": [
+      "2Petr",
+      "2 Petr"
+    ]
+  },
+  "1John": {
+    "text": [
+      "1Joh",
+      "1 Joh"
+    ]
+  },
+  "2John": {
+    "text": [
+      "2Joh",
+      "2 Joh"
+    ]
+  },
+  "3John": {
+    "text": [
+      "3Joh",
+      "3 Joh"
+    ]
+  },
+  "Jude": {
+    "text": [
+      "Jud"
+    ]
+  },
+  "Rev": {
+    "text": [
+      "Offb",
+      "Apk"
+    ],
+    "typed": [
+      "off"
+    ]
+  }
+}
