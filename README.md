@@ -226,6 +226,13 @@ und englische Notation - `Markus 6,30-44` wie `Mark 6:30-44`) und löst sie übe
 Epoche des Buches. Folgen ohne Bibelstelle im Titel - bei thematischen
 Predigten häufig - fallen aus der Ortszuordnung heraus; das ist beabsichtigt.
 
+Der Baubericht nennt je Quelle drei Zahlen: Einträge, davon mit Bibelstelle,
+davon mit Sendedatum. Die dritte steht dort, weil sie einmal still auf 0 fiel –
+der Feed von Practicing the Way schreibt die Zeitzone als `&#43;0000`, und
+solange die Entities nicht aufgelöst wurden, war jedes dieser 229 Daten
+unlesbar. BibleProject hat keine Sendedaten, das ist keine Panne, sondern die
+Natur einer Übersichtsseite.
+
 Feed-Adressen, die nicht von Hand geprüft sind, stehen in
 `data/media/sources.json` auf `null` – eine geratene URL erzeugt still einen
 leeren Index. Steht stattdessen eine `appleId` da, löst `--fetch` die Adresse

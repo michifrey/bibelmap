@@ -348,7 +348,19 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       alle 268 bisherigen Kurzformen lösen auf dasselbe Buch auf, alle 325
       Stammbaum-Referenzen ebenso.
 
-### 4.22 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.22 Medien-Index: Sendedaten und Umlaute — P1 ✅
+
+- [x] Numerische Entities werden aufgelöst. Vorher verloren **229 von 473**
+      Folgen ihr Datum (`&#43;0000` in der Zeitzone) und **63 Titel** zeigten
+      `f&#xFC;r` statt `für`.
+- [x] Die korrigierten Titel bringen genauere Stellen mit: `34,1&#x2013;12` war
+      Vers 1, jetzt sind es die Verse 1–12. **32 Folgen** decken damit mehr ab,
+      **73 Orte** haben mehr Folgen, kein Ort weniger (4.661 → 4.797
+      Verknüpfungen).
+- [x] Der Baubericht nennt je Quelle, wie viele Folgen ein Datum mitbringen –
+      steht dort plötzlich 0, ist der Datumsleser kaputt.
+
+### 4.23 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
@@ -409,6 +421,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v0.5** | Hören & Sehen als eigener Modus (4.19) mit Verknüpfung in beide Richtungen | ✅ erledigt |
 | **v0.6** | Bildnachweis mit Lizenz (4.20) | ✅ erledigt |
 | **v0.7** | Buchkürzel an einer Stelle (4.21) | ✅ erledigt |
+| **v0.8** | Medien-Index: Sendedaten und Umlaute (4.22) | ✅ erledigt |
 | **offen** | 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
