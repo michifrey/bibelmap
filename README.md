@@ -74,7 +74,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
 - **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
   Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
-  Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
+  Bibel und Koran, aus jüdisch-christlich-biblischer Sicht; jede Gestalt hat
+  eine eigene Adresse (`#vergleich=abraham`).
 - **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
   (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
   Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
@@ -99,7 +100,7 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`, `#hoeren=keller`
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#kirche=vater,augustinus`
-  und `#kirche=konzil,chalcedon`. Der Hash läuft beim
+  `#kirche=konzil,chalcedon` und `#vergleich=abraham`. Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
 - **Hören & Sehen** – ein eigener Modus über alle **473 Folgen** der vier

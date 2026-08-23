@@ -288,6 +288,14 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [x] Der Querverweis aus dem Zeitbaum benutzt denselben Weg und hinterlässt
       damit ebenfalls eine teilbare Adresse.
 
+### 4.15c Vergleich verlinkbar — P2 ✅
+
+- [x] `#vergleich=<id>` je Gestalt, Teilen-Knopf in der Kopfzeile, Zurück-Taste
+      führt zurück. Unbekannte Angaben fallen auf die erste Gestalt zurück.
+- [x] Damit hat **jeder** Modus eine Adresse: Karte, Lesen, Reisen, Mission,
+      Kirchengeschichte, Vergleich, Hören & Sehen, Quiz, Heilsgeschichte,
+      Unterstützen, Stammbaum und Graph.
+
 ### 4.16 Offline & installierbar — P1 ✅
 
 - [x] Service Worker mit zwei Caches: App samt Ortsdaten (sofort aus dem Cache,

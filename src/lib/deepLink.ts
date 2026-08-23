@@ -31,6 +31,8 @@ export interface Route {
    * `#kirche=konzil,nicaea1`; ohne Angabe steht der Modus auf seinem Anfang.
    */
   church?: { tab: 'fathers' | 'councils'; id?: string };
+  /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
+  compare?: string;
 }
 
 /** Schlüssel im Hash → Modus ohne weitere Angaben. */
@@ -38,7 +40,6 @@ const MODE_KEYS: Record<string, Mode> = {
   unterstuetzen: 'support',
   heilsgeschichte: 'history',
   quiz: 'quiz',
-  vergleich: 'compare',
 };
 
 const KEY_BY_MODE: Record<string, string> = Object.fromEntries(
@@ -87,6 +88,10 @@ export function parseHash(hash: string): Route | null {
             ? { phase: args[0], journey: args[1] }
             : { phase: args[0], event: args[1] },
       };
+    case 'vergleich':
+      return args[0]
+        ? { view: 'map', mode: 'compare', compare: args[0] }
+        : { view: 'map', mode: 'compare' };
     case 'kirche': {
       if (!args[0]) return { view: 'map', mode: 'church' };
       const tab = args[0] === 'konzil' ? ('councils' as const) : ('fathers' as const);
@@ -130,6 +135,9 @@ export function formatRoute(route: Route): string {
     // In der Reisephase steht die Reise in der Adresse, sonst das Ereignis.
     const detail = phase === 'journeys' ? journey : event;
     return detail ? `#mission=${phase},${detail}` : `#mission=${phase}`;
+  }
+  if (mode === 'compare') {
+    return route.compare ? `#vergleich=${route.compare}` : '#vergleich';
   }
   if (mode === 'church') {
     const c = route.church;
