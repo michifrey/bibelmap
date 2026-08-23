@@ -262,6 +262,25 @@ Zwei Listen, weil die Lage entscheidet:
 npm run check:aliases   # unbekanntes Buch, doppelte Kurzform, zu kurz, überflüssig
 ```
 
+### BibleProject-Guides
+
+Die Adresse eines Guides entsteht aus dem englischen Buchnamen
+(`book-of-<name>`); die Bücher, die BibleProject zu einem Guide zusammenfasst –
+Samuel, Könige, Chronik –, stehen als Ausnahme in `src/data/bpGuides.json`.
+
+Ob die Regel für die übrigen 60 Bücher stimmt, weiß nur die Seite selbst:
+
+```bash
+npm run check:bp                      # klopft alle 63 Adressen ab
+npm run check:bp -- --base http://…   # gegen einen anderen Ursprung
+```
+
+Ein `404` heißt: richtigen Slug heraussuchen und in `bpGuides.json` eintragen.
+Ein `403`, `429` oder eine Zeitüberschreitung heißt gar nichts – solche
+Antworten kommen von Filtern und Proxys, nicht von der Seite, und bleiben
+deshalb **unentschieden**. Antwortet keine einzige Adresse, endet der Lauf mit
+Code 2 und ohne Urteil.
+
 ### Reisen & Geschichten
 
 Die Stationen stehen in `src/data/journeys.ts`: je Station Name, Bibelstelle,
