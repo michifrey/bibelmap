@@ -668,7 +668,30 @@ Leinwand trug zudem kein `aria-label`.
       Durchgang für fremdsprachige Namen – eine ganz ohne Namen fiel durch.
       Gegenprobe: mit Namen keine Meldung, ohne Namen `canvas`.
 
-### 4.38 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.38 Quiz: „Welcher dieser Orte lag auf dem Weg?" — P2 ✅
+
+**Beschreibung:** Eine dritte Wissensfrage, aus denselben Daten wie die
+Ortsliste an jeder Etappe (4.34). Erfunden wird nichts – auch die falschen
+Antworten sind echte Orte.
+
+**Anforderungen**
+- Richtige Antwort: bis 8 km neben der Luftlinie der Etappe.
+- Falsche Antworten: mindestens 60 km neben derselben Linie **und** über 100 km
+  von beiden Stationen. Ein Ort 20 km daneben wäre keine falsche Antwort,
+  sondern eine strittige.
+- Keine Seewege. Die Auflösung nennt den Abstand und die Einschränkung.
+
+**Akzeptanzkriterien**
+- [x] 400 erzeugte Fragen gegen ihre eigenen Regeln nachgerechnet: keine
+      Verletzung.
+- [x] Nur eindeutige Namen als Antwort. Die Messung fand Fragen, bei denen die
+      richtige Antwort je nach gemeintem Ort 8 km oder 134 km neben der Linie
+      lag: „Karmel" liegt am Meer und in Juda, „Zion" steht doppelt in den
+      Daten. Ein Name, den es zweimal gibt, ist als Antwort nicht entscheidbar.
+- [x] Im Browser gesehen: „Von Tal von Hebron nach Sichem – Jerusalem,
+      Sepharvaim, Kyrene, Elath."
+
+### 4.39 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
