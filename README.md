@@ -79,7 +79,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   drei Gäste in Mamre und das Feilschen um Sodom bis zu dem einzigen Stück
   Land, das den beiden je gehört: einer Höhle), **Jakob vom erschlichenen Segen bis zum Grab der Väter** (14 Stationen:
   Linsengericht, Leiter, zwanzig Jahre bei Laban, der Kampf am Jabbok, Rahels
-  Grab – und am Ende der Zug zurück aus Ägypten in die Höhle Machpela), Josef nach Ägypten, **Mose vom Nil bis auf den Nebo** (hundertzwanzig Jahre
+  Grab – und am Ende der Zug zurück aus Ägypten in die Höhle Machpela),
+  **Josef: verkauft nach Ägypten** (12 Stationen von der Zisterne bei Dotan
+  über Potifars Haus und den Hof des Pharao bis zu dem Sarg, der vierhundert
+  Jahre auf den Auszug wartet und in Sichem begraben wird – dort, wo der Weg
+  schiefging), **Mose vom Nil bis auf den Nebo** (hundertzwanzig Jahre
   in drei Vierzigern: vierzig am Hof, vierzig bei den Schafen, vierzig
   unterwegs – vom Schilfkästchen über den brennenden Busch und den Felsen von
   Kadesch bis zu dem Blick über ein Land, das er nicht betreten darf), **der
@@ -95,8 +99,15 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Wagen aus Feuer** (13 Stationen, vom Duell auf dem Karmel über den Ginster in
   Beerscheba und das stille sanfte Sausen am Horeb bis zum Mantel, der aufs
   Wasser schlägt),
-  Jona in die falsche Richtung, das Exil und die Rückkehr, die Flucht nach
-  Ägypten, Jesu Wege in Galiläa und der Weg nach Jerusalem. **Abspielen** lässt
+  **Jona in die falsche Richtung** (die einzige Reise, die entgegengesetzt zum
+  Auftrag beginnt: gut achthundert Kilometer nach Osten wären es gewesen),
+  **das Exil** (9 Stationen: die letzten zwei Festungen Lachis und Aseka, deren
+  erlöschende Feuerzeichen eine Tonscherbe von 1935 festhält, Zedekias Flucht
+  bis in die Ebene von Jericho, der Mord an Gedalja – und am Ende die Wasser
+  Babylons), **die Rückkehr** (8 Stationen über fast hundert Jahre: Kyrus'
+  Erlass, der Grundstein, bei dem man Jubel und Weinen nicht unterscheiden
+  kann, Esras vier Monate ohne Eskorte und Nehemias zweiundfünfzig Tage),
+  die Flucht nach Ägypten, Jesu Wege in Galiläa und der Weg nach Jerusalem. **Abspielen** lässt
   die Route mitwachsen und einen Punkt die Etappen abgehen, während links die
   Station mit Bibelstelle und kurzem Text mitläuft (← / → blättern, Leertaste
   startet). Jede Station verlinkt auf ihre Ortskarte.

@@ -826,24 +826,69 @@ ist:
   Bethel**, **Jericho** und **der Jordan** (der Wagen aus Feuer).
 
 Text je Station: Jakob 196, Landnahme 177, David 187, Elia 191 Zeichen. Damit
-tragen elf der fünfzehn Reisen ausgeführte Stationstexte; dünn bleiben Josef
-(6), Jona (6), Exil (6) und Rückkehr (4).
+tragen elf der fünfzehn Reisen ausgeführte Stationstexte; dünn blieben Josef
+(6), Jona (6), Exil (6) und Rückkehr (4) – nachgeholt in § 4.45.
 
 **Akzeptanzkriterien**
 - [x] Jede neue Station mit Bibelstelle, `placeId` und Koordinate gegen
       `places.json` geprüft: 0 unbekannte IDs, 0 Koordinatenabweichungen,
       0 Stationen ohne Stelle.
 - [x] Keine neue Nulletappe – zwei Stationen auf demselben Punkt gäbe eine
-      Etappe von 0 km. (Bekannt und unverändert: im Exil liegen „Am Fluss
-      Kebar" und „Babylon" auf einem Punkt; sie zu trennen hieße Koordinaten
-      zu erfinden.)
+      Etappe von 0 km. (Damals noch offen: im Exil lagen „Am Fluss Kebar" und
+      „Babylon" auf einem Punkt; behoben in § 4.45.)
 - [x] Umstrittenes steht als umstritten da (Debir, Merom), Überliefertes als
       Überlieferung.
 - [x] Im Browser gemessen: Jakob 2.109 km / 84 Tagesmärsche, Landnahme 532 km /
       21, David 429 km / 17, Elia 1.373 km / 55 – keine Etappe ohne Länge,
       keine Fehlermeldung in der Konsole.
 
-### 4.45 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.45 Die letzten vier dünnen Reisen: Josef, Jona, Exil, Rückkehr — P1 ✅
+
+Damit trägt jede der fünfzehn Reisen ausgeführte Stationstexte; keine steht mehr
+mit einem Satz je Station da.
+
+- **Josef** 6 → 12 Stationen, jetzt 1. Mose 37–50 statt 37–47: Noph (Potifars
+  Haus und das Gefängnis), **On** (der Traumdeuter wird Wesir und heiratet die
+  Tochter des Priesters von On), der Hunger in Hebron, der Becher in Benjamins
+  Sack, die **Tenne Atad** jenseits des Jordans (sieben Tage Klage, und die
+  Kanaaniter nennen den Ort Abel-Mizrajim), **Machpela** – und als Schluss
+  **Sichem: das Grab**, wo Josua nach Josua 24,32 Josefs Gebeine begräbt, an
+  genau der Stelle, an der die Geschichte schiefging.
+- **Exil** 6 → 9: **Lachis** und **Aseka**, die nach Jeremia 34,7 zuletzt noch
+  hielten – mit der Tonscherbe von 1935, auf der ein Vorposten meldet, die
+  Feuerzeichen von Aseka seien nicht mehr zu sehen; die **Ebene von Jericho**,
+  wo Zedekia eingeholt wird; das **große Wasser bei Gibeon** (Jeremia 41).
+- **Rückkehr** 4 → 8: **Jericho** (die Heimkehrerliste zählt Ort für Ort),
+  **Jerusalem: der Grundstein** getrennt von **Jerusalem: die Mauer**, und die
+  **Ebene Ono**, in die Sanballat viermal einlädt und in die Nehemia viermal
+  nicht geht.
+- **Jona** bleibt bei 6 Stationen. Das Buch hat nicht mehr Geographie: vier
+  Orte und zwei Punkte auf See. Statt Stationen zu erfinden, wuchs der Text von
+  93 auf 233 Zeichen je Station.
+
+**Akzeptanzkriterien**
+- [x] 0 unbekannte `placeId`s, 0 Koordinatenabweichungen gegen `places.json`,
+      0 Stationen ohne Bibelstelle.
+- [x] **Keine Nulletappe mehr in der ganzen Datei.** Die bekannte Ausnahme —
+      „Am Fluss Kebar" und „Babylon" lagen im Exil auf einem Punkt — ist
+      behoben, indem beide zu einer Station „Babylonien: am Fluss Kebar"
+      zusammengefasst wurden. Sie zu trennen hätte geheißen, Koordinaten zu
+      erfinden; wo der Kanal Kebar lief, steht jetzt als Unbekanntes im Text.
+- [x] Umstrittenes bleibt umstritten: Tarsis („Südspanien oder Kilikien"), der
+      Verlauf des Kebar, die ungenannte Stadt in 1. Mose 39 („Die Bibel nennt
+      keine Stadt; Hauptstadt war damals Memphis").
+- [x] Was nicht stattfand, steht nicht als Reise da: Nehemia ging nicht nach
+      Ono, und der Stationstext sagt das ausdrücklich samt Hinweis, dass die
+      Linie schematisch ist.
+- [x] Behauptete Entfernungen nachgerechnet: Gat-Hefer → Ninive 826 km („gut
+      achthundert"), Hebron → Sichem 78 km („gut siebzig"), Jericho → Ribla
+      306 km („gut dreihundert").
+- [x] Im Browser in **beiden** Sprachen gezählt, nicht geschätzt: Josef 12
+      Stationen / 2.555 km / 102 Tagesmärsche, Jona 6 / 2.871 km / 115, Exil
+      9 / 2.173 km / 87, Rückkehr 8 / 4.883 km / 195 – keine Etappe ohne
+      Länge, kein JavaScript-Fehler.
+
+### 4.46 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
