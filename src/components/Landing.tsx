@@ -342,7 +342,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
       {/* ============================================================ CARDS */}
       <div className="bg-paper-2 px-5 py-14 sm:px-10 sm:py-20 lg:px-14">
         <div className="mb-6 flex items-baseline gap-4">
-          <span className="bm-eyebrow text-signal">{t('lWaysIn')}</span>
+          <span className="bm-eyebrow text-signal-deep">{t('lWaysIn')}</span>
           <span className="h-px flex-1 bg-[#d8d2c4]" />
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -354,7 +354,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
             >
               {c.art}
               <div className="flex flex-1 flex-col p-6">
-                <div className="bm-eyebrow text-signal" style={{ fontSize: 10 }}>
+                <div className="bm-eyebrow text-signal-deep" style={{ fontSize: 10 }}>
                   {c.kicker}
                 </div>
                 <div className="mt-2.5 font-display text-lg font-extrabold leading-tight tracking-tight text-ink">
@@ -381,7 +381,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
             } ${i >= 2 ? 'border-t border-white/15 lg:border-t-0' : ''}`}
           >
             <div className={`bm-num text-4xl sm:text-[54px] ${s.gold ? 'text-deep' : 'text-white'}`}>{s.value}</div>
-            <div className={`bm-eyebrow mt-2 ${s.gold ? 'text-deep/80' : 'text-mint'}`}>{s.label}</div>
+            <div className={`bm-eyebrow mt-2 ${s.gold ? 'text-deep' : 'text-mint'}`}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -497,7 +497,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
       {/* ============================================================ SOURCES */}
       <div className="bg-paper-2 px-5 py-16 sm:px-10 sm:py-20 lg:px-14">
         <div className="mb-9 flex items-baseline gap-8">
-          <span className="bm-eyebrow text-signal">{t('lSourcesTitle')}</span>
+          <span className="bm-eyebrow text-signal-deep">{t('lSourcesTitle')}</span>
           <span className="h-px flex-1 bg-[#d8d2c4]" />
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -518,7 +518,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
 
         <div className="mt-8 flex flex-col gap-5 border-t-4 border-gold bg-paper px-7 py-7 sm:flex-row sm:items-center sm:gap-8">
           <div className="min-w-0 flex-1">
-            <div className="bm-eyebrow text-signal">{t('lSupportKicker')}</div>
+            <div className="bm-eyebrow text-signal-deep">{t('lSupportKicker')}</div>
             <p className="mt-2.5 text-[13px] font-medium leading-[1.7] text-[#5c6b69]">{t('supportBody3')}</p>
           </div>
           <button
