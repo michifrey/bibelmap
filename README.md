@@ -399,6 +399,23 @@ aushebeln.
 Vite · React · TypeScript · Tailwind CSS · Leaflet (+ markercluster, heat) ·
 CARTO/OpenStreetMap-Kartenkacheln.
 
+**Schriften im Haus.** Montserrat und Fraunces werden nicht von Google Fonts
+geladen, sondern liegen als variable Schriften (`woff2`, Teilmengen latin und
+latin-ext) in `src/assets/fonts/`; die `@font-face`-Regeln stehen in
+`src/index.css`, Vite baut die Dateien mit ein. Beim Besuch der Seite geht damit
+kein Aufruf an einen dritten Server – ein Punkt, an dem sonst Besucherdaten
+abfließen –, und offline sieht die App aus wie online. Kursive Schnitte gibt es
+bewusst nicht: die eine kursive Stelle der App neigt der Browser selbst, statt
+dafür 100 kB zu laden.
+
+Die Dateien stammen aus `@fontsource-variable/montserrat` und
+`@fontsource-variable/fraunces` (5.3.0). Zum Aktualisieren: beide Pakete
+installieren, die vier `*-latin*-normal.woff2` aus `files/` nach
+`src/assets/fonts/` kopieren, die `LICENSE` nach `public/fonts/`, Pakete wieder
+entfernen. Der Lizenztext (SIL OFL 1.1) wird mit ausgeliefert und ist auf der
+Seite *Nachweise & Lizenzen* verlinkt – die OFL verlangt, dass er die Dateien
+begleitet.
+
 ## Lizenz
 
 Bibelmap steht unter der **GNU General Public License v3.0** (siehe `LICENSE`).

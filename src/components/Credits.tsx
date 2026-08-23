@@ -105,6 +105,24 @@ function CreditCard({ entry, lang }: { entry: CreditEntry; lang: Lang }) {
         <p className="mt-3 text-[11.5px] font-medium leading-[1.65] text-ink-soft">{pick(entry.note)}</p>
       )}
 
+      {/* Mitgelieferte Lizenztexte – die Datei selbst, nicht der Verweis darauf. */}
+      {entry.files && (
+        <div className="mt-2 flex flex-wrap gap-2">
+          {entry.files.map((f) => (
+            <a
+              key={f.url}
+              href={f.url}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 bg-paper-2 px-2.5 py-1.5 text-[11px] font-semibold text-ink transition hover:bg-[#e6e1d5]"
+            >
+              {pick(f)}
+              <ExternalIcon />
+            </a>
+          ))}
+        </div>
+      )}
+
       <div className="mt-auto pt-5">
         <a
           href={entry.home}

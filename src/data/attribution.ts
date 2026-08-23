@@ -35,6 +35,11 @@ export interface CreditEntry {
   attribution?: string;
   /** Was sonst noch zu wissen ist, damit der Nachweis ehrlich bleibt. */
   note?: { de: string; en: string };
+  /**
+   * Dateien, die die Lizenz mitliefern lässt – etwa der OFL-Text zu den
+   * Schriften. Liegen unter `public/`, werden also mit ausgeliefert.
+   */
+  files?: { de: string; en: string; url: string }[];
   home: string;
 }
 
@@ -460,9 +465,18 @@ export const CREDITS: CreditEntry[] = [
     group: 'technik',
     license: 'OFL-1.1',
     use: {
-      de: 'Die Schriften der Seite: Montserrat für alles, Fraunces für den Bibeltext. Geladen über Google Fonts.',
-      en: 'The typefaces of the site: Montserrat throughout, Fraunces for the Bible text. Loaded from Google Fonts.',
+      de: 'Die Schriften der Seite: Montserrat für alles, Fraunces für den Bibeltext.',
+      en: 'The typefaces of the site: Montserrat throughout, Fraunces for the Bible text.',
     },
+    attribution: 'Montserrat © The Montserrat Project Authors · Fraunces © The Fraunces Project Authors',
+    note: {
+      de: 'Die Schriftdateien liegen im Projekt selbst und werden mit ausgeliefert – kein Aufruf an Google Fonts, also auch keine Besucherdaten dorthin. Die OFL verlangt, dass ihr Text die Dateien begleitet; hier ist er:',
+      en: 'The font files live in the project and ship with it – no request to Google Fonts, so no visitor data goes there. The OFL requires its text to accompany the files; here it is:',
+    },
+    files: [
+      { de: 'OFL – Montserrat', en: 'OFL – Montserrat', url: 'fonts/OFL-Montserrat.txt' },
+      { de: 'OFL – Fraunces', en: 'OFL – Fraunces', url: 'fonts/OFL-Fraunces.txt' },
+    ],
     home: 'https://fonts.google.com/',
   },
 ];
