@@ -5,7 +5,7 @@ Eine interaktive Karte biblischer Orte – mit **Zeitleiste**, **Suche**,
 Kapitel durchläuft (links die Orte/Stellen, rechts die Karte).
 
 > An interactive map of biblical places – with a timeline, search, heatmap and a
-> presentation mode that walks through a book chapter by chapter.
+> explorer mode that walks through a book chapter by chapter.
 
 Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 (warme, editoriale Farbwelt, Serifen-Display-Font).
