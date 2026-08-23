@@ -156,8 +156,32 @@ npm run preview    # Build lokal anschauen
 
 Ein Workflow (`.github/workflows/deploy.yml`) baut und deployt automatisch bei jedem
 Push auf den Default-Branch. **Einmalig** in den Repo-Einstellungen aktivieren:
-*Settings → Pages → Source: GitHub Actions*. Der Build setzt `VITE_BASE=/bibelmap/`
-für das Project-Pages-Unterverzeichnis; lokal bleibt die Basis `/`.
+*Settings → Pages → Source: GitHub Actions*.
+
+Die Seite läuft unter der eigenen Domain **www.biblemap.ch** (`public/CNAME`) und
+damit an der Wurzel, nicht in einem Unterverzeichnis. Der Build braucht deshalb
+kein `VITE_BASE` mehr; die Umgebungsvariable bleibt in `vite.config.ts` nur als
+Notausgang, falls die Seite einmal wieder unter einem Pfad liegt.
+
+Nötige DNS-Einträge bei `biblemap.ch`:
+
+| Typ | Name | Wert |
+| --- | --- | --- |
+| CNAME | `www` | `michifrey.github.io.` |
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+
+Die vier A-Records auf die Wurzel sind nicht doppelt gemoppelt: GitHub leitet
+`biblemap.ch` von dort auf `www.biblemap.ch` weiter, sonst liefe die nackte
+Domain ins Leere. `bibelmap.ch` – die deutsche Schreibweise – zeigt am besten
+per Weiterleitung des Registrars auf `https://www.biblemap.ch`; eine zweite
+Domain kann GitHub Pages nicht selbst bedienen.
+
+Nach dem ersten Deploy in *Settings → Pages* **Enforce HTTPS** anhaken, sobald
+das Zertifikat ausgestellt ist (dauert nach der DNS-Umstellung einige Minuten
+bis zu einer Stunde).
 
 ## Daten
 
