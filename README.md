@@ -108,7 +108,7 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Papier in der Hand hat.
 - **Teilen & Deep-Links** – jede Ansicht hat eine Adresse: `#ort=a15257a`
   (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
-  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`, `#hoeren=keller`
+  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`, `#nachweise`, `#hoeren=keller`
   (Folgen einer Quelle) und `#hoeren=ort,a15257a` (Folgen zu einem Ort). Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
@@ -143,6 +143,16 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
   selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
   aus deren Arbeit die Seite besteht – je Projekt mit Beitrag und Nennung.
+- **Nachweise & Lizenzen** – die Rechtsseite zur Unterstützen-Seite (Modi-Menü,
+  Fußzeile der Startseite, Direktlink `#nachweise`): **28 Quellen** in sechs
+  Bereichen – Karte & Kacheln, Orte & Verweise, Bibeltext & Artikel, Bilder,
+  Hören & Sehen, Software & Schriften. Je Quelle steht da, was davon in der App
+  steckt, unter welcher **Lizenz** sie steht (verlinkt, mit dem, was die Lizenz
+  verlangt) und – wo eine Lizenz eine bestimmte Zeile fordert – diese
+  **Nachweiszeile im Wortlaut**. Material ohne freie Lizenz (Esri-Kacheln,
+  YouTube, die Podcast-Feeds) ist als solches gekennzeichnet und verlinkt auf
+  die Bedingungen des Anbieters. Zum Schluss die Seite selbst: GPL-3.0, warum,
+  und wohin ein falscher Nachweis gemeldet wird.
 
 ## Entwicklung
 
@@ -410,8 +420,17 @@ entfernt, ist an diese Wahl nicht mehr gebunden.
 - Podcasts & Videos: bibletunes.de, BibleProject, Practicing the Way, Gospel in
   Life – verlinkt, nicht gehostet
 
-Die vollständige Liste mit Beitrag, Nennung und **Spendenlink** je Projekt steht in
-`src/data/support.ts` und wird in der App unter *Projekte unterstützen* angezeigt.
+Das ist die Kurzfassung. Die **vollständige Liste** – jede Quelle mit Lizenz, mit
+dem, was die Lizenz verlangt, und mit der geforderten Nachweiszeile im Wortlaut –
+steht in `src/data/attribution.ts` und wird in der App unter *Nachweise &
+Lizenzen* (`#nachweise`) angezeigt. Die Lizenznamen selbst kommen aus
+`src/lib/imageCredit.ts`, damit „CC BY-SA 4.0" auf der Seite nicht anders heißt
+als am Bild.
+
+Daneben steht `src/data/support.ts` mit Beitrag, Nennung und **Spendenlink** je
+Projekt, angezeigt unter *Projekte unterstützen*: dieselben Projekte, aber die
+Frage nach dem Danken statt der nach dem Recht.
 Bibelmap selbst nimmt kein Geld ein und sammelt keines: keine Werbung, kein
-Tracking, keine Bezahlschranke. Wer eine neue Quelle einbindet, trägt sie dort
-ein – Beitrag, Lizenz-/Nennungshinweis und, wenn vorhanden, die Spendenseite.
+Tracking, keine Bezahlschranke. Wer eine neue Quelle einbindet, trägt sie in **beide** Dateien
+ein – in `attribution.ts` Lizenz und Nachweiszeile, in `support.ts` Beitrag und,
+wenn vorhanden, die Spendenseite.

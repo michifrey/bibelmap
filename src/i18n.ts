@@ -141,6 +141,49 @@ const STRINGS: Dict = {
   epoch: { de: 'Epoche', en: 'Epoch' },
   references: { de: 'Bibelstellen', en: 'Bible passages' },
   faithWitness: { de: 'Glaubenszeuge (Kirchengeschichte)', en: 'Faith witness (church history)' },
+  // Nachweise & Lizenzen
+  credits: { de: 'Nachweise & Lizenzen', en: 'Credits & licences' },
+  creditsSub: { de: 'Woraus diese Seite besteht – und was die Lizenzen verlangen', en: 'What this site is made of – and what the licences require' },
+  creditsLead1: { de: 'Nichts davon', en: 'None of this' },
+  creditsLead2: { de: 'gehört uns', en: 'is ours' },
+  creditsBody1: {
+    de: 'Bibelmap zeigt Orte, Texte, Bilder und Töne, die andere erarbeitet haben. Diese Seite listet jedes Stück auf: was es ist, wo es in der App auftaucht, unter welcher Lizenz es steht und welche Nennung diese Lizenz verlangt.',
+    en: 'Bibelmap shows places, texts, images and audio that other people made. This page lists every piece: what it is, where it appears in the app, the licence it stands under and the credit that licence requires.',
+  },
+  creditsBody2: {
+    de: 'Wo eine Lizenz eine bestimmte Zeile verlangt, steht sie hier im Wortlaut. Bilder tragen ihren Nachweis zusätzlich direkt am Bild, weil bei Wikimedia Commons jedes Bild anders lizenziert ist.',
+    en: 'Where a licence demands a particular line, it stands here word for word. Images carry their credit at the image as well, because on Wikimedia Commons every file is licensed differently.',
+  },
+  creditsBody3: {
+    de: 'Fehlt eine Quelle oder stimmt eine Angabe nicht, ist das ein Fehler – und wird behoben.',
+    en: 'If a source is missing or a detail is wrong, that is a mistake – and it gets fixed.',
+  },
+  creditsStatSources: { de: 'Quellen genannt', en: 'sources named' },
+  creditsStatFree: { de: 'unter freier Lizenz', en: 'under a free licence' },
+  creditsStatGroups: { de: 'Bereiche', en: 'areas' },
+  creditsStatOwn: { de: 'eigenes Material', en: 'material of our own' },
+  creditsLine: { de: 'Nachweiszeile', en: 'Required credit' },
+  creditsPerItem: { de: 'Lizenz je Stück', en: 'licence per item' },
+  creditsVisit: { de: 'Zur Quelle', en: 'To the source' },
+  creditsOwnTitle: { de: 'Diese Seite selbst', en: 'This site itself' },
+  creditsOwnBody: {
+    de: 'Von Bibelmap stammen nur die Anordnung, die Texte der Erklärkarten und der Quelltext. Alles andere gehört den oben genannten Projekten und bleibt bei ihnen – verlinkt, eingebettet oder unter ihrer Lizenz weitergegeben.',
+    en: 'All that comes from Bibelmap is the arrangement, the wording of its explanatory cards and the source code. Everything else belongs to the projects above and stays with them – linked, embedded or passed on under their licence.',
+  },
+  creditsFix: {
+    de: 'Wer hier einen falschen oder fehlenden Nachweis findet: Der Quelltext ist offen, ein Hinweis genügt.',
+    en: 'If you find a credit here that is wrong or missing: the source is open, a note is enough.',
+  },
+  creditsOwnLicense: {
+    de: 'Bibelmap selbst steht unter Copyleft – weil die Grenzdaten es verlangen.',
+    en: 'Bibelmap itself is copyleft – because the border data requires it.',
+  },
+  creditsRepo: { de: 'Quelltext auf GitHub', en: 'Source on GitHub' },
+  creditsToSupport: { de: 'Projekte unterstützen', en: 'Support the projects' },
+  creditsOutro: {
+    de: 'Eine Karte ist nur so ehrlich wie ihre Quellenangabe.',
+    en: 'A map is only as honest as the sources it names.',
+  },
   timeDocs: { de: 'Zeitdokumente', en: 'Documents of the time' },
   timeDocsHint: {
     de: 'Was außerhalb der Bibel von dieser Person erhalten ist – Inschriften, Chroniken, Akten, Briefe.',

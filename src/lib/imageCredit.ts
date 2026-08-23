@@ -25,6 +25,10 @@ const SHARE_ALIKE = {
 };
 const BY = { de: 'Namensnennung', en: 'Attribution' };
 const FREE = { de: 'gemeinfrei – keine Auflagen', en: 'public domain – no conditions' };
+const CODE_BY = {
+  de: 'Namensnennung: Lizenztext und Urheberzeile müssen mitgehen',
+  en: 'Attribution: the licence text and copyright line have to travel along',
+};
 
 function cc(version: string, sa: boolean, port = ''): License {
   const kind = sa ? 'by-sa' : 'by';
@@ -78,6 +82,35 @@ const LICENSES: Record<string, License> = {
     ...BY,
   },
   attribution: { label: 'Attribution', url: null, ...BY },
+
+  // Lizenzen, die nicht an Bildern hängen, sondern an Daten, Software und
+  // Schriften – die Nachweisseite (`data/attribution.ts`) holt sie von hier,
+  // damit Lizenznamen an einer Stelle stehen.
+  'ODbL-1.0': {
+    label: 'ODbL 1.0',
+    url: 'https://opendatacommons.org/licenses/odbl/1-0/',
+    ...SHARE_ALIKE,
+  },
+  'GPL-3.0': { label: 'GPL 3.0', url: 'https://www.gnu.org/licenses/gpl-3.0.html', ...SHARE_ALIKE },
+  MIT: { label: 'MIT', url: 'https://opensource.org/license/mit', ...CODE_BY },
+  'BSD-2-Clause': {
+    label: 'BSD-2-Clause',
+    url: 'https://opensource.org/license/bsd-2-clause',
+    ...CODE_BY,
+  },
+  'Apache-2.0': { label: 'Apache 2.0', url: 'https://www.apache.org/licenses/LICENSE-2.0', ...CODE_BY },
+  'Hippocratic-2.1': {
+    label: 'Hippocratic 2.1',
+    url: 'https://firstdonoharm.dev/version/2/1/license/',
+    de: 'Namensnennung; Nutzung nur ohne Verletzung von Menschenrechten',
+    en: 'Attribution; use only without violating human rights',
+  },
+  'OFL-1.1': {
+    label: 'SIL OFL 1.1',
+    url: 'https://openfontlicense.org/',
+    de: 'frei nutzbar; Namensnennung beim Weitergeben der Schriftdateien',
+    en: 'free to use; attribution when the font files are passed on',
+  },
 };
 
 export interface Credit {

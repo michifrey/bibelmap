@@ -33,6 +33,7 @@ const GraphView = lazy(() => import('./components/GraphView'));
 const Genealogy = lazy(() => import('./components/Genealogy'));
 import Landing, { type LandingTarget } from './components/Landing';
 const Support = lazy(() => import('./components/Support'));
+const Credits = lazy(() => import('./components/Credits'));
 
 /** The support page is worth linking to from outside, so it lives on a hash. */
 const SUPPORT_HASH = '#unterstuetzen';
@@ -685,6 +686,11 @@ export default function App() {
             {mode === 'support' && (
               <Suspense fallback={<ModeFallback />}>
                 <Support lang={lang} onLang={setLang} onExit={closeSupport} />
+              </Suspense>
+            )}
+            {mode === 'credits' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Credits lang={lang} onLang={setLang} onExit={() => setMode(null)} />
               </Suspense>
             )}
           </>

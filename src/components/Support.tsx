@@ -209,7 +209,7 @@ export default function Support({ lang, onLang, onExit }: Props) {
         <p className="mx-auto max-w-[760px] text-center font-display text-lg font-extrabold leading-[1.5] tracking-tight text-white sm:text-[22px]">
           {t('supportOutro')}
         </p>
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
             onClick={onExit}
             className="inline-flex items-center gap-3.5 bg-signal px-6 py-4 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white transition hover:bg-[#0f938b]"
@@ -217,6 +217,14 @@ export default function Support({ lang, onLang, onExit }: Props) {
             {t('supportBack')}
             <Arrow className="text-gold" />
           </button>
+          {/* Schwesterseite: dieselben Projekte, aber die Rechtsfrage. */}
+          <a
+            href="#nachweise"
+            className="inline-flex items-center gap-3.5 bg-white/10 px-6 py-4 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white transition hover:bg-white/20"
+          >
+            {t('credits')}
+            <Arrow className="text-gold" />
+          </a>
         </div>
       </div>
     </div>

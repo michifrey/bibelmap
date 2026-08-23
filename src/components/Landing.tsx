@@ -586,6 +586,9 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
           >
             {t('lSupportCta')}
           </button>
+          <a href="#nachweise" className="text-[12.5px] font-medium text-white/60 transition hover:text-white">
+            {t('credits')}
+          </a>
           <a
             href="https://github.com/michifrey/bibelmap"
             target="_blank"
