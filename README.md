@@ -172,10 +172,18 @@ Ein Workflow (`.github/workflows/deploy.yml`) baut und deployt automatisch bei j
 Push auf den Default-Branch. **Einmalig** in den Repo-Einstellungen aktivieren:
 *Settings → Pages → Source: GitHub Actions*.
 
-Die Seite läuft unter der eigenen Domain **www.biblemap.ch** (`public/CNAME`) und
-damit an der Wurzel, nicht in einem Unterverzeichnis. Der Build braucht deshalb
-kein `VITE_BASE` mehr; die Umgebungsvariable bleibt in `vite.config.ts` nur als
+Die Seite läuft unter der eigenen Domain **www.biblemap.ch** und damit an der
+Wurzel, nicht in einem Unterverzeichnis. Der Build braucht deshalb kein
+`VITE_BASE` mehr; die Umgebungsvariable bleibt in `vite.config.ts` nur als
 Notausgang, falls die Seite einmal wieder unter einem Pfad liegt.
+
+Die Domain steht **nicht** im Repo, sondern unter *Settings → Pages → Custom
+domain*. Eine `CNAME`-Datei wäre hier wirkungslos: wer über einen eigenen
+Actions-Workflow veröffentlicht, bei dem legt GitHub keine an und ignoriert eine
+vorhandene ([Doku][gh-cname]). Wer die Domain sucht, sucht sie also in den
+Einstellungen, nicht im Dateibaum.
+
+[gh-cname]: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
 
 Nötige DNS-Einträge bei `biblemap.ch`:
 
