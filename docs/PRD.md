@@ -427,9 +427,13 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 
 ## 10. Offene Punkte (v0.3)
 
-- BibleProject-Guide-Slugs sind heuristisch (`book-of-<name>` + Gruppen-Override);
-  einzelne selten gruppierte Bücher könnten ins Leere zeigen → bei Bedarf in
-  `bibleProjectUrl` nachpflegen.
+- BibleProject-Guide-Slugs sind weiter heuristisch (`book-of-<name>` +
+  Ausnahmen in `src/data/bpGuides.json`). **`npm run check:bp` klopft die 63
+  Adressen ab** und meldet, welche ins Leere zeigen; ein Fund wird in
+  `bpGuides.json` eingetragen. In der Entwicklungsumgebung ist bibleproject.com
+  gesperrt – der Lauf endet dort mit „unentschieden", nicht mit einem Befund.
+  Offen bleibt der Punkt also, bis jemand das Skript mit Netzzugriff laufen
+  lässt.
 - **3-D-Gelände**: Leaflet kann die Karte nicht kippen. Ein Umstieg auf MapLibre
   würde Terrain und Neigung erlauben, betrifft aber alle fünf Kartenansichten –
   bewusst zurückgestellt.
