@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
-import { erasForPlace } from '../lib/places';
+import { erasForPlace, placeName } from '../lib/places';
 import { osisFromRef } from '../lib/bookAbbr';
-import { BOOKS } from '../data/books';
+import { BOOK_BY_OSIS, BOOKS } from '../data/books';
 import { ERA_BY_ID } from '../data/eras';
 import { GENEALOGY, type Person, bibleRefUrl } from '../data/genealogy';
 import { PASSAGES, type Passage } from '../data/passages';
@@ -53,6 +53,25 @@ function placeColor(p: Place): string {
     if (e && (!best || e.order < best.order)) best = { order: e.order, color: e.color };
   }
   return best?.color ?? TEAL;
+}
+
+/**
+ * Was an einem Knoten steht – in der Sprache, in der die Seite läuft. Orte
+ * trugen bisher immer ihren englischen Namen: im Netz stand „Egypt“, wo die
+ * Karte daneben „Ägypten“ schreibt. Bücher, Personen und Stellen waren schon
+ * übersetzt, Orte als Einzige nicht.
+ */
+function nodeLabel(n: GNode, lang: Lang): string {
+  if (n.kind === 'person' && n.person) return lang === 'de' ? n.person.de : n.person.en;
+  if (n.kind === 'passage' && n.passage) return lang === 'de' ? n.passage.de : n.passage.en;
+  if (n.kind === 'place' && n.place) return placeName(n.place, lang);
+  if (n.kind === 'book' && n.bookOsis) {
+    const b = BOOK_BY_OSIS[n.bookOsis];
+    // Der gebaute Knoten trägt nur die deutsche Fassung, also stand in der
+    // englischen Oberfläche „1. Mose“ statt „Genesis“.
+    if (b) return lang === 'de' ? b.de.replace(/ \(.*\)$/, '') : b.en;
+  }
+  return n.label;
 }
 
 function seeded(i: number): number {
@@ -259,6 +278,12 @@ export default function GraphView({ places, lang }: Props) {
   const [selPerson, setSelPerson] = useState<string | null>(null);
   const [selPassage, setSelPassage] = useState<Passage | null>(null);
   const [bookInfo, setBookInfo] = useState<{ osis: string; label: string } | null>(null);
+
+  /** Der Buchname in der Sprache der Seite – auch in den Tafeln, nicht nur im Netz. */
+  const bookLabel = (osis: string) => {
+    const b = BOOK_BY_OSIS[osis];
+    return b ? (lang === 'de' ? b.de.replace(/ \(.*\)$/, '') : b.en) : osis;
+  };
   const [xrefs, setXrefs] = useState<Xref[] | null>(null);
   const [xrefReal, setXrefReal] = useState(false);
 
@@ -308,12 +333,12 @@ export default function GraphView({ places, lang }: Props) {
     let found = -1;
     for (let i = 0; i < nodes.length; i++) {
       const n = nodes[i];
+      // Beide Schreibweisen: wer „Ägypten“ tippt, meint denselben Knoten wie
+      // wer „Egypt“ tippt – und im Netz stand bis eben nur das Zweite.
       const label =
-        n.kind === 'person' && n.person
-          ? lang === 'de' ? n.person.de : n.person.en
-          : n.kind === 'passage' && n.passage
-            ? `${lang === 'de' ? n.passage.de : n.passage.en} ${n.passage.ref}`
-            : n.label;
+        n.kind === 'passage' && n.passage
+          ? `${nodeLabel(n, lang)} ${n.passage.ref}`
+          : `${nodeLabel(n, lang)} ${n.label}`;
       if (nodeVisible(n) && label.toLowerCase().includes(q)) {
         found = i;
         break;
@@ -350,11 +375,7 @@ export default function GraphView({ places, lang }: Props) {
     ro.observe(wrap);
     view.current = { x: W / 2, y: H / 2, k: 0.62 };
 
-    function labelOf(n: GNode): string {
-      if (n.kind === 'person' && n.person) return filt.current.lang === 'de' ? n.person.de : n.person.en;
-      if (n.kind === 'passage' && n.passage) return filt.current.lang === 'de' ? n.passage.de : n.passage.en;
-      return n.label;
-    }
+    const labelOf = (n: GNode) => nodeLabel(n, filt.current.lang);
 
     function step() {
       const REP = 8000;
@@ -507,21 +528,75 @@ export default function GraphView({ places, lang }: Props) {
           ctx.strokeStyle = '#fff';
           ctx.stroke();
         }
-        const showLabel =
+      }
+
+      /*
+       * Beschriftungen zuletzt und nach Rang, mit Platzprüfung.
+       *
+       * Vorher zeichnete jeder Knoten seine eigene, sobald der Maßstab passte –
+       * in der dichten Mitte lagen dadurch vierzig Buchnamen übereinander und
+       * ergaben einen Fleck, während der Rand der Fläche leer blieb. Jetzt
+       * bekommt zuerst, wer gerade zählt (das Angetippte und seine Nachbarn),
+       * dann die Bücher, dann der Rest; was keinen freien Platz mehr findet,
+       * entfällt. Lesbar ist besser als vollständig.
+       */
+      const boxes: [number, number, number, number][] = [];
+      const fits = (x0: number, y0: number, x1: number, y1: number) => {
+        for (const b of boxes) if (x0 < b[2] && x1 > b[0] && y0 < b[3] && y1 > b[1]) return false;
+        return true;
+      };
+      function rank(i: number): number {
+        const n = nodes[i];
+        if (i === focus) return 1e6;
+        if (neigh && neigh.has(i)) return 1e5 + n.r;
+        return (n.kind === 'book' ? 1e3 : 0) + n.r;
+      }
+      const order: number[] = [];
+      for (let i = 0; i < nodes.length; i++) if (nodeVisible(nodes[i])) order.push(i);
+      order.sort((i, j) => rank(j) - rank(i));
+
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      for (const i of order) {
+        const n = nodes[i];
+        const dim = focus != null && i !== focus && !(neigh && neigh.has(i));
+        const show =
           n.kind === 'book'
             ? v.k > 0.4
             : n.kind === 'passage'
               ? !dim && (i === focus || (neigh && neigh.has(i))) && v.k > 0.5
               : !dim && (i === focus || (neigh && neigh.has(i)) || n.r > 7) && v.k > 0.55;
-        if (showLabel) {
-          ctx.globalAlpha = dim ? 0.25 : 1;
-          ctx.font = `${n.kind === 'book' || n.kind === 'passage' ? 600 : 400} ${n.kind === 'book' ? 12 : 11}px Inter, sans-serif`;
-          ctx.fillStyle = n.kind === 'book' ? TEAL : n.kind === 'passage' ? PASSAGE_COLOR : '#4a5754';
-          ctx.strokeStyle = 'rgba(247,241,230,0.9)';
-          ctx.lineWidth = 3;
-          ctx.strokeText(labelOf(n), sx, sy + r + 2);
-          ctx.fillText(labelOf(n), sx, sy + r + 2);
-        }
+        if (!show) continue;
+
+        const [sx, sy] = toScreen(n.x, n.y);
+        const r = n.r * v.k;
+        const label = labelOf(n);
+        const size = n.kind === 'book' ? 12 : 11;
+        // Montserrat wie im Rest der App – hier stand „Inter“, eine Schrift,
+        // die das Projekt nicht mitliefert; die Fläche fiel auf irgendeine
+        // Systemschrift zurück.
+        ctx.font = `${n.kind === 'book' || n.kind === 'passage' ? 700 : 500} ${size}px Montserrat, system-ui, sans-serif`;
+        const w = ctx.measureText(label).width;
+        // Etwas Luft in der Prüfbox, sonst stehen zwei Namen zwar nicht
+        // übereinander, aber Buchstabe an Buchstabe.
+        const x0 = sx - w / 2 - 6;
+        const x1 = sx + w / 2 + 6;
+        const y0 = sy + r + 1;
+        const y1 = y0 + size + 6;
+        // Was außerhalb liegt, belegt auch keinen Platz.
+        if (x1 < 0 || x0 > W || y1 < 0 || y0 > H) continue;
+        if (!fits(x0, y0, x1, y1)) continue;
+        boxes.push([x0, y0, x1, y1]);
+
+        ctx.globalAlpha = dim ? 0.3 : 1;
+        // Heller Text mit dunklem Saum: die Fläche ist dunkel. Vorher war es
+        // umgekehrt – dunkler Text mit cremefarbenem Saum, ein Papierentwurf.
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(2,31,30,0.92)';
+        ctx.strokeText(label, sx, y0 + 1);
+        ctx.fillStyle =
+          n.kind === 'book' ? '#ffffff' : n.kind === 'passage' ? '#eab873' : 'rgba(255,255,255,0.82)';
+        ctx.fillText(label, sx, y0 + 1);
       }
       ctx.globalAlpha = 1;
     }
@@ -635,7 +710,7 @@ export default function GraphView({ places, lang }: Props) {
       } else if (n.kind === 'passage' && n.passage) {
         setSelPassage(n.passage);
       } else if (n.kind === 'book' && n.bookOsis) {
-        setBookInfo({ osis: n.bookOsis, label: n.label });
+        setBookInfo({ osis: n.bookOsis, label: nodeLabel(n, filt.current.lang) });
       }
     }
 
@@ -707,7 +782,7 @@ export default function GraphView({ places, lang }: Props) {
       </div>
 
       {/* title + controls */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex flex-col gap-2 p-3 pt-20 sm:p-4 sm:pt-24">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1100] flex flex-col gap-2 p-3 pt-28 sm:p-4 sm:pt-24">
         <div className="bm-panel pointer-events-auto flex max-w-[min(94vw,40rem)] flex-wrap items-center gap-x-3 gap-y-2 self-start px-4 py-3">
           <div className="pr-1">
             <div className="font-display text-lg uppercase leading-none text-white">{t('graphTitle')}</div>
@@ -751,7 +826,7 @@ export default function GraphView({ places, lang }: Props) {
 
       {/* place detail */}
       {selPlace && (
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-28 sm:p-4 sm:pt-24">
           <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
             <PlaceDetail place={selPlace} lang={lang} onClose={() => setSelPlace(null)} />
           </div>
@@ -760,7 +835,7 @@ export default function GraphView({ places, lang }: Props) {
 
       {/* person detail */}
       {selPerson && (
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-28 sm:p-4 sm:pt-24">
           <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
             <PersonDetail
               person={GENEALOGY.find((p) => p.id === selPerson)!}
@@ -774,7 +849,7 @@ export default function GraphView({ places, lang }: Props) {
 
       {/* passage detail — title, reference, subtitle, explanation */}
       {selPassage && (
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[22rem] flex-col p-3 pt-28 sm:p-4 sm:pt-24">
           <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
             <div className="animate-fade-in flex h-full flex-col">
               <div className="relative px-4 pb-3 pt-4 text-white" style={{ background: PASSAGE_COLOR }}>
@@ -803,10 +878,10 @@ export default function GraphView({ places, lang }: Props) {
                     <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3 opacity-80" fill="currentColor"><path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14zM5 5h5v2H7v10h10v-3h2v5H5z" /></svg>
                   </a>
                   <button
-                    onClick={() => { setBookInfo({ osis: selPassage.book, label: graph.nodes.find((n) => n.kind === 'book' && n.bookOsis === selPassage.book)?.label ?? selPassage.book }); setSelPassage(null); }}
+                    onClick={() => { setBookInfo({ osis: selPassage.book, label: bookLabel(selPassage.book) }); setSelPassage(null); }}
                     className="bg-surface px-2.5 py-1.5 text-xs font-medium text-white transition hover:bg-gold/30"
                   >
-                    {graph.nodes.find((n) => n.kind === 'book' && n.bookOsis === selPassage.book)?.label ?? selPassage.book}
+                    {bookLabel(selPassage.book)}
                   </button>
                 </div>
               </div>
@@ -817,7 +892,7 @@ export default function GraphView({ places, lang }: Props) {
 
       {/* book → mentioned places/people list */}
       {bookInfo && bookLinks && (
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[20rem] flex-col p-3 pt-20 sm:p-4 sm:pt-24">
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1200] flex w-full max-w-[20rem] flex-col p-3 pt-28 sm:p-4 sm:pt-24">
           <div className="pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur">
             <div className="flex items-center justify-between border-b border-white/10 px-4 py-3">
               <div className="font-display text-lg font-semibold text-white">{bookInfo.label}</div>

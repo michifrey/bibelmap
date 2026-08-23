@@ -15,5 +15,15 @@
     "de": "Chaldäa",
     "variants": ["Chaldäer", "Chaldäern", "Chaldäas"],
     "note": "die Herleitung wählt das Volk 'Chaldäer' statt des Landes"
+  },
+  "af084cf": {
+    "de": "Gründe",
+    "variants": ["Gründen"],
+    "note": "Shephelah; die Herleitung wählt den Dativ Plural 'Gründen' (23 Verse) statt des Nominativs 'Gründe' (Jos 11,16); heute meist 'Schefela'"
+  },
+  "a88310a": {
+    "de": "Jenseits des Wassers",
+    "variants": ["jenseits des Wassers", "jenseit des Wassers", "diesseits des Wassers", "diesseit des Wassers"],
+    "note": "Beyond the River; die Herleitung behält von der Ortsangabe nur 'Wassers' übrig. Luther 1912 nennt die Provinz je nach Standpunkt des Sprechers dies- oder jenseits, z. B. Esra 4,17 und 6,6"
   }
 }
