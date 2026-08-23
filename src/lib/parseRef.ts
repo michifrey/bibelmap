@@ -1,5 +1,6 @@
 import type { Lang } from '../i18n';
 import { BOOKS, BOOK_BY_OSIS } from '../data/books';
+import { ALIASES } from './bookAliases';
 
 /**
  * Eine erkannte Bibelstelle. Der Vers wird gelesen, aber nicht gebraucht –
@@ -13,80 +14,6 @@ export interface ParsedRef {
   label: string;
 }
 
-/**
- * Kurzformen, die sich nicht mechanisch aus den vollen Namen ergeben. Dieselbe
- * Liste pflegt `scripts/lib/bibleref.mjs` für die Medien-Zuordnung; sie hier
- * zu wiederholen ist der Preis dafür, dass der Browser kein Node-Skript lädt.
- */
-const ALIASES: Record<string, string[]> = {
-  Gen: ['1mo', '1mose', 'gen'],
-  Exod: ['2mo', '2mose', 'ex', 'exod'],
-  Lev: ['3mo', '3mose', 'lev'],
-  Num: ['4mo', '4mose', 'num'],
-  Deut: ['5mo', '5mose', 'dtn', 'dt', 'deut'],
-  Josh: ['jos', 'josh'],
-  Judg: ['ri', 'judg'],
-  Ruth: ['rut', 'ruth'],
-  '1Sam': ['1sam'],
-  '2Sam': ['2sam'],
-  '1Kgs': ['1kon', '1koen', '1kge', '1kings', '1kgs'],
-  '2Kgs': ['2kon', '2koen', '2kge', '2kings', '2kgs'],
-  '1Chr': ['1chr', '1chron'],
-  '2Chr': ['2chr', '2chron'],
-  Ezra: ['esr', 'ezra'],
-  Neh: ['neh'],
-  Esth: ['est', 'esth'],
-  Job: ['hiob', 'ijob', 'job'],
-  Ps: ['ps', 'psalm', 'psalmen'],
-  Prov: ['spr', 'prov'],
-  Eccl: ['pred', 'koh', 'eccl'],
-  Song: ['hld', 'hohelied', 'song'],
-  Isa: ['jes', 'isa'],
-  Jer: ['jer'],
-  Lam: ['klgl', 'lam'],
-  Ezek: ['hes', 'ez', 'ezek'],
-  Dan: ['dan'],
-  Hos: ['hos'],
-  Joel: ['joel'],
-  Amos: ['am', 'amos'],
-  Obad: ['obd', 'obad'],
-  Jonah: ['jona', 'jonah'],
-  Mic: ['mi', 'mic'],
-  Nah: ['nah'],
-  Hab: ['hab'],
-  Zeph: ['zef', 'zeph'],
-  Hag: ['hag'],
-  Zech: ['sach', 'zech'],
-  Mal: ['mal'],
-  Matt: ['mt', 'matth', 'matt'],
-  Mark: ['mk', 'mark', 'mr'],
-  Luke: ['lk', 'luk', 'luke'],
-  John: ['joh', 'jh', 'john'],
-  Acts: ['apg', 'apostelgesch', 'acts'],
-  Rom: ['rom', 'roem', 'ro'],
-  '1Cor': ['1kor', '1cor'],
-  '2Cor': ['2kor', '2cor'],
-  Gal: ['gal'],
-  Eph: ['eph'],
-  Phil: ['phil', 'php'],
-  Col: ['kol', 'col'],
-  '1Thess': ['1thess', '1th'],
-  '2Thess': ['2thess', '2th'],
-  '1Tim': ['1tim'],
-  '2Tim': ['2tim'],
-  Titus: ['tit', 'titus'],
-  Phlm: ['phlm', 'philem'],
-  Heb: ['hebr', 'heb'],
-  Jas: ['jak', 'jas'],
-  '1Pet': ['1petr', '1pet'],
-  '2Pet': ['2petr', '2pet'],
-  '1John': ['1joh', '1john'],
-  '2John': ['2joh', '2john'],
-  '3John': ['3joh', '3john'],
-  Jude: ['jud', 'jude'],
-  Rev: ['offb', 'apk', 'rev'],
-};
-
 function norm(s: string): string {
   return s
     .toLowerCase()
@@ -95,7 +22,12 @@ function norm(s: string): string {
     .replace(/[.\s]/g, '');
 }
 
-/** Buchname (voll, in Klammern, Kurzform) → OSIS. Einmal gebaut, dann fest. */
+/**
+ * Buchname (voll, in Klammern, Kurzform) → OSIS. Einmal gebaut, dann fest.
+ * Die Kurzformen kommen aus `src/data/bookAliases.json`; im Suchfeld gelten
+ * beide Listen, denn dort steht der Buchname allein da – „Am 3" kann nur Amos
+ * meinen, während dieselbe Zeichenfolge in einem Fließtext meist „am 3." ist.
+ */
 const LEXICON: Map<string, string> = (() => {
   const map = new Map<string, string>();
   for (const b of BOOKS) {
@@ -105,8 +37,8 @@ const LEXICON: Map<string, string> = (() => {
       if (key) map.set(key, b.osis);
     }
   }
-  for (const [osis, list] of Object.entries(ALIASES)) {
-    for (const a of list) map.set(norm(a), osis);
+  for (const [osis, entry] of Object.entries(ALIASES)) {
+    for (const a of [...(entry.text ?? []), ...(entry.typed ?? [])]) map.set(norm(a), osis);
   }
   return map;
 })();

@@ -108,11 +108,17 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Papier in der Hand hat.
 - **Teilen & Deep-Links** – jede Ansicht hat eine Adresse: `#ort=a15257a`
   (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
-  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`. Der Hash läuft beim
+  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`, `#hoeren=keller`
+  (Folgen einer Quelle) und `#hoeren=ort,a15257a` (Folgen zu einem Ort). Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
-- **Hören & Sehen** – zu jedem Ort die Podcast-Folgen und Videos, die eine
-  Bibelstelle behandeln, in der der Ort vorkommt.
+- **Hören & Sehen** – ein eigener Modus über alle **473 Folgen** der vier
+  eingebundenen Quellen (bibletunes.de, BibleProject, John Mark Comer, Timothy
+  Keller): filterbar nach **Quelle, Buch, Epoche** und Freitext – die Suche
+  versteht dabei auch Ortsnamen. Unter jeder Folge stehen die Orte, die sie
+  berührt; ein Klick darauf führt auf die Karte. Die Verknüpfung gilt in beide
+  Richtungen: jede Ortskarte zeigt weiter ihre Folgen und verlinkt mit
+  *Alle Folgen zu diesem Ort* zurück in den Modus (`#hoeren=ort,…`).
 
 ### Drumherum
 
@@ -128,6 +134,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Leertaste öffnen (Cluster zoomen hinein); Escape schließt von außen nach innen.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
+- **Bildnachweis** – jedes Foto nennt **Urheber und Lizenz**, in der Ortskarte
+  wie im Kartenfenster: der Name führt auf die Dateiseite bei Wikimedia Commons,
+  die Lizenz auf ihren Text. Bilder, die erst zur Laufzeit über Wikidata
+  gefunden werden, holen beides über die Commons-API nach – die Lizenzen
+  verlangen die Nennung, ein „© Name" allein genügt ihnen nicht.
 - **Projekte unterstützen** – eine eigene Seite (Startseite, Modi-Menü, Direktlink
   `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
   selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
@@ -232,8 +243,9 @@ deutschen Namen zeigen weiter den englischen.
 
 ### Podcasts & Videos zu Orten
 
-Jede Ortskarte zeigt unter **Hören & Sehen**, welche Podcast-Folgen und Videos
-eine Bibelstelle behandeln, in der dieser Ort vorkommt:
+Der Modus **Hören & Sehen** stöbert durch alle Folgen, jede Ortskarte zeigt die
+zu ihrem Ort. Gemeinsame Grundlage ist ein Index, der Bibelstellen aus den
+Folgentiteln in Orte auflöst:
 
 ```bash
 npm run media            # baut aus data/media/raw/*.xml
@@ -259,8 +271,33 @@ Quellen stehen in `data/media/sources.json`, die Feeds werden als XML unter
 reproduzierbar läuft. **BibleProject** braucht keinen Feed: je Buch eine
 Übersichtsseite, deren URL sich aus dem Buchkürzel baut.
 
-`public/data/media.json` wird erst geladen, wenn jemand eine Ortskarte öffnet -
-der Index wächst mit jeder Staffel und gehört nicht in den Startpfad.
+`public/data/media.json` wird erst geladen, wenn jemand eine Ortskarte oder den
+Modus öffnet - der Index wächst mit jeder Staffel und gehört nicht in den
+Startpfad. Der Modus dreht ihn beim Öffnen einmal um (`placesByEpisode`), denn
+gespeichert ist nur die Richtung Ort → Folgen.
+
+Was der Index nicht behauptet: dass eine genannte Stelle das Thema der Folge
+ist. Eine Predigt, die Jerusalem im Vorbeigehen zitiert, steht damit unter
+Jerusalem - der Hinweis darauf steht im Modus unter der Liste.
+
+### Kurzformen der Bibelbücher
+
+Die vollen Namen stehen in `src/data/books.ts`. Was sich daraus nicht ableiten
+lässt – `1Mo`, `Klgl`, `Offb`, `Apg` –, steht in **`src/data/bookAliases.json`**,
+und zwar nur dort: Suche (`src/lib/parseRef.ts`), Stammbaum-Referenzen
+(`src/lib/bookAbbr.ts`) und der Medien-Build (`scripts/lib/bibleref.mjs`) lesen
+alle dieselbe Datei.
+
+Zwei Listen, weil die Lage entscheidet:
+
+- **`text`** – im Fließtext eindeutig. `Ri 4` in einem Folgentitel meint Richter.
+- **`typed`** – nur dort, wo jemand einen Buchnamen *eingibt* und sonst nichts
+  danebensteht. `Am 3` ist im Suchfeld Amos, in einem Satz aber fast immer
+  „am 3.". Dasselbe gilt für `Hi`, `Off` und `1Th`.
+
+```bash
+npm run check:aliases   # unbekanntes Buch, doppelte Kurzform, zu kurz, überflüssig
+```
 
 ### Reisen & Geschichten
 

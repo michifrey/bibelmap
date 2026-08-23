@@ -7,7 +7,8 @@
 //   "1. Könige 18 und 19"                          -> 1Kgs 18, 1Kgs 19
 //
 // The book lexicon is derived from src/data/books.ts so the two never drift
-// apart; only irregular short forms are listed by hand below.
+// apart; the irregular short forms come from src/data/bookAliases.json, the
+// same file the app itself reads.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -16,69 +17,23 @@ import { fileURLToPath } from 'node:url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BOOKS_TS = path.resolve(__dirname, '..', '..', 'src', 'data', 'books.ts');
 
-/** Short forms that are not mechanically derivable from the full names. */
-const EXTRA_ALIASES = {
-  Gen: ['1Mo', '1 Mo'],
-  Exod: ['2Mo', '2 Mo', 'Ex'],
-  Lev: ['3Mo', '3 Mo', 'Lev'],
-  Num: ['4Mo', '4 Mo', 'Num'],
-  Deut: ['5Mo', '5 Mo', 'Dtn', 'Dt'],
-  Josh: ['Jos'],
-  Judg: ['Ri'],
-  '1Sam': ['1Sam', '1 Sam'],
-  '2Sam': ['2Sam', '2 Sam'],
-  '1Kgs': ['1Kön', '1 Kön', '1Kge'],
-  '2Kgs': ['2Kön', '2 Kön', '2Kge'],
-  '1Chr': ['1Chr', '1 Chr'],
-  '2Chr': ['2Chr', '2 Chr'],
-  Neh: ['Neh'],
-  Ps: ['Psalm', 'Ps'],
-  Prov: ['Spr'],
-  Eccl: ['Pred', 'Koh', 'Kohelet'],
-  Song: ['Hld', 'Hoheslied'],
-  Isa: ['Jes'],
-  Jer: ['Jer'],
-  Lam: ['Klgl'],
-  Ezek: ['Hes', 'Ez'],
-  Dan: ['Dan'],
-  Hos: ['Hos'],
-  Obad: ['Obd'],
-  Jonah: ['Jona'],
-  Mic: ['Mi'],
-  Nah: ['Nah'],
-  Hab: ['Hab'],
-  Zeph: ['Zef'],
-  Hag: ['Hag'],
-  Zech: ['Sach'],
-  Mal: ['Mal'],
-  Matt: ['Mt', 'Matth'],
-  Mark: ['Mk', 'Mark'],
-  Luke: ['Lk', 'Luk'],
-  John: ['Joh', 'Jh'],
-  Acts: ['Apg', 'Apostelgesch'],
-  Rom: ['Röm', 'Rö'],
-  '1Cor': ['1Kor', '1 Kor'],
-  '2Cor': ['2Kor', '2 Kor'],
-  Gal: ['Gal'],
-  Eph: ['Eph'],
-  Phil: ['Phil', 'Php'],
-  Col: ['Kol'],
-  '1Thess': ['1Thess', '1 Thess'],
-  '2Thess': ['2Thess', '2 Thess'],
-  '1Tim': ['1Tim', '1 Tim'],
-  '2Tim': ['2Tim', '2 Tim'],
-  Titus: ['Tit'],
-  Phlm: ['Phlm', 'Philem'],
-  Heb: ['Hebr', 'Heb'],
-  Jas: ['Jak'],
-  '1Pet': ['1Petr', '1 Petr', '1Pet'],
-  '2Pet': ['2Petr', '2 Petr', '2Pet'],
-  '1John': ['1Joh', '1 Joh'],
-  '2John': ['2Joh', '2 Joh'],
-  '3John': ['3Joh', '3 Joh'],
-  Jude: ['Jud'],
-  Rev: ['Offb', 'Apk'],
-};
+/**
+ * Short forms that are not mechanically derivable from the full names. Sie
+ * stehen in `src/data/bookAliases.json` – derselben Datei, aus der die
+ * Oberfläche liest, damit die beiden Wege nicht auseinanderlaufen.
+ *
+ * Hier gilt nur die Liste `text`: was im Fließtext eindeutig ist. Formen wie
+ * „Am" oder „Hi" stehen unter `typed` und bleiben draußen, denn „am 3." ist
+ * ein deutsches Datum und keine Amos-Stelle.
+ */
+const ALIAS_FILE = path.resolve(__dirname, '..', '..', 'src', 'data', 'bookAliases.json');
+
+const EXTRA_ALIASES = Object.fromEntries(
+  Object.entries(JSON.parse(fs.readFileSync(ALIAS_FILE, 'utf8'))).map(([osis, e]) => [
+    osis,
+    e.text ?? [],
+  ]),
+);
 
 /** Read the book table out of src/data/books.ts without importing TypeScript. */
 export function loadBooks() {

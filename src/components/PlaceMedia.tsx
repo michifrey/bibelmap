@@ -94,6 +94,14 @@ export default function PlaceMedia({ place }: { place: Place }) {
           );
         })}
       </div>
+
+      {/* Der Weg in den eigenen Modus – dort liegen alle Folgen, nicht nur die zu diesem Ort. */}
+      <a
+        href={`#hoeren=ort,${place.id}`}
+        className="mt-2 block bg-surface/50 px-2.5 py-2 text-[11.5px] font-medium text-white transition hover:bg-deepest"
+      >
+        {t('mediaBrowse')} →
+      </a>
     </div>
   );
 }

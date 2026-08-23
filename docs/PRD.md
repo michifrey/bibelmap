@@ -302,7 +302,48 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [x] Nur Siedlungen, nichts unter 1,5 km (Tore und Stadtviertel teilen die
       Koordinaten ihres Ortes); ausgewählt nach Bedeutung, gezeigt nach Nähe.
 
-### 4.19 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.19 Hören & Sehen — P2 ✅
+
+- [x] Eigener Modus über **alle 473 Folgen** der vier Quellen, filterbar nach
+      Quelle, Buch, Epoche und Freitext; die Suche greift auch auf Ortsnamen zu
+      und zieht deren Folgen herein.
+- [x] Die Zahlen an den Quellenknöpfen zählen die **übrige** Auswahl mit, nicht
+      nur die eigene – sonst zeigte jede Quelle nach dem Klick nur sich selbst.
+- [x] Verknüpfung in **beide Richtungen**: unter jeder Folge stehen ihre Orte
+      (Klick → Karte), jede Ortskarte verlinkt zurück in den gefilterten Modus.
+- [x] Verlinkbar: `#hoeren`, `#hoeren=<quelle>`, `#hoeren=ort,<ortsid>`.
+- [x] Ehrlich bleiben: eine genannte Bibelstelle ist nicht zwingend das Thema
+      der Folge – der Hinweis steht unter der Liste, nicht im Kleingedruckten.
+
+### 4.20 Bildnachweis vollständig — P1 ✅
+
+- [x] Jedes Bild nennt **Urheber und Lizenz** – in der Ortskarte wie im
+      Kartenfenster. Die Lizenz verlinkt auf ihren Text, der Urheber auf die
+      Dateiseite; ein Titel sagt in der jeweiligen Sprache, was sie verlangt.
+- [x] Die 386 Orte ohne eigenes Bild holen Urheber und Lizenz beim
+      Laufzeit-Rückfall über die Commons-API (`extmetadata`) nach – bisher stand
+      dort nur „Wikimedia Commons" und gar keine Lizenz.
+- [x] Der Urheber kommt von Commons als HTML; er wird als **Text** gelesen, nie
+      eingesetzt.
+- [x] Unbekannte Kürzel werden weder verschwiegen noch geraten: sie stehen so
+      da, wie sie in den Daten stehen, mit Verweis auf die Dateiseite.
+
+### 4.21 Buchkürzel an einer Stelle — P2 ✅
+
+- [x] Die Kurzformen der Bibelbücher standen an **drei** Stellen im Repo
+      (`parseRef.ts`, `bookAbbr.ts`, `scripts/lib/bibleref.mjs`). Jetzt an
+      einer: `src/data/bookAliases.json`, gelesen von allen dreien.
+- [x] Zwei Listen, weil die Lage entscheidet: `text` gilt überall, `typed` nur
+      dort, wo jemand einen Buchnamen eingibt – „Am 3" ist im Suchfeld Amos, im
+      Fließtext fast immer „am 3.".
+- [x] `npm run check:aliases` prüft die Liste: unbekanntes Buchkürzel, dieselbe
+      Kurzform für zwei Bücher, zu kurze Formen, überflüssige Wiederholung des
+      vollen Namens.
+- [x] Nachgewiesen unverändert: `media.json` nach dem Neubau **byte-identisch**,
+      alle 268 bisherigen Kurzformen lösen auf dasselbe Buch auf, alle 325
+      Stammbaum-Referenzen ebenso.
+
+### 4.22 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
@@ -360,6 +401,9 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v1.0** | **Bibeltext eingebettet** (4.7) inkl. Ort-im-Text-Verknüpfung, Tastatur | ✅ erledigt |
 | **v0.3** | Suche über Referenzen (4.3/4.15), State in URL (4.15), reduzierte Bewegung + Escape | ✅ erledigt |
 | **v0.4** | Reisen & Geschichten (4.12), Mission & Ausbreitung (4.13), Bibelquiz (4.14), Offline (4.16), Handout (4.17), Nachbarorte (4.18), Code-Splitting | ✅ erledigt |
+| **v0.5** | Hören & Sehen als eigener Modus (4.19) mit Verknüpfung in beide Richtungen | ✅ erledigt |
+| **v0.6** | Bildnachweis mit Lizenz (4.20) | ✅ erledigt |
+| **v0.7** | Buchkürzel an einer Stelle (4.21) | ✅ erledigt |
 | **offen** | 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
@@ -383,13 +427,9 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 
 ## 10. Offene Punkte (v0.3)
 
-- Lizenz je Wikidata-Bild aktuell nicht angezeigt (nur „Wikimedia Commons" +
-  Link zur Dateiseite, wo die Lizenz steht).
 - BibleProject-Guide-Slugs sind heuristisch (`book-of-<name>` + Gruppen-Override);
   einzelne selten gruppierte Bücher könnten ins Leere zeigen → bei Bedarf in
   `bibleProjectUrl` nachpflegen.
 - **3-D-Gelände**: Leaflet kann die Karte nicht kippen. Ein Umstieg auf MapLibre
   würde Terrain und Neigung erlauben, betrifft aber alle fünf Kartenansichten –
   bewusst zurückgestellt.
-- Die Kurzformen der Bibelbücher stehen zweimal im Repo (`src/lib/parseRef.ts`
-  für die Oberfläche, `scripts/lib/bibleref.mjs` für den Build).

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
+import MapPanel from './MapPanel';
+import { eraForYear } from '../data/eras';
 import {
   formatYear,
   loadBorders,
@@ -17,6 +19,10 @@ interface Props {
   year: number;
   onYear: (year: number) => void;
   onClose: () => void;
+  /** Era filter, shared with the timeline this panel replaces. */
+  era: string | null;
+  onEra: (eraId: string | null) => void;
+  eraCounts: Record<string, number>;
   /** Mobile-only: collapsed by default; desktop always shows the band. */
   open?: boolean;
   onToggle?: () => void;
@@ -41,7 +47,17 @@ function stepSnapshot(data: BorderData, year: number, dir: 1 | -1): number {
   return data.years[Math.max(0, i - 1)];
 }
 
-export default function YearSlider({ lang, year, onYear, onClose, open = false, onToggle }: Props) {
+export default function YearSlider({
+  lang,
+  year,
+  onYear,
+  onClose,
+  era,
+  onEra,
+  eraCounts,
+  open = false,
+  onToggle,
+}: Props) {
   const t = useT();
   const [data, setData] = useState<BorderData | null>(null);
 
@@ -53,29 +69,17 @@ export default function YearSlider({ lang, year, onYear, onClose, open = false, 
     };
   }, []);
 
+  const atEra = eraForYear(year);
   const snapshot = data ? snapshotFor(data, year) : null;
   const polities = data && snapshot !== null ? (data.byYear[String(snapshot)] ?? []) : [];
 
-  return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-[3.75rem] z-[1100] flex justify-center p-2 sm:bottom-0 sm:p-4">
-      <div className="bm-panel pointer-events-auto w-full max-w-5xl p-3 sm:p-4">
-        {/* On a phone the year is too big to share a line with the label and the
-            close button, so it wraps onto its own centred row. */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-          <button onClick={onToggle} className="order-1 flex items-center gap-1.5 sm:pointer-events-none">
-            <span className="bm-eyebrow whitespace-nowrap">{t('empires')}</span>
-            <svg
-              viewBox="0 0 24 24"
-              className={`h-4 w-4 text-white/60 transition-transform sm:hidden ${open ? '' : 'rotate-180'}`}
-              fill="currentColor"
-            >
-              <path d="M7 14l5-5 5 5z" />
-            </svg>
-          </button>
-
-          {/* the year is the headline of this panel; the arrows step from one
-              atlas plate to the next, the slider scrubs freely between them */}
-          <div className="order-3 flex w-full items-center justify-center gap-2 sm:order-2 sm:ml-auto sm:w-auto">
+  // On a phone the year is too big to share a line with the label and the
+  // close button, so it wraps onto its own centred row.
+  const actions = (
+    <>
+      {/* the year is the headline of this panel; the arrows step from one
+          atlas plate to the next, the slider scrubs freely between them */}
+      <div className="order-3 flex w-full items-center justify-center gap-2 sm:order-2 sm:ml-auto sm:w-auto">
             <button
               onClick={() => data && onYear(stepSnapshot(data, year, -1))}
               disabled={!data || snapshot === data.years[0]}
@@ -99,17 +103,20 @@ export default function YearSlider({ lang, year, onYear, onClose, open = false, 
                 <path d="M9 5l7 7-7 7z" />
               </svg>
             </button>
-          </div>
+      </div>
 
-          <button
-            onClick={onClose}
-            className="bm-btn bm-btn-ghost order-2 ml-auto px-3 py-1.5 text-[11px] sm:order-3 sm:ml-0"
-          >
-            {t('bordersOff')}
-          </button>
-        </div>
+      <button
+        onClick={onClose}
+        className="bm-btn bm-btn-ghost order-2 ml-auto px-3 py-1.5 text-[11px] sm:order-3 sm:ml-0"
+      >
+        {t('bordersOff')}
+      </button>
+    </>
+  );
 
-        <div className={`${open ? 'block' : 'hidden'} sm:block`}>
+  return (
+    <MapPanel title={t('empires')} open={open} onToggle={onToggle} actions={actions}>
+      <>
           {/* the track — ticks mark the years the atlas actually has a map for */}
           <div className="relative mt-3 h-9">
             <div className="pointer-events-none absolute inset-x-0 top-4 h-px bg-white/15" />
@@ -146,6 +153,35 @@ export default function YearSlider({ lang, year, onYear, onClose, open = false, 
             </span>
           </div>
 
+          {/* the era this year falls in — the filter the timeline would offer,
+              kept reachable while the timeline is swapped out for this panel */}
+          <div className="mt-2.5 flex flex-wrap items-center gap-2 border-t border-white/10 pt-2.5">
+            {atEra ? (
+              <button
+                onClick={() => onEra(era === atEra.id ? null : atEra.id)}
+                aria-pressed={era === atEra.id}
+                className="flex items-center gap-2 px-2.5 py-1 transition"
+                style={{
+                  background: era === atEra.id ? atEra.color : `${atEra.color}26`,
+                  outline: era === atEra.id ? `1px solid ${atEra.color}` : 'none',
+                }}
+              >
+                <i className="block h-2 w-2 flex-none" style={{ background: atEra.color }} />
+                <span className="text-xs font-bold text-white">{lang === 'de' ? atEra.de : atEra.en}</span>
+                <span className="text-[11px] text-white/70">
+                  {eraCounts[atEra.id] ?? 0} {t('places')}
+                </span>
+              </button>
+            ) : (
+              <span className="text-[11px] text-white/45">{t('betweenEras')}</span>
+            )}
+            {era !== null && (
+              <button onClick={() => onEra(null)} className="bm-btn bm-btn-ghost px-2.5 py-1 text-[11px]">
+                {t('allEras')}
+              </button>
+            )}
+          </div>
+
           {/* legend: what is on the map right now */}
           <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-white/10 pt-2.5">
             {snapshot !== null && snapshot !== year && (
@@ -161,9 +197,8 @@ export default function YearSlider({ lang, year, onYear, onClose, open = false, 
             ))}
           </div>
 
-          <p className="mt-2 text-[10.5px] leading-snug text-white/40">{t('bordersNote')}</p>
-        </div>
-      </div>
-    </div>
+        <p className="mt-2 text-[10.5px] leading-snug text-white/40">{t('bordersNote')}</p>
+      </>
+    </MapPanel>
   );
 }

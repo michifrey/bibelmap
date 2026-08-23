@@ -4,6 +4,7 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { booksForPlace, erasForPlace, placeName, placeNames } from '../lib/places';
 import { formatKm } from '../lib/route';
+import { licenseInfo } from '../lib/imageCredit';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { ERA_BY_ID, ERAS } from '../data/eras';
 import PlaceThumb from './PlaceThumb';
@@ -49,6 +50,7 @@ function SourceLink({ href, children }: { href: string; children: React.ReactNod
 export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlace, onClose }: Props) {
   const t = useT();
   const [img, setImg] = useState<PlaceImage | null>(place.img);
+  const license = licenseInfo(img?.license ?? null, lang);
   const grouped = useMemo(() => groupByBook(place.verses), [place]);
   const eras = useMemo(() => {
     const ids = new Set(erasForPlace(place));
@@ -94,14 +96,35 @@ export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlac
           </button>
         </div>
         {img?.credit && (
-          <a
-            href={img.creditUrl ?? '#'}
-            target="_blank"
-            rel="noreferrer"
-            className="absolute bottom-1 right-2 bg-black/45 px-1.5 py-0.5 text-[10px] text-white/90"
-          >
-            © {img.credit}
-          </a>
+          <div className="absolute bottom-1 right-2 flex max-w-[calc(100%-1rem)] items-center gap-1 bg-black/55 px-1.5 py-0.5 text-[10px] text-white/90">
+            <a
+              href={img.creditUrl ?? '#'}
+              target="_blank"
+              rel="noreferrer"
+              className="truncate hover:text-gold"
+              title={img.credit}
+            >
+              © {img.credit}
+            </a>
+            {/* Die Lizenz gehört dazu: fast alle Bilder stehen unter einer, die
+                nicht nur den Namen, sondern auch sie selbst genannt haben will. */}
+            {license &&
+              (license.url ? (
+                <a
+                  href={license.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-none border-l border-white/25 pl-1 hover:text-gold"
+                  title={license.hint}
+                >
+                  {license.label}
+                </a>
+              ) : (
+                <span className="flex-none border-l border-white/25 pl-1" title={license.hint}>
+                  {license.label}
+                </span>
+              ))}
+          </div>
         )}
       </div>
 

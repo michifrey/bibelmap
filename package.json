@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
+    "check:aliases": "node scripts/check-aliases.mjs",
     "preview": "vite preview",
     "data": "node scripts/build-data.mjs",
     "text": "node scripts/build-text.mjs",
