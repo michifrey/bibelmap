@@ -402,6 +402,13 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       beide Richtungen – aus beiden Modi ein **3D**-Knopf, aus dem Gelände
       zurück zu Text, Stellen und Entfernungen. Eine Route, die es nicht gibt,
       verschwindet aus der Adresse statt auf nichts zu zeigen.
+- [x] **Station für Station** mit zwei Pfeilen – der einzige Weg zu den
+      Stationen ohne Maus, denn die Punkte liegen in einer WebGL-Leinwand.
+      Feste Breite der Anzeige, damit die Pfeile beim Namenswechsel stehen
+      bleiben; am Anfang und Ende schalten sie sich ab.
+- [x] MapLibre beschriftet seine Bedienelemente selbst – jetzt in der gewählten
+      Sprache („Näher heran" statt „Zoom in", „Karte" statt „Map"). Die
+      A11y-Prüfung sah das nicht: sie zählt Namen, nicht deren Sprache.
 - [x] **Schräg ↔ von oben** als Knopf, nicht nur als Geste: Kippen verlangt auf
       dem Telefon zwei Finger senkrecht: unauffindbar, und damit bliebe die
       Karte dort für immer schräg. Der Knopf folgt der Karte, wer doch mit den

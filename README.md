@@ -182,7 +182,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Route folgt dem Gelände, die Stationen sind anklickbar, und ein Knopf führt
   zurück zu Text, Stellen und Entfernungen. **Schräg ↔ von oben** lässt sich mit
   einem Knopf umschalten – auf dem Telefon geht Kippen sonst nur mit zwei
-  Fingern, und das findet niemand von selbst. Umgekehrt steht in beiden Modi ein
+  Fingern, und das findet niemand von selbst. Zwei Pfeile führen **Station für
+  Station** durch die Route; die Punkte selbst liegen in einer Leinwand und sind
+  mit der Tastatur nicht erreichbar, die Pfeile schon. Die Karte beschriftet
+  ihre eigenen Bedienelemente in der gewählten Sprache. Umgekehrt steht in beiden Modi ein
   **3D**-Knopf – dort sieht man, warum ein Weg über einen Pass führt und nicht
   geradeaus.
   Wer wissen will, warum ein Weg über einen Pass führt und nicht geradeaus,
