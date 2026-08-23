@@ -26,6 +26,13 @@ export interface Route {
    * `#hoeren=keller` die einer Quelle.
    */
   media?: { source?: string; place?: string; ref?: { osis: string; chapter: number } };
+  /**
+   * Reiter + Auswahl (Kirchengeschichte). `#kirche=vater,augustinus` und
+   * `#kirche=konzil,nicaea1`; ohne Angabe steht der Modus auf seinem Anfang.
+   */
+  church?: { tab: 'fathers' | 'councils'; id?: string };
+  /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
+  compare?: string;
 }
 
 /** Schlüssel im Hash → Modus ohne weitere Angaben. */
@@ -33,8 +40,6 @@ const MODE_KEYS: Record<string, Mode> = {
   unterstuetzen: 'support',
   heilsgeschichte: 'history',
   quiz: 'quiz',
-  kirche: 'church',
-  vergleich: 'compare',
 };
 
 const KEY_BY_MODE: Record<string, string> = Object.fromEntries(
@@ -83,6 +88,15 @@ export function parseHash(hash: string): Route | null {
             ? { phase: args[0], journey: args[1] }
             : { phase: args[0], event: args[1] },
       };
+    case 'vergleich':
+      return args[0]
+        ? { view: 'map', mode: 'compare', compare: args[0] }
+        : { view: 'map', mode: 'compare' };
+    case 'kirche': {
+      if (!args[0]) return { view: 'map', mode: 'church' };
+      const tab = args[0] === 'konzil' ? ('councils' as const) : ('fathers' as const);
+      return { view: 'map', mode: 'church', church: { tab, id: args[1] } };
+    }
     case 'hoeren': {
       if (!args[0]) return { view: 'map', mode: 'media' };
       if (args[0] === 'ort') return { view: 'map', mode: 'media', media: { place: args[1] } };
@@ -121,6 +135,15 @@ export function formatRoute(route: Route): string {
     // In der Reisephase steht die Reise in der Adresse, sonst das Ereignis.
     const detail = phase === 'journeys' ? journey : event;
     return detail ? `#mission=${phase},${detail}` : `#mission=${phase}`;
+  }
+  if (mode === 'compare') {
+    return route.compare ? `#vergleich=${route.compare}` : '#vergleich';
+  }
+  if (mode === 'church') {
+    const c = route.church;
+    if (!c) return '#kirche';
+    const key = c.tab === 'councils' ? 'konzil' : 'vater';
+    return c.id ? `#kirche=${key},${c.id}` : '#kirche';
   }
   if (mode === 'media') {
     const m = route.media;

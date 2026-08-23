@@ -279,6 +279,23 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       Hand geänderte Adressen werden übernommen.
 - [x] **Link**-Knopf in Ortskarte und Reise-Modi kopiert die aktuelle Adresse.
 
+### 4.15b Kirchengeschichte verlinkbar — P2 ✅
+
+- [x] `#kirche=vater,<id>` und `#kirche=konzil,<id>`; Reiter und Auswahl laufen
+      in der Adresse mit, der Zurück-Knopf führt zurück.
+- [x] Eine Angabe, die es nicht gibt, fällt auf den Anfang zurück und schreibt
+      das auch in die Adresse – lieber eine gültige Auswahl als ein leerer Modus.
+- [x] Der Querverweis aus dem Zeitbaum benutzt denselben Weg und hinterlässt
+      damit ebenfalls eine teilbare Adresse.
+
+### 4.15c Vergleich verlinkbar — P2 ✅
+
+- [x] `#vergleich=<id>` je Gestalt, Teilen-Knopf in der Kopfzeile, Zurück-Taste
+      führt zurück. Unbekannte Angaben fallen auf die erste Gestalt zurück.
+- [x] Damit hat **jeder** Modus eine Adresse: Karte, Lesen, Reisen, Mission,
+      Kirchengeschichte, Vergleich, Hören & Sehen, Quiz, Heilsgeschichte,
+      Unterstützen, Stammbaum und Graph.
+
 ### 4.16 Offline & installierbar — P1 ✅
 
 - [x] Service Worker mit zwei Caches: App samt Ortsdaten (sofort aus dem Cache,
@@ -323,6 +340,8 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       **Neueste** (nach Sendedatum). Was kein Datum hat, steht dann am Ende und
       sagt das auch – nicht am Anfang, wo eine leere Angabe wie „ganz neu"
       aussähe.
+- [x] Auf der Startseite als vierter Weg hinein (Karte 04) und in der Kopfzeile –
+      ein Modus, den man nur über das Modi-Menü findet, findet kaum jemand.
 - [x] Offline vollständig: der Medien-Index wird im Leerlauf mitgeholt und liegt
       damit im Cache des Service Workers – sonst stünde der Modus ohne Netz
       leer da, während jede andere Ansicht vollständig ist.

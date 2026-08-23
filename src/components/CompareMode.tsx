@@ -1,14 +1,19 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { findPlacesByNames } from '../lib/places';
 import { COMPARE, type CompareFigure } from '../data/compare';
+import ShareLink from './ShareLink';
 import MapView from './MapView';
 
 interface Props {
   places: Place[];
   lang: Lang;
+  /** Gestalt aus der Adresse. */
+  initial?: string | null;
+  /** Meldet die gewählte Gestalt, damit die Adresse mitläuft. */
+  onNavigate?: (id: string) => void;
   onExit: () => void;
 }
 
@@ -23,10 +28,18 @@ function RefCard({ title, color, refs }: { title: string; color: string; refs: s
   );
 }
 
-export default function CompareMode({ places, lang, onExit }: Props) {
+export default function CompareMode({ places, lang, initial, onNavigate, onExit }: Props) {
   const t = useT();
-  const [sel, setSel] = useState<CompareFigure>(COMPARE[0]);
+  // Was in der Adresse steht, muss es geben – sonst beginnt der Modus vorn.
+  const [sel, setSel] = useState<CompareFigure>(
+    COMPARE.find((f) => f.id === initial) ?? COMPARE[0],
+  );
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+
+  useEffect(() => {
+    onNavigate?.(sel.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sel]);
   const stops = useMemo(() => findPlacesByNames(places, sel.places ?? []), [places, sel]);
 
   return (
@@ -36,9 +49,13 @@ export default function CompareMode({ places, lang, onExit }: Props) {
           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="currentColor"><path d="M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z" stroke="currentColor" strokeWidth="1.6" fill="none"/></svg>
           <div className="font-display text-xl uppercase leading-none">{t('compareMode')}</div>
         </div>
-        <button onClick={onExit} className="bm-btn bm-btn-gold">
-          {t('exit')} ✕
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Die Gestalt steht im Hash – der Link führt genau zu ihr zurück. */}
+          <ShareLink className="bm-btn hidden sm:inline-flex" />
+          <button onClick={onExit} className="bm-btn bm-btn-gold">
+            {t('exit')} ✕
+          </button>
+        </div>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
