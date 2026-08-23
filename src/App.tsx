@@ -122,6 +122,7 @@ export default function App() {
   const [churchNav, setChurchNav] = useState<{ tab: 'fathers' | 'councils'; id?: string } | null>(
     INITIAL_ROUTE?.church ?? null,
   );
+  const [compareNav, setCompareNav] = useState<string | null>(INITIAL_ROUTE?.compare ?? null);
   // Mobile-only: bottom-sheet (search/detail) and timeline are collapsible so
   // the map stays usable on small screens. Desktop ignores these.
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -193,6 +194,7 @@ export default function App() {
       return;
     }
     if (m === 'church') setChurchNav(null);
+    if (m === 'compare') setCompareNav(null);
     if (m === 'media') setMediaNav(null);
     setMode(m);
   }
@@ -254,11 +256,23 @@ export default function App() {
           reading: readingNav ?? undefined,
           media: mediaNav ?? undefined,
           church: churchNav ?? undefined,
+          compare: compareNav ?? undefined,
         });
     if (hash === window.location.hash) return;
     ownHash.current = hash;
     window.history.replaceState(null, '', hash || window.location.pathname + window.location.search);
-  }, [atStart, view, mode, selected, journeyNav, missionNav, readingNav, mediaNav, churchNav]);
+  }, [
+    atStart,
+    view,
+    mode,
+    selected,
+    journeyNav,
+    missionNav,
+    readingNav,
+    mediaNav,
+    churchNav,
+    compareNav,
+  ]);
 
   /*
    * Escape schließt, was gerade offen ist – von außen nach innen: erst der
@@ -297,6 +311,7 @@ export default function App() {
       setReadingNav(route.reading ?? null);
       setMediaNav(route.media ?? null);
       setChurchNav(route.church ?? null);
+      setCompareNav(route.compare ?? null);
       pendingPlace.current = route.placeId ?? null;
       if (!route.placeId) setSelected(null);
       setNavEpoch((n) => n + 1);
@@ -706,7 +721,14 @@ export default function App() {
             )}
             {mode === 'compare' && (
               <Suspense fallback={<ModeFallback />}>
-                <CompareMode places={places} lang={lang} onExit={() => setMode(null)} />
+                <CompareMode
+                  key={`compare-${navEpoch}`}
+                  places={places}
+                  lang={lang}
+                  initial={compareNav}
+                  onNavigate={setCompareNav}
+                  onExit={() => setMode(null)}
+                />
               </Suspense>
             )}
             {mode === 'support' && (
