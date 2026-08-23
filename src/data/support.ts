@@ -120,7 +120,7 @@ export const SUPPORT_PROJECTS: SupportProject[] = [
     kind: 'data',
     role: {
       de: 'Der Bibeltext im Entdeckermodus: Lutherbibel 1912 (OSIS) und World English Bible (USFX), aufbereitet und gepflegt.',
-      en: 'The Bible text in presentation mode: Luther 1912 (OSIS) and the World English Bible (USFX), prepared and maintained.',
+      en: 'The Bible text in explorer mode: Luther 1912 (OSIS) and the World English Bible (USFX), prepared and maintained.',
     },
     credit: {
       de: 'Sammlung unter MIT-Lizenz; die enthaltenen Übersetzungen sind gemeinfrei.',
@@ -140,18 +140,17 @@ export const SUPPORT_PROJECTS: SupportProject[] = [
     kind: 'data',
     role: {
       de: 'Die englische Übersetzung, die im Entdeckermodus neben dem Luthertext steht.',
-      en: 'The English translation shown beside the Luther text in presentation mode.',
+      en: 'The English translation shown beside the Luther text in explorer mode.',
     },
     credit: {
       de: 'Die World English Bible ist gemeinfrei und darf ohne Einschränkung weitergegeben werden.',
       en: 'The World English Bible is public domain and may be shared without restriction.',
     },
     home: 'https://ebible.org/',
-    donate: 'https://ebible.org/about.php',
-    donateLabel: { de: 'Spenden-Info', en: 'How to give' },
+    donate: 'https://ebible.org/give.php',
     donateNote: {
-      de: 'Spenden laufen über eine Partnerorganisation; die Über-Seite nennt den Weg.',
-      en: 'Gifts run through a partner organisation; the about page names the route.',
+      de: 'Spenden laufen über die Partnerorganisation World Outreach Ministries; die Seite nennt den Weg.',
+      en: 'Gifts run through the partner organisation World Outreach Ministries; the page names the route.',
     },
   },
   {
