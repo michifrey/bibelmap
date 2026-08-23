@@ -69,7 +69,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   und Tagesmärsche zur vorigen, ein Klick auf *Auf Karte* springt zur Ortskarte.
 - **Kirchengeschichte-Modus** – **Kirchenväter** (westlich/lateinisch ·
   östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
-  7 ökumenischen) auf der Karte. Paulus’ Reisen stehen nicht hier, sondern in
+  7 ökumenischen) auf der Karte; jede Person und jedes Konzil hat eine eigene
+  Adresse (`#kirche=vater,augustinus`, `#kirche=konzil,chalcedon`). Paulus’ Reisen stehen nicht hier, sondern in
   *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
 - **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
   Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
@@ -97,7 +98,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
   `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`, `#hoeren=keller`
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
-  `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel). Der Hash läuft beim
+  `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#kirche=vater,augustinus`
+  und `#kirche=konzil,chalcedon`. Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
 - **Hören & Sehen** – ein eigener Modus über alle **473 Folgen** der vier

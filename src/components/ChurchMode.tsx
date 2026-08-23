@@ -7,12 +7,16 @@ import { useT } from '../i18n';
 import {
   FATHERS, COUNCILS, TRADITION_COLOR, TRADITION_LABEL, type Tradition,
 } from '../data/church';
+import ShareLink from './ShareLink';
 
 interface Props {
   lang: Lang;
   onExit: () => void;
   /** Open straight onto a church father (e.g. coming from the time tree). */
-  initialFatherId?: string | null;
+  /** Vorauswahl aus der Adresse oder aus dem Zeitbaum. */
+  initial?: { tab: 'fathers' | 'councils'; id?: string } | null;
+  /** Meldet Reiter und Auswahl, damit die Adresse mitläuft. */
+  onNavigate?: (nav: { tab: 'fathers' | 'councils'; id?: string }) => void;
   /** Jump to this father in the time tree. */
   onOpenInTree?: (personId: string) => void;
   /** Paul's journeys live in the Mission & spread view — send people there. */
@@ -23,11 +27,20 @@ type Tab = 'fathers' | 'councils';
 
 const CARTO = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
 
-export default function ChurchMode({ lang, onExit, initialFatherId, onOpenInTree, onOpenMission }: Props) {
+export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenInTree, onOpenMission }: Props) {
   const t = useT();
-  const startFather = initialFatherId && FATHERS.some((f) => f.id === initialFatherId) ? initialFatherId : null;
-  const [tab, setTab] = useState<Tab>('fathers');
-  const [sel, setSel] = useState<string | null>(startFather ?? FATHERS[0].id);
+  // Was aus der Adresse kommt, muss es auch geben – sonst steht der Modus auf
+  // seinem Anfang, statt auf eine leere Auswahl zu zeigen.
+  const startTab: Tab = initial?.tab === 'councils' ? 'councils' : 'fathers';
+  const list = startTab === 'councils' ? COUNCILS : FATHERS;
+  const startId = initial?.id && list.some((x) => x.id === initial.id) ? initial.id : list[0].id;
+  const [tab, setTab] = useState<Tab>(startTab);
+  const [sel, setSel] = useState<string | null>(startId);
+
+  useEffect(() => {
+    onNavigate?.({ tab, id: sel ?? undefined });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab, sel]);
 
   const mapEl = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -118,9 +131,13 @@ markVectorsDecorative(map.getContainer());
           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 3v18M7 8h10M5 21h14" /></svg>
           <div className="font-display text-xl uppercase leading-none">{t('churchMode')}</div>
         </div>
-        <button onClick={onExit} className="bm-btn bm-btn-gold">
-          {t('exit')} ✕
-        </button>
+        <div className="flex items-center gap-2">
+          {/* Der Stand steht jetzt im Hash – also lässt er sich auch teilen. */}
+          <ShareLink className="bm-btn hidden sm:inline-flex" />
+          <button onClick={onExit} className="bm-btn bm-btn-gold">
+            {t('exit')} ✕
+          </button>
+        </div>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
