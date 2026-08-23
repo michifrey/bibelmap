@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import { localizeMap } from '../lib/mapLocale';
+import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 
@@ -78,6 +80,7 @@ function icon(m: MissionMarker): L.DivIcon {
 }
 
 export default function MissionMap({ markers, routes, fit, focus, onSelect }: Props) {
+  const lang = useLang();
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
@@ -114,6 +117,14 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
       layerRef.current = null;
     };
   }, []);
+
+  // Leaflet beschriftet Zoom und Fenster selbst – auf Englisch. Diese eine
+  // Zeile holt die Namen aus derselben Sprachdatei wie der Rest.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    return localizeMap(map, lang);
+  }, [lang]);
 
   // Routen, Bögen und Punkte neu zeichnen
   useEffect(() => {

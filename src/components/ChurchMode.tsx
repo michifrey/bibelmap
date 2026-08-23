@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
+import { localizeMap } from '../lib/mapLocale';
 import { markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import type { Lang } from '../i18n';
@@ -63,6 +64,14 @@ export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenIn
       mapRef.current = null;
     };
   }, []);
+
+  // Leaflet beschriftet Zoom und Fenster selbst – auf Englisch. Diese eine
+  // Zeile holt die Namen aus derselben Sprachdatei wie der Rest.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    return localizeMap(map, lang);
+  }, [lang]);
 
   // redraw overlay on tab / selection change
   useEffect(() => {

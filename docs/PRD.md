@@ -440,7 +440,18 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [x] Beim Gelände steht dabei, worauf man wartet: die Karte kommt einmalig
       als eigenes Paket (950 kB).
 
-### 4.26 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.26 Fremde Beschriftungen übersetzen — P2 ✅
+
+- [x] Leaflet und MapLibre beschriften ihre Bedienelemente selbst, auf
+      Englisch. Eine Stelle (`src/lib/mapLocale.ts`) setzt sie für alle sechs
+      Leaflet-Karten; die Geländekarte bekommt sie über MapLibres `locale`.
+- [x] Die A11y-Prüfung meldet fremdsprachige Namen jetzt als Befund. Vorher
+      konnte sie es nicht: sie zählt, **ob** ein Name da ist, nicht in welcher
+      Sprache – gegen den alten Stand meldet sie 11 von 14 Ansichten.
+- [x] Auf Englisch bleibt „Zoom in" stehen: übersetzt wird in die gewählte
+      Sprache, nicht stur ins Deutsche.
+
+### 4.27 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

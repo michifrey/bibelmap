@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
+import { localizeMap } from '../lib/mapLocale';
 import { flyOptions } from '../lib/motion';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
@@ -78,6 +79,14 @@ export default function QuizMode({ places, lang, onExit }: Props) {
       layerRef.current = null;
     };
   }, [level]);
+
+  // Leaflet beschriftet Zoom und Fenster selbst – auf Englisch. Diese eine
+  // Zeile holt die Namen aus derselben Sprachdatei wie der Rest.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    return localizeMap(map, lang);
+  }, [lang, level]);
 
   // Tipp auswerten, sobald er gesetzt ist
   useEffect(() => {

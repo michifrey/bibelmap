@@ -12,6 +12,15 @@
 // nicht benutzt – deshalb kein npm-Skript, sondern ein Aufruf von Hand.
 
 import { chromium } from 'playwright';
+
+/**
+ * Namen, die eine fremde Bibliothek mitbringt und die in einer deutschen
+ * Oberfläche stehen bleiben, wenn niemand sie übersetzt: Leaflet sagt „Zoom
+ * in", MapLibre „Map". Ein Name ist da – nur in der falschen Sprache, und
+ * genau das übersieht eine Prüfung, die bloß zählt, ob ein Name existiert.
+ */
+const FREMDE_NAMEN = /^(Zoom in|Zoom out|Close popup|Map|Map marker|Layers|Marker|Reset bearing|Find my location|Enable terrain|Disable terrain)$/i;
+
 const audit = () => {
   const out = [];
   for (const el of document.querySelectorAll('button, a, [role=button], input, iframe, img, svg')) {
@@ -22,12 +31,21 @@ const audit = () => {
     const name = (el.getAttribute('aria-label') || el.getAttribute('title') || el.getAttribute('alt') || el.textContent || '').trim();
     if (!name) out.push(tag + '.' + (el.className.toString().slice(0, 36) || '(ohne Klasse)'));
   }
+  // Zweiter Durchgang: benannt, aber englisch. Die Leinwand der Geländekarte
+  // trägt ihren Namen ebenfalls als aria-label, deshalb hier auch canvas.
+  for (const el of document.querySelectorAll('[aria-label], [title], canvas')) {
+    const name = (el.getAttribute('aria-label') || el.getAttribute('title') || '').trim();
+    if (name && window.__FREMD.test(name)) out.push('englisch: „' + name + '"');
+  }
   return out;
 };
 const base = process.argv[2] ?? 'http://localhost:5173';
 const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: 1440, height: 950 }, locale: 'de-DE' });
 const p = await ctx.newPage();
+await p.addInitScript((quelle) => {
+  window.__FREMD = new RegExp(quelle, 'i');
+}, FREMDE_NAMEN.source);
 const errs = [];
 let offen = 0;
 p.on('pageerror', (e) => errs.push(e.message));
