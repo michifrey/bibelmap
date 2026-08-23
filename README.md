@@ -26,7 +26,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   vorkommt, inkl. aller Bibelstellen. Gesucht wird auch in den **Reisen und in
   der Ausbreitung**: `Emmaus` findet den Ort *und* die Station im Weg nach
   Jerusalem, `Azusa` das Ereignis von 1906 – ein Klick springt an die passende
-  Stelle im jeweiligen Modus. Wer eine **Bibelstelle** eintippt (`Apg 13`,
+  Stelle im jeweiligen Modus. Auch die **Stammesgebiete** sind darunter:
+  `Sebulon` findet den Stamm, `Hebron` zusätzlich zum Ort die Antwort auf die
+  Frage, in wessen Gebiet er liegt, und `Reichsteilung` die Karte von 930. Wer eine **Bibelstelle** eintippt (`Apg 13`,
   `Mk 6,30`, `1. Mose 12`, `Acts 27`), bekommt die Orte dieses Kapitels und
   einen Weg direkt in den Bibeltext.
 - **Nachbarorte** – jede Ortskarte zeigt, was von dort aus **an einem Tag zu
@@ -35,8 +37,13 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   23 km NO). Ein Klick wechselt zum Nachbarn.
 - **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
   robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
-- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit** (Esri World
-  Imagery) und **Relief/„historisch"** (Esri Shaded Relief).
+- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit**
+  (Sentinel-2 cloudless von EOX – ein wolkenfreies Mosaik aus einem Jahr
+  Copernicus-Aufnahmen, 10 m je Bildpunkt) und **Relief/„historisch"**
+  (Terrain Light von EOX). Beide stehen unter CC-BY 4.0; die früheren
+  Esri-Kacheln verlangten außerhalb eines ArcGIS-Kontos einen Vertrag.
+  Antwortet ein fremder Kachelserver nicht, fällt die Karte auf die Nachtkarte
+  zurück und sagt, warum – statt eine leere Fläche zu zeigen.
 
 ### Erzählen
 
@@ -82,6 +89,44 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Calvin, Spurgeon, Bonhoeffer …). Verlauf von links nach rechts mit einer
   **Zeitschiene** unten; Knoten lassen sich aufklappen und zeigen per Klick
   Lebensdaten, Bibelstellen und eine Kurzbeschreibung. Umschalter **Karte ↔ Zeitbaum**.
+- **Das verteilte Land** – die Karte zum Stammbaum: die **zwölf Stämme Israels**
+  als Gebiete statt als Punkte (Josua 13–21). Die Grenzen teilen sich ihre
+  Eckpunkte, folgen der Küste, dem Jordan und dem Toten Meer und stoßen deshalb
+  aneinander, statt sich zu überlappen. Die Stammesnamen stehen wie auf einer
+  Atlasseite direkt im Gebiet – und treten von selbst zurück, wo das Gebiet auf
+  dem Bildschirm gerade zu klein für den Namen ist. Links stehen die Zwölf nach
+  **Müttern** geordnet (Lea, Rahel, Bilha, Silpa); ein Klick öffnet die Karte des
+  Stammes mit Namensbedeutung, **Los**, **Jakobs Segen** (1. Mose 49) und
+  **Mose-Segen** (5. Mose 33), den Orten im Gebiet und den **Nachbarstämmen** –
+  jeder davon ein Sprung weiter. Dazu die Sonderfälle, die eine reine Loskarte
+  verschweigt: **Levi** bekommt kein Land, sondern die sechs **Zufluchtsstädte**,
+  und **Dan** hält sein Los nicht, sondern zieht ans Nordende des Landes.
+  Umschaltbar zwischen Nacht-, Relief- und Satellitenkarte; die Völkertafel und
+  die Personen der Linie lassen sich darüberlegen.
+- **Was aus ihnen wurde** – dieselbe Karte in sechs Bildern, denn die Loskarte
+  zeigt einen einzigen Augenblick, und die Frage danach ist immer dieselbe: Was
+  wurde aus den zwölf Stämmen? Die Gebiete bleiben, die Farbe wechselt.
+  **um 1200** die Landnahme · **um 1150** was nach Richter 1 nie erobert wurde
+  (die Kette quer durch die Jesreel-Ebene und die Küste entlang) · **930** die
+  Reichsteilung, zehn Stämme gegen zwei, die Grenze quer durch Benjamin ·
+  **732** Assur nimmt Galiläa, die Küste und Gilead, vom Nordreich bleibt der
+  Kern um Samaria · **722** Samaria fällt, die zehn kehren nicht wieder ·
+  **586** Juda fällt – und kommt als einziger zurück. Die Liste links sortiert
+  die Stämme dann nicht mehr nach Müttern, sondern nach ihrem Ausgang, und ein
+  Pfeil zeigt, wohin die Verschleppung ging.
+- **Zeitdokumente zu einer Person** – die Personenkarte zeigt, was außerhalb der
+  Bibel von diesem Menschen erhalten ist: das Sanherib-Prisma zu Hiskia
+  („wie einen Vogel im Käfig"), die Tel-Dan-Stele zum „Haus Davids", die
+  Rationentafeln Babylons für den gefangenen Jojachin, Tacitus und Josephus zu
+  Jesus, die Gallio-Inschrift, an der die Chronologie des Paulus hängt, das
+  Prozessprotokoll Justins, das Wormser Edikt gegen Luther, die Gestapo-Akte
+  Bonhoeffers. Je Dokument: Art (Inschrift · Chronik · Akte · Brief · Papyrus …),
+  Datierung, was dort über die Person steht, Fundort bzw. Museum, ein Bild und
+  der Weg in den Artikel. **57 Personen, 115 Dokumente.**
+  Zwei Dinge stehen ausdrücklich dabei, damit niemand mehr herausliest, als da
+  steht: ob ein Dokument die Person **nennt** oder nur ihre Welt zeigt, und – wo
+  es nichts gibt (Abraham, Mose, Salomo, Josef von Nazaret) – dass es nichts
+  gibt. Bilder antiker Gestalten sind spätere Kunst; auch das steht an der Karte.
 
 ### Lernen & weitergeben
 
@@ -97,7 +142,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Papier in der Hand hat.
 - **Teilen & Deep-Links** – jede Ansicht hat eine Adresse: `#ort=a15257a`
   (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
-  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`, `#hoeren=keller`
+  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum=gebiete,juda,722`
+  (ein Stamm auf der Stammeskarte in einem bestimmten Jahr; `zeit` und `baum`
+  sind die beiden anderen Reiter), `#nachweise`, `#hoeren=keller`
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
   (Jerusalem im Gelände), `#kirche=vater,augustinus`
@@ -152,6 +199,16 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
   selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
   aus deren Arbeit die Seite besteht – je Projekt mit Beitrag und Nennung.
+- **Nachweise & Lizenzen** – die Rechtsseite zur Unterstützen-Seite (Modi-Menü,
+  Fußzeile der Startseite, Direktlink `#nachweise`): **29 Quellen** in sechs
+  Bereichen – Karte & Kacheln, Orte & Verweise, Bibeltext & Artikel, Bilder,
+  Hören & Sehen, Software & Schriften. Je Quelle steht da, was davon in der App
+  steckt, unter welcher **Lizenz** sie steht (verlinkt, mit dem, was die Lizenz
+  verlangt) und – wo eine Lizenz eine bestimmte Zeile fordert – diese
+  **Nachweiszeile im Wortlaut**. Material ohne freie Lizenz (YouTube, die
+  Podcast-Feeds, die verlinkten Lesedienste) ist als solches gekennzeichnet und
+  verlinkt auf die Bedingungen des Anbieters. Zum Schluss die Seite selbst: GPL-3.0, warum,
+  und wohin ein falscher Nachweis gemeldet wird.
 
 ## Entwicklung
 
@@ -166,8 +223,49 @@ npm run preview    # Build lokal anschauen
 
 Ein Workflow (`.github/workflows/deploy.yml`) baut und deployt automatisch bei jedem
 Push auf den Default-Branch. **Einmalig** in den Repo-Einstellungen aktivieren:
-*Settings → Pages → Source: GitHub Actions*. Der Build setzt `VITE_BASE=/bibelmap/`
-für das Project-Pages-Unterverzeichnis; lokal bleibt die Basis `/`.
+*Settings → Pages → Source: GitHub Actions*.
+
+Die Seite läuft unter der eigenen Domain **www.biblemap.ch** und damit an der
+Wurzel, nicht in einem Unterverzeichnis. Der Build braucht deshalb kein
+`VITE_BASE` mehr; die Umgebungsvariable bleibt in `vite.config.ts` nur als
+Notausgang, falls die Seite einmal wieder unter einem Pfad liegt.
+
+Die Domain steht **nicht** im Repo, sondern unter *Settings → Pages → Custom
+domain*. Eine `CNAME`-Datei wäre hier wirkungslos: wer über einen eigenen
+Actions-Workflow veröffentlicht, bei dem legt GitHub keine an und ignoriert eine
+vorhandene ([Doku][gh-cname]). Wer die Domain sucht, sucht sie also in den
+Einstellungen, nicht im Dateibaum.
+
+[gh-cname]: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
+
+DNS-Einträge bei `biblemap.ch` (Swizzonic):
+
+| Typ | Name | Wert |
+| --- | --- | --- |
+| CNAME | `www.biblemap.ch` | `michifrey.github.io.` |
+| A | `biblemap.ch` | `185.199.108.153` |
+| A | `biblemap.ch` | `185.199.109.153` |
+| A | `biblemap.ch` | `185.199.110.153` |
+| A | `biblemap.ch` | `185.199.111.153` |
+
+**Kein `@` als Name.** Viele Anleitungen schreiben `@` für die Wurzel; das
+Swizzonic-Panel führt Namen aber vollqualifiziert und legt daraus brav einen
+Host namens `@.biblemap.ch` an, den nie jemand aufruft. Der Fehler ist still –
+das Panel nimmt ihn an, und die Domain bleibt einfach tot.
+
+Die vier A-Records auf die Wurzel sind nicht doppelt gemoppelt: GitHub leitet
+`biblemap.ch` von dort auf `www.biblemap.ch` weiter, sonst liefe die nackte
+Domain ins Leere. `bibelmap.ch` – die deutsche Schreibweise – leitet per
+Weiterleitung des Registrars auf `https://www.biblemap.ch`; eine zweite Domain
+kann GitHub Pages nicht selbst bedienen.
+
+Die E-Mail-Einträge der Domain (MX, SPF-TXT, der SRV `_autodiscover` und die
+CNAMEs `autoconfig`, `imap`, `pop`, `smtp`) haben mit der Seite nichts zu tun
+und bleiben unangetastet.
+
+In *Settings → Pages* **Enforce HTTPS** anhaken, sobald das Zertifikat
+ausgestellt ist (dauert nach der DNS-Umstellung einige Minuten bis zu einer
+Stunde).
 
 ## Daten
 
@@ -199,6 +297,35 @@ OPEN_BIBLES=/tmp/open-bibles npm run text
 
 **Ortsbilder:** Orte ohne OpenBible-Foto, die eine Wikidata-ID haben, laden ihr Bild
 zur Laufzeit aus Wikidata (P18) → Wikimedia Commons nach (`src/lib/wikidataImage.ts`).
+
+### Zeitdokumente, Bilder und Artikel zu Personen
+
+`src/data/personSources.ts` sammelt zu den Personen des Zeitbaums, was außerhalb
+der Bibel von ihnen erhalten ist. Pro Dokument stehen Art, Datierung, Aussage,
+Aufbewahrungsort und ein Suchbegriff im Datensatz – **keine Bilder und keine
+Artikeltexte**. Beides holt `src/lib/wikipediaArticle.ts` zur Laufzeit über die
+MediaWiki-API (Einleitungsabsatz + Vorschaubild von Wikimedia Commons, gecacht
+im `sessionStorage`). Das Repository bleibt dadurch frei von Bilddateien und
+Lizenzfragen; ohne Netz fällt die Karte still auf reinen Text zurück.
+
+Zu jedem Bild holt die App auch **Urheber und Lizenz** von der Commons-Dateiseite
+und zeigt beides an (`commonsFileCredit()` in `src/lib/imageCredit.ts` – dieselbe
+Stelle, die schon die Ortsbilder nachweist) – fast alle diese Bilder verlangen
+Namensnennung *und* Lizenznennung, ein „© Name" allein genügt nicht.
+
+Der Suchbegriff wird zuerst als exakter Titel aufgelöst (mit Weiterleitungen)
+und erst dann als Suche – ein leicht danebenliegender Begriff landet also
+trotzdem im richtigen Artikel. Links gehen bewusst über die Wikipedia-Suche
+(`/w/index.php?search=`), damit sie auch bei umbenannten Artikeln greifen.
+
+```bash
+npm run check:sources   # prüft alle Person-IDs gegen den Zeitbaum und zählt die Sammlung
+```
+
+Neue Einträge tragen die Regeln der Datei mit: `named: true` heißt, das Dokument
+nennt die Person (oder ihr Haus) ausdrücklich; `named: false` heißt, es ist ein
+Zeitdokument ihrer Welt. Wo es zu einer Person nichts gibt, sagt das eine
+`noteDe`/`noteEn`-Zeile, statt die Lücke zu füllen.
 
 ### Deutsche Ortsnamen
 
@@ -431,6 +558,23 @@ aushebeln.
 Vite · React · TypeScript · Tailwind CSS · Leaflet (+ markercluster, heat) ·
 CARTO/OpenStreetMap-Kartenkacheln.
 
+**Schriften im Haus.** Montserrat und Fraunces werden nicht von Google Fonts
+geladen, sondern liegen als variable Schriften (`woff2`, Teilmengen latin und
+latin-ext) in `src/assets/fonts/`; die `@font-face`-Regeln stehen in
+`src/index.css`, Vite baut die Dateien mit ein. Beim Besuch der Seite geht damit
+kein Aufruf an einen dritten Server – ein Punkt, an dem sonst Besucherdaten
+abfließen –, und offline sieht die App aus wie online. Kursive Schnitte gibt es
+bewusst nicht: die eine kursive Stelle der App neigt der Browser selbst, statt
+dafür 100 kB zu laden.
+
+Die Dateien stammen aus `@fontsource-variable/montserrat` und
+`@fontsource-variable/fraunces` (5.3.0). Zum Aktualisieren: beide Pakete
+installieren, die vier `*-latin*-normal.woff2` aus `files/` nach
+`src/assets/fonts/` kopieren, die `LICENSE` nach `public/fonts/`, Pakete wieder
+entfernen. Der Lizenztext (SIL OFL 1.1) wird mit ausgeliefert und ist auf der
+Seite *Nachweise & Lizenzen* verlinkt – die OFL verlangt, dass er die Dateien
+begleitet.
+
 ## Lizenz
 
 Bibelmap steht unter der **GNU General Public License v3.0** (siehe `LICENSE`).
@@ -446,14 +590,26 @@ entfernt, ist an diese Wahl nicht mehr gebunden.
 - Bibeltext: Lutherbibel 1912 & World English Bible (gemeinfrei), aufbereitet in
   [seven1m/open-bibles](https://github.com/seven1m/open-bibles) (MIT)
 - Reichsgrenzen: [aourednik/historical-basemaps](https://github.com/aourednik/historical-basemaps) (GPL-3.0)
-- Kartenkacheln: © OpenStreetMap-Mitwirkende, © CARTO; „Antike Welt“
+- Kartenkacheln: © OpenStreetMap-Mitwirkende, © CARTO; Satellit
+  © [Sentinel-2 cloudless 2020](https://s2maps.eu/) (EOX IT Services, modifizierte
+  Copernicus-Sentinel-Daten 2020, CC-BY 4.0); Relief © [Terrain Light](https://maps.eox.at/)
+  (EOX, CC-BY 4.0); „Antike Welt“
   © [DARE / Imperium](https://imperium.ahlfeldt.se/) (Univ. Göteborg, CC-BY)
 - Bilder: Wikimedia Commons (Lizenz je Bild, siehe Bildnachweis)
 - Podcasts & Videos: bibletunes.de, BibleProject, Practicing the Way, Gospel in
   Life – verlinkt, nicht gehostet
 
-Die vollständige Liste mit Beitrag, Nennung und **Spendenlink** je Projekt steht in
-`src/data/support.ts` und wird in der App unter *Projekte unterstützen* angezeigt.
+Das ist die Kurzfassung. Die **vollständige Liste** – jede Quelle mit Lizenz, mit
+dem, was die Lizenz verlangt, und mit der geforderten Nachweiszeile im Wortlaut –
+steht in `src/data/attribution.ts` und wird in der App unter *Nachweise &
+Lizenzen* (`#nachweise`) angezeigt. Die Lizenznamen selbst kommen aus
+`src/lib/imageCredit.ts`, damit „CC BY-SA 4.0" auf der Seite nicht anders heißt
+als am Bild.
+
+Daneben steht `src/data/support.ts` mit Beitrag, Nennung und **Spendenlink** je
+Projekt, angezeigt unter *Projekte unterstützen*: dieselben Projekte, aber die
+Frage nach dem Danken statt der nach dem Recht.
 Bibelmap selbst nimmt kein Geld ein und sammelt keines: keine Werbung, kein
-Tracking, keine Bezahlschranke. Wer eine neue Quelle einbindet, trägt sie dort
-ein – Beitrag, Lizenz-/Nennungshinweis und, wenn vorhanden, die Spendenseite.
+Tracking, keine Bezahlschranke. Wer eine neue Quelle einbindet, trägt sie in **beide** Dateien
+ein – in `attribution.ts` Lizenz und Nachweiszeile, in `support.ts` Beitrag und,
+wenn vorhanden, die Spendenseite.

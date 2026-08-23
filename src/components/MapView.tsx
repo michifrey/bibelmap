@@ -19,6 +19,10 @@ interface Props {
   onSelect: (p: Place) => void;
   /** Base map style. */
   basemap?: BasemapId;
+  /** Der gewählte Kachelserver liefert nichts – die Ansicht soll zurückfallen. */
+  onTilesUnavailable?: (id: BasemapId) => void;
+  /** Derselbe Server liefert wieder – die Meldung darf weg. */
+  onTilesRecovered?: (id: BasemapId) => void;
   /** Fit the map to exactly these places (presentation mode). */
   fitPlaces?: Place[] | null;
   /** Fly to a single coordinate (search focus). */
@@ -63,16 +67,31 @@ export const BASEMAPS: Record<BasemapId, Basemap> = {
     maxZoom: 19,
     subdomains: 'abcd',
   },
+  // Satellit und Relief kommen von EOX (maps.eox.at), nicht mehr von Esri:
+  // beide unter CC-BY 4.0 frei nutzbar, beide ohne Beschriftung – und damit
+  // ohne die Nutzungsbedingungen, die Esri für Karten außerhalb eines
+  // ArcGIS-Kontos verlangt. Die WMTS-Adresse ist RESTful und zählt Zeile vor
+  // Spalte: .../default/g/{z}/{y}/{x}.jpg.
   satellite: {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics ' + OB_ATTR,
+    url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg',
+    attribution:
+      'Sentinel-2 cloudless 2020 &copy; <a href="https://s2maps.eu">EOX IT Services</a> (modifizierte Copernicus-Sentinel-Daten 2020, CC-BY) ' +
+      OB_ATTR,
+    // Die Aufnahmen lösen 10 m auf – ab Stufe 14 wird vergrößert statt
+    // nachgeladen, sonst liefe die Karte in leere Kacheln.
     maxZoom: 18,
+    maxNativeZoom: 14,
+    subdomains: '',
     dark: true,
   },
   relief: {
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Tiles &copy; Esri — Source: Esri ' + OB_ATTR,
-    maxZoom: 13,
+    url: 'https://tiles.maps.eox.at/wmts/1.0.0/terrain-light_3857/default/g/{z}/{y}/{x}.jpg',
+    attribution:
+      'Terrain Light &copy; <a href="https://maps.eox.at">EOX</a> · Daten: OpenStreetMap-Mitwirkende, SRTM, Natural Earth (CC-BY) ' +
+      OB_ATTR,
+    maxZoom: 14,
+    maxNativeZoom: 12,
+    subdomains: '',
   },
   antique: {
     // Digital Atlas of the Roman Empire (DARE / "Imperium"), Univ. of Gothenburg.
@@ -129,6 +148,8 @@ export default function MapView({
   lang,
   onSelect,
   basemap = 'light',
+  onTilesUnavailable,
+  onTilesRecovered,
   fitPlaces,
   flyTo,
   borderYear = null,
@@ -143,6 +164,10 @@ export default function MapView({
   const markerById = useRef<Map<string, L.Marker>>(new Map());
   const onSelectRef = useRef(onSelect);
   onSelectRef.current = onSelect;
+  const onTilesUnavailableRef = useRef(onTilesUnavailable);
+  onTilesUnavailableRef.current = onTilesUnavailable;
+  const onTilesRecoveredRef = useRef(onTilesRecovered);
+  onTilesRecoveredRef.current = onTilesRecovered;
   const placesRef = useRef(places);
   placesRef.current = places;
   const langRef = useRef(lang);
@@ -193,15 +218,47 @@ export default function MapView({
     if (!map) return;
     const bm = BASEMAPS[basemap] ?? BASEMAPS.dark;
     if (tileRef.current) map.removeLayer(tileRef.current);
-    tileRef.current = L.tileLayer(bm.url, {
+    const layer = L.tileLayer(bm.url, {
       attribution: bm.attribution,
       subdomains: bm.subdomains ?? 'abc',
       maxZoom: bm.maxZoom,
       maxNativeZoom: bm.maxNativeZoom ?? bm.maxZoom,
-    }).addTo(map);
+    });
+    /*
+     * Fremde Kachelserver können ausfallen – und eine Karte ohne Kacheln sieht
+     * aus wie ein Fehler der App. Kommt von einem Stil gar nichts an, während
+     * es reihenweise Fehler hagelt, sagen wir Bescheid; die Ansicht fällt dann
+     * auf die Karte zurück, die sicher da ist. Kommt später doch etwas an –
+     * das Netz war nur kurz weg –, nehmen wir die Meldung zurück, statt einen
+     * Hinweis über einer funktionierenden Karte stehen zu lassen.
+     */
+    let failures = 0;
+    let reported = false;
+    const onLoad = () => {
+      failures = 0;
+      if (!reported) return;
+      reported = false;
+      onTilesRecoveredRef.current?.(basemap);
+    };
+    const onError = () => {
+      failures += 1;
+      if (reported || failures < 6) return;
+      reported = true;
+      onTilesUnavailableRef.current?.(basemap);
+    };
+    layer.on('tileload', onLoad);
+    layer.on('tileerror', onError);
+    layer.addTo(map);
+    tileRef.current = layer;
     tileRef.current.setZIndex(0);
     const c = map.getContainer();
     c.classList.toggle('bm-dark', !!bm.dark);
+    // Ohne Abmelden feuern die noch laufenden Kachelabrufe einer längst
+    // abgelegten Ebene weiter – und melden einen Stil, den niemand mehr sieht.
+    return () => {
+      layer.off('tileload', onLoad);
+      layer.off('tileerror', onError);
+    };
   }, [basemap]);
 
   // (re)build markers / heat when data or mode changes
@@ -271,6 +328,12 @@ export default function MapView({
     markVectorsDecorative(map.getContainer());
     clusterRef.current = cluster;
   }, [places, heat, selectedId, newIds]);
+
+  // A popup from an earlier marker has nothing to do with the place that is
+  // now selected — and the rail is the surface that answers for it.
+  useEffect(() => {
+    if (selectedId) mapRef.current?.closePopup();
+  }, [selectedId]);
 
   // empire overlay for the selected year
   useEffect(() => {
@@ -364,12 +427,15 @@ export default function MapView({
     const map = mapRef.current;
     if (!map || !flyTo) return;
     map.flyTo([flyTo.lat, flyTo.lon], flyTo.zoom ?? 9, flyOptions({ duration: 0.8 }));
-    // open the cluster spiderfy / highlight after the fly
+    // Spiderfy the cluster so the marker is actually visible — but do not open
+    // its popup. The place is already open in the detail rail; showing the same
+    // name, image, eras and passages a second time on top of the map was the
+    // one place where two surfaces answered the same question at once.
     const id = selectedId;
     const t = window.setTimeout(() => {
       const m = id ? markerById.current.get(id) : null;
       const cluster = clusterRef.current;
-      if (m && cluster) cluster.zoomToShowLayer(m, () => m.openPopup?.());
+      if (m && cluster) cluster.zoomToShowLayer(m, () => {});
     }, 850);
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps

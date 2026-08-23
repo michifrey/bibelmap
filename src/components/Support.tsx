@@ -151,7 +151,7 @@ export default function Support({ lang, onLang, onExit }: Props) {
             }`}
           >
             <div className={`bm-num text-4xl sm:text-[52px] ${s.gold ? 'text-deep' : 'text-white'}`}>{s.value}</div>
-            <div className={`bm-eyebrow mt-2 ${s.gold ? 'text-deep/80' : 'text-mint'}`}>{s.label}</div>
+            <div className={`bm-eyebrow mt-2 ${s.gold ? 'text-deep' : 'text-mint'}`}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -164,7 +164,7 @@ export default function Support({ lang, onLang, onExit }: Props) {
           return (
             <section key={group.kind} className={gi > 0 ? 'mt-16' : ''}>
               <div className="mb-2 flex items-baseline gap-6">
-                <span className="bm-eyebrow text-signal">{group.title}</span>
+                <span className="bm-eyebrow text-signal-deep">{group.title}</span>
                 <span className="h-px flex-1 bg-[#d8d2c4]" />
               </div>
               <p className="mb-6 max-w-[560px] text-[12.5px] font-medium leading-[1.7] text-[#5c6b69]">{group.sub}</p>
@@ -180,7 +180,7 @@ export default function Support({ lang, onLang, onExit }: Props) {
         {/* linked-out services: named, but nobody is asking for money there */}
         <section className="mt-16">
           <div className="mb-2 flex items-baseline gap-6">
-            <span className="bm-eyebrow text-signal">{t('supportAlsoUsed')}</span>
+            <span className="bm-eyebrow text-signal-deep">{t('supportAlsoUsed')}</span>
             <span className="h-px flex-1 bg-[#d8d2c4]" />
           </div>
           <p className="mb-5 max-w-[560px] text-[12.5px] font-medium leading-[1.7] text-[#5c6b69]">
@@ -209,7 +209,7 @@ export default function Support({ lang, onLang, onExit }: Props) {
         <p className="mx-auto max-w-[760px] text-center font-display text-lg font-extrabold leading-[1.5] tracking-tight text-white sm:text-[22px]">
           {t('supportOutro')}
         </p>
-        <div className="mt-8 flex justify-center">
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
           <button
             onClick={onExit}
             className="inline-flex items-center gap-3.5 bg-signal px-6 py-4 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white transition hover:bg-[#0f938b]"
@@ -217,6 +217,14 @@ export default function Support({ lang, onLang, onExit }: Props) {
             {t('supportBack')}
             <Arrow className="text-gold" />
           </button>
+          {/* Schwesterseite: dieselben Projekte, aber die Rechtsfrage. */}
+          <a
+            href="#nachweise"
+            className="inline-flex items-center gap-3.5 bg-white/10 px-6 py-4 text-[13px] font-extrabold uppercase tracking-[0.08em] text-white transition hover:bg-white/20"
+          >
+            {t('credits')}
+            <Arrow className="text-gold" />
+          </a>
         </div>
       </div>
     </div>

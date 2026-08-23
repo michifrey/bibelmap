@@ -36,6 +36,16 @@ const GraphView = lazy(() => import('./components/GraphView'));
 const Genealogy = lazy(() => import('./components/Genealogy'));
 import Landing, { type LandingTarget } from './components/Landing';
 const Support = lazy(() => import('./components/Support'));
+const Credits = lazy(() => import('./components/Credits'));
+
+/** Name jedes Kartenstils – Schalterleiste und Ausfallhinweis lesen ihn hier. */
+const BASEMAP_LABEL: Record<BasemapId, 'basemapDark' | 'basemapLight' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'> = {
+  dark: 'basemapDark',
+  light: 'basemapLight',
+  satellite: 'basemapSatellite',
+  relief: 'basemapRelief',
+  antique: 'basemapAntique',
+};
 
 /** The support page is worth linking to from outside, so it lives on a hash. */
 const SUPPORT_HASH = '#unterstuetzen';
@@ -105,6 +115,8 @@ export default function App() {
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
   const [mode, setMode] = useState<Mode | null>(INITIAL_ROUTE?.mode ?? null);
   const [basemap, setBasemap] = useState<BasemapId>('dark');
+  /** Welcher Kartenstil ausgefallen ist – und ob es ein Ausweichen gab. */
+  const [tileNotice, setTileNotice] = useState<{ id: BasemapId; fellBack: boolean } | null>(null);
   const [view, setView] = useState<View>(INITIAL_ROUTE?.view ?? 'map');
   // The start page is the front door: it is what the app opens on, and the
   // wordmark in the header is the way back to it.
@@ -125,6 +137,7 @@ export default function App() {
     INITIAL_ROUTE?.church ?? null,
   );
   const [compareNav, setCompareNav] = useState<string | null>(INITIAL_ROUTE?.compare ?? null);
+  const [treeNav, setTreeNav] = useState(INITIAL_ROUTE?.tree ?? null);
   // Mobile-only: bottom-sheet (search/detail) and timeline are collapsible so
   // the map stays usable on small screens. Desktop ignores these.
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -138,7 +151,28 @@ export default function App() {
   }
   // Picking the antique basemap is the clearest signal that someone wants the
   // ancient world rather than today's, so the empires come along with it.
+  /**
+   * Ein fremder Kachelserver antwortet nicht: zurück auf die Karte, die aus
+   * der eigenen Ecke kommt – und ein Wort dazu, damit niemand die leere
+   * Fläche für einen Fehler der App hält.
+   */
+  function handleTilesUnavailable(id: BasemapId) {
+    // Wer den Stil längst gewechselt hat, braucht die Nachricht nicht mehr.
+    if (basemap !== id) return;
+    // Fällt die Nachtkarte selbst aus, ist nicht ein Anbieter stumm, sondern
+    // das Netz – dann gibt es nichts, worauf man ausweichen könnte.
+    const fellBack = id !== 'dark';
+    if (fellBack) setBasemap('dark');
+    setTileNotice({ id, fellBack });
+  }
+
+  /** Der Server ist zurück – der Hinweis darf gehen. */
+  function handleTilesRecovered(id: BasemapId) {
+    setTileNotice((notice) => (notice?.id === id ? null : notice));
+  }
+
   function handleBasemap(id: BasemapId) {
+    setTileNotice(null);
     setBasemap(id);
     if (id === 'antique' && borderYear === null) setBorderYear(-1000);
   }
@@ -187,7 +221,10 @@ export default function App() {
   // Opening a view/mode manually (header toggle, modes menu) clears any pending
   // cross-link focus so it doesn't unexpectedly jump on the next visit.
   function handleView(v: View) {
-    if (v === 'tree') setTreeFocus(null);
+    if (v === 'tree') {
+      setTreeFocus(null);
+      setTreeNav(null);
+    }
     setView(v);
   }
   function handleMode(m: Mode) {
@@ -259,6 +296,7 @@ export default function App() {
           media: mediaNav ?? undefined,
           church: churchNav ?? undefined,
           compare: compareNav ?? undefined,
+          tree: treeNav ?? undefined,
         });
     if (hash === window.location.hash) return;
     ownHash.current = hash;
@@ -274,6 +312,7 @@ export default function App() {
     mediaNav,
     churchNav,
     compareNav,
+    treeNav,
   ]);
 
   /*
@@ -314,6 +353,7 @@ export default function App() {
       setMediaNav(route.media ?? null);
       setChurchNav(route.church ?? null);
       setCompareNav(route.compare ?? null);
+      setTreeNav(route.tree ?? null);
       pendingPlace.current = route.placeId ?? null;
       if (!route.placeId) setSelected(null);
       setNavEpoch((n) => n + 1);
@@ -422,9 +462,17 @@ export default function App() {
     setNavEpoch((n) => n + 1);
   }
 
-  /** Ein Treffer aus Reisen oder Ausbreitung: Modus öffnen, Stand setzen. */
+  /** Ein Treffer aus Reisen, Ausbreitung oder Stammesgebieten: hin da. */
   function openStory(hit: SearchHit) {
     setAtStart(false);
+    if (hit.target.mode === 'tree') {
+      setTreeFocus(null);
+      setTreeNav(hit.target.tree);
+      setMode(null);
+      setView('tree');
+      setNavEpoch((n) => n + 1);
+      return;
+    }
     setView('map');
     if (hit.target.mode === 'journeys') {
       setJourneyNav(hit.target.journey);
@@ -497,11 +545,14 @@ export default function App() {
         {view === 'tree' ? (
           <Suspense fallback={<ModeFallback />}>
           <Genealogy
+            key={`tree-${navEpoch}`}
             places={places}
             lang={lang}
             focusId={treeFocus}
             onShowOnMap={showPersonOnMap}
             onShowPlace={showPlaceFromGenealogy}
+            initial={treeNav}
+            onNavigate={setTreeNav}
           />
           </Suspense>
         ) : view === 'graph' ? (
@@ -530,6 +581,8 @@ export default function App() {
                 lang={lang}
                 onSelect={select}
                 basemap={basemap}
+                onTilesUnavailable={handleTilesUnavailable}
+                onTilesRecovered={handleTilesRecovered}
                 newIds={newIds}
                 flyTo={flyTo}
                 borderYear={borderYear}
@@ -584,17 +637,17 @@ export default function App() {
             {/* basemap switcher + empire overlay (right edge) */}
             <div className="pointer-events-auto absolute right-3 top-1/2 z-[1100] flex -translate-y-1/2 flex-col gap-1 bg-deepest/95 p-1 ring-1 ring-white/10 backdrop-blur-xl sm:right-4">
               {([
-                ['dark', 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z', 'basemapDark'],
-                ['light', 'M3 12h18M12 3v18', 'basemapLight'],
-                ['satellite', 'M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20M12 2c2.5 2.7 2.5 17.3 0 20M12 2c-2.5 2.7-2.5 17.3 0 20', 'basemapSatellite'],
-                ['relief', 'M3 18l5-8 4 5 3-4 6 7z', 'basemapRelief'],
-                ['antique', 'M9 3 4 5v16l5-2 6 2 5-2V3l-5 2-6-2zM9 3v16M15 5v16', 'basemapAntique'],
-              ] as [BasemapId, string, 'basemapDark' | 'basemapLight' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'][]).map(([id, icon, key]) => (
+                ['dark', 'M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z'],
+                ['light', 'M3 12h18M12 3v18'],
+                ['satellite', 'M12 2a10 10 0 100 20 10 10 0 000-20zM2 12h20M12 2c2.5 2.7 2.5 17.3 0 20M12 2c-2.5 2.7-2.5 17.3 0 20'],
+                ['relief', 'M3 18l5-8 4 5 3-4 6 7z'],
+                ['antique', 'M9 3 4 5v16l5-2 6 2 5-2V3l-5 2-6-2zM9 3v16M15 5v16'],
+              ] as [BasemapId, string][]).map(([id, icon]) => (
                 <button
                   key={id}
                   onClick={() => handleBasemap(id)}
-                  title={tr(lang, key)}
-                  aria-label={tr(lang, key)}
+                  title={tr(lang, BASEMAP_LABEL[id])}
+                  aria-label={tr(lang, BASEMAP_LABEL[id])}
                   className={`grid h-9 w-9 place-items-center transition ${ basemap === id ? 'bg-signal text-white ' : 'text-white/60 hover:bg-surface' }`}
                 >
                   <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
@@ -604,6 +657,26 @@ export default function App() {
               ))}
 
             </div>
+
+            {/* Kachelserver stumm: ein Wort statt einer leeren Fläche. */}
+            {tileNotice && (
+              <div className="pointer-events-auto absolute right-3 top-[calc(50%+11.5rem)] z-[1100] max-w-[240px] bg-deepest/95 px-3 py-2 text-[11px] leading-snug text-white/80 ring-1 ring-white/10 backdrop-blur-xl sm:right-4">
+                <div className="flex items-start gap-2">
+                  <span>
+                    {tileNotice.fellBack
+                      ? tr(lang, 'basemapUnavailable').replace('%s', tr(lang, BASEMAP_LABEL[tileNotice.id]))
+                      : tr(lang, 'basemapOffline')}
+                  </span>
+                  <button
+                    onClick={() => setTileNotice(null)}
+                    aria-label={tr(lang, 'close')}
+                    className="-mr-1 -mt-1 grid h-5 w-5 flex-none place-items-center text-white/60 transition hover:text-white"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* The empires are an overlay, not a sixth basemap: they work on
                 whichever map is underneath. Sitting inside the basemap rail as
@@ -750,6 +823,11 @@ export default function App() {
             {mode === 'support' && (
               <Suspense fallback={<ModeFallback />}>
                 <Support lang={lang} onLang={setLang} onExit={closeSupport} />
+              </Suspense>
+            )}
+            {mode === 'credits' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Credits lang={lang} onLang={setLang} onExit={() => setMode(null)} />
               </Suspense>
             )}
           </>

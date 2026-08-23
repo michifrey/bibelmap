@@ -175,35 +175,53 @@ export default function QuizMode({ places, lang, onExit }: Props) {
     return (
       <div className="fixed inset-0 z-[2000] flex flex-col bg-deepest">
         <Bar title={t('quiz')} onExit={onExit} />
-        <div className="scroll-soft mx-auto w-full max-w-2xl flex-1 overflow-y-auto px-5 py-8">
-          <p className="mb-6 max-w-prose text-sm leading-relaxed text-white/70">{t('quizHint')}</p>
-          <button
-            onClick={() => setMix((v) => !v)}
-            className={`mb-4 flex w-full items-center justify-between gap-4 px-4 py-3 text-left transition ${mix ? 'bg-signal/25 ring-1 ring-signal' : 'bg-white/5 hover:bg-white/10'}`}
-          >
-            <span>
-              <span className="block text-[13.5px] font-bold text-white">{t('quizMix')}</span>
-              <span className="mt-0.5 block text-[12px] text-white/60">{t('quizMixHint')}</span>
-            </span>
-            <span className={`text-[12px] font-bold ${mix ? 'text-mint' : 'text-white/40'}`}>
-              {mix ? t('on') : t('off')}
-            </span>
-          </button>
+        {/* Centred, not stacked at the top: the choice is the whole screen, and
+            hanging it under the bar made the empty half look like a cut-off
+            page rather than a composition. */}
+        <div className="scroll-soft flex min-h-0 flex-1 flex-col justify-center overflow-y-auto px-5 py-8">
+          <div className="mx-auto w-full max-w-2xl">
+            <div className="bm-eyebrow">{t('quizStartKicker')}</div>
+            <h2 className="mt-3 font-display text-[11vw] font-black uppercase leading-[0.96] tracking-[-0.025em] text-white sm:text-[46px]">
+              <span className="block">{t('quizStartLead1')}</span>
+              <span className="bm-outline block leading-[1.04] text-gold">{t('quizStartLead2')}</span>
+            </h2>
+            <p className="mt-5 max-w-prose text-sm leading-relaxed text-white/70">{t('quizHint')}</p>
 
-          <div className="space-y-2">
-            {levels.map((l) => (
-              <button
-                key={l.id}
-                onClick={() => start(l.id)}
-                className="flex w-full items-center justify-between gap-4 border-l-2 border-gold bg-white/5 px-4 py-3.5 text-left transition hover:bg-white/10"
-              >
-                <span>
-                  <span className="block font-display text-lg uppercase text-white">{l.label}</span>
-                  <span className="mt-0.5 block text-[13px] text-white/60">{l.hint}</span>
-                </span>
-                <span className="bm-num text-gold">›</span>
-              </button>
-            ))}
+            <div className="mt-7 flex flex-wrap items-center gap-3 border-t border-white/10 pt-5">
+              <span className="min-w-0 flex-1">
+                <span className="block text-[13.5px] font-bold text-white">{t('quizMix')}</span>
+                <span className="mt-0.5 block text-[12px] text-white/60">{t('quizMixHint')}</span>
+              </span>
+              {/* A real switch: two states side by side, one of them lit. The
+                  single word "An" in mint did not read as something you set. */}
+              <div className="bm-seg flex-none">
+                <button onClick={() => setMix(false)} aria-pressed={!mix} className={mix ? '' : 'is-on'}>
+                  {t('off')}
+                </button>
+                <button onClick={() => setMix(true)} aria-pressed={mix} className={mix ? 'is-on' : ''}>
+                  {t('on')}
+                </button>
+              </div>
+            </div>
+
+            <div className="bm-eyebrow mt-7 text-white/45">{t('quizPickLevel')}</div>
+            <div className="mt-2.5 space-y-2">
+              {levels.map((l) => (
+                <button
+                  key={l.id}
+                  onClick={() => start(l.id)}
+                  className="flex w-full items-center justify-between gap-4 border-l-[3px] border-gold bg-white/5 px-4 py-3.5 text-left transition hover:bg-white/10"
+                >
+                  <span>
+                    <span className="block font-display text-lg uppercase text-white">{l.label}</span>
+                    <span className="mt-0.5 block text-[13px] text-white/60">{l.hint}</span>
+                  </span>
+                  <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 flex-none text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h13M13 6l6 6-6 6" />
+                  </svg>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>

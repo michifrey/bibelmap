@@ -26,9 +26,9 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # Eigene Domain (public/CNAME): die Seite liegt an der Wurzel, nicht mehr
+      # unter /bibelmap/. VITE_BASE bleibt als Notausgang in vite.config.ts.
       - name: Build
-        env:
-          VITE_BASE: /bibelmap/
         run: npm run build
       - uses: actions/configure-pages@v5
         with:

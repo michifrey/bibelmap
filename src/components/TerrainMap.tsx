@@ -39,7 +39,9 @@ const DEM_ATTR =
 /** Leaflets `{s}`-Platzhalter kennt MapLibre nicht – daraus werden Adressen. */
 function tileUrls(id: BasemapId): string[] {
   const bm = BASEMAPS[id] ?? BASEMAPS.dark;
-  const subs = bm.subdomains ?? 'abc';
+  // `|| ` statt `?? `: die freien Kachelserver tragen einen leeren String,
+  // und aus dem darf keine leere Adressliste werden.
+  const subs = bm.subdomains || 'abc';
   // `{r}` ist Leaflets Netzhaut-Suffix; hier bleibt es leer.
   const url = bm.url.replace('{r}', '');
   if (!url.includes('{s}')) return [url];

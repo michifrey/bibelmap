@@ -20,13 +20,10 @@ const MATCH = { ignoreVary: true };
 
 const TILE_HOSTS = [
   'basemaps.cartocdn.com',
-  'server.arcgisonline.com',
+  'tiles.maps.eox.at',
   'dh.gu.se',
   'tile.openstreetmap.org',
 ];
-
-/** Schriften liegen bei Google – ohne sie sähe die App offline fremd aus. */
-const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 /**
  * Die gebauten Dateien tragen einen Hash im Namen. Statt eine Liste zu pflegen,
@@ -102,8 +99,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Kartenkacheln und Schriften: aus dem Cache, sonst holen und behalten.
-  if (TILE_HOSTS.some((h) => url.hostname.endsWith(h)) || FONT_HOSTS.some((h) => url.hostname.endsWith(h))) {
+  // Kartenkacheln: aus dem Cache, sonst holen und behalten. (Die Schriften
+  // liegen seit der Umstellung im eigenen Haus und laufen unten mit.)
+  if (TILE_HOSTS.some((h) => url.hostname.endsWith(h))) {
     event.respondWith(
       (async () => {
         const cache = await caches.open(TILES);

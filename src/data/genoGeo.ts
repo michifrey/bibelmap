@@ -1,9 +1,12 @@
-// Approximate geography for the genealogy map layer: where the tribes settled,
-// where the Table-of-Nations peoples lived, and where key persons belong.
+// Approximate geography for the two optional layers of the tribes map: where
+// the Table-of-Nations peoples lived, and where key persons belong. The twelve
+// tribes themselves are no longer points — they are territories, and they live
+// with the rest of their data in `tribes.ts`.
 // Coordinates are DELIBERATELY APPROXIMATE (territory / region centres) and only
 // exist to place a label on the map — not a survey. Keyed by the node id used in
 // `nationsTribes.ts`.
 
+/** 'tribe' is kept so the map can name the layer it always draws. */
 export type GeoKind = 'tribe' | 'people' | 'person';
 
 export interface GeoPoint {
@@ -13,21 +16,6 @@ export interface GeoPoint {
 }
 
 export const GENO_GEO: Record<string, GeoPoint> = {
-  // ---- The twelve tribes of Israel — approximate allotments (Josua 13–19) ---
-  reuben: { lat: 31.55, lon: 35.72, kind: 'tribe' },
-  gad: { lat: 32.1, lon: 35.75, kind: 'tribe' },
-  judah: { lat: 31.5, lon: 35.1, kind: 'tribe' },
-  simeon: { lat: 31.2, lon: 34.8, kind: 'tribe' },
-  benjamin: { lat: 31.83, lon: 35.22, kind: 'tribe' },
-  dan: { lat: 31.95, lon: 34.9, kind: 'tribe' },
-  ephraim: { lat: 32.1, lon: 35.22, kind: 'tribe' },
-  manasseh: { lat: 32.42, lon: 35.25, kind: 'tribe' },
-  issachar: { lat: 32.58, lon: 35.42, kind: 'tribe' },
-  zebulun: { lat: 32.78, lon: 35.3, kind: 'tribe' },
-  asher: { lat: 32.95, lon: 35.15, kind: 'tribe' },
-  naphtali: { lat: 33.05, lon: 35.5, kind: 'tribe' },
-  levi: { lat: 31.78, lon: 35.22, kind: 'tribe' }, // no territory — priests, scattered
-
   // ---- Table of Nations — traditional homelands (Gen 10 / 1 Chr 1) ----------
   // Japheth (northern / coastland peoples)
   gomer: { lat: 45.0, lon: 34.0, kind: 'people' },

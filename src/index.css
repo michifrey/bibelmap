@@ -3,6 +3,60 @@
 @import 'leaflet.markercluster/dist/MarkerCluster.css';
 
 /* ------------------------------------------------------------------ */
+/* Schriften – im Haus, nicht bei Google.                              */
+/*                                                                     */
+/* Die Dateien liegen in `src/assets/fonts/` und werden mitgebaut. So  */
+/* geht beim Besuch dieser Seite kein Aufruf an einen dritten Server,  */
+/* und offline sieht die App aus wie online. Beides sind variable      */
+/* Schriften: eine Datei trägt alle Schnitte (Montserrat 100–900,      */
+/* Fraunces mit optischer Größe), deshalb kein Satz pro Gewicht.       */
+/*                                                                     */
+/* Kursiv gibt es bewusst nicht: die eine kursive Stelle der App wird  */
+/* – wie vorher auch – vom Browser geneigt, statt 100 kB dafür zu      */
+/* laden. Lizenz: SIL OFL 1.1, Text unter `public/fonts/`.             */
+/* Herkunft der Dateien: @fontsource-variable/montserrat und           */
+/* @fontsource-variable/fraunces (5.3.0), Teilmengen latin/latin-ext.  */
+/* ------------------------------------------------------------------ */
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./assets/fonts/montserrat-latin-wght-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Montserrat';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./assets/fonts/montserrat-latin-ext-wght-normal.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./assets/fonts/fraunces-latin-opsz-normal.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Fraunces';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./assets/fonts/fraunces-latin-ext-opsz-normal.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308,
+    U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113,
+    U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* ------------------------------------------------------------------ */
 /* Design tokens                                                       */
 /*                                                                     */
 /* The stage is dark and teal. White is not a background here, it is a */
@@ -18,6 +72,9 @@
   --color-deep: #06403c;
   --color-surface: #094c48;
   --color-signal: #0d7f78;
+  /* Signal is the teal for dark ground. On paper it lands at 4.3:1 — a shade
+     under AA for small text — so light surfaces get this darker one. */
+  --color-signal-deep: #0a5f5a;
   --color-mint: #7fe3d5;
 
   /* paper — used sparingly, where something is actually read */
@@ -65,201 +122,219 @@ body {
 
 /* ------------------------------------------------------------------ */
 /* Building blocks                                                     */
+/*                                                                     */
+/* In @layer components on purpose. Unlayered CSS beats anything in a  */
+/* cascade layer, so an unlayered .bm-eyebrow overrode every Tailwind  */
+/* text-* utility next to it — mint on white reads at 1.5:1. Inside    */
+/* this layer the utilities win, which is what a caller writing        */
+/* "bm-eyebrow text-signal" means.                                     */
 /* ------------------------------------------------------------------ */
+@layer components {
 
-/* Rubric above a block. Never a sentence — two or three words. */
-.bm-eyebrow {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-mint);
-}
-.bm-eyebrow-dim {
-  color: rgba(255, 255, 255, 0.45);
-}
-
-/* A floating surface. Hard corners, hairline edge, no drop shadow —
-   separation comes from colour and the 1px line, not from blur. */
-.bm-panel {
-  background: rgba(3, 48, 47, 0.94);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(14px);
-}
-.bm-panel-solid {
-  background: var(--color-deepest);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Outlined display type — the signature move of the start page. The third line
-   of a headline is cut out of the page instead of set on it. */
-.bm-outline {
-  /* The stroke takes its colour from `color`, so the fill has to be cleared
-     separately — setting `color: transparent` would erase the stroke too. */
-  -webkit-text-stroke: 2px currentColor;
-  -webkit-text-fill-color: transparent;
-}
-@supports not (-webkit-text-stroke: 2px currentColor) {
-  .bm-outline {
-    -webkit-text-fill-color: currentColor;
-    opacity: 0.55;
+  /* Rubric above a block. Never a sentence — two or three words. */
+  .bm-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-mint);
   }
-}
+  .bm-eyebrow-dim {
+    color: rgba(255, 255, 255, 0.45);
+  }
 
-/* Numbers are the graphic. */
-.bm-num {
-  font-weight: 900;
-  letter-spacing: -0.035em;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-}
+  /* A floating surface. Hard corners, hairline edge, no drop shadow —
+     separation comes from colour and the 1px line, not from blur. */
+  .bm-panel {
+    background: rgba(3, 48, 47, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(14px);
+  }
+  .bm-panel-solid {
+    background: var(--color-deepest);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
 
-/* Buttons ---------------------------------------------------------- */
-.bm-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 0.9rem;
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
-  border: none;
-  cursor: pointer;
-  transition: background 0.12s ease, color 0.12s ease;
-}
-.bm-btn:hover {
-  background: rgba(255, 255, 255, 0.16);
-}
-.bm-btn-ghost {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-}
-.bm-btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
-/* The one action per screen. */
-.bm-btn-gold {
-  background: var(--color-gold);
-  color: var(--color-deep);
-  font-weight: 800;
-}
-.bm-btn-gold:hover {
-  background: #eab662;
-}
-.bm-btn-signal {
-  background: var(--color-signal);
-}
-.bm-btn-signal:hover {
-  background: #12988f;
-}
-.bm-btn:disabled {
-  opacity: 0.3;
-  cursor: default;
-}
+  /* Outlined display type — the signature move of the start page. The third line
+     of a headline is cut out of the page instead of set on it. */
+  .bm-outline {
+    /* The stroke takes its colour from `color`, so the fill has to be cleared
+       separately — setting `color: transparent` would erase the stroke too. */
+    -webkit-text-stroke: 2px currentColor;
+    -webkit-text-fill-color: transparent;
+  }
+  @supports not (-webkit-text-stroke: 2px currentColor) {
+    .bm-outline {
+      -webkit-text-fill-color: currentColor;
+      opacity: 0.55;
+    }
+  }
 
-/* Segmented control ------------------------------------------------ */
-.bm-seg {
-  display: flex;
-  gap: 2px;
-  padding: 3px;
-  background: rgba(255, 255, 255, 0.07);
-}
-.bm-seg > * {
-  padding: 0.4rem 0.7rem;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.6);
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  transition: background 0.12s ease, color 0.12s ease;
-}
-.bm-seg > *:hover {
-  color: #ffffff;
-}
-.bm-seg > .is-on {
-  background: var(--color-signal);
-  color: #ffffff;
-}
-.bm-seg > .is-on-gold {
-  background: var(--color-gold);
-  color: var(--color-deep);
-  font-weight: 800;
-}
+  /* Numbers are the graphic. */
+  .bm-num {
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
 
-/* Chip — a label, never an action target on its own. */
-.bm-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.25rem 0.55rem;
-  font-size: 11px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.08);
-}
+  /* Buttons ---------------------------------------------------------- */
+  .bm-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.9rem;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border: none;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .bm-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+  }
+  .bm-btn-ghost {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+  }
+  .bm-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  /* The one action per screen. */
+  .bm-btn-gold {
+    background: var(--color-gold);
+    color: var(--color-deep);
+    font-weight: 800;
+  }
+  .bm-btn-gold:hover {
+    background: #eab662;
+  }
+  .bm-btn-signal {
+    background: var(--color-signal);
+  }
+  .bm-btn-signal:hover {
+    background: #12988f;
+  }
+  .bm-btn:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
 
-/* List row — the mention count on the left carries the weight. */
-.bm-row {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  width: 100%;
-  padding: 0.6rem 0.9rem;
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  background: transparent;
-  cursor: pointer;
-  transition: background 0.12s ease;
-}
-.bm-row:hover {
-  background: rgba(255, 255, 255, 0.06);
-}
-.bm-row.is-on {
-  background: var(--color-deep);
-  border-left: 4px solid var(--color-gold);
-  padding-left: calc(0.9rem - 4px);
-}
+  /* Segmented control ------------------------------------------------ */
+  .bm-seg {
+    display: flex;
+    gap: 2px;
+    padding: 3px;
+    background: rgba(255, 255, 255, 0.07);
+  }
+  .bm-seg > * {
+    padding: 0.4rem 0.7rem;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.6);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .bm-seg > *:hover {
+    color: #ffffff;
+  }
+  .bm-seg > .is-on {
+    background: var(--color-signal);
+    color: #ffffff;
+  }
+  .bm-seg > .is-on-gold {
+    background: var(--color-gold);
+    color: var(--color-deep);
+    font-weight: 800;
+  }
 
-.bm-input {
-  width: 100%;
-  padding: 0.7rem 0.85rem;
-  font-size: 13.5px;
-  font-weight: 500;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  outline: none;
-  transition: border-color 0.12s ease, box-shadow 0.12s ease;
-}
-.bm-input::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-.bm-input:focus {
-  border-color: var(--color-gold-deep);
-  box-shadow: 0 0 0 3px rgba(224, 164, 73, 0.28);
-}
+  /* Chip — a label, never an action target on its own. */
+  .bm-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.55rem;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.08);
+  }
 
-/* Focus ring for everything else, per the foundations. */
-:where(button, a, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-gold-deep);
-  outline-offset: 2px;
-}
+  /* List row — the mention count on the left carries the weight. */
+  .bm-row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    width: 100%;
+    padding: 0.6rem 0.9rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.12s ease;
+  }
+  .bm-row:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+  .bm-row.is-on {
+    background: var(--color-deep);
+    border-left: 4px solid var(--color-gold);
+    padding-left: calc(0.9rem - 4px);
+  }
 
-/* Thin scrollbars on the dark stage */
-.scroll-soft {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(127, 227, 213, 0.3) transparent;
-}
-.scroll-soft::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-.scroll-soft::-webkit-scrollbar-thumb {
-  background: rgba(127, 227, 213, 0.25);
+  .bm-input {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    outline: none;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  }
+  .bm-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+  .bm-input:focus {
+    border-color: var(--color-gold-deep);
+    box-shadow: 0 0 0 3px rgba(224, 164, 73, 0.28);
+  }
+
+  /* Focus ring for everything else, per the foundations. */
+  :where(button, a, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-gold-deep);
+    outline-offset: 2px;
+  }
+
+  /* The ground the family tree stands on. A faint dot grid reads as a drawing
+     surface, which is what a genealogy is — and it stops the wide canvas from
+     looking like an empty black field. */
+  .bm-dots {
+    background-color: var(--color-deep);
+    background-image: radial-gradient(rgba(127, 227, 213, 0.13) 1.2px, transparent 1.2px);
+    background-size: 28px 28px;
+  }
+
+  /* Thin scrollbars on the dark stage */
+  .scroll-soft {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(127, 227, 213, 0.3) transparent;
+  }
+  .scroll-soft::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scroll-soft::-webkit-scrollbar-thumb {
+    background: rgba(127, 227, 213, 0.25);
+  }
+
 }
 
 /* ------------------------------------------------------------------ */
@@ -377,6 +452,120 @@ body {
 }
 .leaflet-tooltip.geo-label::before {
   display: none;
+}
+
+/* ---- Stämme Israels: the allotment plate ---- */
+
+/* Territory names sit on the land like an atlas plate. The halo does the work
+   the tooltip box used to do — no border, no background, so twelve names in a
+   country the size of Hesse stop fighting each other. */
+.bm-tribe-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow:
+    0 0 3px rgba(2, 31, 30, 0.98),
+    0 0 7px rgba(2, 31, 30, 0.9),
+    0 0 14px rgba(2, 31, 30, 0.7);
+  pointer-events: none;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+.bm-tribe-label.is-on {
+  color: var(--c, #ffffff);
+  filter: brightness(1.5);
+}
+.bm-tribe-label.is-dim {
+  opacity: 0.35;
+}
+
+/* Water names: the counter-voice — lower case, italic, no weight. */
+.bm-water-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-size: 10px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: rgba(140, 200, 225, 0.75);
+  text-shadow: 0 0 6px rgba(2, 22, 31, 0.95);
+  pointer-events: none;
+}
+
+/* The six cities of refuge get a ring instead of a dot. */
+.bm-refuge-ring {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 1.5px solid var(--color-gold);
+  border-radius: 999px;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* A town that carries the moment: a diamond, so it is not another tribal dot. */
+.bm-hist-mark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  background: var(--color-gold);
+  border: 1px solid rgba(2, 31, 30, 0.8);
+  transform: rotate(45deg);
+  box-shadow: 0 0 8px rgba(224, 164, 73, 0.5);
+}
+
+/* Where a deportation went. The arrow leaves the frame; the word does not. */
+.bm-exile-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-100%, -50%);
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  text-shadow: 0 0 6px rgba(2, 31, 30, 0.95);
+  pointer-events: none;
+}
+
+/* Levi has no territory — when Levi is in hand, its six refuges answer. */
+.bm-refuge-on .bm-refuge-ring {
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border-width: 2px;
+  opacity: 1;
+  box-shadow: 0 0 12px rgba(224, 164, 73, 0.55);
+}
+.bm-refuge-ring {
+  transition: width 0.2s ease, height 0.2s ease, margin 0.2s ease, opacity 0.2s ease;
+}
+
+/* A name steps aside where its territory has no room for it. */
+.bm-tribe-label.is-hidden {
+  opacity: 0;
+}
+/* Far enough out, the plate is a shape, not a reading. */
+.bm-labels-off .bm-tribe-label,
+.bm-labels-off .bm-water-label {
+  opacity: 0;
 }
 
 /* ---- Reiche & Grenzen: the empire overlay ---- */
