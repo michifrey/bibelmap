@@ -347,7 +347,7 @@ function Bar({
 }) {
   const t = useT();
   return (
-    <div className="bm-noprint flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
+    <div className="bm-noprint flex flex-none flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-white/10 bg-abyss px-5 py-3.5 text-white">
       <div className="flex min-w-0 items-center gap-3">
         {onBack && (
           <button onClick={onBack} className="bm-btn bm-btn-ghost flex-none">

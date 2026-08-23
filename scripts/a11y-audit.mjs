@@ -21,6 +21,40 @@ import { chromium } from 'playwright';
  */
 const FREMDE_NAMEN = /^(Zoom in|Zoom out|Close popup|Map|Map marker|Layers|Marker|Reset bearing|Find my location|Enable terrain|Disable terrain)$/i;
 
+/**
+ * Zweiter Blick, auf Telefonbreite: liegt ein Bedienelement außerhalb des
+ * Bildes? Das ist keine Frage des Aussehens – ein „Beenden", das 116 Pixel
+ * rechts danebensteht, lässt sich nicht drücken. Gefunden wurde genau das in
+ * drei Vollbild-Modi, jahrelang unbemerkt.
+ *
+ * Was in einem seitlich scrollbaren Streifen liegt, zählt nicht: durch eine
+ * Reihe von Ortsmarken wischt man, das ist Absicht.
+ */
+const kanten = (breite) => {
+  const out = [];
+  for (const el of document.querySelectorAll('button, a[href], input, select')) {
+    const box = el.getBoundingClientRect();
+    if (box.width === 0 || box.height === 0) continue;
+    const st = getComputedStyle(el);
+    if (st.visibility === 'hidden' || st.display === 'none') continue;
+    const rechts = Math.round(box.right - breite);
+    const links = Math.round(-box.left);
+    if (rechts <= 1 && links <= 1) continue;
+    let scrollbar = false;
+    for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) {
+      const ov = getComputedStyle(a).overflowX;
+      if ((ov === 'auto' || ov === 'scroll') && a.scrollWidth > a.clientWidth + 1) {
+        scrollbar = true;
+        break;
+      }
+    }
+    if (scrollbar) continue;
+    const name = (el.getAttribute('aria-label') || el.textContent || el.tagName).trim().slice(0, 20);
+    out.push(`außerhalb: „${name}" ${rechts > 1 ? rechts + ' px rechts' : links + ' px links'}`);
+  }
+  return [...new Set(out)];
+};
+
 const audit = () => {
   const out = [];
   for (const el of document.querySelectorAll('button, a, [role=button], input, iframe, img, svg')) {
@@ -49,12 +83,24 @@ await p.addInitScript((quelle) => {
 const errs = [];
 let offen = 0;
 p.on('pageerror', (e) => errs.push(e.message));
-for (const hash of ['', '#karte', '#reise=exodus,2', '#mission=modern', '#quiz', '#lesen=Acts,13', '#stammbaum', '#graph', '#kirche', '#vergleich', '#hoeren', '#gelaende', '#heilsgeschichte', '#unterstuetzen']) {
+const ANSICHTEN = ['', '#karte', '#reise=exodus,2', '#mission=modern', '#quiz', '#lesen=Acts,13', '#stammbaum', '#graph', '#kirche', '#vergleich', '#hoeren', '#gelaende', '#heilsgeschichte', '#unterstuetzen'];
+for (const hash of ANSICHTEN) {
   await p.goto(base + '/' + hash, { waitUntil: 'networkidle' });
   await p.waitForTimeout(2200);
   const r = await p.evaluate(audit);
   if (r.length) offen += r.length;
   console.log((hash || '(Startseite)').padEnd(20), r.length ? r.length + ' offen: ' + [...new Set(r)].slice(0, 4).join(' · ') : 'alles benannt');
+}
+
+// Zweiter Durchgang auf Telefonbreite: was ragt aus dem Bild?
+console.log('\nAuf 390 Pixeln – liegt alles im Bild?');
+await p.setViewportSize({ width: 390, height: 844 });
+for (const hash of ANSICHTEN) {
+  await p.goto(base + '/' + hash, { waitUntil: 'networkidle' });
+  await p.waitForTimeout(2200);
+  const r = await p.evaluate(kanten, 390);
+  if (r.length) offen += r.length;
+  console.log((hash || '(Startseite)').padEnd(20), r.length ? r.length + ' offen: ' + r.slice(0, 3).join(' · ') : 'alles im Bild');
 }
 console.log('Konsolenfehler:', [...new Set(errs)].slice(0, 4));
 await b.close();

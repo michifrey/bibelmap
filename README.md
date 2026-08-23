@@ -211,6 +211,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   seine Sprache beim nächsten Besuch wieder.
 - **Tastatur** – Marker lassen sich mit Tabulator ansteuern und mit Enter oder
   Leertaste öffnen (Cluster zoomen hinein); Escape schließt von außen nach innen.
+- **Alles erreichbar** – die A11y-Prüfung geht jede Ansicht zweimal durch:
+  einmal auf Namen, einmal auf 390 Pixeln daraufhin, ob ein Bedienelement aus
+  dem Bild ragt. Ein Knopf, der 116 Pixel rechts danebensteht, lässt sich nicht
+  drücken – und genau das blieb in drei Vollbild-Modi lange unbemerkt.
 - **Zweisprachig bis in die Bibliotheken** – Leaflet und MapLibre beschriften
   ihre eigenen Bedienelemente fest auf Englisch („Zoom in", „Close popup",
   „Map"). `src/lib/mapLocale.ts` setzt sie für alle sechs Leaflet-Karten aus
