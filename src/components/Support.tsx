@@ -96,7 +96,9 @@ export default function Support({ lang, onLang, onExit }: Props) {
     <div className="fixed inset-0 z-[2000] overflow-y-auto bg-paper-2">
       {/* ======================================================== STATEMENT */}
       <div className="relative overflow-hidden bg-deep px-5 py-14 sm:px-10 sm:py-20 lg:px-14">
-        <svg className="pointer-events-none absolute -right-20 -top-16 h-[520px] w-[520px]" viewBox="0 0 520 520" aria-hidden="true">
+        {/* Wie auf der Nachweisseite: auf schmalen Schirmen kleiner, sonst
+            liegt sie über dem Fließtext. */}
+        <svg className="pointer-events-none absolute -right-12 -top-8 h-[300px] w-[300px] opacity-70 sm:-right-20 sm:-top-16 sm:h-[520px] sm:w-[520px] sm:opacity-100" viewBox="0 0 520 520" aria-hidden="true">
           <g fill="none" stroke="#0d7f78" strokeWidth="2">
             <circle cx="260" cy="260" r="80" />
             <circle cx="260" cy="260" r="140" />

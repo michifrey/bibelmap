@@ -152,7 +152,9 @@ export default function Credits({ lang, onLang, onExit }: Props) {
     <div className="fixed inset-0 z-[2000] overflow-y-auto bg-paper-2">
       {/* ======================================================== STATEMENT */}
       <div className="relative overflow-hidden bg-deep px-5 py-14 sm:px-10 sm:py-20 lg:px-14">
-        <svg className="pointer-events-none absolute -right-24 -top-20 h-[520px] w-[520px]" viewBox="0 0 520 520" aria-hidden="true">
+        {/* Auf 390 px deckte die 520er Zeichnung die ganze Kopfzone ab – ihre
+            Linien liefen quer durch den Fließtext. Dort kleiner. */}
+        <svg className="pointer-events-none absolute -right-14 -top-10 h-[300px] w-[300px] opacity-70 sm:-right-24 sm:-top-20 sm:h-[520px] sm:w-[520px] sm:opacity-100" viewBox="0 0 520 520" aria-hidden="true">
           <g fill="none" stroke="#0d7f78" strokeWidth="2">
             <rect x="120" y="60" width="280" height="380" />
             <rect x="150" y="100" width="280" height="380" />
@@ -162,7 +164,12 @@ export default function Credits({ lang, onLang, onExit }: Props) {
         </svg>
 
         <div className="relative">
-          <div className="flex items-start justify-between gap-6">
+          {/*
+            Auf dem Telefon untereinander: nebeneinander blieb der Vorspann in
+            einer 150 Pixel schmalen Spalte neben den Knöpfen stehen und brach
+            in fünf Zeilen um – wie auf der Unterstützen-Seite.
+          */}
+          <div className="flex flex-col-reverse items-start gap-4 sm:flex-row sm:justify-between sm:gap-6">
             <span className="bm-eyebrow text-mint">{t('creditsSub')}</span>
             <div className="flex flex-none items-center gap-2">
               <LangToggle lang={lang} onLang={onLang} variant="inline" />
