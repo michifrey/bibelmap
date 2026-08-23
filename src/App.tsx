@@ -22,6 +22,7 @@ const HistoryMode = lazy(() => import('./components/HistoryMode'));
 const Mission = lazy(() => import('./components/Mission'));
 const JourneyMode = lazy(() => import('./components/JourneyMode'));
 const QuizMode = lazy(() => import('./components/QuizMode'));
+const MediaMode = lazy(() => import('./components/MediaMode'));
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
 import type { SearchHit } from './lib/globalSearch';
 import { parseRef } from './lib/parseRef';
@@ -109,6 +110,7 @@ export default function App() {
   const [journeyNav, setJourneyNav] = useState(INITIAL_ROUTE?.journey ?? null);
   const [missionNav, setMissionNav] = useState(INITIAL_ROUTE?.mission ?? null);
   const [readingNav, setReadingNav] = useState(INITIAL_ROUTE?.reading ?? null);
+  const [mediaNav, setMediaNav] = useState(INITIAL_ROUTE?.media ?? null);
   // Zählt hoch, wenn die Adresse von außen kommt (Zurück-Taste, getippter Link):
   // die Nebenansichten hängen daran und übernehmen den Stand neu.
   const [navEpoch, setNavEpoch] = useState(0);
@@ -187,6 +189,7 @@ export default function App() {
       return;
     }
     if (m === 'church') setChurchFocus(null);
+    if (m === 'media') setMediaNav(null);
     setMode(m);
   }
 
@@ -207,6 +210,7 @@ export default function App() {
       void import('./components/Mission');
       void import('./components/HistoryMode');
       void import('./components/QuizMode');
+      void import('./components/MediaMode');
       void import('./components/Genealogy');
       void import('./components/ChurchMode');
       void import('./components/CompareMode');
@@ -241,11 +245,12 @@ export default function App() {
           journey: journeyNav ?? undefined,
           mission: missionNav ?? undefined,
           reading: readingNav ?? undefined,
+          media: mediaNav ?? undefined,
         });
     if (hash === window.location.hash) return;
     ownHash.current = hash;
     window.history.replaceState(null, '', hash || window.location.pathname + window.location.search);
-  }, [atStart, view, mode, selected, journeyNav, missionNav, readingNav]);
+  }, [atStart, view, mode, selected, journeyNav, missionNav, readingNav, mediaNav]);
 
   /*
    * Escape schließt, was gerade offen ist – von außen nach innen: erst der
@@ -282,6 +287,7 @@ export default function App() {
       setJourneyNav(route.journey ?? null);
       setMissionNav(route.mission ?? null);
       setReadingNav(route.reading ?? null);
+      setMediaNav(route.media ?? null);
       pendingPlace.current = route.placeId ?? null;
       if (!route.placeId) setSelected(null);
       setNavEpoch((n) => n + 1);
@@ -601,6 +607,19 @@ export default function App() {
             {mode === 'history' && (
               <Suspense fallback={<ModeFallback />}>
                 <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />
+              </Suspense>
+            )}
+            {mode === 'media' && (
+              <Suspense fallback={<ModeFallback />}>
+                <MediaMode
+                  key={`media-${navEpoch}`}
+                  places={places}
+                  lang={lang}
+                  initial={mediaNav}
+                  onNavigate={setMediaNav}
+                  onShowPlace={showPlaceFromGenealogy}
+                  onExit={() => setMode(null)}
+                />
               </Suspense>
             )}
             {mode === 'quiz' && (

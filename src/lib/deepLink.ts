@@ -20,6 +20,11 @@ export interface Route {
   mission?: { phase: string; journey?: string; event?: string };
   /** Buch + Kapitel (Präsentationsmodus). */
   reading?: { osis: string; chapter: number };
+  /**
+   * Quelle oder Ort (Hören & Sehen). `#hoeren=ort,jerusalem` zeigt die Folgen
+   * zu einem Ort, `#hoeren=keller` die einer Quelle.
+   */
+  media?: { source?: string; place?: string };
 }
 
 /** Schlüssel im Hash → Modus ohne weitere Angaben. */
@@ -77,6 +82,13 @@ export function parseHash(hash: string): Route | null {
             ? { phase: args[0], journey: args[1] }
             : { phase: args[0], event: args[1] },
       };
+    case 'hoeren':
+      if (!args[0]) return { view: 'map', mode: 'media' };
+      return {
+        view: 'map',
+        mode: 'media',
+        media: args[0] === 'ort' ? { place: args[1] } : { source: args[0] },
+      };
     case 'lesen':
       return {
         view: 'map',
@@ -101,6 +113,10 @@ export function formatRoute(route: Route): string {
     // In der Reisephase steht die Reise in der Adresse, sonst das Ereignis.
     const detail = phase === 'journeys' ? journey : event;
     return detail ? `#mission=${phase},${detail}` : `#mission=${phase}`;
+  }
+  if (mode === 'media') {
+    if (route.media?.place) return `#hoeren=ort,${route.media.place}`;
+    return route.media?.source ? `#hoeren=${route.media.source}` : '#hoeren';
   }
   if (mode === 'present') {
     return route.reading ? `#lesen=${route.reading.osis},${route.reading.chapter}` : '#lesen';
