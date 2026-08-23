@@ -454,6 +454,90 @@ body {
   display: none;
 }
 
+/* ---- Stämme Israels: the allotment plate ---- */
+
+/* Territory names sit on the land like an atlas plate. The halo does the work
+   the tooltip box used to do — no border, no background, so twelve names in a
+   country the size of Hesse stop fighting each other. */
+.bm-tribe-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow:
+    0 0 3px rgba(2, 31, 30, 0.98),
+    0 0 7px rgba(2, 31, 30, 0.9),
+    0 0 14px rgba(2, 31, 30, 0.7);
+  pointer-events: none;
+  transition: opacity 0.15s ease, color 0.15s ease;
+}
+.bm-tribe-label.is-on {
+  color: var(--c, #ffffff);
+  filter: brightness(1.5);
+}
+.bm-tribe-label.is-dim {
+  opacity: 0.35;
+}
+
+/* Water names: the counter-voice — lower case, italic, no weight. */
+.bm-water-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-size: 10px;
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: rgba(140, 200, 225, 0.75);
+  text-shadow: 0 0 6px rgba(2, 22, 31, 0.95);
+  pointer-events: none;
+}
+
+/* The six cities of refuge get a ring instead of a dot. */
+.bm-refuge-ring {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 1.5px solid var(--color-gold);
+  border-radius: 999px;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* Levi has no territory — when Levi is in hand, its six refuges answer. */
+.bm-refuge-on .bm-refuge-ring {
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  border-width: 2px;
+  opacity: 1;
+  box-shadow: 0 0 12px rgba(224, 164, 73, 0.55);
+}
+.bm-refuge-ring {
+  transition: width 0.2s ease, height 0.2s ease, margin 0.2s ease, opacity 0.2s ease;
+}
+
+/* A name steps aside where its territory has no room for it. */
+.bm-tribe-label.is-hidden {
+  opacity: 0;
+}
+/* Far enough out, the plate is a shape, not a reading. */
+.bm-labels-off .bm-tribe-label,
+.bm-labels-off .bm-water-label {
+  opacity: 0;
+}
+
 /* ---- Reiche & Grenzen: the empire overlay ---- */
 
 /* Territory names sit straight on the map like an atlas plate: letterspaced
