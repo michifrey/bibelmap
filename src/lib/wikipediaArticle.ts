@@ -1,4 +1,5 @@
 import type { Lang } from '../i18n';
+import { commonsFileCredit } from './imageCredit';
 
 /**
  * Wikipedia lookup for a person or a historical document: intro paragraph +
@@ -16,6 +17,12 @@ export interface WikiArticle {
   extract: string;
   /** Lead image (Wikimedia Commons), already thumbnailed. */
   thumb: string | null;
+  /** Urheber des Bildes – fast alle Commons-Bilder verlangen die Nennung. */
+  credit: string | null;
+  /** Lizenzkürzel des Bildes, normalisiert (`CC-BY-SA-4.0`). */
+  license: string | null;
+  /** Dateiseite des Bildes; Rückfallziel des Nachweises ist der Artikel. */
+  fileUrl: string | null;
 }
 
 const mem = new Map<string, WikiArticle | null>();
@@ -31,14 +38,16 @@ const PROPS = {
   action: 'query',
   prop: 'pageimages|extracts|info',
   inprop: 'url',
-  piprop: 'thumbnail',
+  piprop: 'thumbnail|name',
   pithumbsize: '480',
   exintro: '1',
   explaintext: '1',
   exsentences: '3',
 };
 
-function firstPage(data: unknown, lang: Lang): WikiArticle | null {
+type Page = WikiArticle & { file: string | null };
+
+function firstPage(data: unknown, lang: Lang): Page | null {
   const pages = (data as { query?: { pages?: unknown[] } })?.query?.pages;
   if (!Array.isArray(pages) || pages.length === 0) return null;
   const p = pages[0] as {
@@ -47,14 +56,34 @@ function firstPage(data: unknown, lang: Lang): WikiArticle | null {
     fullurl?: string;
     extract?: string;
     thumbnail?: { source?: string };
+    pageimage?: string;
   };
   if (p.missing || !p.title) return null;
+  const url = p.fullurl ?? `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(p.title)}`;
   return {
     title: p.title,
-    url: p.fullurl ?? `https://${lang}.wikipedia.org/wiki/${encodeURIComponent(p.title)}`,
+    url,
     extract: (p.extract ?? '').trim(),
     thumb: p.thumbnail?.source ?? null,
+    credit: null,
+    license: null,
+    fileUrl: null,
+    file: p.pageimage ?? null,
   };
+}
+
+/**
+ * Urheber und Lizenz stehen nicht am Artikel, sondern an der Datei – und fast
+ * jedes Commons-Bild verlangt beides. Also ein Schritt mehr, ehe ein Bild
+ * angezeigt wird; ohne Nachweis bleibt es beim Verweis auf den Artikel.
+ */
+async function withCredit(art: Page): Promise<WikiArticle> {
+  const { file, ...rest } = art;
+  if (!rest.thumb || !file) return rest;
+  const meta = await commonsFileCredit(file);
+  return meta
+    ? { ...rest, credit: meta.credit, license: meta.license, fileUrl: meta.fileUrl }
+    : { ...rest, credit: 'Wikimedia Commons', fileUrl: rest.url };
 }
 
 async function load(term: string, lang: Lang): Promise<WikiArticle | null> {
@@ -62,12 +91,15 @@ async function load(term: string, lang: Lang): Promise<WikiArticle | null> {
     const exact = await fetch(api(lang, { ...PROPS, titles: term, redirects: '1' }));
     if (exact.ok) {
       const hit = firstPage(await exact.json(), lang);
-      if (hit) return hit;
+      if (hit) return withCredit(hit);
     }
     const found = await fetch(
       api(lang, { ...PROPS, generator: 'search', gsrsearch: term, gsrlimit: '1' }),
     );
-    if (found.ok) return firstPage(await found.json(), lang);
+    if (found.ok) {
+      const hit = firstPage(await found.json(), lang);
+      if (hit) return withCredit(hit);
+    }
   } catch {
     /* offline or blocked – the card simply stays text-only */
   }

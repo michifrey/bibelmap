@@ -120,3 +120,50 @@ export function plainText(html: string): string {
   const doc = new DOMParser().parseFromString(html, 'text/html');
   return (doc.body.textContent ?? '').replace(/\s+/g, ' ').trim();
 }
+
+export interface CommonsCredit {
+  /** Urheber, wie ihn die Dateiseite nennt – „Wikimedia Commons", wenn sie schweigt. */
+  credit: string;
+  /** Lizenzkürzel, normalisiert (`CC-BY-SA-4.0`), oder null. */
+  license: string | null;
+  /** Dateiseite auf Commons – der Ort, an dem beides nachzulesen ist. */
+  fileUrl: string;
+}
+
+/**
+ * Urheber und Lizenz einer Commons-Datei. Schlägt der Aufruf fehl, bleibt es
+ * beim allgemeinen Nachweis auf die Dateiseite – ein Bild ohne Nachweis zeigt
+ * die App nicht. Genutzt von den Ortsbildern (Wikidata P18) und von den
+ * Personen- und Dokumentbildern des Zeitbaums.
+ */
+export async function commonsFileCredit(file: string): Promise<CommonsCredit | null> {
+  const enc = encodeURIComponent(file.replace(/ /g, '_'));
+  const api = new URL('https://commons.wikimedia.org/w/api.php');
+  api.search = new URLSearchParams({
+    action: 'query',
+    format: 'json',
+    origin: '*', // CORS: ohne das antwortet die API nicht im Browser
+    prop: 'imageinfo',
+    iiprop: 'extmetadata',
+    titles: `File:${file}`,
+  }).toString();
+
+  try {
+    const r = await fetch(api);
+    if (!r.ok) return null;
+    const data = await r.json();
+    const pages = data?.query?.pages;
+    const page = pages && Object.values(pages)[0];
+    const ex = (page as { imageinfo?: { extmetadata?: Record<string, { value?: string }> }[] })
+      ?.imageinfo?.[0]?.extmetadata;
+    if (!ex) return null;
+    const artist = ex.Artist?.value ? plainText(ex.Artist.value) : '';
+    return {
+      credit: artist || 'Wikimedia Commons',
+      license: normalizeLicense(ex.License?.value ?? ex.LicenseShortName?.value),
+      fileUrl: `https://commons.wikimedia.org/wiki/File:${enc}`,
+    };
+  } catch {
+    return null;
+  }
+}

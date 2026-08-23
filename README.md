@@ -201,6 +201,11 @@ MediaWiki-API (Einleitungsabsatz + Vorschaubild von Wikimedia Commons, gecacht
 im `sessionStorage`). Das Repository bleibt dadurch frei von Bilddateien und
 Lizenzfragen; ohne Netz fällt die Karte still auf reinen Text zurück.
 
+Zu jedem Bild holt die App auch **Urheber und Lizenz** von der Commons-Dateiseite
+und zeigt beides an (`commonsFileCredit()` in `src/lib/imageCredit.ts` – dieselbe
+Stelle, die schon die Ortsbilder nachweist) – fast alle diese Bilder verlangen
+Namensnennung *und* Lizenznennung, ein „© Name" allein genügt nicht.
+
 Der Suchbegriff wird zuerst als exakter Titel aufgelöst (mit Weiterleitungen)
 und erst dann als Suche – ein leicht danebenliegender Begriff landet also
 trotzdem im richtigen Artikel. Links gehen bewusst über die Wikipedia-Suche

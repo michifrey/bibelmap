@@ -3,6 +3,7 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { fetchArticle, wikiLink, type WikiArticle } from '../lib/wikipediaArticle';
 import { DOC_KIND, PERSON_SOURCES, type HistDoc } from '../data/personSources';
+import { licenseInfo } from '../lib/imageCredit';
 
 /** Resolve a Wikipedia article once per term/language, for image + intro. */
 function useArticle(term: string | undefined, lang: Lang): WikiArticle | null {
@@ -19,6 +20,45 @@ function useArticle(term: string | undefined, lang: Lang): WikiArticle | null {
     };
   }, [term, lang]);
   return art;
+}
+
+/**
+ * Bildnachweis: Urheber und Lizenz, beide verlinkt. Fast jedes Bild von
+ * Wikimedia Commons verlangt die Nennung von beidem – ein „© Name" allein
+ * genügt nicht (siehe `lib/imageCredit.ts`).
+ */
+function ImageCredit({ art, lang, className = '' }: { art: WikiArticle; lang: Lang; className?: string }) {
+  const license = licenseInfo(art.license, lang);
+  if (!art.credit) return null;
+  return (
+    <span className={`flex min-w-0 items-center gap-1 ${className}`}>
+      <a
+        href={art.fileUrl ?? art.url}
+        target="_blank"
+        rel="noreferrer"
+        className="truncate hover:text-gold"
+        title={art.credit}
+      >
+        © {art.credit}
+      </a>
+      {license &&
+        (license.url ? (
+          <a
+            href={license.url}
+            target="_blank"
+            rel="noreferrer"
+            className="flex-none border-l border-white/25 pl-1 hover:text-gold"
+            title={license.hint}
+          >
+            {license.label}
+          </a>
+        ) : (
+          <span className="flex-none border-l border-white/25 pl-1" title={license.hint}>
+            {license.label}
+          </span>
+        ))}
+    </span>
+  );
 }
 
 function ExternalIcon() {
@@ -49,11 +89,11 @@ export function PersonPortrait({ personId, name, lang }: { personId: string; nam
         referrerPolicy="no-referrer"
         className="h-40 w-full bg-deepest object-cover object-top"
       />
-      <figcaption className="flex items-center justify-between gap-2 bg-deepest/80 px-3 py-1 text-[10px] text-white/55">
-        <span>{caption}</span>
-        <a href={art.url} target="_blank" rel="noreferrer" className="shrink-0 underline-offset-2 hover:underline">
-          Wikimedia Commons
-        </a>
+      {/* Einordnung und Nachweis stehen untereinander: nebeneinander bliebe vom
+          Urhebernamen im 22rem breiten Streifen nur „© Ber…" übrig. */}
+      <figcaption className="bg-deepest/80 px-3 py-1 text-[10px] leading-snug text-white/55">
+        <div>{caption}</div>
+        <ImageCredit art={art} lang={lang} />
       </figcaption>
     </figure>
   );
@@ -101,6 +141,7 @@ function DocRow({ doc, lang }: { doc: HistDoc; lang: Lang }) {
           {where && <span>{where}</span>}
           <span className={doc.named ? 'text-gold/80' : ''}>{doc.named ? t('docNames') : t('docContext')}</span>
         </div>
+        {art?.thumb && <ImageCredit art={art} lang={lang} className="mt-0.5 text-[10px] text-white/40" />}
       </div>
     </li>
   );
