@@ -519,7 +519,37 @@ der sieben Sendschreiben, fünf Stationen für den Hauskreis).
 - [x] Die A11y-Prüfung kennt die Regel: kein Halt hinter dem Vorhang, und
       Escape gibt den Weg zur Kopfzeile wieder frei.
 
-### 4.32 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.32 Eine Suche, die auch die Menschen findet — P1 ✅
+
+**Beschreibung:** Das eine Suchfeld fand Orte, Reisen, Ausbreitung und
+Stammesgebiete – aber keinen einzigen Menschen, obwohl die App zu jedem eine
+Seite hat.
+
+**Gemessen vorher:** „Chalcedon", „Nizäa", „Bonhoeffer", „Debora", „Hiskia" und
+„Sündenfall" fanden **nichts**; „Augustinus" traf nur ein Ereignis, in dessen
+Text der Name vorkommt, nicht seine eigene Seite.
+
+**Anforderungen**
+- Kirchenväter (`#kirche=vater,…`), Konzilien (`#kirche=konzil,…`), Personen des
+  Zeitbaums, Menschen aus den Stammesgebieten, Gestalten des Religionsvergleichs
+  und Stationen der Heilsgeschichte sind über dasselbe Feld erreichbar.
+- Zweite Schreibweisen der Konzilsstädte gelten mit – dieselbe Stadt, andere
+  Buchstaben, nichts erfunden.
+- Jeder Treffer führt auf eine Adresse, die sich weitergeben lässt.
+
+**Akzeptanzkriterien**
+- [x] Alle achtzehn Prüfwörter finden etwas; jedes Ziel gemessen nachgeprüft.
+- [x] Ein Mensch aus dem Zeitbaum steht in der Adresse
+      (`#stammbaum=zeit,bonhoeffer`) – vorher endete der Weg beim Reiter.
+- [x] Die Stationen der Heilsgeschichte haben eine Adresse
+      (`#heilsgeschichte=exodus`) und laufen beim Blättern mit; als einziger
+      Modus hatten sie vorher keine.
+- [x] Derselbe Mensch steht nicht doppelt in der Liste: Kirchenväter stammen aus
+      demselben Datensatz wie die Personen des Zeitbaums.
+- [x] Der Religionsvergleich wird bewusst schwächer bewertet – wer „Mose" tippt,
+      soll zuerst die Orte und die Reise sehen.
+
+### 4.33 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

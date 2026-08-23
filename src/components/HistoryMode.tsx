@@ -12,12 +12,19 @@ import YouTubeEmbed from './YouTubeEmbed';
 interface Props {
   places: Place[];
   lang: Lang;
+  /** Station aus der Adresse (`#heilsgeschichte=exodus`) oder aus der Suche. */
+  initial?: string | null;
+  /** Damit die Adresse mitläuft, wenn jemand weiterblättert. */
+  onNavigate?: (id: string) => void;
   onExit: () => void;
 }
 
-export default function HistoryMode({ places, lang, onExit }: Props) {
+export default function HistoryMode({ places, lang, initial, onNavigate, onExit }: Props) {
   const t = useT();
-  const [i, setI] = useState(0);
+  const [i, setI] = useState(() => {
+    const n = HISTORY.findIndex((h) => h.id === initial);
+    return n >= 0 ? n : 0;
+  });
   const [selected, setSelected] = useState<Place | null>(null);
   const [showVideo, setShowVideo] = useState(false);
 
@@ -28,6 +35,8 @@ export default function HistoryMode({ places, lang, onExit }: Props) {
   useEffect(() => {
     setSelected(null);
     setShowVideo(false);
+    onNavigate?.(HISTORY[i].id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [i]);
 
   function go(d: number) {

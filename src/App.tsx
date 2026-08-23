@@ -171,6 +171,7 @@ export default function App() {
     INITIAL_ROUTE?.church ?? null,
   );
   const [compareNav, setCompareNav] = useState<string | null>(INITIAL_ROUTE?.compare ?? null);
+  const [historyNav, setHistoryNav] = useState<string | null>(INITIAL_ROUTE?.history ?? null);
   const [treeNav, setTreeNav] = useState(INITIAL_ROUTE?.tree ?? null);
   /*
    * Der eigene Weg. Er gehört niemandem außer dem, der ihn baut: gespeichert
@@ -277,6 +278,8 @@ export default function App() {
   }
   function openPersonInTree(id: string) {
     setTreeFocus(id);
+    // Die Adresse trägt die Person mit: `#stammbaum=zeit,bonhoeffer`.
+    setTreeNav({ tab: 'timeline', id });
     setMode(null);
     setView('tree');
   }
@@ -358,6 +361,7 @@ export default function App() {
           media: mediaNav ?? undefined,
           church: churchNav ?? undefined,
           compare: compareNav ?? undefined,
+          history: historyNav ?? undefined,
           own: mode === 'route' ? ownIds : undefined,
           tree: treeNav ?? undefined,
         });
@@ -375,6 +379,7 @@ export default function App() {
     mediaNav,
     churchNav,
     compareNav,
+    historyNav,
     ownIds,
     treeNav,
   ]);
@@ -417,6 +422,7 @@ export default function App() {
       setMediaNav(route.media ?? null);
       setChurchNav(route.church ?? null);
       setCompareNav(route.compare ?? null);
+      setHistoryNav(route.history ?? null);
       if (route.own?.length) setOwnIds(route.own);
       setTreeNav(route.tree ?? null);
       pendingPlace.current = route.placeId ?? null;
@@ -547,10 +553,26 @@ export default function App() {
       setNavEpoch((n) => n + 1);
       return;
     }
+    if (hit.target.mode === 'person') {
+      // Ein Mensch aus dem Zeitbaum: derselbe Weg, den auch die
+      // Kirchengeschichte nimmt, wenn sie „im Zeitbaum zeigen" anbietet.
+      openPersonInTree(hit.target.personId);
+      setNavEpoch((n) => n + 1);
+      return;
+    }
     setView('map');
     if (hit.target.mode === 'journeys') {
       setJourneyNav(hit.target.journey);
       setMode('journeys');
+    } else if (hit.target.mode === 'church') {
+      setChurchNav(hit.target.church);
+      setMode('church');
+    } else if (hit.target.mode === 'compare') {
+      setCompareNav(hit.target.compare);
+      setMode('compare');
+    } else if (hit.target.mode === 'history') {
+      setHistoryNav(hit.target.history);
+      setMode('history');
     } else {
       setMissionNav(hit.target.mission);
       setMode('mission');
@@ -906,7 +928,14 @@ export default function App() {
             )}
             {mode === 'history' && (
               <Suspense fallback={<ModeFallback />}>
-                <HistoryMode places={places} lang={lang} onExit={() => setMode(null)} />
+                <HistoryMode
+                  key={`history-${navEpoch}`}
+                  places={places}
+                  lang={lang}
+                  initial={historyNav}
+                  onNavigate={setHistoryNav}
+                  onExit={() => setMode(null)}
+                />
               </Suspense>
             )}
             {mode === 'media' && (

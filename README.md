@@ -31,6 +31,13 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Frage, in wessen Gebiet er liegt, und `Reichsteilung` die Karte von 930. Wer eine **Bibelstelle** eintippt (`Apg 13`,
   `Mk 6,30`, `1. Mose 12`, `Acts 27`), bekommt die Orte dieses Kapitels und
   einen Weg direkt in den Bibeltext.
+- **Die Suche findet auch die Menschen** – nicht nur Orte, Reisen und
+  Stammesgebiete: **Augustinus** führt auf seine Seite in der Kirchengeschichte,
+  **Chalcedon** und **Nizäa** auf ihr Konzil, **Bonhoeffer** und **Hiskia** in
+  den Zeitbaum, **Debora** und **Gideon** in ihr Stammesgebiet, **Der
+  Sündenfall** auf seine Station der Heilsgeschichte. Vorher fand keines dieser
+  Wörter etwas, obwohl die App zu jedem eine Seite hat. Zweite Schreibweisen
+  gelten mit: „Nizäa" wie „Nicäa", „Ephesos" wie „Ephesus".
 - **Nachbarorte** – jede Ortskarte zeigt, was von dort aus **an einem Tag zu
   Fuß** zu erreichen war: bis 25 km Luftlinie, mit Entfernung und
   Himmelsrichtung (von Jerusalem: Bethlehem 8 km S, Gibeon 9 km NW, Jericho
@@ -174,7 +181,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
   (Jerusalem im Gelände), `#gelaende=reise,exodus` (der Auszug über dem
   Gelände), `#gelaende=mission,second` (die zweite Missionsreise), `#weg=a15257a,a112427`
-  (ein selbst gebauter Weg), `#kirche=vater,augustinus`
+  (ein selbst gebauter Weg), `#heilsgeschichte=exodus` (eine Station der
+  Heilsgeschichte), `#stammbaum=zeit,bonhoeffer` (ein Mensch im Zeitbaum),
+  `#kirche=vater,augustinus`
   `#kirche=konzil,chalcedon` und `#vergleich=abraham`. Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
