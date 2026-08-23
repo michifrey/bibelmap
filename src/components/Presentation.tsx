@@ -11,6 +11,11 @@ import MapView from './MapView';
 import YouTubeEmbed from './YouTubeEmbed';
 import { loadMedia, episodesForRef } from '../lib/media';
 
+/** Wie weit sich die Schrift treiben lässt – darunter unleserlich, darüber passt kaum ein Vers auf die Seite. */
+const MIN_SCALE = 0.8;
+const MAX_SCALE = 2;
+const SCALE_STEP = 0.15;
+
 interface Props {
   places: Place[];
   lang: Lang;
@@ -56,6 +61,27 @@ export default function Presentation({
       // Ohne Speicher bleibt es bei der Voreinstellung – kein Grund zu scheitern.
     }
   }, [beamer]);
+
+  /**
+   * Schriftgröße des Bibeltextes. Fünf Meter vom Fernseher entfernt ist die
+   * Vorgabe zu klein, auf dem Telefon in der Hand manchmal zu groß – und wer
+   * sie einmal eingestellt hat, will sie beim nächsten Mal wiederfinden.
+   */
+  const [textScale, setTextScale] = useState(() => {
+    try {
+      const v = Number(localStorage.getItem('bibelmap:textScale'));
+      return Number.isFinite(v) && v >= MIN_SCALE && v <= MAX_SCALE ? v : 1;
+    } catch {
+      return 1;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem('bibelmap:textScale', String(textScale));
+    } catch {
+      // Ohne Speicher bleibt es bei der Voreinstellung.
+    }
+  }, [textScale]);
 
   const [bookText, setBookText] = useState<BookText | null>(null);
   const [textLoading, setTextLoading] = useState(false);
@@ -203,6 +229,12 @@ export default function Presentation({
         onBack={() => setBook(null)}
         beamer={beamer}
         onBeamer={() => setBeamer((v) => !v)}
+        textScale={textScale}
+        onTextScale={(d) =>
+          setTextScale((v) =>
+            Math.min(MAX_SCALE, Math.max(MIN_SCALE, Number((v + d * SCALE_STEP).toFixed(2)))),
+          )
+        }
         onExit={onExit}
       />
 
@@ -315,9 +347,11 @@ export default function Presentation({
               <p className="bg-surface/50 px-4 py-6 text-center text-sm text-white/60">{t('noText')}</p>
             ) : (
               <div
-                className={`font-scripture text-ink ${
-                  beamer ? 'mx-auto max-w-4xl text-[26px] leading-[1.7]' : 'text-[18.5px] leading-[1.85]'
-                }`}
+                className={`font-scripture text-ink ${beamer ? 'mx-auto max-w-4xl' : ''}`}
+                style={{
+                  fontSize: `${((beamer ? 26 : 18.5) * textScale).toFixed(1)}px`,
+                  lineHeight: beamer ? 1.7 : 1.85,
+                }}
               >
                 {verses.map((vs) => {
                   const vp = versePlaces.get(vs.v) ?? [];
@@ -405,6 +439,8 @@ function PresentationBar({
   onBack,
   beamer,
   onBeamer,
+  textScale = 1,
+  onTextScale,
   onExit,
 }: {
   title: string;
@@ -412,23 +448,53 @@ function PresentationBar({
   onBack?: () => void;
   beamer?: boolean;
   onBeamer?: () => void;
+  textScale?: number;
+  onTextScale?: (richtung: 1 | -1) => void;
   onExit: () => void;
 }) {
   const t = useT();
   return (
-    <div className="flex flex-none items-center justify-between gap-3 border-b border-white/10 bg-signal px-4 py-3 text-white">
-      <div className="flex items-center gap-3">
+    /* `flex-wrap`: auf dem Telefon passte die Leiste nie in eine Zeile – der
+       Beenden-Knopf lag 116 Pixel außerhalb des Bildes und war nicht zu
+       erreichen. Aufgefallen ist es erst, als ein Knopf dazukam. */
+    <div className="flex flex-none flex-wrap items-center justify-between gap-x-3 gap-y-2 border-b border-white/10 bg-signal px-4 py-3 text-white">
+      <div className="flex min-w-0 items-center gap-3">
         {onBack && (
-          <button onClick={onBack} className="bg-white/10 px-2.5 py-1.5 text-sm transition hover:bg-white/20">
+          <button onClick={onBack} className="flex-none bg-white/10 px-2.5 py-1.5 text-sm transition hover:bg-white/20">
             ‹ {t('chooseBook')}
           </button>
         )}
-        <div>
-          <div className="font-display text-lg font-semibold leading-tight">{title}</div>
-          {subtitle && <div className="text-[11px] text-white/75">{subtitle}</div>}
+        <div className="min-w-0">
+          <div className="truncate font-display text-lg font-semibold leading-tight">{title}</div>
+          {subtitle && <div className="truncate text-[11px] text-white/75">{subtitle}</div>}
         </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2">
+        {onTextScale && (
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => onTextScale(-1)}
+              disabled={textScale <= MIN_SCALE + 0.001}
+              aria-label={t('textSmaller')}
+              title={t('textSmaller')}
+              className="bg-white/10 px-2.5 py-1.5 text-xs transition hover:bg-white/20 disabled:opacity-30"
+            >
+              A−
+            </button>
+            <span className="bm-num w-9 text-center text-[11px] text-white/75">
+              {Math.round(textScale * 100)}%
+            </span>
+            <button
+              onClick={() => onTextScale(1)}
+              disabled={textScale >= MAX_SCALE - 0.001}
+              aria-label={t('textLarger')}
+              title={t('textLarger')}
+              className="bg-white/10 px-2.5 py-1.5 text-base transition hover:bg-white/20 disabled:opacity-30"
+            >
+              A+
+            </button>
+          </div>
+        )}
         {onBeamer && (
           <button
             onClick={onBeamer}

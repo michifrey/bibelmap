@@ -454,7 +454,15 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       einer Handpflege – und fand damit im ersten Lauf einen, den die
       Handpflege übersehen hatte („Toggle attribution").
 
-### 4.27 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.27 Schriftgröße im Entdeckermodus — P2 ✅
+
+- [x] Der Bibeltext lässt sich von 80 % auf 200 % stellen, in beiden Modi
+      (18,5 px bzw. 26 px als Grundwert), und die Einstellung bleibt gemerkt.
+- [x] Dabei gefunden und mit repariert: die Leiste des Modus passte auf dem
+      Telefon **nie** in eine Zeile – „Beenden" lag 116 px außerhalb des
+      Bildes und war nicht zu erreichen. Sie bricht jetzt um.
+
+### 4.28 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
