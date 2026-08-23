@@ -135,6 +135,7 @@ export default function App() {
     INITIAL_ROUTE?.church ?? null,
   );
   const [compareNav, setCompareNav] = useState<string | null>(INITIAL_ROUTE?.compare ?? null);
+  const [treeNav, setTreeNav] = useState(INITIAL_ROUTE?.tree ?? null);
   // Mobile-only: bottom-sheet (search/detail) and timeline are collapsible so
   // the map stays usable on small screens. Desktop ignores these.
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -218,7 +219,10 @@ export default function App() {
   // Opening a view/mode manually (header toggle, modes menu) clears any pending
   // cross-link focus so it doesn't unexpectedly jump on the next visit.
   function handleView(v: View) {
-    if (v === 'tree') setTreeFocus(null);
+    if (v === 'tree') {
+      setTreeFocus(null);
+      setTreeNav(null);
+    }
     setView(v);
   }
   function handleMode(m: Mode) {
@@ -290,6 +294,7 @@ export default function App() {
           media: mediaNav ?? undefined,
           church: churchNav ?? undefined,
           compare: compareNav ?? undefined,
+          tree: treeNav ?? undefined,
         });
     if (hash === window.location.hash) return;
     ownHash.current = hash;
@@ -305,6 +310,7 @@ export default function App() {
     mediaNav,
     churchNav,
     compareNav,
+    treeNav,
   ]);
 
   /*
@@ -345,6 +351,7 @@ export default function App() {
       setMediaNav(route.media ?? null);
       setChurchNav(route.church ?? null);
       setCompareNav(route.compare ?? null);
+      setTreeNav(route.tree ?? null);
       pendingPlace.current = route.placeId ?? null;
       if (!route.placeId) setSelected(null);
       setNavEpoch((n) => n + 1);
@@ -453,9 +460,17 @@ export default function App() {
     setNavEpoch((n) => n + 1);
   }
 
-  /** Ein Treffer aus Reisen oder Ausbreitung: Modus öffnen, Stand setzen. */
+  /** Ein Treffer aus Reisen, Ausbreitung oder Stammesgebieten: hin da. */
   function openStory(hit: SearchHit) {
     setAtStart(false);
+    if (hit.target.mode === 'tree') {
+      setTreeFocus(null);
+      setTreeNav(hit.target.tree);
+      setMode(null);
+      setView('tree');
+      setNavEpoch((n) => n + 1);
+      return;
+    }
     setView('map');
     if (hit.target.mode === 'journeys') {
       setJourneyNav(hit.target.journey);
@@ -528,11 +543,14 @@ export default function App() {
         {view === 'tree' ? (
           <Suspense fallback={<ModeFallback />}>
           <Genealogy
+            key={`tree-${navEpoch}`}
             places={places}
             lang={lang}
             focusId={treeFocus}
             onShowOnMap={showPersonOnMap}
             onShowPlace={showPlaceFromGenealogy}
+            initial={treeNav}
+            onNavigate={setTreeNav}
           />
           </Suspense>
         ) : view === 'graph' ? (

@@ -26,7 +26,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   vorkommt, inkl. aller Bibelstellen. Gesucht wird auch in den **Reisen und in
   der Ausbreitung**: `Emmaus` findet den Ort *und* die Station im Weg nach
   Jerusalem, `Azusa` das Ereignis von 1906 – ein Klick springt an die passende
-  Stelle im jeweiligen Modus. Wer eine **Bibelstelle** eintippt (`Apg 13`,
+  Stelle im jeweiligen Modus. Auch die **Stammesgebiete** sind darunter:
+  `Sebulon` findet den Stamm, `Hebron` zusätzlich zum Ort die Antwort auf die
+  Frage, in wessen Gebiet er liegt, und `Reichsteilung` die Karte von 930. Wer eine **Bibelstelle** eintippt (`Apg 13`,
   `Mk 6,30`, `1. Mose 12`, `Acts 27`), bekommt die Orte dieses Kapitels und
   einen Weg direkt in den Bibeltext.
 - **Nachbarorte** – jede Ortskarte zeigt, was von dort aus **an einem Tag zu
@@ -101,6 +103,17 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   und **Dan** hält sein Los nicht, sondern zieht ans Nordende des Landes.
   Umschaltbar zwischen Nacht-, Relief- und Satellitenkarte; die Völkertafel und
   die Personen der Linie lassen sich darüberlegen.
+- **Was aus ihnen wurde** – dieselbe Karte in sechs Bildern, denn die Loskarte
+  zeigt einen einzigen Augenblick, und die Frage danach ist immer dieselbe: Was
+  wurde aus den zwölf Stämmen? Die Gebiete bleiben, die Farbe wechselt.
+  **um 1200** die Landnahme · **um 1150** was nach Richter 1 nie erobert wurde
+  (die Kette quer durch die Jesreel-Ebene und die Küste entlang) · **930** die
+  Reichsteilung, zehn Stämme gegen zwei, die Grenze quer durch Benjamin ·
+  **732** Assur nimmt Galiläa, die Küste und Gilead, vom Nordreich bleibt der
+  Kern um Samaria · **722** Samaria fällt, die zehn kehren nicht wieder ·
+  **586** Juda fällt – und kommt als einziger zurück. Die Liste links sortiert
+  die Stämme dann nicht mehr nach Müttern, sondern nach ihrem Ausgang, und ein
+  Pfeil zeigt, wohin die Verschleppung ging.
 - **Zeitdokumente zu einer Person** – die Personenkarte zeigt, was außerhalb der
   Bibel von diesem Menschen erhalten ist: das Sanherib-Prisma zu Hiskia
   („wie einen Vogel im Käfig"), die Tel-Dan-Stele zum „Haus Davids", die
@@ -129,7 +142,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Papier in der Hand hat.
 - **Teilen & Deep-Links** – jede Ansicht hat eine Adresse: `#ort=a15257a`
   (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
-  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`, `#nachweise`, `#hoeren=keller`
+  `#mission=modern`, `#lesen=Acts,13`, `#stammbaum=gebiete,juda,722`
+  (ein Stamm auf der Stammeskarte in einem bestimmten Jahr; `zeit` und `baum`
+  sind die beiden anderen Reiter), `#nachweise`, `#hoeren=keller`
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#kirche=vater,augustinus`
   `#kirche=konzil,chalcedon` und `#vergleich=abraham`. Der Hash läuft beim

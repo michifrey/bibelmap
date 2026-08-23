@@ -344,12 +344,6 @@ const STRINGS: Dict = {
   ntMapHint: { de: 'Wo die Stämme und Völker lebten – tippe einen Punkt an.', en: 'Where the tribes and peoples lived – tap a point.' },
   openInGenTree: { de: 'Im Stammbaum öffnen', en: 'Open in family tree' },
   // Stämme Israels – die Karte des Stammbaums
-  tribesEyebrow: { de: 'Josua 13–21', en: 'Joshua 13–21' },
-  tribesTitle: { de: 'Das verteilte Land', en: 'The land divided' },
-  tribesIntro: {
-    de: 'Zwölf Söhne, zwölf Lose – aber Levi bekommt keins und Josef zwei. Tippe ein Gebiet an.',
-    en: 'Twelve sons, twelve lots – except Levi gets none and Joseph two. Tap a territory.',
-  },
   tribesAll: { de: 'Alle Stämme', en: 'All tribes' },
   tribesWest: { de: 'Westlich des Jordans', en: 'West of the Jordan' },
   tribesEast: { de: 'Östlich des Jordans', en: 'East of the Jordan' },
@@ -364,6 +358,10 @@ const STRINGS: Dict = {
   tribesNeighbours: { de: 'Grenzt an', en: 'Borders on' },
   tribesFoldList: { de: 'Karte', en: 'Map' },
   tribesOpenList: { de: 'Stämme', en: 'Tribes' },
+  tribesHistNote: {
+    de: 'Die Gebiete bleiben dieselben – die Farbe sagt, was aus ihnen wurde. Die drei späten Jahreszahlen sind auch außerbiblisch datiert, die beiden frühen sind Näherungen.',
+    en: 'The territories stay the same – the colour says what became of them. The three late dates are attested outside the Bible as well; the two early ones are approximations.',
+  },
   tribesLayers: { de: 'Ebenen', en: 'Layers' },
   tribesCities: { de: 'Orte', en: 'Towns' },
   tribesBasemap: { de: 'Karte', en: 'Base map' },

@@ -33,6 +33,13 @@ export interface Route {
   church?: { tab: 'fathers' | 'councils'; id?: string };
   /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
   compare?: string;
+  /**
+   * Reiter und Stand der Stammbaum-Ansicht. `#stammbaum=gebiete,juda,722`
+   * zeigt Juda auf der Stammeskarte im Jahr des Falls von Samaria. Stamm und
+   * Jahr stehen in beliebiger Reihenfolge – eine reine Zahl ist das Jahr,
+   * alles andere ein Name –, damit keine leeren Kommastellen nötig sind.
+   */
+  tree?: { tab: 'timeline' | 'tree' | 'map'; id?: string; year?: number };
 }
 
 /** Schlüssel im Hash → Modus ohne weitere Angaben. */
@@ -69,8 +76,21 @@ export function parseHash(hash: string): Route | null {
       return { view: 'map', mode: null };
     case 'ort':
       return args[0] ? { view: 'map', mode: null, placeId: args[0] } : { view: 'map', mode: null };
-    case 'stammbaum':
-      return { view: 'tree', mode: null };
+    case 'stammbaum': {
+      if (!args[0]) return { view: 'tree', mode: null };
+      const tab = args[0] === 'gebiete' ? 'map' : args[0] === 'baum' ? 'tree' : 'timeline';
+      const rest = args.slice(1).filter(Boolean);
+      const year = rest.find((a) => /^\d+$/.test(a));
+      return {
+        view: 'tree',
+        mode: null,
+        tree: {
+          tab,
+          id: rest.find((a) => !/^\d+$/.test(a)),
+          year: year ? Number(year) : undefined,
+        },
+      };
+    }
     case 'graph':
       return { view: 'graph', mode: null };
     case 'reise':
@@ -155,7 +175,14 @@ export function formatRoute(route: Route): string {
   if (mode === 'present') {
     return route.reading ? `#lesen=${route.reading.osis},${route.reading.chapter}` : '#lesen';
   }
-  if (view === 'tree') return '#stammbaum';
+  if (view === 'tree') {
+    const tr = route.tree;
+    if (!tr) return '#stammbaum';
+    const parts = [tr.tab === 'map' ? 'gebiete' : tr.tab === 'tree' ? 'baum' : 'zeit'];
+    if (tr.id) parts.push(tr.id);
+    if (tr.year) parts.push(String(tr.year));
+    return `#stammbaum=${parts.join(',')}`;
+  }
   if (view === 'graph') return '#graph';
   return route.placeId ? `#ort=${route.placeId}` : '#karte';
 }

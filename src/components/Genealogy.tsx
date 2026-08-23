@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
@@ -15,6 +15,10 @@ interface Props {
   focusId?: string | null;
   /** For the Zeitstrahl tab: open the church-history map on a person. */
   onShowOnMap?: (personId: string) => void;
+  /** Vorauswahl aus der Adresse: Reiter, Stamm bzw. Name, Jahr. */
+  initial?: { tab: Tab; id?: string; year?: number } | null;
+  /** Meldet Reiter und Stand, damit die Adresse mitläuft. */
+  onNavigate?: (nav: { tab: Tab; id?: string; year?: number }) => void;
 }
 
 type Tab = 'timeline' | 'tree' | 'map';
@@ -60,10 +64,31 @@ function ancestry(id: string): string[] {
   return out;
 }
 
-export default function Genealogy({ places, lang, onShowPlace, focusId, onShowOnMap }: Props) {
+export default function Genealogy({
+  places,
+  lang,
+  onShowPlace,
+  focusId,
+  onShowOnMap,
+  initial,
+  onNavigate,
+}: Props) {
   const t = useT();
-  const [tab, setTab] = useState<Tab>('timeline');
-  const [query, setQuery] = useState('');
+  const [tab, setTab] = useState<Tab>(initial?.tab ?? 'timeline');
+  // Auf dem Stammbaum-Reiter ist die Angabe aus der Adresse eine Suche, auf der
+  // Karte ein Stamm – dieselbe Stelle im Hash, weil es dieselbe Frage ist:
+  // welchen Namen soll die Ansicht zeigen?
+  const [query, setQuery] = useState(initial?.tab === 'tree' ? (initial.id ?? '') : '');
+  // Was die Karte meldet, steht hier – der Reiter allein reicht der Adresse nicht.
+  const [mapNav, setMapNav] = useState<{ id?: string; year?: number }>(
+    initial?.tab === 'map' ? { id: initial.id, year: initial.year } : {},
+  );
+
+  useEffect(() => {
+    if (tab === 'map') onNavigate?.({ tab, ...mapNav });
+    else onNavigate?.({ tab, id: tab === 'tree' && query ? query : undefined });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab, query, mapNav]);
   // start with the top two levels open
   const [open, setOpen] = useState<Set<string>>(() => new Set(['adam', 'noah']));
 
@@ -163,7 +188,12 @@ export default function Genealogy({ places, lang, onShowPlace, focusId, onShowOn
       {/* ---- Karte (tribes map) ---- */}
       {tab === 'map' && (
         <div className="absolute inset-0">
-          <TribesMap lang={lang} onOpenInTree={openInTree} />
+          <TribesMap
+            lang={lang}
+            onOpenInTree={openInTree}
+            initial={initial?.tab === 'map' ? { id: initial.id, year: initial.year } : null}
+            onNavigate={setMapNav}
+          />
         </div>
       )}
 
