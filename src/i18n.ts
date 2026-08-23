@@ -42,6 +42,15 @@ const STRINGS: Dict = {
     en: 'Loading the terrain map – it arrives once, as its own bundle.',
   },
   terrainExaggeration: { de: 'Überhöhung', en: 'Exaggeration' },
+  alongTitle: { de: 'Was lag am Weg?', en: 'What lay along the way?' },
+  alongShow: { de: 'Orte am Weg', en: 'Places along the way' },
+  alongHide: { de: 'Orte am Weg ausblenden', en: 'Hide places along the way' },
+  alongOff: { de: 'abseits', en: 'off the line' },
+  alongNone: { de: 'Keine bekannten Orte nah an dieser Linie.', en: 'No known places close to this line.' },
+  alongNote: {
+    de: 'Orte bis 8 km neben der Luftlinie zwischen den beiden Stationen. Die Luftlinie ist nicht der Weg: wer von Jerusalem nach Jericho ging, nahm die Straße durchs Wadi, nicht die Gerade.',
+    en: 'Places within 8 km of the straight line between the two stops. That line is not the road: whoever walked from Jerusalem to Jericho took the wadi road, not the straight line.',
+  },
   ownRoute: { de: 'Eigener Weg', en: 'My own route' },
   ownRouteHint: {
     de: 'Orte zu einem eigenen Weg zusammenstellen – mit Entfernungen und Blatt zum Ausdrucken.',
