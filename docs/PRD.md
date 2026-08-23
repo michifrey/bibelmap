@@ -756,7 +756,35 @@ zu ihrem Tod mit 127 Jahren.
       umstritten", „Salem wird traditionell mit Jerusalem gleichgesetzt".
 - [x] Im Browser: 3.494 km, 140 Tagesmärsche, 16 Etappen mit „Orte am Weg".
 
-### 4.42 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.42 Mose als eigener Weg, der Auszug nach 4. Mose 33 — P1 ✅
+
+**Mose (neu, 12 Stationen)** – ein Leben als Route, nicht ein Ereignis: Nil,
+Totschlag, Midian, brennender Busch, Rückkehr mit achtzig, Zoan vor dem Pharao,
+Passanacht, Schilfmeer, Sinai, Kadesch, Berg Hor (Aarons Tod), Nebo.
+
+**Der Auszug: 10 → 11 Stationen**, Text je Station 85 → 161 Zeichen. Die
+Stationen folgen jetzt ausdrücklich der Liste in 4. Mose 33; die Bibelstellen
+nennen beide Quellen (2. Mose und 4. Mose 33).
+
+**Akzeptanzkriterien**
+- [x] Jede Station trägt eine echte Bibelstelle; alle `placeId` und Koordinaten
+      gegen `places.json` geprüft, keine Abweichung.
+- [x] Keine Station ohne Weg: „Vor dem Pharao" lag zunächst auf denselben
+      Koordinaten wie „Zurück nach Ägypten" und „Ramses" – drei Punkte, zwei
+      Etappen der Länge null. Gelöst nicht durch geratene Koordinaten, sondern
+      durch **Zoan**: Psalm 78,12.43 verortet die Wunder „auf dem Felde Zoan".
+- [x] Was die Liste nennt und niemand lokalisieren kann, steht als solches da:
+      „Von Alusch weiß niemand, wo es lag."
+- [x] Umstrittenes bleibt umstritten: die Lage von Sinai und Meer steht im
+      Vorspann der Reise.
+- [x] Im Browser: Mose 1.800 km / 72 Tagesmärsche, der Auszug 751 km / 30 –
+      keine Nulletappe, keine Konsolenfehler.
+
+**Bekannt und nicht angerührt:** In der Exil-Reise teilen sich „Am Fluss Kebar"
+und „Babylon" einen Punkt im Ortsdatensatz. Das zu trennen hieße, Koordinaten
+zu erfinden.
+
+### 4.43 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
