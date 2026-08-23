@@ -5,3 +5,6 @@ dist-ssr
 .DS_Store
 .vite
 npm-debug.log*
+
+# von scripts/sync-maplibre-worker.mjs erzeugt (predev/prebuild)
+public/vendor/maplibre

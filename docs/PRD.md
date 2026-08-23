@@ -386,7 +386,21 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
 - [x] Der Baubericht nennt je Quelle, wie viele Folgen ein Datum mitbringen –
       steht dort plötzlich 0, ist der Datumsleser kaputt.
 
-### 4.23 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.23 Gelände in 3D — P2 ✅
+
+- [x] Vierte Ansicht (`#gelaende`) auf **MapLibre GL**, mit Höhengelände aus den
+      Terrain Tiles (AWS Open Data), Neigung, Drehung und einstellbarer
+      Überhöhung (1×–3×).
+- [x] **Kein Umstieg**: die fünf Leaflet-Karten bleiben, wie sie sind. Die
+      Geländeansicht steht daneben und teilt sich Seitenleiste, Zeitleiste,
+      Kartenwahl und Ortsauswahl mit der flachen Karte.
+- [x] Was sie nicht kann, steht in der Ansicht: keine Ballung, keine Wärmekarte,
+      keine Reichsgrenzen.
+- [x] Erst auf Abruf geladen (950 kB) und **nicht** im Leerlauf vorgeholt – eine
+      Ansicht, die ohnehin Höhenkacheln aus dem Netz braucht, rechtfertigt kein
+      Megabyte für jeden Besuch.
+
+### 4.24 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
@@ -448,7 +462,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v0.6** | Bildnachweis mit Lizenz (4.20) | ✅ erledigt |
 | **v0.7** | Buchkürzel an einer Stelle (4.21) | ✅ erledigt |
 | **v0.8** | Medien-Index: Sendedaten und Umlaute (4.22) | ✅ erledigt |
-| **offen** | 3-D-Gelände (MapLibre) | ⬜ offen |
+| **v0.9** | Gelände in 3D mit MapLibre (4.23) | ✅ erledigt |
 
 ---
 
@@ -478,6 +492,3 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
   gesperrt – der Lauf endet dort mit „unentschieden", nicht mit einem Befund.
   Offen bleibt der Punkt also, bis jemand das Skript mit Netzzugriff laufen
   lässt.
-- **3-D-Gelände**: Leaflet kann die Karte nicht kippen. Ein Umstieg auf MapLibre
-  würde Terrain und Neigung erlauben, betrifft aber alle fünf Kartenansichten –
-  bewusst zurückgestellt.

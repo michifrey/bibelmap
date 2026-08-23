@@ -5,7 +5,9 @@
   "license": "GPL-3.0-or-later",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/sync-maplibre-worker.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/sync-maplibre-worker.mjs",
     "build": "tsc --noEmit && vite build",
     "check:aliases": "node scripts/check-aliases.mjs",
     "check:bp": "node scripts/check-bp-guides.mjs",
@@ -21,6 +23,7 @@
     "leaflet": "^1.9.4",
     "leaflet.heat": "^0.2.0",
     "leaflet.markercluster": "^1.5.3",
+    "maplibre-gl": "^6.5.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-leaflet": "^5.0.0"
