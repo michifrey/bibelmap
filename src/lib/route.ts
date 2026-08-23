@@ -57,6 +57,19 @@ export function walkingDays(km: number): number {
   return Math.max(1, Math.round(km / KM_PER_DAY));
 }
 
+/**
+ * Unterhalb dieser Strecke ist „ein Tagesmarsch" keine Größenordnung mehr,
+ * sondern eine Übertreibung: Gethsemane liegt 550 Meter von der Stadt, Betanien
+ * gut zwei Kilometer, Emmaus knapp sieben – Wege, die man geht und am selben
+ * Abend zurückkommt. `walkingDays` kann das nicht sagen, weil es bei 1 aufhört;
+ * darum entscheidet die Anzeige hier, ob überhaupt in Tagen gerechnet wird.
+ */
+export const SHORT_WALK_KM = 8;
+
+export function isShortWalk(km: number): boolean {
+  return km < SHORT_WALK_KM;
+}
+
 /** Kilometer lesbar: unter 10 mit einer Nachkommastelle, darüber ganzzahlig. */
 export function formatKm(km: number, lang: 'de' | 'en'): string {
   const value =

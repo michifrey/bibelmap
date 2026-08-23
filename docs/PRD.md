@@ -844,8 +844,10 @@ tragen elf der fünfzehn Reisen ausgeführte Stationstexte; dünn blieben Josef
 
 ### 4.45 Die letzten vier dünnen Reisen: Josef, Jona, Exil, Rückkehr — P1 ✅
 
-Damit trägt jede der fünfzehn Reisen ausgeführte Stationstexte; keine steht mehr
-mit einem Satz je Station da.
+Damit tragen zwölf der fünfzehn Reisen ausgeführte Stationstexte. (Der Satz
+stand hier zuerst als „jede der fünfzehn" – das war falsch: die drei
+neutestamentlichen Reisen hatten weiter einen Satz je Station. Nachgeholt in
+§ 4.46.)
 
 - **Josef** 6 → 12 Stationen, jetzt 1. Mose 37–50 statt 37–47: Noph (Potifars
   Haus und das Gefängnis), **On** (der Traumdeuter wird Wesir und heiratet die
@@ -888,12 +890,66 @@ mit einem Satz je Station da.
       9 / 2.173 km / 87, Rückkehr 8 / 4.883 km / 195 – keine Etappe ohne
       Länge, kein JavaScript-Fehler.
 
-### 4.46 Jesus – Leben und Wege (eigene Sektion) — P1 ✅
+### 4.46 Die drei neutestamentlichen Reisen — und „ein Gang zu Fuß" — P1 ✅
+
+Nach § 4.44 und § 4.45 waren die dünnsten Reisen ausgerechnet die
+neutestamentlichen: Geburt 5 Stationen zu 97 Zeichen, Galiläa 8 zu 92,
+Jerusalem 7 zu 92 – während der Rest bei 160 bis 240 lag.
+
+- **Die Flucht nach Ägypten** 5 → 7: **Jerusalem: die Darstellung** und
+  **Bethlehem: die Sterndeuter** getrennt (Lukas und Matthäus erzählen
+  verschiedene Wege; hier stehen sie nacheinander), und als Schluss
+  **Jerusalem: mit zwölf**, wo die Eltern ihn eine Tagereise lang nicht
+  vermissen.
+- **Jesu Wege in Galiläa** 8 → 13: **der Jordan** (Taufe und die vierzig Tage),
+  **Nain**, **auf dem See** (Sturm und Gang über das Wasser, als Seeweg
+  gezeichnet), **Magdala / Dalmanuta** und **Gennesaret**.
+- **Der Weg nach Jerusalem** 7 → 13: **jenseits des Jordans** (Johannes 10,40 –
+  zurück an die Taufstelle), **Betanien** zweimal (Lazarus und die Salbung),
+  **Ephraim**, **Betfage**, **Gethsemane** und **Golgatha**.
+
+**„1 Tagesmarsch" für 520 Meter**
+
+Die neuen Passionsstationen liegen in Gehweite: Jerusalem → Gethsemane 0,52 km,
+Betanien → Betfage 0,82 km, Gethsemane → Golgatha 0,86 km. Die Anzeige rechnete
+jede Etappe in Tagesmärschen um, und `walkingDays` hört bei 1 auf – aus einem
+Gang von fünfhundert Metern wurde „1 Tagesmarsch". Das war schon vorher falsch
+(Betanien → Jerusalem 2,2 km, Emmaus 6,4 km), fiel aber nicht auf.
+
+Neu: `SHORT_WALK_KM = 8` und `isShortWalk()` in `src/lib/route.ts`; unter acht
+Kilometern steht **„ein Gang zu Fuß"** statt einer Tagesangabe – in den Reisen
+wie in der eigenen Route. Der Hinweistext nennt die Schwelle.
+
+**Akzeptanzkriterien**
+- [x] 0 unbekannte `placeId`s, 0 Koordinatenabweichungen, 0 Stationen ohne
+      Bibelstelle, 0 Nulletappen.
+- [x] Im Browser in beiden Sprachen gezählt: Geburt 7 Stationen / 1.117 km,
+      Galiläa 13 / 351 km, Jerusalem 13 / 240 km – und **jede** Etappe einer
+      Kategorie zugeordnet (Gang, Tagesmarsch oder Seeweg), keine übrig.
+- [x] Beide Zweige der neuen Beschriftung geprüft, nicht nur einer: im Weg nach
+      Jerusalem stehen 6 Etappen als Gang und 6 als Tagesmärsche. Eine Regel,
+      die immer dasselbe sagt, prüft nichts.
+- [x] Behauptungen im Text nachgerechnet und dort zurückgenommen, wo sie zu
+      weit gingen: „zehn Kilometer" nach Bethlehem sind 8,5 km Luftlinie (jetzt
+      „knapp zehn"), „der kürzeste Vers der Bibel" gilt nicht im Griechischen
+      (jetzt „in den meisten Übersetzungen"), Ephraim kommt nur *in den
+      Evangelien* nur einmal vor, und „die Passion auf zwei Quadratkilometern"
+      stimmte nicht – Emmaus liegt 6,4 km von Golgatha (jetzt: sieben
+      Stationen, keine Etappe über acht Kilometer, die kürzeste fünfhundert
+      Meter).
+- [x] Umstrittenes bleibt umstritten: welche Stadt in Markus 5 gemeint ist
+      („geben die Handschriften verschieden an"), wo Emmaus lag, und dass die
+      Reihenfolge der Erzählung folgt, nicht einem Fahrplan.
+
+Damit tragen **alle fünfzehn Reisen** 160 bis 240 Zeichen je Station.
+### 4.47 Jesus – Leben und Wege (eigene Sektion) — P1 ✅
 
 **Anlass:** Die Evangelien waren drei Routen unter fünfzehn in „Reisen &
-Geschichten“: 5 + 8 + 7 Stationen für dreißig Jahre. Wer wissen wollte, was in
-der Passionswoche an welchem Tag geschah oder wo Maria von Magdala überall
-vorkommt, fand darauf keine Antwort.
+Geschichten“. § 4.46 hat sie inzwischen ausgebaut (7 + 13 + 13 Stationen), und
+das bleibt richtig: als Weg gelesen. Zwei Fragen beantwortet ein Weg trotzdem
+nicht – was in der Passionswoche an welchem Tag geschah, und wo Maria von
+Magdala überall vorkommt. Dafür braucht es eine Gliederung nach Akten und eine
+zweite Achse: die Menschen.
 
 **Eine eigene Sektion, 86 Stationen in sieben Akten:** Verheißung und Geburt
 (12), die verborgenen Jahre (2), Taufe/Wüste/erste Zeichen (11), das Jahr am See
@@ -932,7 +988,7 @@ Serienseite.
       als unbestätigt aus. Ebenso offen: Folgen aus Staffel 2 und 5, die hier
       bewusst fehlen, statt geraten zu werden.
 
-### 4.47 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.48 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

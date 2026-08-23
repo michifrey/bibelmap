@@ -10,6 +10,7 @@ import {
   bearing,
   compass,
   formatKm,
+  isShortWalk,
   legDistances,
   walkingDays,
   type LatLon,
@@ -149,7 +150,9 @@ export default function OwnRoute({ places, lang, ids, onChange, onShowPlace, onE
                       <>
                         <div className="py-1 pl-3 text-[11px] text-white/40" title={t('distanceNote')}>
                           ↓ {formatKm(km, lang)} {dir} ·{' '}
-                          {walkingDays(km)} {walkingDays(km) === 1 ? t('dayWalk') : t('dayWalks')}
+                          {isShortWalk(km)
+                            ? t('shortWalk')
+                            : `${walkingDays(km)} ${walkingDays(km) === 1 ? t('dayWalk') : t('dayWalks')}`}
                         </div>
                         <AlongTheWay
                           places={places}

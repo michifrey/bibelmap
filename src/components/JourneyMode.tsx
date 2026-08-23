@@ -5,7 +5,7 @@ import { useT } from '../i18n';
 import { JOURNEYS, JOURNEY_BY_ID, type BibleJourney } from '../data/journeys';
 import { ERAS, ERA_BY_ID } from '../data/eras';
 import { passageUrl } from '../data/mission';
-import { formatKm, legDistances, walkingDays, type LatLon } from '../lib/route';
+import { formatKm, isShortWalk, legDistances, walkingDays, type LatLon } from '../lib/route';
 import { readableOnDark } from '../lib/contrast';
 import RouteMap from './RouteMap';
 import AlongTheWay from './AlongTheWay';
@@ -241,7 +241,9 @@ export default function JourneyMode({
                         ↓ {formatKm(legs[i - 1], lang)}
                         {s.sea
                           ? ` · ${t('bySea')}`
-                          : ` · ${walkingDays(legs[i - 1])} ${walkingDays(legs[i - 1]) === 1 ? t('dayWalk') : t('dayWalks')}`}
+                          : isShortWalk(legs[i - 1])
+                            ? ` · ${t('shortWalk')}`
+                            : ` · ${walkingDays(legs[i - 1])} ${walkingDays(legs[i - 1]) === 1 ? t('dayWalk') : t('dayWalks')}`}
                       </div>
                       {/* Nicht bei Seewegen: was neben einer Schiffslinie liegt,
                           lag nicht am Weg, sondern an einer anderen Küste. */}

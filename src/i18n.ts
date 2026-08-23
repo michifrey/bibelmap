@@ -361,10 +361,11 @@ const STRINGS: Dict = {
     en: 'Abraham, the Exodus, David on the run, Jesus’ roads – play the route and read along.',
   },
   distanceNote: {
-    de: 'Entfernungen sind Luftlinien zwischen den Orten; die tatsächlichen Wege waren länger. Tagesmärsche gerechnet mit rund 25 km am Tag – eine Größenordnung, kein Fahrplan.',
-    en: 'Distances are straight lines between places; the actual roads were longer. Days on foot reckoned at about 25 km a day – an order of magnitude, not a timetable.',
+    de: 'Entfernungen sind Luftlinien zwischen den Orten; die tatsächlichen Wege waren länger. Tagesmärsche gerechnet mit rund 25 km am Tag – eine Größenordnung, kein Fahrplan. Unter 8 km steht ein Gang, kein Tagesmarsch.',
+    en: 'Distances are straight lines between places; the actual roads were longer. Days on foot reckoned at about 25 km a day – an order of magnitude, not a timetable. Under 8 km it says a walk, not a day on foot.',
   },
   dayWalk: { de: 'Tagesmarsch', en: 'day on foot' },
+  shortWalk: { de: 'ein Gang zu Fuß', en: 'a short walk' },
   dayWalks: { de: 'Tagesmärsche', en: 'days on foot' },
   bySea: { de: 'Seeweg', en: 'by sea' },
   totalDistance: { de: 'Gesamt', en: 'Total' },
