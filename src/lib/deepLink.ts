@@ -31,6 +31,8 @@ export interface Route {
    * `#kirche=konzil,nicaea1`; ohne Angabe steht der Modus auf seinem Anfang.
    */
   church?: { tab: 'fathers' | 'councils'; id?: string };
+  /** Station der Heilsgeschichte: `#heilsgeschichte=exodus`. */
+  history?: string;
   /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
   compare?: string;
   /**
@@ -52,7 +54,6 @@ export interface Route {
 const MODE_KEYS: Record<string, Mode> = {
   unterstuetzen: 'support',
   nachweise: 'credits',
-  heilsgeschichte: 'history',
   quiz: 'quiz',
 };
 
@@ -131,6 +132,10 @@ export function parseHash(hash: string): Route | null {
             ? { phase: args[0], journey: args[1] }
             : { phase: args[0], event: args[1] },
       };
+    case 'heilsgeschichte':
+      return args[0]
+        ? { view: 'map', mode: 'history', history: args[0] }
+        : { view: 'map', mode: 'history' };
     case 'weg':
       return args.length
         ? { view: 'map', mode: 'route', own: args.filter(Boolean) }
@@ -185,6 +190,9 @@ export function formatRoute(route: Route): string {
   }
   if (mode === 'compare') {
     return route.compare ? `#vergleich=${route.compare}` : '#vergleich';
+  }
+  if (mode === 'history') {
+    return route.history ? `#heilsgeschichte=${route.history}` : '#heilsgeschichte';
   }
   if (mode === 'route') {
     return route.own?.length ? `#weg=${route.own.join(',')}` : '#weg';

@@ -84,20 +84,27 @@ export default function Genealogy({
     initial?.tab === 'map' ? { id: initial.id, year: initial.year } : {},
   );
 
-  useEffect(() => {
-    if (tab === 'map') onNavigate?.({ tab, ...mapNav });
-    else onNavigate?.({ tab, id: tab === 'tree' && query ? query : undefined });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tab, query, mapNav]);
   // start with the top two levels open
   const [open, setOpen] = useState<Set<string>>(() => new Set(['adam', 'noah']));
 
   // Der Zeitstrahl zeigt eine Person – von der Kirchengeschichtskarte (Prop)
   // oder aus einer Stammeskarte (Knopf). Beides läuft über denselben Zustand.
-  const [timelineFocus, setTimelineFocus] = useState<string | null>(focusId ?? null);
+  // Auf dem Zeitreiter ist die Angabe aus der Adresse die Person selbst –
+  // damit ein Treffer der Suche („Bonhoeffer") auch als Link weitergegeben
+  // werden kann und nicht nur den Reiter trifft.
+  const [timelineFocus, setTimelineFocus] = useState<string | null>(
+    focusId ?? (initial?.tab === 'timeline' ? (initial.id ?? null) : null),
+  );
   useEffect(() => {
     if (focusId) setTimelineFocus(focusId);
   }, [focusId]);
+
+  useEffect(() => {
+    if (tab === 'map') onNavigate?.({ tab, ...mapNav });
+    else if (tab === 'tree') onNavigate?.({ tab, id: query || undefined });
+    else onNavigate?.({ tab, id: timelineFocus ?? undefined });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab, query, mapNav, timelineFocus]);
 
   function openInTimeline(personId: string) {
     setTimelineFocus(personId);
