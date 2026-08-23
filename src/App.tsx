@@ -74,10 +74,39 @@ function Loading() {
  * Während eine Ansicht nachgeladen wird, steht schon ihre Bühne da – so
  * flackert die Karte darunter nicht weg.
  */
+/**
+ * Warteanzeige für die Vollbild-Modi. Sie deckt alles ab, weil der Modus
+ * danach ebenfalls alles abdeckt – sonst blitzte die Karte kurz durch.
+ */
 function ModeFallback() {
   return (
     <div className="fixed inset-0 z-[2000] grid place-items-center bg-deepest">
       <div className="h-8 w-8 animate-pulse rounded-full bg-gold/60" />
+    </div>
+  );
+}
+
+/**
+ * Warteanzeige für eine Ansicht, nicht für einen Modus. Der Unterschied ist
+ * nicht kosmetisch: eine Ansicht tauscht nur die Fläche, Kopfzeile und
+ * Seitenleiste bleiben stehen. Die Modus-Anzeige legte sich über alles und
+ * ließ den Wechsel ins Gelände wie einen Absturz aussehen – schwarzer
+ * Bildschirm, ein Punkt, sonst nichts.
+ *
+ * Wer wartet, soll außerdem lesen können, worauf: die Geländekarte kommt als
+ * eigenes Paket und braucht beim ersten Mal spürbar Zeit.
+ */
+function ViewFallback({ lang, note }: { lang: Lang; note?: 'terrain' }) {
+  return (
+    <div className="absolute inset-0 z-0 grid place-items-center bg-deepest">
+      <div className="flex flex-col items-center gap-3 px-6 text-center">
+        <div className="h-8 w-8 animate-pulse rounded-full bg-gold/60" />
+        {note === 'terrain' && (
+          <div className="max-w-xs text-[12px] leading-snug text-white/60">
+            {tr(lang, 'terrainLoading')}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -619,7 +648,7 @@ export default function App() {
     <LangContext.Provider value={lang}>
       <div className="relative h-full w-full overflow-hidden">
         {view === 'tree' ? (
-          <Suspense fallback={<ModeFallback />}>
+          <Suspense fallback={<ViewFallback lang={lang} />}>
           <Genealogy
             key={`tree-${navEpoch}`}
             places={places}
@@ -632,13 +661,13 @@ export default function App() {
           />
           </Suspense>
         ) : view === 'graph' ? (
-          <Suspense fallback={<ModeFallback />}>
+          <Suspense fallback={<ViewFallback lang={lang} />}>
             <GraphView places={places} lang={lang} />
           </Suspense>
         ) : (
           <>
             {view === 'terrain' ? (
-              <Suspense fallback={<ModeFallback />}>
+              <Suspense fallback={<ViewFallback lang={lang} note="terrain" />}>
                 <TerrainMap
                   places={visible}
                   selectedId={selected?.id ?? null}
