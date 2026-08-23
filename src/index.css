@@ -461,6 +461,36 @@ body {
   pointer-events: none;
 }
 
+/* A town that carries the moment: a diamond, so it is not another tribal dot. */
+.bm-hist-mark {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  background: var(--color-gold);
+  border: 1px solid rgba(2, 31, 30, 0.8);
+  transform: rotate(45deg);
+  box-shadow: 0 0 8px rgba(224, 164, 73, 0.5);
+}
+
+/* Where a deportation went. The arrow leaves the frame; the word does not. */
+.bm-exile-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-100%, -50%);
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  text-shadow: 0 0 6px rgba(2, 31, 30, 0.95);
+  pointer-events: none;
+}
+
 /* Levi has no territory — when Levi is in hand, its six refuges answer. */
 .bm-refuge-on .bm-refuge-ring {
   width: 24px;

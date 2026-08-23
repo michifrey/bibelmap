@@ -13,17 +13,33 @@ import {
   NEIGHBOURS,
   polygonArea,
   polygonCentroid,
+  tribeBySlug,
+  tribeSlug,
   type Mother,
   type Tribe,
 } from '../data/tribes';
 import { COAST, DEAD_SEA, JORDAN, LAKE_HULEH, LANDMARKS, MEDITERRANEAN, SEA_OF_GALILEE } from '../data/levant';
 import { NODE_BY_ID, LINE_COLOR } from '../data/nationsTribes';
+import {
+  PHASES,
+  FATE_COLOR,
+  FATE_LABEL,
+  phaseYear,
+  phaseYearShort,
+  type Fate,
+  type Phase,
+} from '../data/tribeHistory';
 import { BASEMAPS, type BasemapId } from './MapView';
 import { flyOptions } from '../lib/motion';
+import ShareLink from './ShareLink';
 
 interface Props {
   lang: Lang;
   onOpenInTree: (id: string) => void;
+  /** Vorauswahl aus der Adresse: Stamm und/oder Jahr. */
+  initial?: { id?: string; year?: number } | null;
+  /** Meldet Stamm und Jahr, damit die Adresse mitläuft. */
+  onNavigate?: (nav: { id?: string; year?: number }) => void;
 }
 
 /** The two optional overlays; the allotment itself is always drawn. */
@@ -68,6 +84,16 @@ const DRAWN: Drawn[] = TRIBES.filter((t) => t.polygon).map((t) => ({
   area: polygonArea(t.polygon!),
 }));
 
+/**
+ * Which colour a territory wears. In the allotment it is the tribe's own; from
+ * the division of the kingdom onwards it is the colour of what became of it,
+ * because that is the thing the picture is then about.
+ */
+function fillFor(id: string, ph: Phase): string {
+  const fate: Fate = ph.fates[id] ?? 'lot';
+  return fate === 'lot' ? TRIBE_BY_ID[id].color : FATE_COLOR[fate];
+}
+
 /** Label point size — big territories carry a bigger name, like an atlas plate. */
 function labelSize(area: number): number {
   if (area >= 0.28) return 13;
@@ -75,7 +101,7 @@ function labelSize(area: number): number {
   return 10;
 }
 
-export default function TribesMap({ lang, onOpenInTree }: Props) {
+export default function TribesMap({ lang, onOpenInTree, initial, onNavigate }: Props) {
   const t = useT();
   const elRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -85,15 +111,32 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
   const tileRef = useRef<L.TileLayer | null>(null);
   const danLine = useRef<L.Polyline | null>(null);
 
-  const [selected, setSelected] = useState<string | null>(null);
+  // Was aus der Adresse kommt, muss es auch geben – sonst steht die Karte auf
+  // ihrem Anfang, statt auf eine leere Auswahl zu zeigen.
+  const [selected, setSelected] = useState<string | null>(tribeBySlug(initial?.id)?.id ?? null);
+  const [phaseIdx, setPhaseIdx] = useState(() => {
+    const i = PHASES.findIndex((p) => Math.abs(p.year) === initial?.year);
+    return i < 0 ? 0 : i;
+  });
   const [hover, setHover] = useState<string | null>(null);
   const [overlays, setOverlays] = useState<Record<Overlay, boolean>>({ people: false, person: false });
   const [cities, setCities] = useState(true);
   const [basemap, setBasemap] = useState<BasemapId>('dark');
   // Phones only: the sheet folds down to its title so the plate can be seen.
   const [folded, setFolded] = useState(false);
+  // Same on a phone for the map's own controls.
+  const [toolsOpen, setToolsOpen] = useState(false);
 
+  const phase = PHASES[phaseIdx];
   const name = useCallback((o: { de: string; en: string }) => (lang === 'de' ? o.de : o.en), [lang]);
+
+  useEffect(() => {
+    onNavigate?.({
+      id: selected ? tribeSlug(TRIBE_BY_ID[selected]) : undefined,
+      year: phaseIdx > 0 ? Math.abs(PHASES[phaseIdx].year) : undefined,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected, phaseIdx]);
   const active = selected ?? hover;
   const activeRef = useRef<string | null>(null);
   activeRef.current = active;
@@ -177,11 +220,12 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
 
     // territories
     for (const { tribe: tr } of DRAWN) {
+      const paint = fillFor(tr.id, phase);
       const poly = L.polygon(tr.polygon!, {
-        color: tr.color,
+        color: paint,
         weight: 1.25,
         opacity: 0.85,
-        fillColor: tr.color,
+        fillColor: paint,
         fillOpacity: 0.34,
         // The plate is one object; the panel is where the reading happens.
         bubblingMouseEvents: false,
@@ -226,7 +270,7 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
         keyboard: false,
         icon: L.divIcon({
           className: '',
-          html: `<span class="bm-tribe-label" data-tribe="${tr.id}" style="--c:${tr.color};font-size:${labelSize(area)}px">${name(tr.mapLabel ?? tr)}</span>`,
+          html: `<span class="bm-tribe-label" data-tribe="${tr.id}" style="--c:${fillFor(tr.id, phase)};font-size:${labelSize(area)}px">${name(tr.mapLabel ?? tr)}</span>`,
           iconSize: [0, 0],
         }),
       }).addTo(layer);
@@ -245,7 +289,7 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
         }),
       }).addTo(layer);
     }
-  }, [lang, name]);
+  }, [lang, name, phase]);
 
   // ---- towns --------------------------------------------------------------
   useEffect(() => {
@@ -299,6 +343,52 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
     };
   }, [cities, name]);
 
+  // ---- what the phase adds: its towns and its way out ----------------------
+  useEffect(() => {
+    const layer = tribeLayer.current;
+    if (!layer) return;
+    const group = L.layerGroup();
+
+    for (const pl of phase.places ?? []) {
+      const m = L.marker([pl.lat, pl.lon], {
+        icon: L.divIcon({ className: '', html: '<span class="bm-hist-mark"></span>', iconSize: [0, 0] }),
+        keyboard: false,
+      });
+      m.bindTooltip(
+        `${name(pl)}${phase.placesLabel ? ` <span style="opacity:.6">· ${name(phase.placesLabel)}</span>` : ''}`,
+        { direction: 'top', offset: [0, -8], className: 'bm-polity-tip' },
+      );
+      m.addTo(group);
+    }
+
+    // The deportations leave the frame; the arrow only has to show which way.
+    for (const ex of phase.exiles ?? []) {
+      L.polyline([ex.from, ex.to], {
+        pane: 'bmWater',
+        interactive: false,
+        color: '#e0a449',
+        weight: 2,
+        opacity: 0.8,
+        dashArray: '5 5',
+      }).addTo(group);
+      L.marker(ex.to, {
+        pane: 'bmTribeLabels',
+        interactive: false,
+        keyboard: false,
+        icon: L.divIcon({
+          className: '',
+          html: `<span class="bm-exile-label">${name(ex)} →</span>`,
+          iconSize: [0, 0],
+        }),
+      }).addTo(group);
+    }
+
+    group.addTo(layer);
+    return () => {
+      group.remove();
+    };
+  }, [phase, name]);
+
   // ---- optional overlays: peoples & persons -------------------------------
   useEffect(() => {
     const layer = overlayLayer.current;
@@ -332,6 +422,8 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
       const on = id === active;
       const dim = !!active && !on;
       poly.setStyle({
+        color: fillFor(id, phase),
+        fillColor: fillFor(id, phase),
         weight: on ? 2.5 : 1.25,
         opacity: dim ? 0.5 : 0.9,
         fillOpacity: on ? 0.6 : dim ? 0.2 : 0.34,
@@ -352,7 +444,7 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
         el.classList.toggle('is-dim', !!active && !on);
       }
     }
-  }, [active, fitLabels]);
+  }, [active, fitLabels, phase]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -421,10 +513,27 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
           </svg>
         </button>
         <div className="bm-panel pointer-events-auto flex min-h-0 flex-1 flex-col overflow-hidden">
+          {/* Which moment am I looking at. Always here, whatever is below. */}
+          <div className="scroll-soft flex flex-none items-center gap-px overflow-x-auto border-b border-white/10 bg-deepest/60 px-2 py-1.5">
+            {PHASES.map((p, i) => (
+              <button
+                key={p.id}
+                onClick={() => setPhaseIdx(i)}
+                title={name(p)}
+                aria-pressed={i === phaseIdx}
+                className={`flex-none px-2 py-1 text-[11px] font-bold tabular-nums transition ${
+                  i === phaseIdx ? 'bg-gold text-deep' : 'text-white/50 hover:bg-white/10 hover:text-white'
+                }`}
+              >
+                {phaseYearShort(p)}
+              </button>
+            ))}
+          </div>
           {tribe ? (
             <TribeCard
               tribe={tribe}
               lang={lang}
+              phase={phase}
               onBack={home}
               onOpenInTree={onOpenInTree}
               onSelect={setSelected}
@@ -433,10 +542,20 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
           ) : (
             <>
               <div className="flex-none border-b border-white/10 px-4 py-3">
-                <div className="bm-eyebrow">{t('tribesEyebrow')}</div>
-                <h2 className="font-display mt-1 text-[19px] leading-tight text-white">{t('tribesTitle')}</h2>
-                <p className="mt-1 text-[11.5px] leading-snug text-white/55">{t('tribesIntro')}</p>
+                <div className="bm-eyebrow">{phaseYear(phase, lang)} · {phase.ref}</div>
+                <h2 className="font-display mt-1 text-[19px] leading-tight text-white">{name(phase)}</h2>
+                <p className="mt-1.5 text-[11.5px] leading-relaxed text-white/60">{name(phase.text)}</p>
               </div>
+              {phaseIdx > 0 ? (
+                <FateList
+                  phase={phase}
+                  lang={lang}
+                  hover={hover}
+                  onHover={setHover}
+                  onSelect={setSelected}
+                  onFly={(la, lo) => mapRef.current?.flyTo([la, lo], 10, flyOptions({ duration: 0.6 }))}
+                />
+              ) : (
               <div className="scroll-soft min-h-0 flex-1 overflow-y-auto">
                 {MOTHERS.map((m) => (
                   <div key={m.id}>
@@ -471,15 +590,38 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
                 ))}
                 <p className="px-4 py-3 text-[11px] leading-relaxed text-white/40">{t('tribesNote')}</p>
               </div>
+              )}
             </>
           )}
         </div>
       </div>
 
+      {/* The map alone should say which moment it is showing — the sheet may be
+          folded away on a phone, and the colours change under you. */}
+      {phaseIdx > 0 && (selected || folded) && (
+        <div className="bm-panel pointer-events-none absolute left-2 top-[9.5rem] z-[1050] max-w-[9rem] px-3 py-2 sm:bottom-3 sm:left-[23rem] sm:top-auto sm:max-w-[16rem]">
+          <div className="bm-eyebrow bm-eyebrow-dim tabular-nums">{phaseYear(phase, lang)}</div>
+          <div className="text-[11.5px] font-bold leading-tight text-white">{name(phase)}</div>
+        </div>
+      )}
+
       {/* ---------------- right: what the plate shows ---------------------- */}
-      <div className="pointer-events-auto absolute right-2 top-[6.5rem] z-[1100] flex w-[8.75rem] flex-col gap-px sm:right-3 sm:top-24 sm:w-[12.5rem]">
+      <div className="pointer-events-auto absolute right-2 top-[9.5rem] z-[1100] flex w-[8.75rem] flex-col items-stretch gap-px sm:right-3 sm:top-24 sm:w-[12.5rem]">
+        {/* On a phone the map band is only a few hundred pixels tall; five
+            stacked panels would be most of it. They fold behind one button. */}
+        <button
+          onClick={() => setToolsOpen((v) => !v)}
+          aria-expanded={toolsOpen}
+          className="bm-panel flex items-center justify-between px-3 py-1.5 text-[11px] font-bold text-white/75 sm:hidden"
+        >
+          {t('tribesLayers')}
+          <svg viewBox="0 0 24 24" className={`h-3 w-3 transition-transform ${toolsOpen ? 'rotate-180' : ''}`} fill="currentColor" aria-hidden="true">
+            <path d="M12 16 6 10h12z" />
+          </svg>
+        </button>
+        <div className={`flex-col gap-px sm:flex ${toolsOpen ? 'flex' : 'hidden'}`}>
         <div className="bm-panel px-3 py-2">
-          <div className="bm-eyebrow bm-eyebrow-dim mb-1.5">{t('tribesLayers')}</div>
+          <div className="bm-eyebrow bm-eyebrow-dim mb-1.5 hidden sm:block">{t('tribesLayers')}</div>
           <Toggle on={cities} onClick={() => setCities((v) => !v)} label={t('tribesCities')} />
           {(Object.keys(OVERLAY_LABEL) as Overlay[]).map((k) => (
             <Toggle
@@ -497,7 +639,7 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
               <button
                 key={m.id}
                 onClick={() => setBasemap(m.id)}
-                className={`py-1 text-[10.5px] font-bold tracking-wide transition ${
+                className={`truncate py-1 text-[10px] font-bold transition sm:text-[10.5px] sm:tracking-wide ${
                   basemap === m.id ? 'bg-signal text-white' : 'bg-white/8 text-white/55 hover:text-white'
                 }`}
               >
@@ -525,6 +667,8 @@ export default function TribesMap({ lang, onOpenInTree }: Props) {
         <button onClick={home} className="bm-btn bm-btn-ghost justify-center bg-deepest/94 backdrop-blur">
           {t('tribesHome')}
         </button>
+        <ShareLink className="bm-btn bm-btn-ghost justify-center bg-deepest/94 backdrop-blur" />
+        </div>
       </div>
     </div>
   );
@@ -551,19 +695,111 @@ function Toggle({ on, onClick, label }: { on: boolean; onClick: () => void; labe
   );
 }
 
+/**
+ * From the division of the kingdom onwards the tribes are not sorted by mother
+ * any more but by what happened to them — which is the only ordering that makes
+ * the picture legible: ten on one side, two on the other, then ten gone.
+ */
+function FateList({
+  phase,
+  lang,
+  hover,
+  onHover,
+  onSelect,
+  onFly,
+}: {
+  phase: Phase;
+  lang: Lang;
+  hover: string | null;
+  onHover: (id: string | null) => void;
+  onSelect: (id: string) => void;
+  onFly: (lat: number, lon: number) => void;
+}) {
+  const t = useT();
+  const name = (o: { de: string; en: string }) => (lang === 'de' ? o.de : o.en);
+
+  // Groups in the order they first appear in the tribe list, so the reading
+  // order on screen matches the order on the map from north to south.
+  const groups: { fate: Fate; ids: string[] }[] = [];
+  for (const tr of TRIBES) {
+    const fate = phase.fates[tr.id];
+    if (!fate || fate === 'lot') continue;
+    const g = groups.find((x) => x.fate === fate);
+    if (g) g.ids.push(tr.id);
+    else groups.push({ fate, ids: [tr.id] });
+  }
+
+  return (
+    <div className="scroll-soft min-h-0 flex-1 overflow-y-auto">
+      {groups.map((g) => (
+        <div key={g.fate}>
+          <div className="sticky top-0 z-10 flex items-baseline gap-2 bg-deepest/95 px-4 py-1.5 backdrop-blur">
+            <span className="h-2.5 w-2.5 flex-none" style={{ background: FATE_COLOR[g.fate] }} />
+            <span className="bm-eyebrow bm-eyebrow-dim">{name(FATE_LABEL[g.fate])}</span>
+            <span className="text-[10px] text-white/30">{g.ids.length}</span>
+          </div>
+          {g.ids.map((id) => (
+            <button
+              key={id}
+              onClick={() => onSelect(id)}
+              onMouseEnter={() => onHover(id)}
+              onMouseLeave={() => onHover(null)}
+              onFocus={() => onHover(id)}
+              onBlur={() => onHover(null)}
+              className={`bm-row ${hover === id ? 'is-on' : ''}`}
+            >
+              <span className="h-3.5 w-3.5 flex-none" style={{ background: FATE_COLOR[g.fate] }} />
+              <span className="min-w-0 flex-1 truncate text-[13px] font-semibold text-white">
+                {name(TRIBE_BY_ID[id])}
+              </span>
+            </button>
+          ))}
+        </div>
+      ))}
+
+      {phase.places && phase.places.length > 0 && (
+        <div className="px-4 py-3">
+          <div className="bm-eyebrow bm-eyebrow-dim mb-1.5">
+            {phase.placesLabel ? name(phase.placesLabel) : t('tribesTowns')}
+          </div>
+          <div className="flex flex-wrap gap-1">
+            {phase.places.map((pl) => (
+              <button
+                key={pl.de}
+                onClick={() => onFly(pl.lat, pl.lon)}
+                className="bm-chip transition hover:bg-white/20"
+                title={t('tribesFlyTo')}
+              >
+                <span className="h-1.5 w-1.5 rotate-45 bg-gold" />
+                {name(pl)}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <p className="border-t border-white/10 px-4 py-3 text-[11px] leading-relaxed text-white/40">
+        {t('tribesHistNote')}
+      </p>
+    </div>
+  );
+}
+
 interface CardProps {
   tribe: Tribe;
   lang: Lang;
+  phase: Phase;
   onBack: () => void;
   onOpenInTree: (id: string) => void;
   onFly: (lat: number, lon: number) => void;
   onSelect: (id: string) => void;
 }
 
-function TribeCard({ tribe: tr, lang, onBack, onOpenInTree, onFly, onSelect }: CardProps) {
+function TribeCard({ tribe: tr, lang, phase, onBack, onOpenInTree, onFly, onSelect }: CardProps) {
   const t = useT();
   const name = (o: { de: string; en: string }) => (lang === 'de' ? o.de : o.en);
   const mother = MOTHER_BY_ID[tr.mother];
+  const fate = phase.fates[tr.id];
 
   return (
     <>
@@ -579,6 +815,12 @@ function TribeCard({ tribe: tr, lang, onBack, onOpenInTree, onFly, onSelect }: C
             {tr.via ? `${name(tr.via)} · ${name(mother)}` : `${tr.born}. ${t('tribesSon')} · ${name(mother)}`}
           </span>
           <span className="bm-chip">{tr.polygon ? t(tr.side === 'east' ? 'tribesEast' : 'tribesWest') : t('tribesNoLand')}</span>
+          {fate && fate !== 'lot' && (
+            <span className="bm-chip" style={{ background: `${FATE_COLOR[fate]}33` }}>
+              <span className="h-1.5 w-1.5" style={{ background: FATE_COLOR[fate] }} />
+              {`${phaseYear(phase, lang)} · ${lang === 'de' ? FATE_LABEL[fate].de : FATE_LABEL[fate].en}`}
+            </span>
+          )}
         </div>
       </div>
 

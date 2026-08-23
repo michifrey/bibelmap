@@ -2,6 +2,8 @@ import type { Lang } from '../i18n';
 import { JOURNEYS as BIBLE_JOURNEYS } from '../data/journeys';
 import { JOURNEYS as MISSION_JOURNEYS, PHASES, SPREAD_EVENTS, PHASE_BY_ID } from '../data/mission';
 import { ERA_BY_ID } from '../data/eras';
+import { TRIBES, tribeSlug } from '../data/tribes';
+import { PHASES as TRIBE_PHASES, phaseYear } from '../data/tribeHistory';
 
 /**
  * Wohin ein Treffer führt – dieselben Angaben, die auch im Hash stehen, damit
@@ -9,7 +11,8 @@ import { ERA_BY_ID } from '../data/eras';
  */
 export type HitTarget =
   | { mode: 'journeys'; journey: { id: string; stop: number } }
-  | { mode: 'mission'; mission: { phase: string; journey?: string; event?: string } };
+  | { mode: 'mission'; mission: { phase: string; journey?: string; event?: string } }
+  | { mode: 'tree'; tree: { tab: 'timeline' | 'tree' | 'map'; id?: string; year?: number } };
 
 export interface SearchHit {
   key: string;
@@ -36,9 +39,9 @@ function score(haystack: string, needle: string): number {
 }
 
 /**
- * Sucht in dem, was nicht auf der Hauptkarte liegt: den erzählten Reisen und
- * der Ausbreitung. Orte findet weiterhin `searchPlaces` – beides landet in
- * derselben Ergebnisliste.
+ * Sucht in dem, was nicht auf der Hauptkarte liegt: den erzählten Reisen, der
+ * Ausbreitung und den Stammesgebieten. Orte findet weiterhin `searchPlaces` –
+ * beides landet in derselben Ergebnisliste.
  */
 export function searchStories(query: string, lang: Lang, limit = 8): SearchHit[] {
   const q = norm(query.trim());
@@ -115,6 +118,44 @@ export function searchStories(query: string, lang: Lang, limit = 8): SearchHit[]
       subtitle: `${lang === 'de' ? 'Ausbreitung' : 'Spread'} · ${lang === 'de' ? p.range.de : p.range.en}`,
       color: p.color,
       target: { mode: 'mission', mission: { phase: p.id } },
+    });
+  }
+
+  // ---- Stämme Israels ------------------------------------------------------
+  for (const tr of TRIBES) {
+    const name = lang === 'de' ? tr.de : tr.en;
+    const slug = tribeSlug(tr);
+    add(score(name, q), {
+      key: `t:${tr.id}`,
+      title: name,
+      subtitle: `${lang === 'de' ? 'Stammesgebiet' : 'Tribal territory'} · ${tr.lot}`,
+      color: tr.color,
+      target: { mode: 'tree', tree: { tab: 'map', id: slug } },
+    });
+    // Wer „Hebron" sucht, bekommt den Ort von der Hauptkarte – und von hier die
+    // Antwort auf die Frage, in wessen Gebiet er liegt.
+    for (const c of tr.cities) {
+      const town = lang === 'de' ? c.de : c.en;
+      add(score(town, q) - 15, {
+        key: `t:${tr.id}:${c.de}`,
+        title: town,
+        subtitle: `${lang === 'de' ? 'im Gebiet von' : 'in the territory of'} ${name}`,
+        color: tr.color,
+        target: { mode: 'tree', tree: { tab: 'map', id: slug } },
+      });
+    }
+  }
+
+  for (const ph of TRIBE_PHASES) {
+    const name = lang === 'de' ? ph.de : ph.en;
+    const text = lang === 'de' ? ph.text.de : ph.text.en;
+    const s = Math.max(score(name, q), norm(text).includes(q) ? 35 : 0);
+    add(s, {
+      key: `th:${ph.id}`,
+      title: name,
+      subtitle: `${lang === 'de' ? 'Stammesgebiete' : 'Tribal territories'} · ${phaseYear(ph, lang)}`,
+      color: '#e0a449',
+      target: { mode: 'tree', tree: { tab: 'map', year: Math.abs(ph.year) } },
     });
   }
 

@@ -611,6 +611,39 @@ export const TRIBES: Tribe[] = [
 
 export const TRIBE_BY_ID = Object.fromEntries(TRIBES.map((t) => [t.id, t])) as Record<string, Tribe>;
 
+/**
+ * Der Name, unter dem ein Stamm in der Adresse steht. Die Schlüssel im Hash
+ * sind in diesem Projekt deutsch (`#ort`, `#reise`, `#kirche`, `#stammbaum`),
+ * also ist es der Stamm auch: `#stammbaum=gebiete,juda` statt `judah`, und
+ * `manasse-ost` statt `m-east`.
+ */
+export function tribeSlug(t: Tribe): string {
+  return t.de
+    .toLowerCase()
+    .replace(/ä/g, 'ae')
+    .replace(/ö/g, 'oe')
+    .replace(/ü/g, 'ue')
+    .replace(/ß/g, 'ss')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+const BY_SLUG: Record<string, Tribe> = (() => {
+  const map: Record<string, Tribe> = {};
+  for (const t of TRIBES) {
+    // Die eigene Kennung und der englische Name gelten mit, damit ein von Hand
+    // getippter Link nicht daran scheitert, in welcher Sprache er gedacht war.
+    for (const key of [tribeSlug(t), t.id, t.en.toLowerCase()]) map[key] = map[key] ?? t;
+  }
+  return map;
+})();
+
+/** Stamm aus einer Adresse. `null`, wenn es ihn nicht gibt – nicht geraten. */
+export function tribeBySlug(slug: string | undefined): Tribe | null {
+  if (!slug) return null;
+  return BY_SLUG[slug.toLowerCase()] ?? null;
+}
+
 /** The six cities of refuge (Jos 20,7-8) – Levi's mark on the map. */
 export const REFUGE_CITIES: (TribeCity & { in: string })[] = [
   { de: 'Kedesch', en: 'Kedesh', lat: 33.11, lon: 35.53, in: 'naphtali' },
