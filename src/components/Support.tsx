@@ -1,5 +1,6 @@
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
+import { inSprache } from '../data/attribution';
 import { SUPPORT_PROJECTS, SUPPORT_LINKED, type SupportKind, type SupportProject } from '../data/support';
 import LangToggle from './LangToggle';
 
@@ -41,7 +42,7 @@ function ProjectCard({ project, lang }: { project: SupportProject; lang: Lang })
         {project.name}
       </div>
       {project.by && (
-        <div className="mt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-ink-soft">{project.by}</div>
+        <div className="mt-1 text-[11px] font-bold uppercase tracking-[0.14em] text-ink-soft">{inSprache(project.by, lang)}</div>
       )}
 
       <p className="mt-3.5 text-[12.5px] font-medium leading-[1.7] text-[#5c6b69]">{pick(project.role)}</p>

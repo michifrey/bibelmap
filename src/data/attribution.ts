@@ -16,8 +16,12 @@ export type CreditGroup = 'karten' | 'daten' | 'texte' | 'bilder' | 'medien' | '
 export interface CreditEntry {
   id: string;
   name: string;
-  /** Wer dahintersteht, so wie die Leute sich selbst nennen. */
-  by?: string;
+  /**
+   * Wer dahintersteht, so wie die Leute sich selbst nennen. Ein reiner Name
+   * bleibt ein Name; steht ein eigenes Wort darin („und Mitwirkende",
+   * „Universität Göteborg"), gehört es in beide Sprachen.
+   */
+  by?: string | { de: string; en: string };
   group: CreditGroup;
   /** Lizenzkürzel, auflösbar über `licenseInfo` – null bei „je Stück verschieden". */
   license: string | null;
@@ -29,10 +33,16 @@ export interface CreditEntry {
   /** Was daraus in dieser App steckt – und wo es zu sehen ist. */
   use: { de: string; en: string };
   /**
-   * Die Zeile, die die Lizenz sichtbar verlangt. Wortlaut, nicht Umschreibung –
-   * deshalb einsprachig, wie im Nachweis üblich.
+   * Die Zeile, die die Lizenz sichtbar verlangt. Wortlaut, nicht Umschreibung.
+   *
+   * Sie stand einsprachig hier – mit dem Gedanken, ein Wortlaut lasse sich
+   * nicht übersetzen. Das stimmt nur halb: OpenStreetMap gibt seine Zeile
+   * selbst in beiden Sprachen an („© OpenStreetMap-Mitwirkende" /
+   * „© OpenStreetMap contributors"), und wo unsere eigenen Worte darin stehen
+   * („Ortsdaten", „Historische Karte"), ist Deutsch in einer englischen
+   * Oberfläche kein Wortlaut, sondern ein Übersehen.
    */
-  attribution?: string;
+  attribution?: string | { de: string; en: string };
   /** Was sonst noch zu wissen ist, damit der Nachweis ehrlich bleibt. */
   note?: { de: string; en: string };
   /**
@@ -93,14 +103,14 @@ export const CREDITS: CreditEntry[] = [
   {
     id: 'osm',
     name: 'OpenStreetMap',
-    by: 'OpenStreetMap Foundation und Mitwirkende',
+    by: { de: 'OpenStreetMap Foundation und Mitwirkende', en: 'OpenStreetMap Foundation and contributors' },
     group: 'karten',
     license: 'ODbL-1.0',
     use: {
       de: 'Die Landkarte unter allen Kartenstilen: Küsten, Flüsse, Städte, Straßen.',
       en: 'The map beneath every style: coasts, rivers, cities, roads.',
     },
-    attribution: '© OpenStreetMap-Mitwirkende',
+    attribution: { de: '© OpenStreetMap-Mitwirkende', en: '© OpenStreetMap contributors' },
     note: {
       de: 'Die ODbL verlangt die Nennung bei jeder Anzeige – sie steht deshalb auch unten rechts in der Karte selbst.',
       en: 'The ODbL requires the credit wherever the data is shown – so it also sits in the corner of the map itself.',
@@ -159,14 +169,17 @@ export const CREDITS: CreditEntry[] = [
   {
     id: 'dare',
     name: 'Digital Atlas of the Roman Empire (Imperium)',
-    by: 'Johan Åhlfeldt · Universität Göteborg',
+    by: { de: 'Johan Åhlfeldt · Universität Göteborg', en: 'Johan Åhlfeldt · University of Gothenburg' },
     group: 'karten',
     license: 'CC-BY-4.0',
     use: {
       de: 'Die historische Karte („antik") mit römischen Straßen und Siedlungen.',
       en: 'The historical basemap ("antique") with Roman roads and settlements.',
     },
-    attribution: 'Historische Karte © DARE, Universität Göteborg (CC BY)',
+    attribution: {
+      de: 'Historische Karte © DARE, Universität Göteborg (CC BY)',
+      en: 'Historical map © DARE, University of Gothenburg (CC BY)',
+    },
     home: 'https://imperium.ahlfeldt.se/',
   },
   {
@@ -197,7 +210,7 @@ export const CREDITS: CreditEntry[] = [
       de: 'Jeder Marker: Koordinaten, Schreibvarianten und Bibelstellen zu rund 1.335 Orten – und die Bilder, die der Datensatz mitbringt.',
       en: 'Every marker: coordinates, spellings and passages for some 1,335 places – and the images the dataset brings along.',
     },
-    attribution: 'Ortsdaten © OpenBible.info, CC BY 4.0',
+    attribution: { de: 'Ortsdaten © OpenBible.info, CC BY 4.0', en: 'Place data © OpenBible.info, CC BY 4.0' },
     home: 'https://www.openbible.info/geo/',
   },
   {
@@ -210,13 +223,13 @@ export const CREDITS: CreditEntry[] = [
       de: 'Die Verweise zwischen den biblischen Büchern im Graph.',
       en: 'The links between the biblical books in the graph view.',
     },
-    attribution: 'Querverweise © OpenBible.info, CC BY 4.0',
+    attribution: { de: 'Querverweise © OpenBible.info, CC BY 4.0', en: 'Cross references © OpenBible.info, CC BY 4.0' },
     home: 'https://www.openbible.info/labs/cross-references/',
   },
   {
     id: 'wikidata',
     name: 'Wikidata',
-    by: 'Wikimedia Foundation und Freiwillige',
+    by: { de: 'Wikimedia Foundation und Freiwillige', en: 'Wikimedia Foundation and volunteers' },
     group: 'daten',
     license: 'CC0',
     use: {
@@ -269,7 +282,7 @@ export const CREDITS: CreditEntry[] = [
   {
     id: 'wikipedia',
     name: 'Wikipedia',
-    by: 'Wikimedia Foundation und Autorinnen und Autoren',
+    by: { de: 'Wikimedia Foundation und Autorinnen und Autoren', en: 'Wikimedia Foundation and its authors' },
     group: 'texte',
     license: 'CC-BY-SA-4.0',
     use: {
@@ -287,7 +300,10 @@ export const CREDITS: CreditEntry[] = [
   {
     id: 'commons',
     name: 'Wikimedia Commons',
-    by: 'die Fotografinnen, Fotografen und Museen, die dort hochladen',
+    by: {
+      de: 'die Fotografinnen, Fotografen und Museen, die dort hochladen',
+      en: 'the photographers and museums who upload there',
+    },
     group: 'bilder',
     license: null,
     use: {
@@ -405,7 +421,7 @@ export const CREDITS: CreditEntry[] = [
   {
     id: 'react',
     name: 'React · React DOM',
-    by: 'Meta und Mitwirkende',
+    by: { de: 'Meta und Mitwirkende', en: 'Meta and contributors' },
     group: 'technik',
     license: 'MIT',
     use: { de: 'Die Oberfläche.', en: 'The interface.' },
@@ -414,7 +430,7 @@ export const CREDITS: CreditEntry[] = [
   {
     id: 'vite',
     name: 'Vite',
-    by: 'Evan You und Mitwirkende',
+    by: { de: 'Evan You und Mitwirkende', en: 'Evan You and contributors' },
     group: 'technik',
     license: 'MIT',
     use: { de: 'Der Bau der Seite.', en: 'The build of the site.' },
@@ -441,7 +457,7 @@ export const CREDITS: CreditEntry[] = [
   {
     id: 'leaflet',
     name: 'Leaflet',
-    by: 'Volodymyr Agafonkin und Mitwirkende',
+    by: { de: 'Volodymyr Agafonkin und Mitwirkende', en: 'Volodymyr Agafonkin and contributors' },
     group: 'technik',
     license: 'BSD-2-Clause',
     use: { de: 'Die Karte selbst – Kacheln, Marker, Zoom.', en: 'The map itself – tiles, markers, zoom.' },
@@ -450,7 +466,7 @@ export const CREDITS: CreditEntry[] = [
   {
     id: 'react-leaflet',
     name: 'React Leaflet',
-    by: 'Paul Le Cam und Mitwirkende',
+    by: { de: 'Paul Le Cam und Mitwirkende', en: 'Paul Le Cam and contributors' },
     group: 'technik',
     license: 'Hippocratic-2.1',
     use: { de: 'Die Brücke zwischen React und Leaflet.', en: 'The bridge between React and Leaflet.' },
@@ -505,3 +521,15 @@ export const REPO_URL = 'https://github.com/michifrey/bibelmap';
 
 /** Die Lizenz von Bibelmap selbst: GPL-3.0, erzwungen von den Grenzdaten. */
 export const LICENSE_URL = 'https://github.com/michifrey/bibelmap/blob/main/LICENSE';
+
+/**
+ * Ein Feld, das ein Name oder ein Satz sein kann, in der gewählten Sprache.
+ * Namen stehen als reine Zeichenkette da und gelten in jeder Sprache.
+ */
+export function inSprache(
+  wert: string | { de: string; en: string } | undefined,
+  lang: 'de' | 'en',
+): string | undefined {
+  if (wert === undefined) return undefined;
+  return typeof wert === 'string' ? wert : wert[lang];
+}

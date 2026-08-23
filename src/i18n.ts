@@ -42,6 +42,10 @@ const STRINGS: Dict = {
     en: 'Loading the terrain map – it arrives once, as its own bundle.',
   },
   terrainExaggeration: { de: 'Überhöhung', en: 'Exaggeration' },
+  landingCredits: {
+    de: 'Orte © OpenBible.info, CC-BY 4.0 · Grenzen © historical-basemaps, GPL-3.0 · Kacheln © OpenStreetMap, © CARTO',
+    en: 'Places © OpenBible.info, CC-BY 4.0 · Borders © historical-basemaps, GPL-3.0 · Tiles © OpenStreetMap, © CARTO',
+  },
   alongTitle: { de: 'Was lag am Weg?', en: 'What lay along the way?' },
   alongShow: { de: 'Orte am Weg', en: 'Places along the way' },
   alongHide: { de: 'Orte am Weg ausblenden', en: 'Hide places along the way' },

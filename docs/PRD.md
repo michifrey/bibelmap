@@ -603,7 +603,29 @@ liegen – die Frage, die jeder stellt, der eine Reise nacherzählt.
       gemessen liegen Jerusalem/Zion 0,00 km, Ölberg/Bethphage 0,49 km
       auseinander – jede Schwelle für das eine trifft auch das andere.
 
-### 4.35 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.35 Deutsch in der englischen Oberfläche — P1 ✅
+
+**Gemessen vorher:** 28 deutsche Reste über achtzehn Ansichten. Der häufigste
+stand in **jeder** Ansicht mit Karte: die Attributionen waren fest auf Deutsch
+im Quelltext („· Orte: OpenBible.info", „· Routen: schematisch", „Orte der
+Kirchenväter & Konzilien: schematisch"). Dazu die Nachweisseite („OpenStreetMap
+Foundation und Mitwirkende", „Historische Karte © DARE, Universität Göteborg").
+
+**Anforderungen**
+- Was die App selbst sagt, sagt sie in beiden Sprachen – auch die Zeile unter
+  der Karte, die beim Sprachwechsel mitwechseln muss.
+- Was anderen gehört, bleibt: eine deutsche Folge heißt deutsch. Sie trägt
+  `lang="de"` – richtiges HTML, das der Screenreader ebenso braucht.
+- Namen bleiben Namen; „Universität Göteborg" heißt auf Englisch aber
+  „University of Gothenburg", weil die Universität sich selbst so nennt.
+
+**Akzeptanzkriterien**
+- [x] 28 → 0 über alle achtzehn Ansichten.
+- [x] `scripts/check-i18n.mjs` prüft es, mit Gegenprobe auf Deutsch.
+- [x] Die Gegenprobe hat einen Fehler in der Prüfung selbst gefunden: sie hielt
+      `<html lang="de">` für eine fremdsprachige Insel und übersprang alles.
+
+### 4.36 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

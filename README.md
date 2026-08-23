@@ -245,6 +245,14 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Höhenkacheln ebenfalls aus dem Netz. Über das
   Browser-Menü lässt sie sich als App installieren (Manifest + Symbole).
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
+  Das galt für alles, was jemand bewusst übersetzt hat – und nicht für das, was
+  nebenbei entstand: gemessen standen **28 deutsche Reste** in der englischen
+  Oberfläche, der häufigste in **jeder** Ansicht mit Karte („· Orte:
+  OpenBible.info", „· Routen: schematisch"). Jetzt sind es null.
+  `scripts/check-i18n.mjs` hält es so. Was **nicht** übersetzt wird, ist das,
+  was anderen gehört: eine deutsche Folge von bibletunes.de heißt auch in der
+  englischen Oberfläche deutsch – sie trägt ein `lang="de"`, damit der
+  Screenreader sie richtig ausspricht und die Prüfung sie in Ruhe lässt.
   Ohne eigene Wahl entscheidet die Browsersprache; wer einmal umschaltet, bekommt
   seine Sprache beim nächsten Besuch wieder.
 - **Tastatur** – Marker lassen sich mit Tabulator ansteuern und mit Enter oder
@@ -654,6 +662,24 @@ gegen eine gebaute Vorschau:
 npm run dev
 node scripts/a11y-audit.mjs
 ```
+
+### Zweisprachigkeit prüfen
+
+`scripts/check-i18n.mjs` schaltet die Oberfläche auf Englisch und geht alle
+achtzehn Ansichten durch – Text wie Beschriftungen, die nur ein Screenreader
+liest. Gesucht wird nach deutschen Funktionswörtern; was ein eigenes `lang`
+trägt, bleibt außen vor.
+
+```bash
+npm run dev
+node scripts/check-i18n.mjs                          # Englisch: darf nichts finden
+node scripts/check-i18n.mjs http://localhost:4173 de # Gegenprobe: muss finden
+```
+
+Die Gegenprobe ist kein Beiwerk. Beim ersten Lauf meldete sie null Funde auf
+der **deutschen** Oberfläche – die Prüfung hatte `<html lang="de">` für eine
+fremdsprachige Insel gehalten und alles übersprungen. Eine Prüfung, die nie
+etwas findet, sieht aus wie eine bestandene.
 
 ### Bewegung und Tastatur
 

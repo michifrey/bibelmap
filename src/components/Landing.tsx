@@ -643,8 +643,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
         </div>
         <div className="flex-1" />
         <span className="text-[11.5px] font-medium text-white/40">
-          Orte © OpenBible.info, CC-BY 4.0 · Grenzen © historical-basemaps, GPL-3.0 · Kacheln ©
-          OpenStreetMap, © CARTO
+          {t('landingCredits')}
         </span>
       </div>
     </div>

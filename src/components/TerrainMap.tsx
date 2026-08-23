@@ -5,6 +5,7 @@ import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { useReducedMotion } from '../lib/motion';
+import { attr } from '../lib/mapAttribution';
 import { BASEMAPS, type BasemapId } from './MapView';
 /**
  * Eine Route über dem Gelände – aus den Bibelreisen oder aus der Mission. Die
@@ -196,7 +197,7 @@ export default function TerrainMap({
             tiles: tileUrls(basemap),
             tileSize: 256,
             maxzoom: 17,
-            attribution: BASEMAPS[basemap]?.attribution ?? '',
+            attribution: BASEMAPS[basemap] ? attr(BASEMAPS[basemap].attribution, lang) : '',
           },
           dem: {
             type: 'raster-dem',

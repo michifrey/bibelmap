@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
+import { attr, CARTO_ATTR } from '../lib/mapAttribution';
 import { flyOptions } from '../lib/motion';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
@@ -66,8 +67,6 @@ export default function QuizMode({ places, lang, onExit }: Props) {
       // Ohne Beschriftung – sonst steht die Antwort auf der Karte.
     });
     const kacheln = L.tileLayer(TILES, {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY)',
       subdomains: 'abcd',
     }).addTo(map);
     tileWatchRef.current = watchTiles(kacheln, map, lang);
@@ -91,7 +90,7 @@ export default function QuizMode({ places, lang, onExit }: Props) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang);
+    return localizeMap(map, lang, attr(CARTO_ATTR, lang));
   }, [lang, level]);
 
   // Tipp auswerten, sobald er gesetzt ist

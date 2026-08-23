@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
+import { attr } from '../lib/mapAttribution';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { GENO_GEO, type GeoKind } from '../data/genoGeo';
@@ -210,8 +211,8 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang);
-  }, [lang]);
+    return localizeMap(map, lang, attr(BASEMAPS[basemap]?.attribution ?? BASEMAPS.dark.attribution, lang));
+  }, [lang, basemap]);
 
   // ---- basemap ------------------------------------------------------------
   useEffect(() => {
@@ -221,7 +222,6 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
     const bm = BASEMAPS[basemap];
     tileWatchRef.current?.();
     tileRef.current = L.tileLayer(bm.url, {
-      attribution: bm.attribution,
       subdomains: bm.subdomains ?? 'abc',
       maxZoom: 12,
       maxNativeZoom: bm.maxZoom,

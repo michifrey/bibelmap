@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
+import { attr, CARTO_ATTR, ORTE_ATTR } from '../lib/mapAttribution';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import 'leaflet.markercluster';
@@ -42,30 +43,28 @@ export type BasemapId = 'dark' | 'light' | 'satellite' | 'relief' | 'antique';
 
 export interface Basemap {
   url: string;
-  attribution: string;
+  attribution: { de: string; en: string };
   maxZoom: number;
   maxNativeZoom?: number;
   subdomains?: string;
   dark?: boolean;
 }
 
-const OB_ATTR = '· Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY)';
+const OB = ORTE_ATTR;
 
 export const BASEMAPS: Record<BasemapId, Basemap> = {
   // The default. A light basemap under a dark shell reads as two designs
   // stacked on each other; the era colours also only sing against dark.
   dark: {
     url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> ' + OB_ATTR,
+    attribution: CARTO_ATTR,
     maxZoom: 17,
     subdomains: 'abcd',
     dark: true,
   },
   light: {
     url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> ' + OB_ATTR,
+    attribution: CARTO_ATTR,
     maxZoom: 19,
     subdomains: 'abcd',
   },
@@ -76,9 +75,10 @@ export const BASEMAPS: Record<BasemapId, Basemap> = {
   // Spalte: .../default/g/{z}/{y}/{x}.jpg.
   satellite: {
     url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg',
-    attribution:
-      'Sentinel-2 cloudless 2020 &copy; <a href="https://s2maps.eu">EOX IT Services</a> (modifizierte Copernicus-Sentinel-Daten 2020, CC-BY) ' +
-      OB_ATTR,
+    attribution: {
+      de: `Sentinel-2 cloudless 2020 &copy; <a href="https://s2maps.eu">EOX IT Services</a> (modifizierte Copernicus-Sentinel-Daten 2020, CC-BY) ${OB.de}`,
+      en: `Sentinel-2 cloudless 2020 &copy; <a href="https://s2maps.eu">EOX IT Services</a> (modified Copernicus Sentinel data 2020, CC-BY) ${OB.en}`,
+    },
     // Die Aufnahmen lösen 10 m auf – ab Stufe 14 wird vergrößert statt
     // nachgeladen, sonst liefe die Karte in leere Kacheln.
     maxZoom: 18,
@@ -88,9 +88,10 @@ export const BASEMAPS: Record<BasemapId, Basemap> = {
   },
   relief: {
     url: 'https://tiles.maps.eox.at/wmts/1.0.0/terrain-light_3857/default/g/{z}/{y}/{x}.jpg',
-    attribution:
-      'Terrain Light &copy; <a href="https://maps.eox.at">EOX</a> · Daten: OpenStreetMap-Mitwirkende, SRTM, Natural Earth (CC-BY) ' +
-      OB_ATTR,
+    attribution: {
+      de: `Terrain Light &copy; <a href="https://maps.eox.at">EOX</a> · Daten: OpenStreetMap-Mitwirkende, SRTM, Natural Earth (CC-BY) ${OB.de}`,
+      en: `Terrain Light &copy; <a href="https://maps.eox.at">EOX</a> · Data: OpenStreetMap contributors, SRTM, Natural Earth (CC-BY) ${OB.en}`,
+    },
     maxZoom: 14,
     maxNativeZoom: 12,
     subdomains: '',
@@ -98,8 +99,10 @@ export const BASEMAPS: Record<BasemapId, Basemap> = {
   antique: {
     // Digital Atlas of the Roman Empire (DARE / "Imperium"), Univ. of Gothenburg.
     url: 'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png',
-    attribution:
-      'Historische Karte &copy; <a href="https://imperium.ahlfeldt.se/">DARE</a> (Univ. Göteborg, CC-BY) ' + OB_ATTR,
+    attribution: {
+      de: `Historische Karte &copy; <a href="https://imperium.ahlfeldt.se/">DARE</a> (Univ. Göteborg, CC-BY) ${OB.de}`,
+      en: `Historical map &copy; <a href="https://imperium.ahlfeldt.se/">DARE</a> (Univ. of Gothenburg, CC-BY) ${OB.en}`,
+    },
     maxZoom: 14,
     maxNativeZoom: 11,
   },
@@ -219,8 +222,8 @@ export default function MapView({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang);
-  }, [lang]);
+    return localizeMap(map, lang, attr(BASEMAPS[basemap]?.attribution ?? BASEMAPS.dark.attribution, lang));
+  }, [lang, basemap]);
 
   // basemap tile layer (swappable)
   useEffect(() => {
@@ -229,7 +232,6 @@ export default function MapView({
     const bm = BASEMAPS[basemap] ?? BASEMAPS.dark;
     if (tileRef.current) map.removeLayer(tileRef.current);
     const layer = L.tileLayer(bm.url, {
-      attribution: bm.attribution,
       subdomains: bm.subdomains ?? 'abc',
       maxZoom: bm.maxZoom,
       maxNativeZoom: bm.maxNativeZoom ?? bm.maxZoom,

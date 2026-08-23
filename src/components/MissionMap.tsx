@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
+import { attr, CARTO_ATTR } from '../lib/mapAttribution';
 import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
@@ -103,8 +104,6 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
       zoomControl: true,
     });
     const kacheln = L.tileLayer(CARTO, {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Orte: <a href="https://www.openbible.info/geo/">OpenBible.info</a> (CC-BY)',
       subdomains: 'abcd',
     }).addTo(map);
     tileWatchRef.current = watchTiles(kacheln, map, lang);
@@ -129,7 +128,7 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang);
+    return localizeMap(map, lang, attr(CARTO_ATTR, lang));
   }, [lang]);
 
   // Routen, Bögen und Punkte neu zeichnen
