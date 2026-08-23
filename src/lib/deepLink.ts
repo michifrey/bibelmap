@@ -101,6 +101,11 @@ export function parseHash(hash: string): Route | null {
           ? { view: 'terrain', mode: null, journey: { id: args[1], stop: 0 } }
           : { view: 'terrain', mode: null };
       }
+      if (args[0] === 'mission') {
+        return args[1]
+          ? { view: 'terrain', mode: null, mission: { phase: 'journeys', journey: args[1] } }
+          : { view: 'terrain', mode: null };
+      }
       return args[0]
         ? { view: 'terrain', mode: null, placeId: args[0] }
         : { view: 'terrain', mode: null };
@@ -187,6 +192,7 @@ export function formatRoute(route: Route): string {
     return route.reading ? `#lesen=${route.reading.osis},${route.reading.chapter}` : '#lesen';
   }
   if (view === 'terrain') {
+    if (route.mission?.journey) return `#gelaende=mission,${route.mission.journey}`;
     if (route.journey) return `#gelaende=reise,${route.journey.id}`;
     return route.placeId ? `#gelaende=${route.placeId}` : '#gelaende';
   }

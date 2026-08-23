@@ -29,6 +29,8 @@ interface Props {
   initial?: { phase: string; journey?: string; event?: string } | null;
   /** Meldet den Stand, damit die Adresse mitläuft. */
   onNavigate?: (state: { phase: string; journey: string; event?: string }) => void;
+  /** Dieselbe Route über dem Gelände – dort sieht man die Pässe und Küsten. */
+  onOpenTerrain?: (id: string) => void;
   onExit: () => void;
 }
 
@@ -74,7 +76,15 @@ function eventItems(events: SpreadEvent[], lang: Lang): Item[] {
   }));
 }
 
-export default function Mission({ places, lang, onShowPlace, initial, onNavigate, onExit }: Props) {
+export default function Mission({
+  places,
+  lang,
+  onShowPlace,
+  initial,
+  onNavigate,
+  onOpenTerrain,
+  onExit,
+}: Props) {
   const t = useT();
   const [phaseId, setPhaseId] = useState(() =>
     initial && PHASE_BY_ID[initial.phase] ? initial.phase : 'journeys',
@@ -315,6 +325,20 @@ export default function Mission({ places, lang, onShowPlace, initial, onNavigate
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {/* Nur in der Reisephase: die Ausbreitung ist keine Route, die man
+              über ein Gelände legen könnte. */}
+          {onOpenTerrain && phaseId === 'journeys' && journey && (
+            <button
+              onClick={() => onOpenTerrain(journey.id)}
+              className="bm-btn hidden sm:inline-flex"
+              title={t('terrainView')}
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M3 18l5-8 4 5 3-4 6 7z" />
+              </svg>
+              {t('terrain')}
+            </button>
+          )}
           <ShareLink className="bm-btn hidden sm:inline-flex" />
           <button onClick={() => setPlaying((p) => !p)} className="bm-btn">
             {playing ? (

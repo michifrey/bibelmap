@@ -6,8 +6,20 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { useReducedMotion } from '../lib/motion';
 import { BASEMAPS, type BasemapId } from './MapView';
-import { ERA_BY_ID } from '../data/eras';
-import type { BibleJourney } from '../data/journeys';
+/**
+ * Eine Route über dem Gelände – aus den Bibelreisen oder aus der Mission. Die
+ * beiden Datensätze sehen verschieden aus; hier zählt nur, was das Gelände
+ * braucht: ein Name, eine Farbe, eine Kette von Stationen.
+ */
+export interface TerrainRoute {
+  id: string;
+  /** Woher die Route kommt – entscheidet, wohin der Rückweg führt. */
+  kind: 'journey' | 'mission';
+  de: string;
+  en: string;
+  color: string;
+  stops: { de: string; en: string; lat: number; lon: number }[];
+}
 
 interface Props {
   places: Place[];
@@ -19,10 +31,10 @@ interface Props {
   flyTo?: { lat: number; lon: number; zoom?: number; key: number } | null;
   /** Kumulative Zeitleiste: was in der gewählten Epoche neu dazukommt. */
   newIds?: Set<string> | null;
-  /** Eine Reise, die über dem Gelände liegt – der eigentliche Grund für 3D. */
-  journey?: BibleJourney | null;
-  /** Zurück zur Reise als Text und Karte. */
-  onOpenJourney?: (id: string) => void;
+  /** Eine Route, die über dem Gelände liegt – der eigentliche Grund für 3D. */
+  route?: TerrainRoute | null;
+  /** Zurück dorthin, wo die Route herkommt: Text, Stellen, Entfernungen. */
+  onOpenRoute?: (route: TerrainRoute) => void;
 }
 
 /**
@@ -76,7 +88,7 @@ function toGeoJSON(places: Place[], newIds: Set<string> | null | undefined) {
 }
 
 /** Die Route als Linie, die Stationen als nummerierte Punkte. */
-function journeyGeoJSON(j: BibleJourney | null | undefined) {
+function journeyGeoJSON(j: TerrainRoute | null | undefined) {
   const line = {
     type: 'FeatureCollection' as const,
     features: j
@@ -97,7 +109,7 @@ function journeyGeoJSON(j: BibleJourney | null | undefined) {
     features: (j?.stops ?? []).map((s, i) => ({
       type: 'Feature' as const,
       geometry: { type: 'Point' as const, coordinates: [s.lon, s.lat] },
-      properties: { nr: i + 1, de: s.de, en: s.en, sea: !!s.sea },
+      properties: { nr: i + 1, de: s.de, en: s.en },
     })),
   };
   return { line, stops };
@@ -119,8 +131,8 @@ export default function TerrainMap({
   basemap = 'satellite',
   flyTo,
   newIds,
-  journey,
-  onOpenJourney,
+  route,
+  onOpenRoute,
 }: Props) {
   const t = useT();
   const el = useRef<HTMLDivElement>(null);
@@ -169,8 +181,8 @@ export default function TerrainMap({
             attribution: DEM_ATTR,
           },
           places: { type: 'geojson', data: toGeoJSON(places, newIds) },
-          route: { type: 'geojson', data: journeyGeoJSON(journey).line },
-          routeStops: { type: 'geojson', data: journeyGeoJSON(journey).stops },
+          route: { type: 'geojson', data: journeyGeoJSON(route).line },
+          routeStops: { type: 'geojson', data: journeyGeoJSON(route).stops },
         },
         layers: [
           { id: 'base', type: 'raster', source: 'base' },
@@ -324,16 +336,17 @@ export default function TerrainMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !ready) return;
-    const { line, stops } = journeyGeoJSON(journey);
+    const { line, stops } = journeyGeoJSON(route);
     (map.getSource('route') as maplibregl.GeoJSONSource | undefined)?.setData(line);
     (map.getSource('routeStops') as maplibregl.GeoJSONSource | undefined)?.setData(stops);
-    // Die Route trägt die Farbe ihrer Epoche – dieselbe Ordnung wie überall.
-    const color = (journey && ERA_BY_ID[journey.era]?.color) || ROUTE_COLOR;
+    // Die Route trägt ihre eigene Farbe – die Epoche bei den Bibelreisen, die
+    // Farbe der Reise bei der Mission.
+    const color = route?.color || ROUTE_COLOR;
     map.setPaintProperty('route', 'line-color', color);
     map.setPaintProperty('route-stops', 'circle-color', color);
-    if (!journey?.stops.length) return;
+    if (!route?.stops.length) return;
     const b = new maplibregl.LngLatBounds();
-    for (const s of journey.stops) b.extend([s.lon, s.lat]);
+    for (const s of route.stops) b.extend([s.lon, s.lat]);
     // Die Neigung bleibt: eine Route, die flach eingepasst wird, verliert
     // genau das, wofür man sie hier ansieht.
     map.fitBounds(b, {
@@ -343,7 +356,7 @@ export default function TerrainMap({
       maxZoom: 9,
       duration: reduced ? 0 : 1400,
     });
-  }, [journey, ready, reduced]);
+  }, [route, ready, reduced]);
 
   // Kartenwahl: dasselbe Tuch wie flach, nur über dem Gelände.
   useEffect(() => {
@@ -383,21 +396,18 @@ export default function TerrainMap({
           darunter beginnen, sonst schneidet sie den Hinweis ab. */}
       <div className="pointer-events-none absolute inset-x-0 top-28 z-[1100] flex justify-center px-2 sm:top-24">
         <div className="pointer-events-auto flex max-w-[min(92vw,34rem)] flex-col gap-2 bg-deepest/95 px-3 py-2 ring-1 ring-white/10 backdrop-blur-xl">
-          {journey ? (
+          {route ? (
             <div className="flex flex-wrap items-center gap-2">
-              <span
-                className="h-2.5 w-6 flex-none"
-                style={{ background: ERA_BY_ID[journey.era]?.color ?? ROUTE_COLOR }}
-              />
+              <span className="h-2.5 w-6 flex-none" style={{ background: route.color }} />
               <span className="text-[12.5px] font-bold text-white">
-                {lang === 'de' ? journey.de : journey.en}
+                {lang === 'de' ? route.de : route.en}
               </span>
               <span className="text-[11px] text-white/55">
-                {journey.stops.length} {t('stations')}
+                {route.stops.length} {t('stations')}
               </span>
-              {onOpenJourney && (
-                <button onClick={() => onOpenJourney(journey.id)} className="bm-btn bm-btn-ghost ml-auto">
-                  {t('journeys')} →
+              {onOpenRoute && (
+                <button onClick={() => onOpenRoute(route)} className="bm-btn bm-btn-ghost ml-auto">
+                  {route.kind === 'mission' ? t('mission') : t('journeys')} →
                 </button>
               )}
             </div>
