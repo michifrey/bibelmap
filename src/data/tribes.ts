@@ -25,6 +25,19 @@ export interface TribeCity {
   major?: boolean;
 }
 
+/**
+ * Ein Mensch, den dieses Gebiet hervorgebracht hat. `node` steht nur dort, wo
+ * der Zeitbaum die Person auch führt – die meisten Richter stehen in keiner
+ * Geschlechterliste und bekommen darum keinen Sprung, sondern nur ihre Stelle.
+ */
+export interface TribePerson {
+  de: string;
+  en: string;
+  role: BiText;
+  ref: string;
+  node?: string;
+}
+
 export interface Tribe {
   /** Node id in `nationsTribes.ts`, so the map can open the family tree. */
   id: string;
@@ -58,6 +71,8 @@ export interface Tribe {
   /** One or two sentences on the land itself. */
   land: BiText;
   cities: TribeCity[];
+  /** Wer von hier kam. Die Reihenfolge ist die der Bibel, nicht die des Rangs. */
+  people?: TribePerson[];
   polygon?: [number, number][];
 }
 
@@ -103,6 +118,14 @@ export const TRIBES: Tribe[] = [
   // ---- West of the Jordan, north → south ----------------------------------
   {
     id: 'asher',
+    people: [
+      {
+        de: 'Hanna',
+        en: 'Anna',
+        role: { de: 'Prophetin im Tempel', en: 'Prophetess in the temple' },
+        ref: 'Lk 2,36',
+      },
+    ],
     rank: 8,
     labelAt: [33.23, 35.09],
     de: 'Asser',
@@ -130,14 +153,28 @@ export const TRIBES: Tribe[] = [
       [32.95, 35.2],
       [33.05, 35.27],
       [33.17, 35.32],
-      [33.3, 35.28],
-      [33.28, 35.18],
+      [33.22, 35.31],
+      [33.2, 35.12],
       [33.09, 35.11],
       [32.92, 35.06],
     ],
   },
   {
     id: 'naphtali',
+    people: [
+      {
+        de: 'Barak',
+        en: 'Barak',
+        role: { de: 'Feldherr an Deboras Seite', en: 'Commander at Deborah\'s side' },
+        ref: 'Ri 4,6',
+      },
+      {
+        de: 'Hiram',
+        en: 'Huram',
+        role: { de: 'Erzgießer für den Tempel', en: 'Bronzeworker for the temple' },
+        ref: '1Kön 7,14',
+      },
+    ],
     rank: 6,
     labelAt: [33.03, 35.54],
     de: 'Naftali',
@@ -166,16 +203,29 @@ export const TRIBES: Tribe[] = [
       [32.95, 35.2],
       [33.05, 35.27],
       [33.17, 35.32],
-      [33.3, 35.28],
-      [33.33, 35.55],
-      [33.2, 35.63],
-      [33.02, 35.62],
-      [32.88, 35.57],
-      [32.8, 35.52],
+      [33.22, 35.31],
+      [33.35, 35.64],
+      [33.18, 35.72],
+      [32.9, 35.6],
+      [32.82, 35.54],
     ],
   },
   {
     id: 'zebulun',
+    people: [
+      {
+        de: 'Elon',
+        en: 'Elon',
+        role: { de: 'Richter', en: 'Judge' },
+        ref: 'Ri 12,11',
+      },
+      {
+        de: 'Jona',
+        en: 'Jonah',
+        role: { de: 'Prophet aus Gat-Hefer', en: 'Prophet from Gath-hepher' },
+        ref: '2Kön 14,25',
+      },
+    ],
     rank: 10,
     labelAt: [32.78, 35.19],
     de: 'Sebulon',
@@ -210,6 +260,26 @@ export const TRIBES: Tribe[] = [
   },
   {
     id: 'issachar',
+    people: [
+      {
+        de: 'Tola',
+        en: 'Tola',
+        role: { de: 'Richter', en: 'Judge' },
+        ref: 'Ri 10,1',
+      },
+      {
+        de: 'Die Söhne Issachars',
+        en: 'The sons of Issachar',
+        role: { de: '„die Einsicht hatten für die Zeiten“', en: '“who had understanding of the times”' },
+        ref: '1Chr 12,33',
+      },
+      {
+        de: 'Baesa',
+        en: 'Baasha',
+        role: { de: 'König des Nordreichs', en: 'King of the northern kingdom' },
+        ref: '1Kön 15,27',
+      },
+    ],
     rank: 9,
     labelAt: [32.5, 35.45],
     de: 'Issachar',
@@ -241,12 +311,32 @@ export const TRIBES: Tribe[] = [
       [32.55, 35.57],
       [32.44, 35.53],
       [32.4, 35.35],
-      [32.48, 35.2],
-      [32.58, 35.16],
+      [32.5, 35.3],
+      [32.6, 35.24],
     ],
   },
   {
     id: 'manasseh',
+    people: [
+      {
+        de: 'Gideon',
+        en: 'Gideon',
+        role: { de: 'Richter', en: 'Judge' },
+        ref: 'Ri 6,15',
+      },
+      {
+        de: 'Zelofhads Töchter',
+        en: 'The daughters of Zelophehad',
+        role: { de: 'Erbrecht für Töchter erstritten', en: 'Won the right of daughters to inherit' },
+        ref: '4Mo 27,1',
+      },
+      {
+        de: 'Abimelech',
+        en: 'Abimelech',
+        role: { de: '„König“ von Sichem', en: '“King” of Shechem' },
+        ref: 'Ri 9,1',
+      },
+    ],
     via: { de: 'Josef', en: 'Joseph' },
     mapLabel: { de: 'Manasse', en: 'Manasseh' },
     rank: 11.2,
@@ -274,8 +364,8 @@ export const TRIBES: Tribe[] = [
     polygon: [
       [32.82, 34.98],
       [32.66, 35.16],
-      [32.58, 35.16],
-      [32.48, 35.2],
+      [32.6, 35.24],
+      [32.5, 35.3],
       [32.4, 35.35],
       [32.44, 35.53],
       [32.32, 35.55],
@@ -290,6 +380,27 @@ export const TRIBES: Tribe[] = [
   },
   {
     id: 'ephraim',
+    people: [
+      {
+        de: 'Josua',
+        en: 'Joshua',
+        role: { de: 'Nachfolger des Mose', en: 'Successor of Moses' },
+        ref: '4Mo 13,8',
+        node: 'josua',
+      },
+      {
+        de: 'Debora',
+        en: 'Deborah',
+        role: { de: 'Richtete im Gebirge Ephraim', en: 'Judged in the hill country of Ephraim' },
+        ref: 'Ri 4,5',
+      },
+      {
+        de: 'Jerobeam I.',
+        en: 'Jeroboam I',
+        role: { de: 'Erster König des Nordreichs', en: 'First king of the northern kingdom' },
+        ref: '1Kön 11,26',
+      },
+    ],
     via: { de: 'Josef', en: 'Joseph' },
     rank: 11.1,
     labelAt: [32.05, 35.3],
@@ -326,6 +437,20 @@ export const TRIBES: Tribe[] = [
   },
   {
     id: 'dan',
+    people: [
+      {
+        de: 'Simson',
+        en: 'Samson',
+        role: { de: 'Richter', en: 'Judge' },
+        ref: 'Ri 13,2',
+      },
+      {
+        de: 'Oholiab',
+        en: 'Oholiab',
+        role: { de: 'Kunsthandwerker der Stiftshütte', en: 'Craftsman of the tabernacle' },
+        ref: '2Mo 31,6',
+      },
+    ],
     rank: 5,
     labelAt: [31.95, 34.82],
     de: 'Dan',
@@ -357,11 +482,46 @@ export const TRIBES: Tribe[] = [
       [31.74, 34.92],
       [31.72, 34.78],
       [31.74, 34.66],
-      [32.05, 34.75],
+      [32.07, 34.73],
     ],
   },
   {
     id: 'benjamin',
+    people: [
+      {
+        de: 'Ehud',
+        en: 'Ehud',
+        role: { de: 'Richter', en: 'Judge' },
+        ref: 'Ri 3,15',
+      },
+      {
+        de: 'Saul',
+        en: 'Saul',
+        role: { de: 'Erster König Israels', en: 'First king of Israel' },
+        ref: '1Sam 9,1',
+        node: 'saul',
+      },
+      {
+        de: 'Jonatan',
+        en: 'Jonathan',
+        role: { de: 'Davids Freund', en: 'David\'s friend' },
+        ref: '1Sam 14,1',
+        node: 'jonatan',
+      },
+      {
+        de: 'Mordechai und Ester',
+        en: 'Mordecai and Esther',
+        role: { de: 'Am Hof in Susa', en: 'At the court in Susa' },
+        ref: 'Est 2,5',
+      },
+      {
+        de: 'Paulus',
+        en: 'Paul',
+        role: { de: 'Apostel – „aus dem Stamm Benjamin“', en: 'Apostle – “of the tribe of Benjamin”' },
+        ref: 'Röm 11,1',
+        node: 'paulus',
+      },
+    ],
     rank: 12,
     labelAt: [31.88, 35.36],
     de: 'Benjamin',
@@ -391,13 +551,55 @@ export const TRIBES: Tribe[] = [
       [31.99, 35.55],
       [31.83, 35.53],
       [31.8, 35.45],
-      [31.78, 35.3],
-      [31.79, 35.15],
+      [31.76, 35.3],
+      [31.77, 35.15],
       [31.8, 35.02],
     ],
   },
   {
     id: 'judah',
+    people: [
+      {
+        de: 'Kaleb',
+        en: 'Caleb',
+        role: { de: 'Kundschafter, der blieb', en: 'The spy who held out' },
+        ref: '4Mo 13,6',
+      },
+      {
+        de: 'Otniel',
+        en: 'Othniel',
+        role: { de: 'Der erste Richter', en: 'The first judge' },
+        ref: 'Ri 3,9',
+      },
+      {
+        de: 'Boas',
+        en: 'Boaz',
+        role: { de: 'Löser in Bethlehem', en: 'Kinsman-redeemer in Bethlehem' },
+        ref: 'Rut 2,1',
+        node: 'boas',
+      },
+      {
+        de: 'David',
+        en: 'David',
+        role: { de: 'König', en: 'King' },
+        ref: '1Sam 16,1',
+        node: 'david',
+      },
+      {
+        de: 'Salomo',
+        en: 'Solomon',
+        role: { de: 'König', en: 'King' },
+        ref: '1Kön 1,39',
+        node: 'salomo',
+      },
+      {
+        de: 'Jesus',
+        en: 'Jesus',
+        role: { de: '„Aus Juda ist unser Herr gekommen“', en: '“Our Lord descended from Judah”' },
+        ref: 'Hebr 7,14',
+        node: 'jesus',
+      },
+    ],
     rank: 4,
     labelAt: [31.48, 35.02],
     de: 'Juda',
@@ -422,8 +624,8 @@ export const TRIBES: Tribe[] = [
     ],
     polygon: [
       [31.8, 35.02],
-      [31.79, 35.15],
-      [31.78, 35.3],
+      [31.77, 35.15],
+      [31.76, 35.3],
       [31.8, 35.45],
       [31.83, 35.53],
       [31.6, 35.45],
@@ -441,6 +643,14 @@ export const TRIBES: Tribe[] = [
   },
   {
     id: 'simeon',
+    people: [
+      {
+        de: 'Simri',
+        en: 'Zimri',
+        role: { de: 'Erschlagen bei Baal-Peor', en: 'Struck down at Baal-peor' },
+        ref: '4Mo 25,14',
+      },
+    ],
     rank: 2,
     labelAt: [31.16, 34.6],
     de: 'Simeon',
@@ -477,6 +687,14 @@ export const TRIBES: Tribe[] = [
   // ---- East of the Jordan, south → north ----------------------------------
   {
     id: 'reuben',
+    people: [
+      {
+        de: 'Datan und Abiram',
+        en: 'Dathan and Abiram',
+        role: { de: 'Aufstand gegen Mose', en: 'Rebellion against Moses' },
+        ref: '4Mo 16,1',
+      },
+    ],
     rank: 1,
     labelAt: [31.64, 35.86],
     de: 'Ruben',
@@ -511,6 +729,26 @@ export const TRIBES: Tribe[] = [
   },
   {
     id: 'gad',
+    people: [
+      {
+        de: 'Jeftah',
+        en: 'Jephthah',
+        role: { de: 'Richter', en: 'Judge' },
+        ref: 'Ri 11,1',
+      },
+      {
+        de: 'Elia',
+        en: 'Elijah',
+        role: { de: 'Prophet aus Tischbe in Gilead', en: 'Prophet from Tishbe in Gilead' },
+        ref: '1Kön 17,1',
+      },
+      {
+        de: 'Barsillai',
+        en: 'Barzillai',
+        role: { de: 'Versorgte David auf der Flucht', en: 'Sustained David in his flight' },
+        ref: '2Sam 17,27',
+      },
+    ],
     rank: 7,
     labelAt: [32.26, 35.92],
     de: 'Gad',
@@ -550,6 +788,14 @@ export const TRIBES: Tribe[] = [
   },
   {
     id: 'm-east',
+    people: [
+      {
+        de: 'Jaïr',
+        en: 'Jair',
+        role: { de: 'Richter', en: 'Judge' },
+        ref: 'Ri 10,3',
+      },
+    ],
     via: { de: 'Josef', en: 'Joseph' },
     mapLabel: { de: 'Manasse (Ost)', en: 'Manasseh (east)' },
     rank: 11.3,
@@ -590,6 +836,54 @@ export const TRIBES: Tribe[] = [
   // ---- The tribe with no land ---------------------------------------------
   {
     id: 'levi',
+    people: [
+      {
+        de: 'Mose',
+        en: 'Moses',
+        role: { de: 'Prophet und Führer', en: 'Prophet and leader' },
+        ref: '2Mo 6,20',
+        node: 'mose',
+      },
+      {
+        de: 'Aaron',
+        en: 'Aaron',
+        role: { de: 'Erster Hoherpriester', en: 'First high priest' },
+        ref: '2Mo 6,20',
+        node: 'aaron',
+      },
+      {
+        de: 'Mirjam',
+        en: 'Miriam',
+        role: { de: 'Prophetin', en: 'Prophetess' },
+        ref: '2Mo 15,20',
+        node: 'mirjam',
+      },
+      {
+        de: 'Pinhas',
+        en: 'Phinehas',
+        role: { de: 'Priester', en: 'Priest' },
+        ref: '4Mo 25,7',
+        node: 'pinhas',
+      },
+      {
+        de: 'Samuel',
+        en: 'Samuel',
+        role: { de: 'Richter und Prophet', en: 'Judge and prophet' },
+        ref: '1Chr 6,18-23',
+      },
+      {
+        de: 'Hesekiel',
+        en: 'Ezekiel',
+        role: { de: 'Priester und Prophet im Exil', en: 'Priest and prophet in exile' },
+        ref: 'Hes 1,3',
+      },
+      {
+        de: 'Johannes der Täufer',
+        en: 'John the Baptist',
+        role: { de: 'Sohn eines Priesters', en: 'Son of a priest' },
+        ref: 'Lk 1,5',
+      },
+    ],
     rank: 3,
     de: 'Levi',
     en: 'Levi',
@@ -720,3 +1014,24 @@ export const NEIGHBOURS: Record<string, string[]> = (() => {
   }
   return out;
 })();
+
+/**
+ * In wessen Gebiet liegt dieser Punkt? Strahlenverfahren gegen die dreizehn
+ * Ringe. Die Ringe überlappen sich nicht, also gibt es höchstens eine Antwort;
+ * wer außerhalb liegt – Philisterküste, Negev, Phönizien – bekommt keine, statt
+ * dem nächstgelegenen Stamm zugeschlagen zu werden.
+ */
+export function tribeAt(lat: number, lon: number): Tribe | null {
+  for (const t of TRIBES) {
+    const ring = t.polygon;
+    if (!ring) continue;
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [yi, xi] = ring[i];
+      const [yj, xj] = ring[j];
+      if (yi > lat !== yj > lat && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+    if (inside) return t;
+  }
+  return null;
+}

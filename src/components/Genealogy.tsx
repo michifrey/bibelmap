@@ -92,6 +92,24 @@ export default function Genealogy({
   // start with the top two levels open
   const [open, setOpen] = useState<Set<string>>(() => new Set(['adam', 'noah']));
 
+  // Der Zeitstrahl zeigt eine Person – von der Kirchengeschichtskarte (Prop)
+  // oder aus einer Stammeskarte (Knopf). Beides läuft über denselben Zustand.
+  const [timelineFocus, setTimelineFocus] = useState<string | null>(focusId ?? null);
+  useEffect(() => {
+    if (focusId) setTimelineFocus(focusId);
+  }, [focusId]);
+
+  function openInTimeline(personId: string) {
+    setTimelineFocus(personId);
+    setTab('timeline');
+  }
+
+  /** Ein Ortsname aus der Stammeskarte führt auf die Ortskarte der Hauptkarte. */
+  function openPlace(term: string) {
+    const place = searchPlaces(places, term, 1)[0];
+    if (place) onShowPlace(place);
+  }
+
   // Jump from the map into the tree, focused on the tapped tribe/people/person.
   function openInTree(id: string) {
     const n = NODE_BY_ID[id];
@@ -181,7 +199,7 @@ export default function Genealogy({
       {/* ---- Zeitstrahl (timeline) ---- */}
       {tab === 'timeline' && (
         <div className="absolute inset-0">
-          <TreeView lang={lang} focusId={focusId} onShowOnMap={onShowOnMap} />
+          <TreeView lang={lang} focusId={timelineFocus} onShowOnMap={onShowOnMap} />
         </div>
       )}
 
@@ -191,6 +209,8 @@ export default function Genealogy({
           <TribesMap
             lang={lang}
             onOpenInTree={openInTree}
+            onOpenPlace={openPlace}
+            onOpenInTimeline={openInTimeline}
             initial={initial?.tab === 'map' ? { id: initial.id, year: initial.year } : null}
             onNavigate={setMapNav}
           />

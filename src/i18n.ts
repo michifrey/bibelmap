@@ -372,6 +372,10 @@ const STRINGS: Dict = {
   tribesRefuge: { de: 'Zufluchtsstädte', en: 'Cities of refuge' },
   tribesFlyTo: { de: 'Auf der Karte zeigen', en: 'Show on the map' },
   tribesNeighbours: { de: 'Grenzt an', en: 'Borders on' },
+  tribesPeople: { de: 'Wer von hier kam', en: 'Who came from here' },
+  tribesInTimeline: { de: 'Im Zeitbaum zeigen', en: 'Show in the time tree' },
+  tribesOpenPlace: { de: 'Ortskarte öffnen', en: 'Open the place card' },
+  inTribe: { de: 'Im Gebiet von', en: 'In the territory of' },
   tribesFoldList: { de: 'Karte', en: 'Map' },
   tribesOpenList: { de: 'Stämme', en: 'Tribes' },
   tribesHistNote: {

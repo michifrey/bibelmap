@@ -7,6 +7,7 @@ import { formatKm } from '../lib/route';
 import { licenseInfo } from '../lib/imageCredit';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { ERA_BY_ID, ERAS } from '../data/eras';
+import { tribeAt, tribeSlug } from '../data/tribes';
 import PlaceThumb from './PlaceThumb';
 import PlaceMedia from './PlaceMedia';
 import ShareLink from './ShareLink';
@@ -14,6 +15,8 @@ import ShareLink from './ShareLink';
 interface Props {
   place: Place;
   lang: Lang;
+  /** Die Stammeskarte auf dem Gebiet öffnen, in dem dieser Ort liegt. */
+  onOpenTribe?: (tribeSlug: string) => void;
   /** Orte in Gehweite, schon sortiert – berechnet in App.tsx. */
   neighbours?: { place: Place; km: number; dir: string }[];
   onSelectPlace?: (p: Place) => void;
@@ -47,7 +50,8 @@ function SourceLink({ href, children }: { href: string; children: React.ReactNod
   );
 }
 
-export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlace, onClose }: Props) {
+export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlace, onOpenTribe, onClose }: Props) {
+  const tribe = useMemo(() => tribeAt(place.lat, place.lon), [place.lat, place.lon]);
   const t = useT();
   const [img, setImg] = useState<PlaceImage | null>(place.img);
   const license = licenseInfo(img?.license ?? null, lang);
@@ -205,6 +209,23 @@ export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlac
         </div>
 
         <PlaceMedia place={place} />
+
+        {/* Wessen Land war das? Die Gegenrichtung zu den Orten der Stammeskarte. */}
+        {tribe && onOpenTribe && (
+          <div className="border-t border-white/10 px-4 py-3.5">
+            <div className="bm-eyebrow mb-2">{t('inTribe')}</div>
+            <button
+              onClick={() => onOpenTribe(tribeSlug(tribe))}
+              className="flex w-full items-center gap-2 bg-white/8 px-2.5 py-2 text-left transition hover:bg-gold/30"
+            >
+              <span className="h-3.5 w-3.5 flex-none" style={{ background: tribe.color }} />
+              <span className="flex-1 text-[12.5px] font-bold text-white">
+                {lang === 'de' ? tribe.de : tribe.en}
+              </span>
+              <span className="text-[11px] font-semibold text-white/50">{tribe.lot}</span>
+            </button>
+          </div>
+        )}
 
         {/* Nachbarorte: was an einem Tag zu Fuß erreichbar war */}
         {neighbours.length > 0 && onSelectPlace && (
