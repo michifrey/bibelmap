@@ -730,7 +730,33 @@ Regeln.
 - [x] Gegenprobe: Eintrag mit unbekannter ID eingefügt → Exit 1 mit Befund;
       entfernt → Exit 0.
 
-### 4.41 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.41 Die Wege des Alten Testaments: Abraham und Sara — P1 ✅
+
+**Anlass:** Der Eindruck, die App sei „neutestamentlich". Nachgemessen stimmte
+das Gefühl, aber nicht der Grund: die alttestamentlichen Reisen fehlen nicht,
+sie sind dünner erzählt. Paulus' zweite Reise hat 17 Stationen, der Auszug 10,
+Abraham 9, die Rückkehr 4 – und jede Station trug genau einen Satz (~90
+Zeichen).
+
+**Abraham: 9 → 17 Stationen**, Text je Station 101 → 180 Zeichen. Neu dabei:
+der Zug bis Hoba nördlich von Damaskus (der weiteste Punkt seines Lebens),
+Melchisedek in Salem, Hagar am Brunnen Beer-Lachai-Roi, das Feilschen um
+Sodom, Gerar, und der Kauf der Höhle Machpela.
+
+**Sara ist die zweite Hauptperson**, nicht mehr „seine Frau": sie stand vorher
+in 2 von 9 Stationen, jetzt in 6 von 17 – von „Sarai war unfruchtbar" über den
+Palast des Pharao, ihre eigene Idee mit Hagar und ihr Lachen hinter der Tür bis
+zu ihrem Tod mit 127 Jahren.
+
+**Akzeptanzkriterien**
+- [x] Jede Station trägt eine echte Bibelstelle; nichts erfunden.
+- [x] Alle 17 `placeId` zeigen auf einen Ort in `places.json`, alle
+      Koordinaten stimmen mit dem Ortsdatensatz überein.
+- [x] Umstrittenes steht als umstritten da: „Wo Sodom lag, ist bis heute
+      umstritten", „Salem wird traditionell mit Jerusalem gleichgesetzt".
+- [x] Im Browser: 3.494 km, 140 Tagesmärsche, 16 Etappen mit „Orte am Weg".
+
+### 4.42 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
