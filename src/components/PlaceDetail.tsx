@@ -20,6 +20,10 @@ interface Props {
   /** Orte in Gehweite, schon sortiert – berechnet in App.tsx. */
   neighbours?: { place: Place; km: number; dir: string }[];
   onSelectPlace?: (p: Place) => void;
+  /** Stelle im eigenen Weg – `-1`, wenn der Ort nicht dabei ist. */
+  ownIndex?: number;
+  onToggleOwn?: () => void;
+  onOpenOwnRoute?: () => void;
   onClose: () => void;
 }
 
@@ -50,8 +54,19 @@ function SourceLink({ href, children }: { href: string; children: React.ReactNod
   );
 }
 
-export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlace, onOpenTribe, onClose }: Props) {
+export default function PlaceDetail({
+  place,
+  lang,
+  neighbours = [],
+  onSelectPlace,
+  onOpenTribe,
+  ownIndex = -1,
+  onToggleOwn,
+  onOpenOwnRoute,
+  onClose,
+}: Props) {
   const tribe = useMemo(() => tribeAt(place.lat, place.lon), [place.lat, place.lon]);
+  const inOwn = ownIndex >= 0;
   const t = useT();
   const [img, setImg] = useState<PlaceImage | null>(place.img);
   const license = licenseInfo(img?.license ?? null, lang);
@@ -149,6 +164,25 @@ export default function PlaceDetail({ place, lang, neighbours = [], onSelectPlac
             <span key={ty} className="bm-chip capitalize">{ty}</span>
           ))}
         </div>
+
+        {/* Der eigene Weg: derselbe Knopf fügt an und nimmt wieder heraus.
+            Ist der Ort dabei, steht seine Nummer daneben – sonst müsste man
+            in den Modus wechseln, um zu sehen, ob der Klick angekommen ist. */}
+        {onToggleOwn && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <button
+              onClick={onToggleOwn}
+              className={inOwn ? 'bm-btn bm-btn-ghost' : 'bm-btn bm-btn-gold'}
+            >
+              {inOwn ? `− ${t('ownRouteRemove')}` : `+ ${t('ownRouteAdd')}`}
+            </button>
+            {inOwn && onOpenOwnRoute && (
+              <button onClick={onOpenOwnRoute} className="bm-btn bm-btn-ghost">
+                {t('ownRouteStation')} {(ownIndex ?? 0) + 1} · {t('ownRouteOpen')} →
+              </button>
+            )}
+          </div>
+        )}
 
         {/* eras / when */}
         <div className="mt-4">

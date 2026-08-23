@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Place } from './types';
 import { LangContext, type Lang, useT, t as tr } from './i18n';
 import {
@@ -28,6 +28,7 @@ const Mission = lazy(() => import('./components/Mission'));
 const JourneyMode = lazy(() => import('./components/JourneyMode'));
 const QuizMode = lazy(() => import('./components/QuizMode'));
 const MediaMode = lazy(() => import('./components/MediaMode'));
+const OwnRoute = lazy(() => import('./components/OwnRoute'));
 // MapLibre wiegt schwer – die Geländeansicht kommt erst, wenn jemand sie öffnet.
 const TerrainMap = lazy(() => import('./components/TerrainMap'));
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
@@ -171,6 +172,34 @@ export default function App() {
   );
   const [compareNav, setCompareNav] = useState<string | null>(INITIAL_ROUTE?.compare ?? null);
   const [treeNav, setTreeNav] = useState(INITIAL_ROUTE?.tree ?? null);
+  /*
+   * Der eigene Weg. Er gehört niemandem außer dem, der ihn baut: gespeichert
+   * wird er im Browser, weitergegeben nur über den Link, den er selbst schickt.
+   * Trägt eine Adresse Stationen mit, gilt sie – wer einen geteilten Weg
+   * öffnet, will ihn sehen und nicht seinen eigenen.
+   */
+  const [ownIds, setOwnIds] = useState<string[]>(() => {
+    if (INITIAL_ROUTE?.own?.length) return INITIAL_ROUTE.own;
+    try {
+      const raw = localStorage.getItem('bibelmap:weg');
+      const list = raw ? JSON.parse(raw) : null;
+      return Array.isArray(list) ? list.filter((x) => typeof x === 'string') : [];
+    } catch {
+      return [];
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem('bibelmap:weg', JSON.stringify(ownIds));
+    } catch {
+      // Ein Browser ohne Speicher ist kein Grund, den Weg nicht zu zeigen.
+    }
+  }, [ownIds]);
+
+  /** Ort anfügen oder wieder herausnehmen – derselbe Knopf in der Ortskarte. */
+  const toggleOwn = useCallback((id: string) => {
+    setOwnIds((cur) => (cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]));
+  }, []);
   // Mobile-only: bottom-sheet (search/detail) and timeline are collapsible so
   // the map stays usable on small screens. Desktop ignores these.
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -329,6 +358,7 @@ export default function App() {
           media: mediaNav ?? undefined,
           church: churchNav ?? undefined,
           compare: compareNav ?? undefined,
+          own: mode === 'route' ? ownIds : undefined,
           tree: treeNav ?? undefined,
         });
     if (hash === window.location.hash) return;
@@ -345,6 +375,7 @@ export default function App() {
     mediaNav,
     churchNav,
     compareNav,
+    ownIds,
     treeNav,
   ]);
 
@@ -386,6 +417,7 @@ export default function App() {
       setMediaNav(route.media ?? null);
       setChurchNav(route.church ?? null);
       setCompareNav(route.compare ?? null);
+      if (route.own?.length) setOwnIds(route.own);
       setTreeNav(route.tree ?? null);
       pendingPlace.current = route.placeId ?? null;
       if (!route.placeId) setSelected(null);
@@ -726,6 +758,9 @@ export default function App() {
                       neighbours={neighbours}
                       onSelectPlace={select}
                       onOpenTribe={openTribe}
+                      ownIndex={ownIds.indexOf(selected.id)}
+                      onToggleOwn={() => toggleOwn(selected.id)}
+                      onOpenOwnRoute={() => setMode('route')}
                       onClose={() => setSelected(null)}
                     />
                   ) : (
@@ -929,6 +964,19 @@ export default function App() {
                   lang={lang}
                   initial={compareNav}
                   onNavigate={setCompareNav}
+                  onExit={() => setMode(null)}
+                />
+              </Suspense>
+            )}
+            {mode === 'route' && (
+              <Suspense fallback={<ModeFallback />}>
+                <OwnRoute
+                  key={`route-${navEpoch}`}
+                  places={places}
+                  lang={lang}
+                  ids={ownIds}
+                  onChange={setOwnIds}
+                  onShowPlace={showPlaceFromGenealogy}
                   onExit={() => setMode(null)}
                 />
               </Suspense>

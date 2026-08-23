@@ -149,6 +149,18 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   vergrößern (80 % bis 200 %), auch im Beamer-Modus; die Einstellung bleibt
   gemerkt. Fünf Meter vom Fernseher entfernt ist die Vorgabe zu klein, auf dem
   Telefon in der Hand manchmal zu groß.
+- **Eigener Weg** – die erzählten Reisen stehen fest, weil die Bibel sie so
+  erzählt. Was fehlte, war der umgekehrte Fall: die Wege, die im Text nicht als
+  Weg stehen, aber im Hauskreis auf den Tisch kommen – die Orte eines Kapitels,
+  die Städte der sieben Sendschreiben, die fünf Stationen für den Sonntag. In
+  jeder Ortskarte fügt ein Knopf den Ort an; im Modus **Eigener Weg** (`#weg`)
+  steht die Reihenfolge, lässt sich mit ↑ und ↓ ändern, und jede Etappe nennt
+  Entfernung, Himmelsrichtung und Tagesmärsche. Der Weg lässt sich abspielen,
+  als Blatt drucken und weitergeben: die Adresse trägt ihn mit
+  (`#weg=a15257a,a112427,a231f80` – Jerusalem, Bethlehem, Jericho, 38 km).
+  Gespeichert wird er sonst nirgends als im Browser dessen, der ihn baut.
+  Verschieben geht mit Knöpfen statt mit der Maus – eine Liste, die sich nur
+  ziehen lässt, ist mit der Tastatur nicht zu ordnen.
 - **Handout drucken** – jede Reise lässt sich als Blatt ausgeben: Titel, Epoche,
   Bibelstelle, Gesamtstrecke und alle Stationen mit Stelle, Text und Entfernung
   – ohne Karte, Knöpfe und dunklen Hintergrund. Für den Hauskreis, der lieber
@@ -161,7 +173,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
   (Jerusalem im Gelände), `#gelaende=reise,exodus` (der Auszug über dem
-  Gelände), `#gelaende=mission,second` (die zweite Missionsreise), `#kirche=vater,augustinus`
+  Gelände), `#gelaende=mission,second` (die zweite Missionsreise), `#weg=a15257a,a112427`
+  (ein selbst gebauter Weg), `#kirche=vater,augustinus`
   `#kirche=konzil,chalcedon` und `#vergleich=abraham`. Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.

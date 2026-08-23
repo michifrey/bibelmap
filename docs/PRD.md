@@ -473,7 +473,41 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       scrollbaren Streifen liegt, zählt nicht – durch eine Reihe von Ortsmarken
       wischt man, das ist Absicht.
 
-### 4.29 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.29 Tastatur: Sprungmarken — P1 ✅
+
+- [x] Drei Sprungmarken am Anfang der Tabulatorreihe („Zur Navigation", „Zur
+      Suche", „Zur Karte"), sichtbar erst mit Fokus. Vorher war die Kopfzeile
+      auf der Karte das 205. von 208 ansteuerbaren Elementen; jetzt sind es in
+      allen Ansichten zwei Tastendrücke.
+- [x] Die A11y-Prüfung misst diesen Weg in einem dritten Durchgang mit.
+
+### 4.30 Eigener Weg — P2 ✅
+
+**Beschreibung:** Orte zu einem selbst zusammengestellten Weg verbinden – für
+die Wege, die im Text nicht als Weg stehen (die Orte eines Kapitels, die Städte
+der sieben Sendschreiben, fünf Stationen für den Hauskreis).
+
+**Anforderungen**
+- Ortskarte: ein Knopf fügt an und nimmt wieder heraus; die Stelle im Weg steht
+  dabei.
+- Eigener Modus (`#weg`) mit Reihenfolge, Entfernung, Himmelsrichtung und
+  Tagesmärschen je Etappe sowie Gesamtstrecke.
+- Blatt zum Drucken wie bei den Reisen; Abspielen wie bei den Reisen.
+- Die Adresse trägt den Weg mit (`#weg=a15257a,a112427,a231f80`).
+
+**Akzeptanzkriterien**
+- [x] Anfügen, Entfernen, Verschieben und Leeren wirken sofort auf Liste,
+      Karte, Gesamtstrecke und Adresse.
+- [x] Verschieben mit Knöpfen (↑/↓), nicht mit der Maus – eine Liste, die sich
+      nur ziehen lässt, ist mit der Tastatur nicht zu ordnen.
+- [x] Der Weg bleibt im Browser gemerkt (`localStorage`); ein geteilter Link
+      zeigt beim Empfänger denselben Weg.
+- [x] Ein Kürzel im Link, zu dem es keinen Ort gibt, fällt still heraus, statt
+      eine Lücke in die Strecke zu reißen.
+- [x] Entfernungen sind Luftlinien, Tagesmärsche eine Größenordnung – beides
+      steht in der Ansicht.
+
+### 4.31 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
