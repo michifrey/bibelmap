@@ -337,7 +337,11 @@ export default function Presentation({
                           key={p.id}
                           onClick={() => setSelected(p)}
                           title={placeName(p, lang)}
-                          className={`ml-1 inline-flex translate-y-[1px] items-center rounded-full px-1 align-middle text-[10px] font-sans transition ${ selected?.id === p.id ? 'bg-signal text-white' : 'bg-gold/30 text-white hover:bg-gold/55' }`}
+                          // Dieselbe Papierrechnung wie bei den Ortsnamen im
+                          // Text: weiß auf Goldschleier über Weiß war nicht zu
+                          // lesen. Ausgewählt bleibt es weiß – dort trägt das
+                          // volle Signalgrün dahinter.
+                          className={`ml-1 inline-flex translate-y-[1px] items-center rounded-full px-1 align-middle text-[10px] font-sans transition ${ selected?.id === p.id ? 'bg-signal text-white' : 'bg-gold/30 text-ink hover:bg-gold/60' }`}
                         >
                           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M12 2C8.7 2 6 4.7 6 8c0 4.4 6 12 6 12s6-7.6 6-12c0-3.3-2.7-6-6-6zm0 8.2A2.2 2.2 0 1 1 12 5.8a2.2 2.2 0 0 1 0 4.4z" /></svg>
                           {placeName(p, lang)}
