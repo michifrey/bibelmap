@@ -140,7 +140,9 @@ body {
     color: var(--color-mint);
   }
   .bm-eyebrow-dim {
-    color: rgba(255, 255, 255, 0.45);
+    /* 0.45 ergibt auf dem tiefsten Grund 4,05:1 – für 10-Pixel-Versalien zu
+       wenig. 0.6 sind 6,06:1 und auf jedem der vier dunklen Gründe genug. */
+    color: rgba(255, 255, 255, 0.6);
   }
 
   /* A floating surface. Hard corners, hairline edge, no drop shadow —

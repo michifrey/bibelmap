@@ -282,7 +282,7 @@ export default function MediaMode({
                     {/* Bei „Timothy Keller“ heißt die Quelle wie ihr Autor –
                         dann steht der Name einmal, nicht zweimal untereinander. */}
                     {s.author && s.author !== sourceLabel(s) && (
-                      <span className="block truncate text-[11px] text-white/50">{s.author}</span>
+                      <span className="block truncate text-[11px] text-white/60">{s.author}</span>
                     )}
                   </span>
                   <span className="bm-num flex-none text-sm text-white/60">{counts[s.id] ?? 0}</span>
@@ -345,7 +345,7 @@ export default function MediaMode({
               </button>
             )}
 
-            <p className="mt-6 hidden text-[11px] leading-relaxed text-white/45 lg:block">{t('mediaNote')}</p>
+            <p className="mt-6 hidden text-[11px] leading-relaxed text-white/60 lg:block">{t('mediaNote')}</p>
           </div>
         </aside>
 
@@ -416,7 +416,7 @@ export default function MediaMode({
                   <button
                     aria-label={t('close')}
                     onClick={() => setPlace(null)}
-                    className="text-white/50 hover:text-white"
+                    className="text-white/60 hover:text-white"
                   >
                     ✕
                   </button>
@@ -427,7 +427,7 @@ export default function MediaMode({
 
           {/* Liste */}
           <div className="scroll-soft min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5">
-            {!index && <div className="text-sm text-white/50">…</div>}
+            {!index && <div className="text-sm text-white/60">…</div>}
 
             {index && !list.length && (
               <div className="bm-panel p-4 text-sm text-white/70">{t('mediaEmpty')}</div>
@@ -456,9 +456,11 @@ export default function MediaMode({
                       <span className="min-w-0 truncate font-bold uppercase tracking-[0.16em] text-mint">
                         {src ? sourceLabel(src) : ep.src}
                       </span>
-                      {date && <span className="flex-none text-white/45">{date}</span>}
+                      {/* /45 und /50 lagen bei 3,65 und 4,16:1 – meine eigene
+                          Arbeit aus #68, auf denselben Maßstab gebracht. */}
+                      {date && <span className="flex-none text-white/60">{date}</span>}
                       {era0 && (
-                        <span className="ml-auto flex-none truncate text-white/50">
+                        <span className="ml-auto flex-none truncate text-white/60">
                           {lang === 'de' ? era0.de : era0.en}
                         </span>
                       )}
@@ -517,7 +519,7 @@ export default function MediaMode({
                           </button>
                         ))}
                         {chips.length > CHIPS && (
-                          <span className="px-0.5 text-[11px] text-white/45">+{chips.length - CHIPS}</span>
+                          <span className="px-0.5 text-[11px] text-white/60">+{chips.length - CHIPS}</span>
                         )}
                       </div>
                     )}
@@ -532,7 +534,7 @@ export default function MediaMode({
               </button>
             )}
 
-            <p className="mt-6 text-[11px] leading-relaxed text-white/45 lg:hidden">{t('mediaNote')}</p>
+            <p className="mt-6 text-[11px] leading-relaxed text-white/60 lg:hidden">{t('mediaNote')}</p>
           </div>
         </main>
       </div>
