@@ -1,7 +1,7 @@
 // Prüft die Zeitdokument-Sammlung gegen den Zeitbaum:
 //   – zeigt jede Person-ID, die es in `genealogy.ts` nicht gibt (Tippfehler),
 //   – zählt Dokumente, Sprachen und die Felder, ohne die ein Eintrag nichts taugt.
-// Aufruf: npm run sources
+// Aufruf: npm run check:sources
 import { readFileSync } from 'node:fs';
 
 const gen = readFileSync(new URL('../src/data/genealogy.ts', import.meta.url), 'utf8');

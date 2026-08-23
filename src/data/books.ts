@@ -5,6 +5,8 @@
 // - era:   era id (see eras.ts) used to place the book on the timeline
 // - bg:    BibleGateway passage code (book name for the ?search= param)
 
+import BP_GUIDE_OVERRIDE from './bpGuides.json';
+
 export interface BookMeta {
   num: number;
   osis: string;
@@ -97,15 +99,9 @@ export function bibleGatewayUrl(osis: string, chapter: number, version: string):
 
 // BibleProject "guide" pages carry the book-overview video plus resources.
 // Slugs follow `book-of-<name>`, except a few books that BibleProject groups
-// into a single guide (Kings, Samuel, Chronicles). Maintain exceptions here.
-const BP_GUIDE_OVERRIDE: Record<string, string> = {
-  '1Kgs': 'books-of-kings',
-  '2Kgs': 'books-of-kings',
-  '1Sam': 'books-of-samuel',
-  '2Sam': 'books-of-samuel',
-  '1Chr': 'books-of-chronicles',
-  '2Chr': 'books-of-chronicles',
-};
+// into a single guide (Kings, Samuel, Chronicles). Die Ausnahmen stehen in
+// `src/data/bpGuides.json` – dieselbe Datei prüft `npm run check:bp`, das die
+// Adressen einmal abklopft und meldet, welche ins Leere zeigen.
 
 function bookSlug(name: string): string {
   return name
@@ -134,6 +130,6 @@ export function bibleProjectVideoIds(osis: string): string[] {
 export function bibleProjectUrl(osis: string): string {
   const b = BOOK_BY_OSIS[osis];
   if (!b) return 'https://bibleproject.com/';
-  const slug = BP_GUIDE_OVERRIDE[osis] ?? `book-of-${bookSlug(b.en)}`;
+  const slug = (BP_GUIDE_OVERRIDE as Record<string, string>)[osis] ?? `book-of-${bookSlug(b.en)}`;
   return `https://bibleproject.com/guides/${slug}/`;
 }

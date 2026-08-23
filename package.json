@@ -8,13 +8,15 @@
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
     "check:aliases": "node scripts/check-aliases.mjs",
+    "check:bp": "node scripts/check-bp-guides.mjs",
+    "check:links": "node scripts/check-support-links.mjs",
+    "check:sources": "node scripts/check-sources.mjs",
     "preview": "vite preview",
     "data": "node scripts/build-data.mjs",
     "text": "node scripts/build-text.mjs",
     "names": "node scripts/build-names-de.mjs",
     "media": "node scripts/build-media.mjs",
-    "xrefs": "node scripts/build-xrefs.mjs",
-    "sources": "node scripts/check-sources.mjs"
+    "xrefs": "node scripts/build-xrefs.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

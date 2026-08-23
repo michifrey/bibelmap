@@ -5,7 +5,7 @@ Eine interaktive Karte biblischer Orte – mit **Zeitleiste**, **Suche**,
 Kapitel durchläuft (links die Orte/Stellen, rechts die Karte).
 
 > An interactive map of biblical places – with a timeline, search, heatmap and a
-> presentation mode that walks through a book chapter by chapter.
+> explorer mode that walks through a book chapter by chapter.
 
 Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 (warme, editoriale Farbwelt, Serifen-Display-Font).
@@ -74,11 +74,13 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   und Tagesmärsche zur vorigen, ein Klick auf *Auf Karte* springt zur Ortskarte.
 - **Kirchengeschichte-Modus** – **Kirchenväter** (westlich/lateinisch ·
   östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
-  7 ökumenischen) auf der Karte. Paulus’ Reisen stehen nicht hier, sondern in
+  7 ökumenischen) auf der Karte; jede Person und jedes Konzil hat eine eigene
+  Adresse (`#kirche=vater,augustinus`, `#kirche=konzil,chalcedon`). Paulus’ Reisen stehen nicht hier, sondern in
   *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
 - **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
   Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
-  Bibel und Koran, aus jüdisch-christlich-biblischer Sicht.
+  Bibel und Koran, aus jüdisch-christlich-biblischer Sicht; jede Gestalt hat
+  eine eigene Adresse (`#vergleich=abraham`).
 - **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
   (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
   Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
@@ -114,23 +116,31 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 - **Teilen & Deep-Links** – jede Ansicht hat eine Adresse: `#ort=a15257a`
   (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
   `#mission=modern`, `#lesen=Acts,13`, `#stammbaum`, `#nachweise`, `#hoeren=keller`
-  (Folgen einer Quelle) und `#hoeren=ort,a15257a` (Folgen zu einem Ort). Der Hash läuft beim
+  (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
+  `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#kirche=vater,augustinus`
+  `#kirche=konzil,chalcedon` und `#vergleich=abraham`. Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
 - **Hören & Sehen** – ein eigener Modus über alle **473 Folgen** der vier
   eingebundenen Quellen (bibletunes.de, BibleProject, John Mark Comer, Timothy
   Keller): filterbar nach **Quelle, Buch, Epoche** und Freitext – die Suche
-  versteht dabei auch Ortsnamen. Unter jeder Folge stehen die Orte, die sie
-  berührt; ein Klick darauf führt auf die Karte. Die Verknüpfung gilt in beide
-  Richtungen: jede Ortskarte zeigt weiter ihre Folgen und verlinkt mit
-  *Alle Folgen zu diesem Ort* zurück in den Modus (`#hoeren=ort,…`).
+  versteht dabei auch Ortsnamen, und zwei Reihenfolgen stehen zur Wahl:
+  **Passgenau** (die genaue Stelle vor dem ganzen Buch) oder **Neueste** (nach
+  Sendedatum). Unter jeder Folge stehen die Orte, die sie
+  berührt; ein Klick darauf führt auf die Karte. Die Verknüpfung gilt in alle
+  Richtungen: jede Ortskarte verlinkt mit *Alle Folgen zu diesem Ort* in den
+  Modus (`#hoeren=ort,…`), der **Lesemodus** zeigt neben Kapitel und Text, wie
+  viele Folgen genau diese Stelle behandeln (`#hoeren=stelle,Mark,6`), und von
+  dort führt jede Bibelstelle wieder in den Text zurück.
 
 ### Drumherum
 
 - **Offline & installierbar** – die App meldet einen Service Worker an: Einstieg,
-  Programmdateien und die Ortsdaten liegen nach dem ersten Besuch im Cache,
-  einmal angesehene Kartenkacheln ebenso. Ohne Netz startet Bibelmap weiter,
-  zeigt alle 1.335 Orte und die bereits besuchten Kartenausschnitte. Über das
+  Programmdateien, die Ortsdaten **und der Medien-Index** liegen nach dem ersten
+  Besuch im Cache, einmal angesehene Kartenkacheln ebenso. Ohne Netz startet
+  Bibelmap weiter, zeigt alle 1.335 Orte, alle 473 Folgen und die bereits
+  besuchten Kartenausschnitte. Die Folgen selbst liegen bei ihren Anbietern –
+  abspielen lässt sich ohne Netz nichts. Über das
   Browser-Menü lässt sie sich als App installieren (Manifest + Symbole).
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
   Ohne eigene Wahl entscheidet die Browsersprache; wer einmal umschaltet, bekommt
@@ -144,6 +154,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   die Lizenz auf ihren Text. Bilder, die erst zur Laufzeit über Wikidata
   gefunden werden, holen beides über die Commons-API nach – die Lizenzen
   verlangen die Nennung, ein „© Name" allein genügt ihnen nicht.
+- **Startseite** – vier Wege hinein: Karte, Entdeckermodus, Stammbäume und
+  Hören & Sehen, dazu die Kopfzeile mit denselben Zielen.
 - **Projekte unterstützen** – eine eigene Seite (Startseite, Modi-Menü, Direktlink
   `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
   selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,
@@ -172,8 +184,32 @@ npm run preview    # Build lokal anschauen
 
 Ein Workflow (`.github/workflows/deploy.yml`) baut und deployt automatisch bei jedem
 Push auf den Default-Branch. **Einmalig** in den Repo-Einstellungen aktivieren:
-*Settings → Pages → Source: GitHub Actions*. Der Build setzt `VITE_BASE=/bibelmap/`
-für das Project-Pages-Unterverzeichnis; lokal bleibt die Basis `/`.
+*Settings → Pages → Source: GitHub Actions*.
+
+Die Seite läuft unter der eigenen Domain **www.biblemap.ch** (`public/CNAME`) und
+damit an der Wurzel, nicht in einem Unterverzeichnis. Der Build braucht deshalb
+kein `VITE_BASE` mehr; die Umgebungsvariable bleibt in `vite.config.ts` nur als
+Notausgang, falls die Seite einmal wieder unter einem Pfad liegt.
+
+Nötige DNS-Einträge bei `biblemap.ch`:
+
+| Typ | Name | Wert |
+| --- | --- | --- |
+| CNAME | `www` | `michifrey.github.io.` |
+| A | `@` | `185.199.108.153` |
+| A | `@` | `185.199.109.153` |
+| A | `@` | `185.199.110.153` |
+| A | `@` | `185.199.111.153` |
+
+Die vier A-Records auf die Wurzel sind nicht doppelt gemoppelt: GitHub leitet
+`biblemap.ch` von dort auf `www.biblemap.ch` weiter, sonst liefe die nackte
+Domain ins Leere. `bibelmap.ch` – die deutsche Schreibweise – zeigt am besten
+per Weiterleitung des Registrars auf `https://www.biblemap.ch`; eine zweite
+Domain kann GitHub Pages nicht selbst bedienen.
+
+Nach dem ersten Deploy in *Settings → Pages* **Enforce HTTPS** anhaken, sobald
+das Zertifikat ausgestellt ist (dauert nach der DNS-Umstellung einige Minuten
+bis zu einer Stunde).
 
 ## Daten
 
@@ -227,7 +263,7 @@ trotzdem im richtigen Artikel. Links gehen bewusst über die Wikipedia-Suche
 (`/w/index.php?search=`), damit sie auch bei umbenannten Artikeln greifen.
 
 ```bash
-npm run sources   # prüft alle Person-IDs gegen den Zeitbaum und zählt die Sammlung
+npm run check:sources   # prüft alle Person-IDs gegen den Zeitbaum und zählt die Sammlung
 ```
 
 Neue Einträge tragen die Regeln der Datei mit: `named: true` heißt, das Dokument
@@ -280,6 +316,13 @@ und englische Notation - `Markus 6,30-44` wie `Mark 6:30-44`) und löst sie übe
 Epoche des Buches. Folgen ohne Bibelstelle im Titel - bei thematischen
 Predigten häufig - fallen aus der Ortszuordnung heraus; das ist beabsichtigt.
 
+Der Baubericht nennt je Quelle drei Zahlen: Einträge, davon mit Bibelstelle,
+davon mit Sendedatum. Die dritte steht dort, weil sie einmal still auf 0 fiel –
+der Feed von Practicing the Way schreibt die Zeitzone als `&#43;0000`, und
+solange die Entities nicht aufgelöst wurden, war jedes dieser 229 Daten
+unlesbar. BibleProject hat keine Sendedaten, das ist keine Panne, sondern die
+Natur einer Übersichtsseite.
+
 Feed-Adressen, die nicht von Hand geprüft sind, stehen in
 `data/media/sources.json` auf `null` – eine geratene URL erzeugt still einen
 leeren Index. Steht stattdessen eine `appleId` da, löst `--fetch` die Adresse
@@ -318,6 +361,42 @@ Zwei Listen, weil die Lage entscheidet:
 ```bash
 npm run check:aliases   # unbekanntes Buch, doppelte Kurzform, zu kurz, überflüssig
 ```
+
+### BibleProject-Guides
+
+Die Adresse eines Guides entsteht aus dem englischen Buchnamen
+(`book-of-<name>`); die Bücher, die BibleProject zu einem Guide zusammenfasst –
+Samuel, Könige, Chronik –, stehen als Ausnahme in `src/data/bpGuides.json`.
+
+Ob die Regel für die übrigen 60 Bücher stimmt, weiß nur die Seite selbst:
+
+```bash
+npm run check:bp                      # klopft alle 63 Adressen ab
+npm run check:bp -- --base http://…   # gegen einen anderen Ursprung
+```
+
+Ein `404` heißt: richtigen Slug heraussuchen und in `bpGuides.json` eintragen.
+Ein `403`, `429` oder eine Zeitüberschreitung heißt gar nichts – solche
+Antworten kommen von Filtern und Proxys, nicht von der Seite, und bleiben
+deshalb **unentschieden**. Antwortet keine einzige Adresse, endet der Lauf mit
+Code 2 und ohne Urteil.
+
+### Spendenlinks der Unterstützen-Seite
+
+`src/data/support.ts` verlinkt zu jedem Projekt die Startseite und, wo es eine
+gibt, die Spendenseite. Ein toter Spendenlink ist die eine Sorte Fehler, die
+diese Seite nicht haben darf – sie hat genau den Zweck, Geld zu den Projekten zu
+leiten:
+
+```bash
+npm run check:links              # alle Adressen aus support.ts
+npm run check:links -- --donate  # nur die Spendenseiten
+```
+
+Dieselben Regeln wie bei `check:bp`: nur `404`/`410` sind eine Aussage, alles
+andere bleibt unentschieden, und ein vollständig geblockter Lauf endet mit Code
+2 statt mit einem Fehlurteil. In der Agenten-Umgebung sind fast alle diese Hosts
+gesperrt; wer Netzzugriff hat, klärt die Frage damit in einer Minute.
 
 ### Reisen & Geschichten
 

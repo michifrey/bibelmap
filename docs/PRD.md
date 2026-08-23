@@ -279,6 +279,23 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       Hand geänderte Adressen werden übernommen.
 - [x] **Link**-Knopf in Ortskarte und Reise-Modi kopiert die aktuelle Adresse.
 
+### 4.15b Kirchengeschichte verlinkbar — P2 ✅
+
+- [x] `#kirche=vater,<id>` und `#kirche=konzil,<id>`; Reiter und Auswahl laufen
+      in der Adresse mit, der Zurück-Knopf führt zurück.
+- [x] Eine Angabe, die es nicht gibt, fällt auf den Anfang zurück und schreibt
+      das auch in die Adresse – lieber eine gültige Auswahl als ein leerer Modus.
+- [x] Der Querverweis aus dem Zeitbaum benutzt denselben Weg und hinterlässt
+      damit ebenfalls eine teilbare Adresse.
+
+### 4.15c Vergleich verlinkbar — P2 ✅
+
+- [x] `#vergleich=<id>` je Gestalt, Teilen-Knopf in der Kopfzeile, Zurück-Taste
+      führt zurück. Unbekannte Angaben fallen auf die erste Gestalt zurück.
+- [x] Damit hat **jeder** Modus eine Adresse: Karte, Lesen, Reisen, Mission,
+      Kirchengeschichte, Vergleich, Hören & Sehen, Quiz, Heilsgeschichte,
+      Unterstützen, Stammbaum und Graph.
+
 ### 4.16 Offline & installierbar — P1 ✅
 
 - [x] Service Worker mit zwei Caches: App samt Ortsdaten (sofort aus dem Cache,
@@ -311,9 +328,23 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       nur die eigene – sonst zeigte jede Quelle nach dem Klick nur sich selbst.
 - [x] Verknüpfung in **beide Richtungen**: unter jeder Folge stehen ihre Orte
       (Klick → Karte), jede Ortskarte verlinkt zurück in den gefilterten Modus.
-- [x] Verlinkbar: `#hoeren`, `#hoeren=<quelle>`, `#hoeren=ort,<ortsid>`.
+- [x] Verlinkbar: `#hoeren`, `#hoeren=<quelle>`, `#hoeren=ort,<ortsid>`,
+      `#hoeren=stelle,<buch>,<kapitel>`.
+- [x] Auch der Lesemodus hängt daran: neben dem Kapitel steht, wie viele Folgen
+      genau diese Stelle behandeln; ein Klick öffnet sie, und von dort führt
+      jede Bibelstelle in den Text zurück. Buch-Übersichten zählen mit – sie
+      gelten für jedes Kapitel und stehen deshalb hinter den genauen Stellen.
 - [x] Ehrlich bleiben: eine genannte Bibelstelle ist nicht zwingend das Thema
       der Folge – der Hinweis steht unter der Liste, nicht im Kleingedruckten.
+- [x] Zwei Reihenfolgen: **Passgenau** (genaue Stelle vor ganzem Buch) und
+      **Neueste** (nach Sendedatum). Was kein Datum hat, steht dann am Ende und
+      sagt das auch – nicht am Anfang, wo eine leere Angabe wie „ganz neu"
+      aussähe.
+- [x] Auf der Startseite als vierter Weg hinein (Karte 04) und in der Kopfzeile –
+      ein Modus, den man nur über das Modi-Menü findet, findet kaum jemand.
+- [x] Offline vollständig: der Medien-Index wird im Leerlauf mitgeholt und liegt
+      damit im Cache des Service Workers – sonst stünde der Modus ohne Netz
+      leer da, während jede andere Ansicht vollständig ist.
 
 ### 4.20 Bildnachweis vollständig — P1 ✅
 
@@ -343,7 +374,19 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       alle 268 bisherigen Kurzformen lösen auf dasselbe Buch auf, alle 325
       Stammbaum-Referenzen ebenso.
 
-### 4.22 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.22 Medien-Index: Sendedaten und Umlaute — P1 ✅
+
+- [x] Numerische Entities werden aufgelöst. Vorher verloren **229 von 473**
+      Folgen ihr Datum (`&#43;0000` in der Zeitzone) und **63 Titel** zeigten
+      `f&#xFC;r` statt `für`.
+- [x] Die korrigierten Titel bringen genauere Stellen mit: `34,1&#x2013;12` war
+      Vers 1, jetzt sind es die Verse 1–12. **32 Folgen** decken damit mehr ab,
+      **73 Orte** haben mehr Folgen, kein Ort weniger (4.661 → 4.797
+      Verknüpfungen).
+- [x] Der Baubericht nennt je Quelle, wie viele Folgen ein Datum mitbringen –
+      steht dort plötzlich 0, ist der Datumsleser kaputt.
+
+### 4.23 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
@@ -404,6 +447,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v0.5** | Hören & Sehen als eigener Modus (4.19) mit Verknüpfung in beide Richtungen | ✅ erledigt |
 | **v0.6** | Bildnachweis mit Lizenz (4.20) | ✅ erledigt |
 | **v0.7** | Buchkürzel an einer Stelle (4.21) | ✅ erledigt |
+| **v0.8** | Medien-Index: Sendedaten und Umlaute (4.22) | ✅ erledigt |
 | **offen** | 3-D-Gelände (MapLibre) | ⬜ offen |
 
 ---
@@ -427,9 +471,13 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 
 ## 10. Offene Punkte (v0.3)
 
-- BibleProject-Guide-Slugs sind heuristisch (`book-of-<name>` + Gruppen-Override);
-  einzelne selten gruppierte Bücher könnten ins Leere zeigen → bei Bedarf in
-  `bibleProjectUrl` nachpflegen.
+- BibleProject-Guide-Slugs sind weiter heuristisch (`book-of-<name>` +
+  Ausnahmen in `src/data/bpGuides.json`). **`npm run check:bp` klopft die 63
+  Adressen ab** und meldet, welche ins Leere zeigen; ein Fund wird in
+  `bpGuides.json` eingetragen. In der Entwicklungsumgebung ist bibleproject.com
+  gesperrt – der Lauf endet dort mit „unentschieden", nicht mit einem Befund.
+  Offen bleibt der Punkt also, bis jemand das Skript mit Netzzugriff laufen
+  lässt.
 - **3-D-Gelände**: Leaflet kann die Karte nicht kippen. Ein Umstieg auf MapLibre
   würde Terrain und Neigung erlauben, betrifft aber alle fünf Kartenansichten –
   bewusst zurückgestellt.

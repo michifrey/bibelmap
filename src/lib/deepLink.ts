@@ -21,10 +21,18 @@ export interface Route {
   /** Buch + Kapitel (Präsentationsmodus). */
   reading?: { osis: string; chapter: number };
   /**
-   * Quelle oder Ort (Hören & Sehen). `#hoeren=ort,jerusalem` zeigt die Folgen
-   * zu einem Ort, `#hoeren=keller` die einer Quelle.
+   * Quelle, Ort oder Stelle (Hören & Sehen). `#hoeren=ort,a15257a` zeigt die
+   * Folgen zu einem Ort, `#hoeren=stelle,Acts,13` die zu einem Kapitel,
+   * `#hoeren=keller` die einer Quelle.
    */
-  media?: { source?: string; place?: string };
+  media?: { source?: string; place?: string; ref?: { osis: string; chapter: number } };
+  /**
+   * Reiter + Auswahl (Kirchengeschichte). `#kirche=vater,augustinus` und
+   * `#kirche=konzil,nicaea1`; ohne Angabe steht der Modus auf seinem Anfang.
+   */
+  church?: { tab: 'fathers' | 'councils'; id?: string };
+  /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
+  compare?: string;
 }
 
 /** Schlüssel im Hash → Modus ohne weitere Angaben. */
@@ -33,8 +41,6 @@ const MODE_KEYS: Record<string, Mode> = {
   nachweise: 'credits',
   heilsgeschichte: 'history',
   quiz: 'quiz',
-  kirche: 'church',
-  vergleich: 'compare',
 };
 
 const KEY_BY_MODE: Record<string, string> = Object.fromEntries(
@@ -83,13 +89,29 @@ export function parseHash(hash: string): Route | null {
             ? { phase: args[0], journey: args[1] }
             : { phase: args[0], event: args[1] },
       };
-    case 'hoeren':
+    case 'vergleich':
+      return args[0]
+        ? { view: 'map', mode: 'compare', compare: args[0] }
+        : { view: 'map', mode: 'compare' };
+    case 'kirche': {
+      if (!args[0]) return { view: 'map', mode: 'church' };
+      const tab = args[0] === 'konzil' ? ('councils' as const) : ('fathers' as const);
+      return { view: 'map', mode: 'church', church: { tab, id: args[1] } };
+    }
+    case 'hoeren': {
       if (!args[0]) return { view: 'map', mode: 'media' };
-      return {
-        view: 'map',
-        mode: 'media',
-        media: args[0] === 'ort' ? { place: args[1] } : { source: args[0] },
-      };
+      if (args[0] === 'ort') return { view: 'map', mode: 'media', media: { place: args[1] } };
+      if (args[0] === 'stelle') {
+        return args[1]
+          ? {
+              view: 'map',
+              mode: 'media',
+              media: { ref: { osis: args[1], chapter: Math.max(1, num(args[2], 1)) } },
+            }
+          : { view: 'map', mode: 'media' };
+      }
+      return { view: 'map', mode: 'media', media: { source: args[0] } };
+    }
     case 'lesen':
       return {
         view: 'map',
@@ -115,9 +137,20 @@ export function formatRoute(route: Route): string {
     const detail = phase === 'journeys' ? journey : event;
     return detail ? `#mission=${phase},${detail}` : `#mission=${phase}`;
   }
+  if (mode === 'compare') {
+    return route.compare ? `#vergleich=${route.compare}` : '#vergleich';
+  }
+  if (mode === 'church') {
+    const c = route.church;
+    if (!c) return '#kirche';
+    const key = c.tab === 'councils' ? 'konzil' : 'vater';
+    return c.id ? `#kirche=${key},${c.id}` : '#kirche';
+  }
   if (mode === 'media') {
-    if (route.media?.place) return `#hoeren=ort,${route.media.place}`;
-    return route.media?.source ? `#hoeren=${route.media.source}` : '#hoeren';
+    const m = route.media;
+    if (m?.place) return `#hoeren=ort,${m.place}`;
+    if (m?.ref) return `#hoeren=stelle,${m.ref.osis},${m.ref.chapter}`;
+    return m?.source ? `#hoeren=${m.source}` : '#hoeren';
   }
   if (mode === 'present') {
     return route.reading ? `#lesen=${route.reading.osis},${route.reading.chapter}` : '#lesen';

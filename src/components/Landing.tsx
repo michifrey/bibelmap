@@ -3,7 +3,7 @@ import { useT } from '../i18n';
 import { ERAS, eraWeight } from '../data/eras';
 import LangToggle from './LangToggle';
 
-export type LandingTarget = 'map' | 'tree' | 'present' | 'support';
+export type LandingTarget = 'map' | 'tree' | 'present' | 'media' | 'support';
 
 interface Props {
   lang: Lang;
@@ -167,6 +167,39 @@ function CardArtRead() {
   );
 }
 
+/** Wellenform über einer Stellenliste — Karte 04. */
+function CardArtMedia() {
+  return (
+    <svg viewBox="0 0 246 178" className="block w-full" aria-hidden="true">
+      <rect width="246" height="178" fill="#073f3c" />
+      <rect x="132" width="114" height="178" fill="#0a5450" />
+      {/* Wellenform: die Folge */}
+      <g stroke="#7fe3d5" strokeOpacity=".55" strokeWidth="4" strokeLinecap="round">
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => {
+          const h = [18, 34, 52, 30, 64, 44, 74, 38, 56, 26, 42, 20][i];
+          return <path key={i} d={`M${20 + i * 9} ${89 - h / 2}v${h}`} />;
+        })}
+      </g>
+      <g stroke="#e0a449" strokeWidth="4" strokeLinecap="round">
+        <path d="M74 57v64M128 66v46" />
+      </g>
+      {/* Kopfhörer: das Hören */}
+      <g fill="none" stroke="#a9e4dc" strokeOpacity=".8" strokeWidth="5" strokeLinecap="round">
+        <path d="M160 96a29 29 0 0 1 58 0" />
+        <path d="M160 96v18M218 96v18" />
+      </g>
+      <g fill="#e0a449">
+        <rect x="153" y="108" width="14" height="26" rx="7" />
+        <rect x="211" y="108" width="14" height="26" rx="7" />
+      </g>
+      {/* Die Stelle, an der sie hängt */}
+      <g stroke="#7fe3d5" strokeOpacity=".45" strokeWidth="3" strokeLinecap="round">
+        <path d="M152 150h74M152 162h48" />
+      </g>
+    </svg>
+  );
+}
+
 /** Miniature of the genealogy tree — card 03. */
 function CardArtTree() {
   return (
@@ -207,6 +240,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
     { kicker: t('lCard1Kicker'), title: t('lCard1Title'), body: t('lCard1Body'), cta: t('lCard1Cta'), art: <CardArtMap />, target: 'map' as const },
     { kicker: t('lCard2Kicker'), title: t('lCard2Title'), body: t('lCard2Body'), cta: t('lCard2Cta'), art: <CardArtRead />, target: 'present' as const },
     { kicker: t('lCard3Kicker'), title: t('lCard3Title'), body: t('lCard3Body'), cta: t('lCard3Cta'), art: <CardArtTree />, target: 'tree' as const },
+    { kicker: t('lCard4Kicker'), title: t('lCard4Title'), body: t('lCard4Body'), cta: t('lCard4Cta'), art: <CardArtMedia />, target: 'media' as const },
   ];
 
   const stats = [
@@ -227,6 +261,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
     { label: t('map'), target: 'map' },
     { label: t('presentation'), target: 'present' },
     { label: t('genealogy'), target: 'tree' },
+    { label: t('media'), target: 'media' },
   ];
 
   return (
@@ -342,10 +377,10 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
       {/* ============================================================ CARDS */}
       <div className="bg-paper-2 px-5 py-14 sm:px-10 sm:py-20 lg:px-14">
         <div className="mb-6 flex items-baseline gap-4">
-          <span className="bm-eyebrow text-signal">{t('lWaysIn')}</span>
+          <span className="bm-eyebrow text-signal-deep">{t('lWaysIn')}</span>
           <span className="h-px flex-1 bg-[#d8d2c4]" />
         </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {cards.map((c) => (
             <button
               key={c.kicker}
@@ -354,7 +389,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
             >
               {c.art}
               <div className="flex flex-1 flex-col p-6">
-                <div className="bm-eyebrow text-signal" style={{ fontSize: 10 }}>
+                <div className="bm-eyebrow text-signal-deep" style={{ fontSize: 10 }}>
                   {c.kicker}
                 </div>
                 <div className="mt-2.5 font-display text-lg font-extrabold leading-tight tracking-tight text-ink">
@@ -381,7 +416,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
             } ${i >= 2 ? 'border-t border-white/15 lg:border-t-0' : ''}`}
           >
             <div className={`bm-num text-4xl sm:text-[54px] ${s.gold ? 'text-deep' : 'text-white'}`}>{s.value}</div>
-            <div className={`bm-eyebrow mt-2 ${s.gold ? 'text-deep/80' : 'text-mint'}`}>{s.label}</div>
+            <div className={`bm-eyebrow mt-2 ${s.gold ? 'text-deep' : 'text-mint'}`}>{s.label}</div>
           </div>
         ))}
       </div>
@@ -497,7 +532,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
       {/* ============================================================ SOURCES */}
       <div className="bg-paper-2 px-5 py-16 sm:px-10 sm:py-20 lg:px-14">
         <div className="mb-9 flex items-baseline gap-8">
-          <span className="bm-eyebrow text-signal">{t('lSourcesTitle')}</span>
+          <span className="bm-eyebrow text-signal-deep">{t('lSourcesTitle')}</span>
           <span className="h-px flex-1 bg-[#d8d2c4]" />
         </div>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -518,7 +553,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
 
         <div className="mt-8 flex flex-col gap-5 border-t-4 border-gold bg-paper px-7 py-7 sm:flex-row sm:items-center sm:gap-8">
           <div className="min-w-0 flex-1">
-            <div className="bm-eyebrow text-signal">{t('lSupportKicker')}</div>
+            <div className="bm-eyebrow text-signal-deep">{t('lSupportKicker')}</div>
             <p className="mt-2.5 text-[13px] font-medium leading-[1.7] text-[#5c6b69]">{t('supportBody3')}</p>
           </div>
           <button

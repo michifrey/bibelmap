@@ -119,3 +119,16 @@ export function precision(ep: MediaEpisode): number {
   if (ep.refs.some((r) => r.chapter != null)) return 1;
   return 2;
 }
+
+/**
+ * Folgen zu einer Stelle: alles, was dieses Kapitel nennt, dazu die
+ * Buch-Übersichten. Sortiert wie überall – die genaue Stelle vor dem ganzen
+ * Buch, dann neu vor alt.
+ */
+export function episodesForRef(index: MediaIndex, osis: string, chapter: number): MediaEpisode[] {
+  const out = index.episodes.filter((ep) =>
+    ep.refs.some((r) => r.osis === osis && (r.chapter === null || r.chapter === chapter)),
+  );
+  out.sort((a, b) => precision(a) - precision(b) || (b.date ?? '').localeCompare(a.date ?? ''));
+  return out;
+}
