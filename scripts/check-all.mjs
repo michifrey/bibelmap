@@ -21,8 +21,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const CHECKS = [
   { name: 'Buchkürzel', script: 'check-aliases.mjs' },
-  { name: 'Zeitdokumente', script: 'check-sources.mjs' },
-  { name: 'Stammesgrenzen', script: 'check-tribes.mjs' },
+  { name: 'Zeitdokumente', script: 'check-sources.mjs', ts: true },
+  { name: 'Stammesgrenzen', script: 'check-tribes.mjs', ts: true },
   { name: 'Farbkontraste', script: 'check-contrast.mjs' },
   // Liest den echten Code statt einer Nachbildung und braucht dafür Node mit
   // TypeScript und den Auflöser aus scripts/lib.

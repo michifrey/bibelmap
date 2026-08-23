@@ -702,9 +702,18 @@ Luftlinie der Etappe liegen, jede falsche mindestens 60 km daneben und über
 Die Prüfung liest dafür den **echten Code**, keine Nachbildung:
 `scripts/lib/ts-loader.mjs` erlaubt Node, `src/lib/quiz.ts` samt allem, was
 daran hängt, zu importieren – Node 22 versteht TypeScript, es fehlten nur die
-Dateiendungen, die Bundler weglassen dürfen. Die älteren Prüfungen lesen ihre
-Daten noch mit regulären Ausdrücken aus dem Quelltext; das hat schon einmal
-still versagt, als eine Konstante in eine JSON-Datei umzog.
+Dateiendungen, die Bundler weglassen dürfen.
+
+**Zeitdokumente** und **Stammesgrenzen** lesen inzwischen ebenso. Bei den
+Stammesgrenzen wog das doppelt: die Prüfung hatte `tribeAt()` ein zweites Mal
+aufgeschrieben und verglich damit nur ihre eigene Fassung mit ihrer eigenen
+Lesart. Jetzt fragt sie dieselbe Funktion, die auch die Ortskarte fragt.
+
+Und jede Prüfung sagt, **wie viel** sie geprüft hat – 41 Datenfarben, 115
+Zeitdokumente, 13 Gebiete, 400 Quizfragen. Wo das nicht geht, steht eine
+Untergrenze: findet eine Prüfung weniger, erklärt sie sich selbst für kaputt,
+statt Entwarnung zu geben. Das hat schon einmal still versagt, als eine
+Konstante in eine JSON-Datei umzog.
 
 Gegenprobe: den Korridor in `quiz.ts` von 8 auf 30 km geweitet – die Prüfung
 meldet Verstöße und endet mit Exit 1. Zurückgestellt: Exit 0.

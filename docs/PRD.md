@@ -712,7 +712,25 @@ Regeln.
 - [x] Gegenprobe: Korridor in `quiz.ts` von 8 auf 30 km geweitet → Exit 1 mit
       Befunden; zurückgestellt → Exit 0.
 
-### 4.40 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.40 Jede Prüfung sagt, wie viel sie geprüft hat — P2 ✅
+
+- [x] `check-sources` und `check-tribes` importieren den echten Code statt ihn
+      mit regulären Ausdrücken zu lesen. Bei den Stammesgrenzen entfällt damit
+      eine zweite Fassung von `tribeAt()` – die Prüfung verglich bislang ihre
+      eigene Lesart mit ihrer eigenen Rechnung.
+- [x] Untergrenzen, wo weiter Text gelesen wird: `check-contrast` verlangt
+      mindestens 20 Farben, `check-sources` 100 Personen / 20 Einträge / 50
+      Dokumente, `check-quiz` genug Wegfragen. Darunter meldet die Prüfung
+      einen Fehler statt Entwarnung.
+- [x] Jede Zeile der Zusammenfassung trägt ihre Zahl: 94 Kurzformen, 115
+      Zeitdokumente, 13 Gebiete, 41 Datenfarben, 400 Quizfragen.
+- [x] `check-sources` prüft zusätzlich die Felder, ohne die ein Dokument nichts
+      taugt – ein leerer Titel ist schlimmer als ein fehlender Eintrag, weil er
+      im Zeitbaum als Karte auftaucht.
+- [x] Gegenprobe: Eintrag mit unbekannter ID eingefügt → Exit 1 mit Befund;
+      entfernt → Exit 0.
+
+### 4.41 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
