@@ -279,6 +279,15 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       Hand geänderte Adressen werden übernommen.
 - [x] **Link**-Knopf in Ortskarte und Reise-Modi kopiert die aktuelle Adresse.
 
+### 4.15b Kirchengeschichte verlinkbar — P2 ✅
+
+- [x] `#kirche=vater,<id>` und `#kirche=konzil,<id>`; Reiter und Auswahl laufen
+      in der Adresse mit, der Zurück-Knopf führt zurück.
+- [x] Eine Angabe, die es nicht gibt, fällt auf den Anfang zurück und schreibt
+      das auch in die Adresse – lieber eine gültige Auswahl als ein leerer Modus.
+- [x] Der Querverweis aus dem Zeitbaum benutzt denselben Weg und hinterlässt
+      damit ebenfalls eine teilbare Adresse.
+
 ### 4.16 Offline & installierbar — P1 ✅
 
 - [x] Service Worker mit zwei Caches: App samt Ortsdaten (sofort aus dem Cache,
