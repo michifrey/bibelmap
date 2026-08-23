@@ -3,7 +3,7 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import LangToggle from './LangToggle';
 
-export type Mode = 'present' | 'history' | 'journeys' | 'mission' | 'compare' | 'church' | 'quiz' | 'nations' | 'media' | 'route' | 'index' | 'support' | 'credits';
+export type Mode = 'present' | 'history' | 'journeys' | 'gospel' | 'mission' | 'compare' | 'church' | 'quiz' | 'nations' | 'media' | 'route' | 'index' | 'support' | 'credits';
 export type View = 'map' | 'terrain' | 'tree' | 'graph';
 
 interface Props {
@@ -26,6 +26,7 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
     { id: 'present', label: t('presentation'), hint: t('presentationHint'), icon: 'M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z' },
     { id: 'history', label: t('historyMode'), hint: t('historyHint'), icon: 'M12 8v5l3 2' },
     { id: 'journeys', label: t('journeys'), hint: t('journeysSub'), icon: 'M5 20c4-10 10-10 14-16M5 20h.01M19 4h.01M9 15l1.5 1.5' },
+    { id: 'gospel', label: t('gospel'), hint: t('gospelHint'), icon: 'M12 2l2.3 5.5 5.9.5-4.5 3.9 1.4 5.8L12 14.6 6.9 17.7l1.4-5.8-4.5-3.9 5.9-.5z' },
     { id: 'mission', label: t('mission'), hint: t('missionHint'), icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18' },
     { id: 'church', label: t('churchMode'), hint: t('churchHint'), icon: 'M12 3v18M7 8h10M5 21h14' },
     { id: 'quiz', label: t('quiz'), hint: t('quizSub'), icon: 'M12 17h.01M9.5 9a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1 1-1.1 1.8M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z' },

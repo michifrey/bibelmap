@@ -329,6 +329,28 @@ const STRINGS: Dict = {
     de: 'Quelle: 1. Chronik 1–9 · 1. Mose 5, 10, 11, 25, 36 · 4. Mose 26 · Matthäus 1',
     en: 'Sources: 1 Chronicles 1–9 · Genesis 5, 10, 11, 25, 36 · Numbers 26 · Matthew 1',
   },
+  gospel: { de: 'Jesus – Leben und Wege', en: 'Jesus – life and roads' },
+  gospelSub: {
+    de: 'Von der Ankündigung an Maria bis zu den Erscheinungen nach Ostern',
+    en: 'From the annunciation to Mary to the appearances after Easter',
+  },
+  gospelHint: {
+    de: 'Das Leben Jesu in sieben Akten: jede Station mit Ort, Bibelstelle und den Menschen, die darin vorkommen – und ein Weg durch die Passionswoche Tag für Tag.',
+    en: 'The life of Jesus in seven acts: every station with its place, its passage and the people in it – and a way through Holy Week day by day.',
+  },
+  gospelStations: { de: 'Stationen', en: 'stations' },
+  gospelPeople: { de: 'Die Menschen der Evangelien', en: 'The people of the gospels' },
+  gospelPeopleHint: {
+    de: 'Ein Name zeigt seine Spur durch alle Akte – die Zahl sagt, in wie vielen Stationen er vorkommt.',
+    en: 'A name shows its trail through all the acts – the number says in how many stations it appears.',
+  },
+  gospelAppearsIn: { de: 'Kommt vor in', en: 'Appears in' },
+  gospelBackToActs: { de: 'Zurück zu den Akten', en: 'Back to the acts' },
+  gospelOnScreen: { de: 'Verfilmt', en: 'On screen' },
+  gospelChosenNote: {
+    de: 'Staffel und Folge sind nach dem Inhalt zugeordnet und noch nicht beim Anbieter gegengeprüft. „The Chosen“ ist eine Verfilmung: Sie erfindet Figuren und Dialoge, die so nicht in den Evangelien stehen.',
+    en: 'Season and episode are matched by content and not yet checked against the provider. "The Chosen" is a dramatisation: it invents characters and dialogue that are not in the gospels.',
+  },
   journeys: { de: 'Reisen & Geschichten', en: 'Journeys & stories' },
   journeysHint: {
     de: 'Die großen Wege der Bibel als erzählte Reise: Route abspielen, Station für Station mitlesen – jede mit Bibelstelle und Ort auf der Karte.',

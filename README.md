@@ -84,6 +84,19 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   die Route mitwachsen und einen Punkt die Etappen abgehen, während links die
   Station mit Bibelstelle und kurzem Text mitläuft (← / → blättern, Leertaste
   startet). Jede Station verlinkt auf ihre Ortskarte.
+- **Jesus – Leben und Wege** – eine eigene Sektion für die Evangelien: **86
+  Stationen in sieben Akten**, von der Ankündigung an Maria über die Geburt in
+  Bethlehem, das Jahr am See, den Weg nach Jerusalem und die Passionswoche **Tag
+  für Tag** (Palmsonntag → Grabesruhe) bis zu Emmaus, dem See Tiberias und dem
+  Abschied am Ölberg. Jede Station nennt Ort, Bibelstelle (mit Parallelstellen),
+  einen erzählenden Text und – wo sie hängen bleibt – die Stelle im Wortlaut.
+  **52 Menschen der Evangelien** stehen in einem eigenen Verzeichnis: ein Klick
+  auf *Simon Petrus* zeigt seine 24 Stationen vom Bootssteg bis zum Kohlenfeuer,
+  ein Klick auf *Maria von Magdala* ihre Spur bis zum leeren Grab. Jede Station
+  verlinkt den **BibleProject-Guide** ihres Evangeliums, und wo eine Folge von
+  **The Chosen** die Szene spielt, steht sie daneben – als Verfilmung
+  gekennzeichnet, mit der Bibelstelle direkt darüber. Adressen wie
+  `#jesus=passion,golgotha` und `#jesus=mensch,petrus` sind teilbar.
 - **Mission & Ausbreitung** – wie das Evangelium in die Welt kam: die vier
   Reisen des Paulus (plus die Wege vor ihm, Apg 1–11) als Route mit nummerierten
   Stationen und Bibelstellen – und danach die Ausbreitung bis heute, in sieben
@@ -643,6 +656,31 @@ tatsächlichen Marschrouten; einige Orte sind nicht sicher lokalisiert (Sinai,
 Kadesch, Emmaus). Die Animation (`src/components/RouteMap.tsx`) läuft
 imperativ über `requestAnimationFrame` und fasst nur die Leaflet-Ebenen an –
 React rendert währenddessen nicht mit.
+
+### Jesus – Leben und Wege
+
+Die Stationen stehen in `src/data/gospel.ts`: Akte, Stationen und das
+Personenverzeichnis in einer Datei, alles zweisprachig. Die Koordinaten kommen
+über `placeId` aus demselben OpenBible-Datensatz wie die Hauptkarte.
+
+Grundsätze der Daten: Erzählt wird, was die Evangelien berichten, in ihrer
+Reihenfolge – weicht Johannes von den anderen ab (die Tempelreinigung am Anfang
+statt am Ende), steht die Station dort, wo sein Evangelium sie erzählt, und der
+Text sagt es. Nicht sicher lokalisierte Orte (die Wüste der Versuchung, der Berg
+der Verklärung, Emmaus, Machärus) tragen die verbreitete Zuordnung und sagen
+dazu, dass es eine ist.
+
+`npm run check:gospel` prüft, was nachrechenbar ist: jede Ortskennung gegen
+`places.json` (samt Abstand – mehr als 6 km und die Kennung meint einen anderen
+Ort), jede Bibelstelle auf Lesbarkeit und darauf, dass ihr Buch zum
+verlinkten Guide passt, jede Person einer Station gegen das Verzeichnis. Die
+Prüfung läuft in `npm run check` mit.
+
+**The Chosen** (`src/data/chosen.ts`): Die Zuordnung Folge → Station wurde nach
+dem Inhalt der Folgen zusammengetragen, nicht von einer Schnittstelle geholt.
+Solange `VERIFIED` dort `false` ist, weist die Oberfläche die Angaben als
+unbestätigt aus. Verlinkt wird nur die Serienseite – für einzelne Folgen gibt es
+keine Adresse, die sich verlässlich bilden ließe.
 
 ### Mission & Ausbreitung
 

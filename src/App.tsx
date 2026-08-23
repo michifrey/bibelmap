@@ -26,6 +26,7 @@ const Presentation = lazy(() => import('./components/Presentation'));
 const HistoryMode = lazy(() => import('./components/HistoryMode'));
 const Mission = lazy(() => import('./components/Mission'));
 const JourneyMode = lazy(() => import('./components/JourneyMode'));
+const Gospel = lazy(() => import('./components/Gospel'));
 const QuizMode = lazy(() => import('./components/QuizMode'));
 const MediaMode = lazy(() => import('./components/MediaMode'));
 const OwnRoute = lazy(() => import('./components/OwnRoute'));
@@ -158,6 +159,7 @@ export default function App() {
   const [atStart, setAtStart] = useState(!INITIAL_ROUTE);
   // Unterzustand der Nebenansichten, damit die Adresse ihn mitschreibt.
   const [journeyNav, setJourneyNav] = useState(INITIAL_ROUTE?.journey ?? null);
+  const [gospelNav, setGospelNav] = useState(INITIAL_ROUTE?.gospel ?? null);
   const [missionNav, setMissionNav] = useState(INITIAL_ROUTE?.mission ?? null);
   const [readingNav, setReadingNav] = useState(INITIAL_ROUTE?.reading ?? null);
   const [mediaNav, setMediaNav] = useState(INITIAL_ROUTE?.media ?? null);
@@ -318,6 +320,7 @@ export default function App() {
     const prefetch = () => {
       void import('./components/Presentation');
       void import('./components/JourneyMode');
+      void import('./components/Gospel');
       void import('./components/Mission');
       void import('./components/HistoryMode');
       void import('./components/QuizMode');
@@ -358,6 +361,7 @@ export default function App() {
           placeId: selected?.id,
           journey: journeyNav ?? undefined,
           mission: missionNav ?? undefined,
+          gospel: gospelNav ?? undefined,
           reading: readingNav ?? undefined,
           media: mediaNav ?? undefined,
           church: churchNav ?? undefined,
@@ -375,6 +379,7 @@ export default function App() {
     mode,
     selected,
     journeyNav,
+    gospelNav,
     missionNav,
     readingNav,
     mediaNav,
@@ -419,6 +424,7 @@ export default function App() {
       setMode(route.mode);
       setJourneyNav(route.journey ?? null);
       setMissionNav(route.mission ?? null);
+      setGospelNav(route.gospel ?? null);
       setReadingNav(route.reading ?? null);
       setMediaNav(route.media ?? null);
       setChurchNav(route.church ?? null);
@@ -574,6 +580,9 @@ export default function App() {
     } else if (hit.target.mode === 'history') {
       setHistoryNav(hit.target.history);
       setMode('history');
+    } else if (hit.target.mode === 'gospel') {
+      setGospelNav(hit.target.gospel);
+      setMode('gospel');
     } else {
       setMissionNav(hit.target.mission);
       setMode('mission');
@@ -969,6 +978,19 @@ export default function App() {
                 onNavigate={setJourneyNav}
                 onOpenMission={() => setMode('mission')}
                 onOpenTerrain={openJourneyInTerrain}
+                onExit={() => setMode(null)}
+              />
+              </Suspense>
+            )}
+            {mode === 'gospel' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Gospel
+                key={`gospel-${navEpoch}`}
+                places={places}
+                lang={lang}
+                onShowPlace={showPlaceFromGenealogy}
+                initial={gospelNav}
+                onNavigate={setGospelNav}
                 onExit={() => setMode(null)}
               />
               </Suspense>

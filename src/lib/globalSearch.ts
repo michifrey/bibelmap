@@ -1,6 +1,7 @@
 import type { Lang } from '../i18n';
 import { JOURNEYS as BIBLE_JOURNEYS } from '../data/journeys';
 import { JOURNEYS as MISSION_JOURNEYS, PHASES, SPREAD_EVENTS, PHASE_BY_ID } from '../data/mission';
+import { ACTS, ACT_BY_ID, PEOPLE_WITH_SCENES, STATIONS, STATIONS_BY_PERSON } from '../data/gospel';
 import { ERA_BY_ID } from '../data/eras';
 import { TRIBES, tribeSlug } from '../data/tribes';
 import { PHASES as TRIBE_PHASES, phaseYear } from '../data/tribeHistory';
@@ -21,6 +22,7 @@ export type HitTarget =
   | { mode: 'person'; personId: string }
   | { mode: 'church'; church: { tab: 'fathers' | 'councils'; id: string } }
   | { mode: 'compare'; compare: string }
+  | { mode: 'gospel'; gospel: { act: string; station?: string; person?: string } }
   | { mode: 'history'; history: string };
 
 export interface SearchHit {
@@ -143,6 +145,46 @@ export function searchStories(query: string, lang: Lang, limit = 8): SearchHit[]
       subtitle: `${lang === 'de' ? 'Ausbreitung' : 'Spread'} · ${lang === 'de' ? p.range.de : p.range.en}`,
       color: p.color,
       target: { mode: 'mission', mission: { phase: p.id } },
+    });
+  }
+
+  // ---- Jesus: Stationen, Akte und die Menschen der Evangelien --------------
+  for (const st of STATIONS) {
+    const name = lang === 'de' ? st.de : st.en;
+    const text = lang === 'de' ? st.text.de : st.text.en;
+    const where = lang === 'de' ? st.where.de : st.where.en;
+    const act = ACT_BY_ID[st.act];
+    const hitScore = Math.max(score(name, q), score(where, q) - 10, norm(text).includes(q) ? 40 : 0);
+    add(hitScore, {
+      key: `g:${st.id}`,
+      title: name,
+      subtitle: `${act ? (lang === 'de' ? act.de : act.en) : ''} · ${lang === 'de' ? st.ref.de : st.ref.en}`,
+      color: act?.color ?? '#9a4ba0',
+      target: { mode: 'gospel', gospel: { act: st.act, station: st.id } },
+    });
+  }
+
+  for (const a of ACTS) {
+    const name = lang === 'de' ? a.de : a.en;
+    add(score(name, q) - 20, {
+      key: `ga:${a.id}`,
+      title: name,
+      subtitle: `${lang === 'de' ? 'Jesus' : 'Jesus'} · ${lang === 'de' ? a.range.de : a.range.en}`,
+      color: a.color,
+      target: { mode: 'gospel', gospel: { act: a.id } },
+    });
+  }
+
+  for (const person of PEOPLE_WITH_SCENES) {
+    const name = lang === 'de' ? person.de : person.en;
+    const role = lang === 'de' ? person.role.de : person.role.en;
+    const count = STATIONS_BY_PERSON[person.id]?.length ?? 0;
+    add(score(name, q), {
+      key: `gp:${person.id}`,
+      title: name,
+      subtitle: `${role} · ${count} ${lang === 'de' ? 'Stationen' : 'stations'}`,
+      color: '#9a4ba0',
+      target: { mode: 'gospel', gospel: { act: 'promise', person: person.id } },
     });
   }
 
