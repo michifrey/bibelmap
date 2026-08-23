@@ -307,6 +307,40 @@ body {
     box-shadow: 0 0 0 3px rgba(224, 164, 73, 0.28);
   }
 
+  /* A dropdown that belongs to this app rather than to the operating system.
+     `appearance: none` takes the native arrow away, so the field draws its
+     own — otherwise the browser leaves a light widget on the dark stage. */
+  .bm-select {
+    appearance: none;
+    padding: 0.7rem 2rem 0.7rem 0.85rem;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.07);
+    background-image: linear-gradient(45deg, transparent 50%, rgba(255, 255, 255, 0.6) 50%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.6) 50%, transparent 50%);
+    background-position: right 1rem center, right 0.7rem center;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.12s ease, box-shadow 0.12s ease;
+  }
+  .bm-select:hover {
+    border-color: rgba(255, 255, 255, 0.28);
+  }
+  .bm-select:focus-visible {
+    border-color: var(--color-gold-deep);
+    box-shadow: 0 0 0 3px rgba(224, 164, 73, 0.28);
+  }
+  /* The list itself is drawn by the browser and inherits nothing — without
+     this it opens white-on-white in some builds. */
+  .bm-select option {
+    background: var(--color-deepest);
+    color: #ffffff;
+  }
+
   /* Focus ring for everything else, per the foundations. */
   :where(button, a, [tabindex]):focus-visible {
     outline: 2px solid var(--color-gold-deep);
