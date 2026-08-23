@@ -5,6 +5,7 @@ import { useT } from '../i18n';
 import type { Lang } from '../i18n';
 import ShareLink from './ShareLink';
 import RouteMap, { type RouteStop } from './RouteMap';
+import AlongTheWay from './AlongTheWay';
 import {
   bearing,
   compass,
@@ -145,10 +146,20 @@ export default function OwnRoute({ places, lang, ids, onChange, onShowPlace, onE
                   <li key={`${p.id}-${i}`} className="relative pl-7">
                     <span className="absolute left-[11px] top-0 h-full w-px bg-white/12" aria-hidden />
                     {km !== null && (
-                      <div className="py-1 pl-3 text-[11px] text-white/40" title={t('distanceNote')}>
-                        ↓ {formatKm(km, lang)} {dir} ·{' '}
-                        {walkingDays(km)} {walkingDays(km) === 1 ? t('dayWalk') : t('dayWalks')}
-                      </div>
+                      <>
+                        <div className="py-1 pl-3 text-[11px] text-white/40" title={t('distanceNote')}>
+                          ↓ {formatKm(km, lang)} {dir} ·{' '}
+                          {walkingDays(km)} {walkingDays(km) === 1 ? t('dayWalk') : t('dayWalks')}
+                        </div>
+                        <AlongTheWay
+                          places={places}
+                          lang={lang}
+                          from={points[i - 1]}
+                          to={points[i]}
+                          stops={[placeName(stations[i - 1], lang), placeName(p, lang)]}
+                          onSelect={onShowPlace}
+                        />
+                      </>
                     )}
                     <span
                       style={{ background: active ? COLOR : 'transparent', borderColor: COLOR }}

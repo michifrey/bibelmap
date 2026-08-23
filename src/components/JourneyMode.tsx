@@ -8,6 +8,7 @@ import { passageUrl } from '../data/mission';
 import { formatKm, legDistances, walkingDays, type LatLon } from '../lib/route';
 import { readableOnDark } from '../lib/contrast';
 import RouteMap from './RouteMap';
+import AlongTheWay from './AlongTheWay';
 import ShareLink from './ShareLink';
 
 interface Props {
@@ -235,12 +236,29 @@ export default function JourneyMode({
                 <li key={`${s.de}-${i}`} data-stop={i} className="relative pl-7">
                   <span className="absolute left-[11px] top-0 h-full w-px bg-white/12" aria-hidden />
                   {i > 0 && (
-                    <div className="py-1 pl-3 text-[11px] text-white/40" title={t('distanceNote')}>
-                      ↓ {formatKm(legs[i - 1], lang)}
-                      {s.sea
-                        ? ` · ${t('bySea')}`
-                        : ` · ${walkingDays(legs[i - 1])} ${walkingDays(legs[i - 1]) === 1 ? t('dayWalk') : t('dayWalks')}`}
-                    </div>
+                    <>
+                      <div className="py-1 pl-3 text-[11px] text-white/40" title={t('distanceNote')}>
+                        ↓ {formatKm(legs[i - 1], lang)}
+                        {s.sea
+                          ? ` · ${t('bySea')}`
+                          : ` · ${walkingDays(legs[i - 1])} ${walkingDays(legs[i - 1]) === 1 ? t('dayWalk') : t('dayWalks')}`}
+                      </div>
+                      {/* Nicht bei Seewegen: was neben einer Schiffslinie liegt,
+                          lag nicht am Weg, sondern an einer anderen Küste. */}
+                      {!s.sea && (
+                        <AlongTheWay
+                          places={places}
+                          lang={lang}
+                          from={[journey.stops[i - 1].lat, journey.stops[i - 1].lon]}
+                          to={[s.lat, s.lon]}
+                          stops={[
+                            lang === 'de' ? journey.stops[i - 1].de : journey.stops[i - 1].en,
+                            lang === 'de' ? s.de : s.en,
+                          ]}
+                          onSelect={onShowPlace}
+                        />
+                      )}
+                    </>
                   )}
                   <span
                     style={{ background: active ? color : 'transparent', borderColor: color }}

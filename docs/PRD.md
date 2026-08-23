@@ -574,7 +574,36 @@ es ihn nie.
       auf die Nachtkarte; `MapView` meldet nur selbst, wenn es niemand sonst
       tut – doppelte Hinweise gibt es nicht.
 
-### 4.34 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.34 Was lag am Weg? — P2 ✅
+
+**Beschreibung:** Zu jeder Etappe die Orte, die neben der Verbindungslinie
+liegen – die Frage, die jeder stellt, der eine Reise nacherzählt.
+
+**Anforderungen**
+- Korridor von 8 km neben der Luftlinie; Ausgabe in der Reihenfolge der Etappe.
+- Nur punkthafte Orte: Siedlungen, Berge, Hügel, Quellen, Brunnen, Lager,
+  Furten, Festungen, Pässe. Landschaften wie „Galiläa" haben nur einen
+  Mittelpunkt und sagen nicht, ob sie am Weg lagen.
+- Die Luftlinie ist nicht der Weg – das steht in der Ansicht.
+
+**Akzeptanzkriterien**
+- [x] Jerusalem → Jericho nennt Ölberg, Bethanien, Bahurim, Anathoth;
+      Nazareth → Kapernaum nennt Gat-Hefer und den Tabor.
+- [x] Gegenprobe an echten Daten: für jeden Treffer ist der Umweg über ihn
+      nie kürzer als die Etappe selbst (sonst stimmte die Projektion nicht).
+- [x] Die Zielstation erscheint nicht als Ort am Weg – die Bibel kennt mehrere
+      Jerichos, und ein zweiter Datensatz stand 1,6 km neben der Linie.
+- [x] Orte näher als 1 km an einer Station fallen heraus: „Zion" trägt dieselben
+      Koordinaten wie Jerusalem. Der Ölberg (1,10 km) bleibt.
+- [x] Leere Antwort wird als solche gezeigt – in der Wüste des Auszugs liegt
+      nichts nah an der Linie.
+- [x] Nicht bei Seewegen (`stop.sea`) und nicht in *Mission & Ausbreitung*:
+      dort trägt kein Feld die Unterscheidung zwischen Schiff und Landmarsch.
+- [x] Nahe beieinanderliegende Treffer werden **nicht** zusammengefasst:
+      gemessen liegen Jerusalem/Zion 0,00 km, Ölberg/Bethphage 0,49 km
+      auseinander – jede Schwelle für das eine trifft auch das andere.
+
+### 4.35 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

@@ -161,6 +161,17 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   vergrößern (80 % bis 200 %), auch im Beamer-Modus; die Einstellung bleibt
   gemerkt. Fünf Meter vom Fernseher entfernt ist die Vorgabe zu klein, auf dem
   Telefon in der Hand manchmal zu groß.
+- **Was lag am Weg?** – zu jeder Etappe die Orte, die neben der Verbindungslinie
+  liegen. Von Jerusalem nach Jericho sind es 23 km – dazwischen liegen
+  **Ölberg, Bethanien, Bahurim und Anathoth**; von Nazareth nach Kapernaum
+  **Gat-Hefer** (Jonas Heimat) und der **Tabor**. Gerechnet wird gegen die
+  Luftlinie, bis 8 km daneben – gut zwei Stunden abseits, noch „unterwegs".
+  Und die Luftlinie ist nicht der Weg: wer nach Jericho ging, nahm die Straße
+  durchs Wadi und nicht die Gerade. Das steht auch dabei. In den Reisen und im
+  eigenen Weg, eingeklappt – die Etappenliste soll die Reise erzählen, nicht
+  ein Ortsverzeichnis sein. Nicht bei Seewegen, und nicht in *Mission &
+  Ausbreitung*: dort unterscheiden die Daten Schiffspassage und Landmarsch
+  nicht, und Orte „am Weg" quer über das Mittelmeer wären erfunden.
 - **Eigener Weg** – die erzählten Reisen stehen fest, weil die Bibel sie so
   erzählt. Was fehlte, war der umgekehrte Fall: die Wege, die im Text nicht als
   Weg stehen, aber im Hauskreis auf den Tisch kommen – die Orte eines Kapitels,
