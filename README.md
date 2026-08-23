@@ -74,7 +74,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   zur neuen Welt (Schöpfung, Abraham, Exodus, Exil, Jesus, frühe Kirche …) mit
   Karte, Bibelstelle und Video je Station.
 - **Reisen & Geschichten** – die großen Wege der Bibel als erzählte Reise:
-  Abraham von Ur nach Kanaan, Jakobs Flucht, Josef nach Ägypten, der Auszug und
+  **Abraham und Sara** von Ur bis zum Grab in Machpela (17 Stationen, 3.494 km,
+  140 Tagesmärsche – von der Berufung über Ägypten, den Zug bis Damaskus, die
+  drei Gäste in Mamre und das Feilschen um Sodom bis zu dem einzigen Stück
+  Land, das den beiden je gehört: einer Höhle), Jakobs Flucht, Josef nach Ägypten, der Auszug und
   die vierzig Jahre Wüste, die Landnahme, David auf der Flucht, Elia zum Horeb,
   Jona in die falsche Richtung, das Exil und die Rückkehr, die Flucht nach
   Ägypten, Jesu Wege in Galiläa und der Weg nach Jerusalem. **Abspielen** lässt
