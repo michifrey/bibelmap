@@ -803,7 +803,47 @@ Hor** (Aarons Tod).
       Und im Vorspann: 4. Mose 33 zählt 42 Lager, die meisten unlokalisierbar.
 - [x] Im Browser: 992 km, 40 Tagesmärsche, 13 Etappen mit „Orte am Weg".
 
-### 4.44 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.44 Die vier übrigen Wege des Alten Testaments — P1 ✅
+
+Nach Abraham, Mose, Auszug und Wüste blieben vier alttestamentliche Reisen
+stehen, die zwar auf der Karte lagen, aber je Station nur einen Satz trugen.
+Alle vier auf einmal, damit das Alte Testament nicht länger die dünnere Hälfte
+ist:
+
+- **Jakob** 11 → 14 Stationen, jetzt das ganze Leben von 1. Mose 25 bis 50:
+  Beerscheba (das Linsengericht und der erschlichene Segen), Bethel (die
+  Leiter), Haran (zwanzig Jahre bei Laban), Gilead, Mahanajim, Pnuël (der Kampf
+  am Jabbok), Sukkot (die Versöhnung mit Esau), Sichem, Bethel zurück, Efrata
+  (Rahels Grab), Hebron (Isaaks Tod), Beerscheba (der Aufbruch nach Ägypten),
+  Gosen, Hebron (Machpela).
+- **Landnahme** 9 → 14: neu **Ebal und Garizim** (der Segen und der Fluch
+  vorgelesen), **Lachis**, **Debir**, die **Wasser von Merom** und **Silo**
+  (die Verteilung des Landes).
+- **David** 9 → 15: neu **Gibea** (das Fenster, durch das Michal ihn
+  hinunterlässt), **Mizpe in Moab**, die **Wüste Maon**, die **Wüste Sif** (der
+  Speer am Kopfende), **Hebron** (die Salbung über Juda) und **Jerusalem**.
+- **Elia** 8 → 13: neu **Jesreel** (Nabots Weinberg), **Samaria**, **Gilgal und
+  Bethel**, **Jericho** und **der Jordan** (der Wagen aus Feuer).
+
+Text je Station: Jakob 196, Landnahme 177, David 187, Elia 191 Zeichen. Damit
+tragen elf der fünfzehn Reisen ausgeführte Stationstexte; dünn bleiben Josef
+(6), Jona (6), Exil (6) und Rückkehr (4).
+
+**Akzeptanzkriterien**
+- [x] Jede neue Station mit Bibelstelle, `placeId` und Koordinate gegen
+      `places.json` geprüft: 0 unbekannte IDs, 0 Koordinatenabweichungen,
+      0 Stationen ohne Stelle.
+- [x] Keine neue Nulletappe – zwei Stationen auf demselben Punkt gäbe eine
+      Etappe von 0 km. (Bekannt und unverändert: im Exil liegen „Am Fluss
+      Kebar" und „Babylon" auf einem Punkt; sie zu trennen hieße Koordinaten
+      zu erfinden.)
+- [x] Umstrittenes steht als umstritten da (Debir, Merom), Überliefertes als
+      Überlieferung.
+- [x] Im Browser gemessen: Jakob 2.109 km / 84 Tagesmärsche, Landnahme 532 km /
+      21, David 429 km / 17, Elia 1.373 km / 55 – keine Etappe ohne Länge,
+      keine Fehlermeldung in der Konsole.
+
+### 4.45 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**

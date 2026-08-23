@@ -77,7 +77,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   **Abraham und Sara** von Ur bis zum Grab in Machpela (17 Stationen, 3.494 km,
   140 Tagesmärsche – von der Berufung über Ägypten, den Zug bis Damaskus, die
   drei Gäste in Mamre und das Feilschen um Sodom bis zu dem einzigen Stück
-  Land, das den beiden je gehört: einer Höhle), Jakobs Flucht, Josef nach Ägypten, **Mose vom Nil bis auf den Nebo** (hundertzwanzig Jahre
+  Land, das den beiden je gehört: einer Höhle), **Jakob vom erschlichenen Segen bis zum Grab der Väter** (14 Stationen:
+  Linsengericht, Leiter, zwanzig Jahre bei Laban, der Kampf am Jabbok, Rahels
+  Grab – und am Ende der Zug zurück aus Ägypten in die Höhle Machpela), Josef nach Ägypten, **Mose vom Nil bis auf den Nebo** (hundertzwanzig Jahre
   in drei Vierzigern: vierzig am Hof, vierzig bei den Schafen, vierzig
   unterwegs – vom Schilfkästchen über den brennenden Busch und den Felsen von
   Kadesch bis zu dem Blick über ein Land, das er nicht betreten darf), **der
@@ -85,7 +87,14 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   **die vierzig Jahre Wüste** (14 Stationen von den Lustgräbern über
   Mirjams Aussatz in Hazeroth, die zwölf Kundschafter, Mirjams Grab in der
   Wüste Zin und Aarons Tod auf dem Berg Hor bis nach Sittim, wo Bileam segnen
-  muss, was er verfluchen soll), die Landnahme, David auf der Flucht, Elia zum Horeb,
+  muss, was er verfluchen soll), **die Landnahme** (14 Stationen von Rahabs Flachsstängeln über die
+  Vorlesung des Gesetzes zwischen Ebal und Garizim bis zur Wahl in Sichem),
+  **David von der Flucht auf den Thron** (15 Stationen: Michal lässt ihn durchs
+  Fenster, vierhundert Verschuldete in der Höhle, zweimal verschont er den
+  Mann, der ihn jagt – bis Hebron und Jerusalem), **Elia vom Karmel bis zum
+  Wagen aus Feuer** (13 Stationen, vom Duell auf dem Karmel über den Ginster in
+  Beerscheba und das stille sanfte Sausen am Horeb bis zum Mantel, der aufs
+  Wasser schlägt),
   Jona in die falsche Richtung, das Exil und die Rückkehr, die Flucht nach
   Ägypten, Jesu Wege in Galiläa und der Weg nach Jerusalem. **Abspielen** lässt
   die Route mitwachsen und einen Punkt die Etappen abgehen, während links die
