@@ -82,7 +82,10 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   unterwegs – vom Schilfkästchen über den brennenden Busch und den Felsen von
   Kadesch bis zu dem Blick über ein Land, das er nicht betreten darf), **der
   Auszug** entlang der Stationenliste aus 4. Mose 33, und
-  die vierzig Jahre Wüste, die Landnahme, David auf der Flucht, Elia zum Horeb,
+  **die vierzig Jahre Wüste** (14 Stationen von den Lustgräbern über
+  Mirjams Aussatz in Hazeroth, die zwölf Kundschafter, Mirjams Grab in der
+  Wüste Zin und Aarons Tod auf dem Berg Hor bis nach Sittim, wo Bileam segnen
+  muss, was er verfluchen soll), die Landnahme, David auf der Flucht, Elia zum Horeb,
   Jona in die falsche Richtung, das Exil und die Rückkehr, die Flucht nach
   Ägypten, Jesu Wege in Galiläa und der Weg nach Jerusalem. **Abspielen** lässt
   die Route mitwachsen und einen Punkt die Etappen abgehen, während links die

@@ -784,7 +784,26 @@ nennen beide Quellen (2. Mose und 4. Mose 33).
 und „Babylon" einen Punkt im Ortsdatensatz. Das zu trennen hieße, Koordinaten
 zu erfinden.
 
-### 4.43 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.43 Vierzig Jahre Wüste: 10 → 14 Stationen — P1 ✅
+
+Damit ist der Mose-Bogen fertig erzählt: Auszug (11), Mose selbst (12), die
+Wüstenjahre (14). Text je Station 77 → 180 Zeichen.
+
+Neu dabei: **Kibroth-Hattaawa** (die Wachteln, und der Name „Lustgräber"),
+**Hazeroth** (Mirjam und Aaron gegen ihren Bruder, und das Lager wartet sieben
+Tage auf sie), die **Wüste Paran** als Ausgangspunkt der Kundschafter, die
+**Wüste Zin** (Mirjams Grab, und der Schlag auf den Felsen) und der **Berg
+Hor** (Aarons Tod).
+
+**Akzeptanzkriterien**
+- [x] Alle 14 Stationen mit echter Bibelstelle, `placeId` und Koordinate gegen
+      `places.json` geprüft – keine Abweichung, keine Nulletappe.
+- [x] Die Lücke steht als Lücke da: „Zwischen Kadesch und hier liegen in der
+      Liste achtzehn Lager, von denen kein einziges sicher zu zeigen ist."
+      Und im Vorspann: 4. Mose 33 zählt 42 Lager, die meisten unlokalisierbar.
+- [x] Im Browser: 992 km, 40 Tagesmärsche, 13 Etappen mit „Orte am Weg".
+
+### 4.44 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
