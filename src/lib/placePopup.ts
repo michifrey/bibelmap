@@ -4,6 +4,7 @@ import { erasForPlace, booksForPlace, placeName, placeNames } from './places';
 import { ERAS, ERA_BY_ID } from '../data/eras';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { resolveWikidataImage } from './wikidataImage';
+import { licenseInfo } from './imageCredit';
 
 const EXTERNAL_ICON =
   '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v7h-2V6.4l-9.3 9.3-1.4-1.4L17.6 5H14zM5 5h5v2H7v10h10v-3h2v5H5z"/></svg>';
@@ -20,10 +21,19 @@ function esc(s: string): string {
 
 
 
-function imageHtml(img: PlaceImage, name: string): string {
-  const credit = img.credit
-    ? `<a class="bm-pop-credit" href="${esc(img.creditUrl ?? '#')}" target="_blank" rel="noreferrer">© ${esc(img.credit)}</a>`
+function imageHtml(img: PlaceImage, name: string, lang: Lang): string {
+  if (!img.credit) {
+    return `<img src="${esc(img.url)}" alt="${esc(name)}" loading="lazy" referrerpolicy="no-referrer" />`;
+  }
+  // Urheber und Lizenz stehen beide da: das verlangen die Lizenzen, unter denen
+  // die Bilder auf Commons liegen.
+  const lic = licenseInfo(img.license, lang);
+  const licHtml = lic
+    ? lic.url
+      ? `<a class="bm-pop-lic" href="${esc(lic.url)}" target="_blank" rel="noreferrer" title="${esc(lic.hint)}">${esc(lic.label)}</a>`
+      : `<span class="bm-pop-lic" title="${esc(lic.hint)}">${esc(lic.label)}</span>`
     : '';
+  const credit = `<span class="bm-pop-credit"><a href="${esc(img.creditUrl ?? '#')}" target="_blank" rel="noreferrer">© ${esc(img.credit)}</a>${licHtml}</span>`;
   return `<img src="${esc(img.url)}" alt="${esc(name)}" loading="lazy" referrerpolicy="no-referrer" />${credit}`;
 }
 
@@ -99,7 +109,7 @@ export function buildPlacePopup(place: Place, lang: Lang, onMore: () => void): H
   const el = document.createElement('div');
   el.className = 'bm-pop';
   el.innerHTML = `
-    <div class="bm-pop-img" data-img>${place.img ? imageHtml(place.img, name) : placeholderHtml()}</div>
+    <div class="bm-pop-img" data-img>${place.img ? imageHtml(place.img, name, lang) : placeholderHtml()}</div>
     <div class="bm-pop-body">
       <h3 class="bm-pop-title">${esc(name)}</h3>
       <div class="bm-pop-tags">
@@ -124,7 +134,7 @@ export function buildPlacePopup(place: Place, lang: Lang, onMore: () => void): H
     const slot = el.querySelector('[data-img]');
     resolveWikidataImage(place.wikidata)
       .then((img) => {
-        if (img && slot) slot.innerHTML = imageHtml(img, name);
+        if (img && slot) slot.innerHTML = imageHtml(img, name, lang);
       })
       .catch(() => {
         /* keep placeholder */

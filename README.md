@@ -121,6 +121,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Leertaste öffnen (Cluster zoomen hinein); Escape schließt von außen nach innen.
 - **Quellen** – Verlinkung zu OpenBible Atlas, Wikidata, Biblia Factbook,
   BibleGateway (Lutherbibel / ESV) und The Bible Project (Video).
+- **Bildnachweis** – jedes Foto nennt **Urheber und Lizenz**, in der Ortskarte
+  wie im Kartenfenster: der Name führt auf die Dateiseite bei Wikimedia Commons,
+  die Lizenz auf ihren Text. Bilder, die erst zur Laufzeit über Wikidata
+  gefunden werden, holen beides über die Commons-API nach – die Lizenzen
+  verlangen die Nennung, ein „© Name" allein genügt ihnen nicht.
 - **Projekte unterstützen** – eine eigene Seite (Startseite, Modi-Menü, Direktlink
   `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
   selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,

@@ -1,4 +1,5 @@
 import type { PlaceImage } from '../types';
+import { normalizeLicense, plainText } from './imageCredit';
 
 // Runtime fallback for place photos: many places without an OpenBible image do
 // carry a Wikidata Q-id. We resolve the Wikidata P18 image client-side (the
@@ -36,6 +37,10 @@ export async function resolveWikidataImage(qid: string): Promise<PlaceImage | nu
           creditUrl: `https://commons.wikimedia.org/wiki/File:${enc}`,
           license: null,
         };
+        // Urheber und Lizenz stehen nicht bei Wikidata, sondern bei der Datei.
+        // Fast alle diese Bilder verlangen beides – also einen Schritt mehr.
+        const meta = await fileCredit(p18);
+        if (meta) result = { ...result, ...meta };
       }
     }
   } catch {
@@ -49,4 +54,40 @@ export async function resolveWikidataImage(qid: string): Promise<PlaceImage | nu
     /* ignore */
   }
   return result;
+}
+
+/**
+ * Urheber und Lizenz einer Commons-Datei. Schlägt der Aufruf fehl, bleibt es
+ * beim allgemeinen Nachweis auf die Dateiseite – ein Bild ohne Nachweis
+ * zeigt die App nicht.
+ */
+async function fileCredit(file: string): Promise<Pick<PlaceImage, 'credit' | 'license'> | null> {
+  const api = new URL('https://commons.wikimedia.org/w/api.php');
+  api.search = new URLSearchParams({
+    action: 'query',
+    format: 'json',
+    origin: '*', // CORS: ohne das antwortet die API nicht im Browser
+    prop: 'imageinfo',
+    iiprop: 'extmetadata',
+    titles: `File:${file}`,
+  }).toString();
+
+  try {
+    const r = await fetch(api);
+    if (!r.ok) return null;
+    const data = await r.json();
+    const pages = data?.query?.pages;
+    const page = pages && Object.values(pages)[0];
+    const ex = (page as { imageinfo?: { extmetadata?: Record<string, { value?: string }> }[] })
+      ?.imageinfo?.[0]?.extmetadata;
+    if (!ex) return null;
+    const artist = ex.Artist?.value ? plainText(ex.Artist.value) : '';
+    const license = normalizeLicense(ex.License?.value ?? ex.LicenseShortName?.value);
+    return {
+      credit: artist || 'Wikimedia Commons',
+      license,
+    };
+  } catch {
+    return null;
+  }
 }

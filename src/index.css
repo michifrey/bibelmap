@@ -498,12 +498,31 @@ body {
   position: absolute;
   right: 0;
   bottom: 0;
+  display: flex;
+  max-width: 100%;
+  align-items: center;
+  gap: 4px;
   background: rgba(0, 0, 0, 0.55);
   color: rgba(255, 255, 255, 0.9);
   font-size: 10px;
   line-height: 1.2;
   padding: 2px 6px;
+}
+.bm-pop-credit a {
+  color: inherit;
   text-decoration: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.bm-pop-credit a:hover {
+  color: var(--color-gold);
+}
+/* Die Lizenz gehört zum Nachweis, tritt aber hinter den Namen zurück. */
+.bm-pop-lic {
+  flex: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  padding-left: 4px;
 }
 .bm-pop-body {
   padding: 0.8rem 0.9rem 0.9rem;
