@@ -42,6 +42,11 @@ const STRINGS: Dict = {
     en: 'Loading the terrain map – it arrives once, as its own bundle.',
   },
   terrainExaggeration: { de: 'Überhöhung', en: 'Exaggeration' },
+  graphHits: { de: 'Treffer', en: 'Matches' },
+  graphCanvas: {
+    de: 'Netz aus Büchern, Orten, Personen und Stellen – die Knoten lassen sich über die Trefferliste öffnen.',
+    en: 'Network of books, places, persons and passages – open a node through the list of matches.',
+  },
   placeIndex: { de: 'Ortsregister', en: 'Index of places' },
   placeIndexHint: {
     de: 'Alle Orte alphabetisch – mit Erwähnungen, Epochen und der Spanne der Bücher.',

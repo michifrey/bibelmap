@@ -226,6 +226,14 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 
 ### Drumherum
 
+- **Der Graph mit der Tastatur** – das Netz aus Büchern, Orten, Personen und
+  Stellen hob beim Tippen zwar den passenden Knoten hervor, öffnen ließ er sich
+  aber nur mit der Maus: auf den Punkt klicken. Gemessen war „Jerusalem" tippen
+  und Enter drücken folgenlos. Jetzt stehen die Treffer als **Liste unter dem
+  Feld**, als richtige Knöpfe – drei Tabulatorschritte bis zum Suchfeld, tippen,
+  Enter, und die Karte des Knotens steht offen. „Abraham" bringt die Person und
+  die Stellen dazu. Die Leinwand trug außerdem keinen Namen; jetzt sagt sie,
+  was sie zeigt und wo die Bedienung liegt.
 - **Gelände in 3D** – eine vierte Ansicht neben Karte, Zeitbaum und Graph
   (`#gelaende`): dieselben Orte über echtem Höhengelände, kippbar und drehbar.
   **Jede Route lässt sich hineinlegen** – die Bibelreisen (`#gelaende=reise,exodus`)
@@ -652,8 +660,10 @@ angaben folgen einer gängigen konservativen Chronologie.
 `scripts/a11y-audit.mjs` geht mit einem Browser durch alle vierzehn Ansichten,
 dreimal:
 
-1. **Namen** – was keinen hat (Icon-Knöpfe, Regler, Grafiken) und was einen
-   englischen hat, den eine Bibliothek mitbringt.
+1. **Namen** – was keinen hat (Icon-Knöpfe, Regler, Grafiken, **Leinwände**)
+   und was einen englischen hat, den eine Bibliothek mitbringt. Leinwände
+   standen lange nur im zweiten Blick auf fremdsprachige Namen; eine ganz ohne
+   Namen fiel deshalb durch – genau so blieb die des Graphen jahrelang stumm.
 2. **390 Pixel** – ragt ein Bedienelement seitlich aus dem Bild? Was in einem
    scrollbaren Streifen liegt, zählt nicht.
 3. **Nur mit der Tastatur** – wie viele Tastendrücke liegen zwischen

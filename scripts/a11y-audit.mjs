@@ -58,10 +58,18 @@ const kanten = (breite) => {
 
 const audit = () => {
   const out = [];
-  for (const el of document.querySelectorAll('button, a, [role=button], input, iframe, img, svg')) {
+  /*
+   * `canvas` stand nur im zweiten Durchgang (fremdsprachige Namen), nicht im
+   * ersten. Eine Leinwand ganz ohne Namen fiel deshalb durch: der Graph hatte
+   * keinen, und die Prüfung meldete „alles benannt". Wer sie nicht sieht,
+   * bekam an dieser Stelle nichts vorgelesen.
+   */
+  for (const el of document.querySelectorAll('button, a, [role=button], input, iframe, img, svg, canvas')) {
     if (el.classList.contains('leaflet-marker-icon')) continue;
     const tag = el.tagName.toLowerCase();
     if (tag === 'svg') { if (!el.hasAttribute('aria-hidden')) out.push('svg ohne aria-hidden'); continue; }
+    // Eine Leinwand, die ausdrücklich Beiwerk ist, braucht keinen Namen.
+    if (tag === 'canvas' && el.getAttribute('aria-hidden') === 'true') continue;
     if (tag === 'img' && el.getAttribute('alt') === '') continue;
     const name = (el.getAttribute('aria-label') || el.getAttribute('title') || el.getAttribute('alt') || el.textContent || '').trim();
     if (!name) out.push(tag + '.' + (el.className.toString().slice(0, 36) || '(ohne Klasse)'));

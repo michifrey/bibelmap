@@ -20,6 +20,14 @@ type NodeKind = 'book' | 'place' | 'person' | 'passage';
 
 const PASSAGE_COLOR = '#b8742e';
 
+/** Welche Art Knoten – dieselben Wörter wie an den Filterschaltern. */
+const KIND_KEY = {
+  book: 'graphBooks',
+  place: 'graphPlaces',
+  person: 'graphPeople',
+  passage: 'graphPassages',
+} as const;
+
 interface GNode {
   id: string;
   kind: NodeKind;
@@ -322,16 +330,20 @@ export default function GraphView({ places, lang }: Props) {
     return filt.current.showPeople;
   }
 
-  // search → focus a matching node
-  useEffect(() => {
+  /*
+   * Die Suche hob bisher den ersten Treffer hervor und rückte ihn in die
+   * Mitte. Öffnen ließ er sich nur mit der Maus: auf den Punkt klicken.
+   * Gemessen war der Graph damit ohne Maus eine Sackgasse – „Jerusalem"
+   * tippen, Enter drücken, und nichts geschieht.
+   *
+   * Jetzt stehen die Treffer als Liste unter dem Feld, als richtige Knöpfe.
+   */
+  const treffer = useMemo(() => {
     const q = query.trim().toLowerCase();
-    if (!q) {
-      focusReq.current = null;
-      return;
-    }
+    if (!q) return [] as { i: number; label: string; kind: NodeKind }[];
     const { nodes } = graph;
-    let found = -1;
-    for (let i = 0; i < nodes.length; i++) {
+    const out: { i: number; label: string; kind: NodeKind }[] = [];
+    for (let i = 0; i < nodes.length && out.length < 12; i++) {
       const n = nodes[i];
       // Beide Schreibweisen: wer „Ägypten“ tippt, meint denselben Knoten wie
       // wer „Egypt“ tippt – und im Netz stand bis eben nur das Zweite.
@@ -340,14 +352,35 @@ export default function GraphView({ places, lang }: Props) {
           ? `${nodeLabel(n, lang)} ${n.passage.ref}`
           : `${nodeLabel(n, lang)} ${n.label}`;
       if (nodeVisible(n) && label.toLowerCase().includes(q)) {
-        found = i;
-        break;
+        out.push({ i, label: nodeLabel(n, lang), kind: n.kind });
       }
     }
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, graph, lang, showPlaces, showPeople, showPassages]);
+
+  // search → focus a matching node
+  useEffect(() => {
+    const found = treffer.length ? treffer[0].i : -1;
     focusReq.current = found >= 0 ? found : null;
     if (found >= 0) active.current = found;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, graph, lang]);
+  }, [treffer]);
+
+  /** Einen Knoten öffnen – derselbe Weg, den ein Klick auf den Punkt nimmt. */
+  function oeffneKnoten(i: number) {
+    const n = graph.nodes[i];
+    if (!n) return;
+    focusReq.current = i;
+    active.current = i;
+    setSelPlace(null);
+    setSelPerson(null);
+    setSelPassage(null);
+    setBookInfo(null);
+    if (n.kind === 'place' && n.place) setSelPlace(n.place);
+    else if (n.kind === 'person' && n.person) setSelPerson(n.person.id);
+    else if (n.kind === 'passage' && n.passage) setSelPassage(n.passage);
+    else if (n.kind === 'book' && n.bookOsis) setBookInfo({ osis: n.bookOsis, label: nodeLabel(n, lang) });
+  }
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -778,7 +811,16 @@ export default function GraphView({ places, lang }: Props) {
   return (
     <div className="absolute inset-0 bg-deepest">
       <div ref={wrapRef} className="absolute inset-0">
-        <canvas ref={canvasRef} className="block h-full w-full" style={{ cursor: 'grab' }} />
+        {/* Die Leinwand trug keinen Namen: ein Screenreader las an dieser
+            Stelle nichts. Sie ist ein Bild des Netzes – die Bedienung liegt
+            in den Knöpfen daneben, nicht in ihr. */}
+        <canvas
+          ref={canvasRef}
+          role="img"
+          aria-label={t('graphCanvas')}
+          className="block h-full w-full"
+          style={{ cursor: 'grab' }}
+        />
       </div>
 
       {/* title + controls */}
@@ -818,6 +860,23 @@ export default function GraphView({ places, lang }: Props) {
             />
           </label>
         </div>
+        {/* Die Treffer als Knöpfe: der einzige Weg, ohne Maus in das Netz
+            hineinzukommen. Der Punkt auf der Leinwand nimmt keinen Fokus an. */}
+        {treffer.length > 0 && (
+          <div className="bm-panel pointer-events-auto flex max-w-[min(94vw,40rem)] flex-wrap items-center gap-1.5 self-start px-3 py-2">
+            <span className="bm-eyebrow bm-eyebrow-dim mr-1">{t('graphHits')}</span>
+            {treffer.map((h) => (
+              <button
+                key={h.i}
+                onClick={() => oeffneKnoten(h.i)}
+                className="bg-white/8 px-2 py-1 text-[11.5px] font-bold text-white transition hover:bg-gold/30"
+              >
+                {h.label}
+                <span className="ml-1.5 font-medium text-white/45">{t(KIND_KEY[h.kind])}</span>
+              </button>
+            ))}
+          </div>
+        )}
         <div className="bm-panel pointer-events-none self-start px-3 py-1.5 text-[11px] text-white/60">
           {t('graphHint')} · {bookCount} {t('graphBooks')} · {placeCount} {t('graphPlaces')} · {personCount} {t('graphPeople')} · {passageCount} {t('graphPassages')}
           {showBookLinks && ` · ${t('graphBookLinks')}: ${xrefReal ? t('graphXrefReal') : t('graphXrefDerived')}`}
