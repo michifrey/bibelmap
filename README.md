@@ -285,6 +285,17 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 
 ### Drumherum
 
+- **Modi-Tafel** – dreizehn Modi passen in kein Klappmenü. Als Liste unter dem
+  Knopf war sie 940 Pixel hoch, und die letzten Einträge standen unter dem
+  Bildrand. Sie liegt jetzt als Tafel in der Mitte: nach den drei Familien
+  geordnet, in denen dieses README sie ohnehin beschreibt (Erzählen · Lernen &
+  weitergeben · Über das Projekt), in Spalten statt in einer Säule, mit fester
+  Höhe – gescrollt wird innen, nicht über den Rand hinaus. Dazu ein **Suchfeld**,
+  das Titel *und* Beschreibung durchsucht (`Paulus` findet *Mission &
+  Ausbreitung*), und volle Tastaturbedienung: tippen sucht, ↑ ↓ ← → wählt quer
+  durch die Gruppen, Eingabe öffnet, Esc schließt – und zwar nur die Tafel,
+  nicht den Modus darunter.
+
 - **Der Graph mit der Tastatur** – das Netz aus Büchern, Orten, Personen und
   Stellen hob beim Tippen zwar den passenden Knoten hervor, öffnen ließ er sich
   aber nur mit der Maus: auf den Punkt klicken. Gemessen war „Jerusalem" tippen
