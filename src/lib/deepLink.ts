@@ -31,6 +31,12 @@ export interface Route {
    * `#kirche=konzil,nicaea1`; ohne Angabe steht der Modus auf seinem Anfang.
    */
   church?: { tab: 'fathers' | 'councils'; id?: string };
+  /**
+   * Akt und Station der Jesus-Sektion: `#jesus=passion,golgotha`. Ein Mensch
+   * statt eines Akts steht als `#jesus=mensch,petrus` – die Akte heißen nie
+   * so, deshalb bleibt das eindeutig.
+   */
+  gospel?: { act: string; station?: string; person?: string };
   /** Station der Heilsgeschichte: `#heilsgeschichte=exodus`. */
   history?: string;
   /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
@@ -133,6 +139,15 @@ export function parseHash(hash: string): Route | null {
             ? { phase: args[0], journey: args[1] }
             : { phase: args[0], event: args[1] },
       };
+    case 'jesus': {
+      if (!args[0]) return { view: 'map', mode: 'gospel' };
+      if (args[0] === 'mensch') {
+        return args[1]
+          ? { view: 'map', mode: 'gospel', gospel: { act: 'promise', person: args[1] } }
+          : { view: 'map', mode: 'gospel' };
+      }
+      return { view: 'map', mode: 'gospel', gospel: { act: args[0], station: args[1] } };
+    }
     case 'heilsgeschichte':
       return args[0]
         ? { view: 'map', mode: 'history', history: args[0] }
@@ -188,6 +203,12 @@ export function formatRoute(route: Route): string {
     // In der Reisephase steht die Reise in der Adresse, sonst das Ereignis.
     const detail = phase === 'journeys' ? journey : event;
     return detail ? `#mission=${phase},${detail}` : `#mission=${phase}`;
+  }
+  if (mode === 'gospel') {
+    if (!route.gospel) return '#jesus';
+    const { act, station, person } = route.gospel;
+    if (person) return `#jesus=mensch,${person}`;
+    return station ? `#jesus=${act},${station}` : `#jesus=${act}`;
   }
   if (mode === 'compare') {
     return route.compare ? `#vergleich=${route.compare}` : '#vergleich';

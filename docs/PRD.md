@@ -942,8 +942,53 @@ wie in der eigenen Route. Der Hinweistext nennt die Schwelle.
       Reihenfolge der Erzählung folgt, nicht einem Fahrplan.
 
 Damit tragen **alle fünfzehn Reisen** 160 bis 240 Zeichen je Station.
+### 4.47 Jesus – Leben und Wege (eigene Sektion) — P1 ✅
 
-### 4.47 Weitere Ansichten (aus parallelen Arbeiten)
+**Anlass:** Die Evangelien waren drei Routen unter fünfzehn in „Reisen &
+Geschichten“. § 4.46 hat sie inzwischen ausgebaut (7 + 13 + 13 Stationen), und
+das bleibt richtig: als Weg gelesen. Zwei Fragen beantwortet ein Weg trotzdem
+nicht – was in der Passionswoche an welchem Tag geschah, und wo Maria von
+Magdala überall vorkommt. Dafür braucht es eine Gliederung nach Akten und eine
+zweite Achse: die Menschen.
+
+**Eine eigene Sektion, 86 Stationen in sieben Akten:** Verheißung und Geburt
+(12), die verborgenen Jahre (2), Taufe/Wüste/erste Zeichen (11), das Jahr am See
+(26), der Weg nach Jerusalem (13), die letzte Woche (14), der dritte Tag und
+danach (8). Die Passionswoche trägt an jeder Station ihren Tag – von
+Palmsonntag über die fünf Verhöre in einer Nacht bis zur Grabesruhe.
+
+**Die Menschen sind die zweite Achse:** 52 Personen mit Rolle und einem eigenen
+Absatz, gruppiert (Familie · die Zwölf · Frauen, die mitgehen · Begegnungen ·
+Macht). Jede Station nennt, wer darin handelt; ein Klick auf einen Namen zeigt
+seine Spur durch alle Akte – Petrus 24 Stationen, Maria 9, Maria von Magdala 4.
+Die Suche findet Stationen, Akte und Personen.
+
+**Fremde Häuser:** Jede Station verlinkt den BibleProject-Guide ihres
+Evangeliums (dieselbe geprüfte Adressregel wie 4.9). Für „The Chosen“ steht die
+Zuordnung Folge → Station in `src/data/chosen.ts`; verlinkt wird nur die
+Serienseite.
+
+**Akzeptanzkriterien**
+- [x] Jede Station trägt eine echte Bibelstelle; nichts erfunden. Abweichungen
+      zwischen den Evangelien stehen im Text, nicht in einer Harmonisierung.
+- [x] Alle 74 `placeId` zeigen auf einen Ort in `places.json` und liegen
+      höchstens 6 km von ihm entfernt (`npm run check:gospel`).
+- [x] Jede Bibelstelle lässt sich lesen, und ihr Buch passt zu dem Guide, auf
+      den die Station verlinkt – sonst schlägt die Prüfung fehl.
+- [x] Jede in einer Station genannte Person steht im Verzeichnis.
+- [x] Unsichere Orte stehen als unsicher da: „Wüste Juda – der Ort ist nicht
+      überliefert“, „Hermon oder Tabor, die Tradition schwankt“, „Machärus – die
+      Festung nennt erst Josephus“.
+- [x] Deep-Links: `#jesus=passion,golgotha`, `#jesus=mensch,petrus`; eine
+      verlinkte Station bestimmt ihren Akt selbst.
+- [ ] **Offen:** Die Zuordnung der Folgen von „The Chosen“ (Staffel, Folge,
+      Titel) ist nach Inhalt zusammengetragen und noch nicht bei thechosen.tv
+      nachgesehen – der Netzzugang der Arbeitsumgebung erlaubt den Host nicht.
+      Bis dahin steht `VERIFIED = false`, und die Oberfläche weist die Angaben
+      als unbestätigt aus. Ebenso offen: Folgen aus Staffel 2 und 5, die hier
+      bewusst fehlen, statt geraten zu werden.
+
+### 4.48 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
 (geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
