@@ -69,6 +69,7 @@ export default function ModePalette({ onPick, onClose }: Props) {
           { id: 'gospel', label: t('gospel'), hint: t('gospelHint'), icon: 'M12 2l2.3 5.5 5.9.5-4.5 3.9 1.4 5.8L12 14.6 6.9 17.7l1.4-5.8-4.5-3.9 5.9-.5z' },
           { id: 'mission', label: t('mission'), hint: t('missionHint'), icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18' },
           { id: 'church', label: t('churchMode'), hint: t('churchHint'), icon: 'M12 3v18M7 8h10M5 21h14' },
+          { id: 'israel', label: t('israel'), hint: t('israelHint'), icon: 'M12 2 4 7v10l8 5 8-5V7zM12 7l4 2.5v5L12 17l-4-2.5v-5z' },
           { id: 'compare', label: t('compareMode'), hint: t('compareIntro'), icon: 'M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z' },
         ],
       },

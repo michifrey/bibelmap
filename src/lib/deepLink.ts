@@ -39,6 +39,8 @@ export interface Route {
   gospel?: { act: string; station?: string; person?: string };
   /** Station der Heilsgeschichte: `#heilsgeschichte=exodus`. */
   history?: string;
+  /** Ereignis der Israel-Karte: `#israel=okt2023`. */
+  israel?: string;
   /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
   compare?: string;
   /**
@@ -156,6 +158,10 @@ export function parseHash(hash: string): Route | null {
       return args.length
         ? { view: 'map', mode: 'route', own: args.filter(Boolean) }
         : { view: 'map', mode: 'route' };
+    case 'israel':
+      return args[0]
+        ? { view: 'map', mode: 'israel', israel: args[0] }
+        : { view: 'map', mode: 'israel' };
     case 'vergleich':
       return args[0]
         ? { view: 'map', mode: 'compare', compare: args[0] }
@@ -209,6 +215,9 @@ export function formatRoute(route: Route): string {
     const { act, station, person } = route.gospel;
     if (person) return `#jesus=mensch,${person}`;
     return station ? `#jesus=${act},${station}` : `#jesus=${act}`;
+  }
+  if (mode === 'israel') {
+    return route.israel ? `#israel=${route.israel}` : '#israel';
   }
   if (mode === 'compare') {
     return route.compare ? `#vergleich=${route.compare}` : '#vergleich';

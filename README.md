@@ -148,6 +148,37 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   7 ökumenischen) auf der Karte; jede Person und jedes Konzil hat eine eigene
   Adresse (`#kirche=vater,augustinus`, `#kirche=konzil,chalcedon`). Paulus’ Reisen stehen nicht hier, sondern in
   *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
+- **Israel: Land, Staat, Konflikt** – eine Karte im Stil einer
+  Nachrichtensendung: unten eine Bauchbinde mit Jahr und Schlagzeile, darüber
+  die **Gebietsstände**, die sich mit dem Zeitstrahl ablösen – Mandat,
+  UN-Teilungsplan 1947, Waffenstillstandslinien 1949, nach 1967 mit Sinai,
+  nach der Rückgabe 1982, Oslo mit den Zonen A/B/C, und heute. Die
+  **Schraffur trägt die Aussage**: voll gefüllt ist Staatsgebiet, schräg
+  schraffiert besetztes, gekreuzt einseitig einbezogenes, gestreift
+  fremdverwaltetes, gepunktet zurückgegebenes, nur umrissen ein Plan, der nie
+  in Kraft trat. Konflikte bekommen ein Einschlagzeichen an ihrem Ort.
+  49 Ereignisse von der Landnahme bis zur Waffenruhe in Gaza im Oktober 2025 –
+  die biblischen Kriege (Samaria 722, Sanherib 701, Jerusalem 586) neben den
+  modernen (1948, 1956, 1967, 1973, 1982, die Gazakriege, 7. Oktober 2023,
+  der Libanon 2024, die zwölf Tage mit Iran 2025).
+
+  **Zu den Quellen.** Jedes Ereignis nennt mindestens eine – UN-Resolutionen im
+  Wortlaut, Gutachten des Internationalen Gerichtshofs, Vertragstexte, UN OCHA,
+  UNRWA, Yad Vashem, das British Museum für die Keilschriftzeugnisse, die
+  Bundeszentrale für politische Bildung, Reuters und die Tagesschau für das
+  Laufende. **Jede Zahl nennt die Stelle, die sie erhebt, und den Stand**, auf
+  den sie sich bezieht; wo eine Zahl umstritten ist, steht das dabei. Der
+  laufende Krieg ist in Bewegung, deshalb führt der Eintrag zusätzlich auf eine
+  Stelle, die fortlaufend zählt, statt die Zahl hier zum letzten Wort zu machen.
+
+  **Zur Benennung.** Wo zwei Namen im Gebrauch sind, stehen beide: 1948 heißt
+  Unabhängigkeitskrieg *und* Nakba, 1967 Sechstagekrieg *und* Juni-Krieg. Wer
+  nur einen der beiden Namen kennt, kennt nur eine der beiden Erinnerungen.
+  Linien heißen, was sie juristisch sind – die Linie von 1949 ist eine
+  Waffenstillstandslinie, keine Grenze, und das Abkommen sagt das selbst.
+  „Besetzt" ist der Begriff des Völkerrechts, kein Urteil. Die Karte sagt, was
+  wann geschah und wer es festhält – nicht, wer recht hat.
+
 - **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
   Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
   Bibel und Koran, aus jüdisch-christlich-biblischer Sicht; jede Gestalt hat
@@ -259,7 +290,7 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
   `#mission=modern`, `#lesen=Acts,13`, `#stammbaum=gebiete,juda,722`
   (ein Stamm auf der Stammeskarte in einem bestimmten Jahr; `zeit` und `baum`
-  sind die beiden anderen Reiter), `#nachweise`, `#hoeren=keller`
+  sind die beiden anderen Reiter), `#nachweise`, `#israel=okt2023`, `#hoeren=keller`
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
   (Jerusalem im Gelände), `#gelaende=reise,exodus` (der Auszug über dem
@@ -654,6 +685,27 @@ Genau daran hingen beim Einbau sechs Fehler: Jerusalem lag auf der falschen
 Seite der Grenze, Megiddo in Issachar statt Manasse, Kapernaum und Laisch
 außerhalb jedes Gebiets, Jafo genau auf einem Eckpunkt – und Tyrus mitten in
 Asser.
+
+### Israel-Karte: Belege
+
+`src/data/israel.ts` behauptet über sich, dass jedes Ereignis eine Quelle nennt
+und jede Zahl die Stelle, die sie erhebt, samt Stand. Eine Behauptung, die
+niemand nachprüft, hält nicht lange:
+
+```bash
+npm run check:israel
+```
+
+Geprüft werden Belege (jede Quellenkennung existiert, jede Zahl hat Quelle
+*und* Stand, und die Quelle einer Zahl steht auch in der Liste des Ereignisses,
+damit sie anklickbar ist), die zeitliche Reihenfolge, die Gebietsstände (jeder
+Verweis trifft einen, den es gibt; keiner bleibt ungezeigt), die Flächen
+(mindestens drei Punkte, alle im Kartenausschnitt), die Abschnitte und die
+Zweisprachigkeit – Umlaute im englischen Feld sind deutscher Text an der
+falschen Stelle.
+
+Beim Einbau fand die Prüfung zwei Stellen, an denen die Quelle einer Zahl nicht
+in der Quellenliste ihres Ereignisses stand: sichtbar war sie, anklickbar nicht.
 
 ### BibleProject-Guides
 
