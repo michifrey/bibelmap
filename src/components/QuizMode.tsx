@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
-import { attr, CARTO_ATTR } from '../lib/mapAttribution';
+import { addBasemap, basemapAttr } from '../lib/basemaps';
 import { flyOptions } from '../lib/motion';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';
@@ -20,7 +20,10 @@ interface Props {
 }
 
 const ROUNDS = 8;
-const TILES = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png';
+// Das Quiz braucht eine Karte OHNE Beschriftung – sonst steht die Antwort
+// darauf. Bis CARTO einen Schlüssel verlangte, war das `dark_nolabels`; jetzt
+// ist es das ebenfalls unbeschriftete Terrain Light von EOX.
+const TILES = 'relief' as const;
 
 /** Punkte nach Entfernung – nah dran zählt, auf den Meter genau muss niemand. */
 function scoreFor(km: number): number {
@@ -66,9 +69,7 @@ export default function QuizMode({ places, lang, onExit }: Props) {
       zoomControl: true,
       // Ohne Beschriftung – sonst steht die Antwort auf der Karte.
     });
-    const kacheln = L.tileLayer(TILES, {
-      subdomains: 'abcd',
-    }).addTo(map);
+    const kacheln = addBasemap(map, TILES);
     tileWatchRef.current = watchTiles(kacheln, map, lang);
     layerRef.current = L.layerGroup().addTo(map);
     map.on('click', (e: L.LeafletMouseEvent) => {
@@ -90,7 +91,7 @@ export default function QuizMode({ places, lang, onExit }: Props) {
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang, attr(CARTO_ATTR, lang));
+    return localizeMap(map, lang, basemapAttr(TILES, lang));
   }, [lang, level]);
 
   // Tipp auswerten, sobald er gesetzt ist

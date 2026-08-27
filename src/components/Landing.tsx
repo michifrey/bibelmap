@@ -254,7 +254,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
     { name: 'OpenBible.info', body: t('lSource1Body'), href: 'https://www.openbible.info/geo/' },
     { name: 'open-bibles', body: t('lSource2Body'), href: 'https://github.com/seven1m/open-bibles' },
     { name: 'historical-basemaps', body: t('lSource3Body'), href: 'https://github.com/aourednik/historical-basemaps' },
-    { name: 'OpenStreetMap & CARTO', body: t('lSource4Body'), href: 'https://www.openstreetmap.org/copyright' },
+    { name: 'OpenStreetMap', body: t('lSource4Body'), href: 'https://www.openstreetmap.org/copyright' },
   ];
 
   const nav: { label: string; target: LandingTarget }[] = [

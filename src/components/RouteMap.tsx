@@ -3,6 +3,7 @@ import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
 import { attr, ROUTEN_ATTR } from '../lib/mapAttribution';
+import { addBasemap } from '../lib/basemaps';
 import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions, useReducedMotion } from '../lib/motion';
@@ -34,7 +35,9 @@ interface Props {
   onSelect: (i: number) => void;
 }
 
-const TILES = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+// Die Kacheln kommen aus `lib/basemaps.ts` – eine Adresse für alle sieben
+// Karten, statt in jeder Datei eine eigene Kopie.
+const TILES = 'light' as const;
 
 function stopIcon(i: number, active: boolean, color: string): L.DivIcon {
   const size = active ? 26 : 16;
@@ -85,9 +88,7 @@ export default function RouteMap({
   useEffect(() => {
     if (!el.current || mapRef.current) return;
     const map = L.map(el.current, { center: [31.8, 35.2], zoom: 7, minZoom: 2, maxZoom: 13, worldCopyJump: true });
-    const kacheln = L.tileLayer(TILES, {
-      subdomains: 'abcd',
-    }).addTo(map);
+    const kacheln = addBasemap(map, TILES);
     tileWatchRef.current = watchTiles(kacheln, map, lang);
     mapRef.current = map;
     const offKeys = enableMarkerKeyboard(map.getContainer(), (el) => {

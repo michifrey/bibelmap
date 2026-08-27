@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
-import { attr, CARTO_ATTR } from '../lib/mapAttribution';
+import { addBasemap, basemapAttr } from '../lib/basemaps';
 import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
@@ -39,7 +39,9 @@ interface Props {
   onSelect: (id: string) => void;
 }
 
-const CARTO = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+// Die Kacheln kommen aus `lib/basemaps.ts` – eine Adresse für alle sieben
+// Karten, statt in jeder Datei eine eigene Kopie.
+const TILES = 'light' as const;
 
 /**
  * Bogen zwischen zwei Punkten (quadratische Bézier-Kurve). Bögen lesen sich auf
@@ -103,9 +105,7 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
       worldCopyJump: true,
       zoomControl: true,
     });
-    const kacheln = L.tileLayer(CARTO, {
-      subdomains: 'abcd',
-    }).addTo(map);
+    const kacheln = addBasemap(map, TILES);
     tileWatchRef.current = watchTiles(kacheln, map, lang);
     layerRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
@@ -128,7 +128,7 @@ export default function MissionMap({ markers, routes, fit, focus, onSelect }: Pr
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang, attr(CARTO_ATTR, lang));
+    return localizeMap(map, lang, basemapAttr(TILES, lang));
   }, [lang]);
 
   // Routen, Bögen und Punkte neu zeichnen

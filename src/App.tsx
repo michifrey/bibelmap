@@ -11,7 +11,8 @@ import {
   placeName,
 } from './lib/places';
 import { ERAS, ERA_BY_ID } from './data/eras';
-import MapView, { type BasemapId } from './components/MapView';
+import MapView from './components/MapView';
+import { DEFAULT_BASEMAP, fallbackFor, type BasemapId } from './lib/basemaps';
 import Header, { type Mode, type View } from './components/Header';
 import SkipLinks from './components/SkipLinks';
 import { JOURNEY_BY_ID } from './data/journeys';
@@ -151,7 +152,7 @@ export default function App() {
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
   const [mode, setMode] = useState<Mode | null>(INITIAL_ROUTE?.mode ?? null);
-  const [basemap, setBasemap] = useState<BasemapId>('dark');
+  const [basemap, setBasemap] = useState<BasemapId>(DEFAULT_BASEMAP);
   /** Welcher Kartenstil ausgefallen ist – und ob es ein Ausweichen gab. */
   const [tileNotice, setTileNotice] = useState<{ id: BasemapId; fellBack: boolean } | null>(null);
   const [view, setView] = useState<View>(INITIAL_ROUTE?.view ?? 'map');
@@ -223,15 +224,19 @@ export default function App() {
    * Ein fremder Kachelserver antwortet nicht: zurück auf die Karte, die aus
    * der eigenen Ecke kommt – und ein Wort dazu, damit niemand die leere
    * Fläche für einen Fehler der App hält.
+   *
+   * Worauf ausgewichen wird, entscheidet `fallbackFor` am Rechnernamen und
+   * nicht mehr eine Kennung hier: Seit die Nachtkarte aus derselben
+   * OpenStreetMap-Kachel gerechnet wird wie die helle, wäre ein Wechsel
+   * zwischen den beiden kein Ausweichen, sondern derselbe Fehler in anderer
+   * Farbe.
    */
   function handleTilesUnavailable(id: BasemapId) {
     // Wer den Stil längst gewechselt hat, braucht die Nachricht nicht mehr.
     if (basemap !== id) return;
-    // Fällt die Nachtkarte selbst aus, ist nicht ein Anbieter stumm, sondern
-    // das Netz – dann gibt es nichts, worauf man ausweichen könnte.
-    const fellBack = id !== 'dark';
-    if (fellBack) setBasemap('dark');
-    setTileNotice({ id, fellBack });
+    const ersatz = fallbackFor(id);
+    if (ersatz) setBasemap(ersatz);
+    setTileNotice({ id, fellBack: ersatz !== null });
   }
 
   /** Der Server ist zurück – der Hinweis darf gehen. */

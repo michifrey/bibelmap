@@ -59,8 +59,8 @@ const STRINGS: Dict = {
     en: 'The number gives the mentions, the dots the eras in which the place appears. The span names the first and the last book in canonical order – not every book between: Jerusalem appears in 37 of them. 57 places carry no mention; they are in the data because other places refer to them.',
   },
   landingCredits: {
-    de: 'Orte © OpenBible.info, CC-BY 4.0 · Grenzen © historical-basemaps, GPL-3.0 · Kacheln © OpenStreetMap, © CARTO',
-    en: 'Places © OpenBible.info, CC-BY 4.0 · Borders © historical-basemaps, GPL-3.0 · Tiles © OpenStreetMap, © CARTO',
+    de: 'Orte © OpenBible.info, CC-BY 4.0 · Grenzen © historical-basemaps, GPL-3.0 · Kacheln © OpenStreetMap-Mitwirkende, ODbL',
+    en: 'Places © OpenBible.info, CC-BY 4.0 · Borders © historical-basemaps, GPL-3.0 · Tiles © OpenStreetMap contributors, ODbL',
   },
   alongTitle: { de: 'Was lag am Weg?', en: 'What lay along the way?' },
   alongShow: { de: 'Orte am Weg', en: 'Places along the way' },
@@ -230,6 +230,7 @@ const STRINGS: Dict = {
     en: 'Type to search · ↑ ↓ ← → to move · Enter opens · Esc closes',
   },
   modes: { de: 'Modi', en: 'Modes' },
+  basemap: { de: 'Grundkarte', en: 'Base map' },
   basemapDark: { de: 'Nachtkarte', en: 'Night map' },
   basemapLight: { de: 'Karte', en: 'Map' },
   basemapSatellite: { de: 'Satellit', en: 'Satellite' },

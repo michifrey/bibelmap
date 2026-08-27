@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
-import { attr } from '../lib/mapAttribution';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { GENO_GEO, type GeoKind } from '../data/genoGeo';
@@ -32,7 +31,7 @@ import {
   type Fate,
   type Phase,
 } from '../data/tribeHistory';
-import { BASEMAPS, type BasemapId } from './MapView';
+import { addBasemap, DEFAULT_BASEMAP, basemapAttr, type BasemapId } from '../lib/basemaps';
 import { flyOptions } from '../lib/motion';
 import { readableOnDark } from '../lib/contrast';
 import ShareLink from './ShareLink';
@@ -131,7 +130,7 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
   const [hover, setHover] = useState<string | null>(null);
   const [overlays, setOverlays] = useState<Record<Overlay, boolean>>({ people: false, person: false });
   const [cities, setCities] = useState(true);
-  const [basemap, setBasemap] = useState<BasemapId>('dark');
+  const [basemap, setBasemap] = useState<BasemapId>(DEFAULT_BASEMAP);
   // Phones only: the sheet folds down to its title so the plate can be seen.
   const [folded, setFolded] = useState(false);
   // Same on a phone for the map's own controls.
@@ -211,7 +210,7 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang, attr(BASEMAPS[basemap]?.attribution ?? BASEMAPS.dark.attribution, lang));
+    return localizeMap(map, lang, basemapAttr(basemap, lang));
   }, [lang, basemap]);
 
   // ---- basemap ------------------------------------------------------------
@@ -219,15 +218,12 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
     const map = mapRef.current;
     if (!map) return;
     tileRef.current?.remove();
-    const bm = BASEMAPS[basemap];
     tileWatchRef.current?.();
-    tileRef.current = L.tileLayer(bm.url, {
-      subdomains: bm.subdomains ?? 'abc',
-      maxZoom: 12,
-      maxNativeZoom: bm.maxZoom,
-      opacity: basemap === 'dark' ? 1 : 0.75,
-    }).addTo(map);
-    tileRef.current.getContainer()?.style.setProperty('filter', basemap === 'dark' ? 'none' : 'saturate(.65)');
+    tileRef.current?.remove();
+    // Die Kachel selbst tritt zurück: auf ihr liegen dreizehn Flächen und ihre
+    // Namen, und die sind hier die Karte.
+    tileRef.current = addBasemap(map, basemap, { maxZoom: 12 });
+    tileRef.current.setOpacity(0.8);
     tileWatchRef.current = watchTiles(tileRef.current, map, lang);
   }, [basemap]);
 

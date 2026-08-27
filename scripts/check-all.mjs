@@ -26,6 +26,7 @@ const CHECKS = [
   { name: 'Farbkontraste', script: 'check-contrast.mjs' },
   { name: 'Jesus-Sektion', script: 'check-gospel.mjs', ts: true },
   { name: 'Israel-Karte', script: 'check-israel.mjs', ts: true },
+  { name: 'Kachelquellen', script: 'check-tiles.mjs' },
   // Liest den echten Code statt einer Nachbildung und braucht dafür Node mit
   // TypeScript und den Auflöser aus scripts/lib.
   { name: 'Quizfragen', script: 'check-quiz.mjs', ts: true },
