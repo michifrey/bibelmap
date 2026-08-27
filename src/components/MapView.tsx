@@ -2,7 +2,11 @@ import { useEffect, useRef } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
-import { attr, CARTO_ATTR, ORTE_ATTR } from '../lib/mapAttribution';
+import { BASEMAPS, basemapAttr, DEFAULT_BASEMAP, type BasemapId } from '../lib/basemaps';
+
+// Die Kachelquellen wohnen jetzt in `lib/basemaps.ts`; hier stehen sie nur
+// weiter zur Verfügung, damit die bestehenden Importe gelten.
+export { BASEMAPS, type BasemapId };
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import 'leaflet.markercluster';
@@ -38,75 +42,6 @@ interface Props {
    */
   newIds?: Set<string> | null;
 }
-
-export type BasemapId = 'dark' | 'light' | 'satellite' | 'relief' | 'antique';
-
-export interface Basemap {
-  url: string;
-  attribution: { de: string; en: string };
-  maxZoom: number;
-  maxNativeZoom?: number;
-  subdomains?: string;
-  dark?: boolean;
-}
-
-const OB = ORTE_ATTR;
-
-export const BASEMAPS: Record<BasemapId, Basemap> = {
-  // The default. A light basemap under a dark shell reads as two designs
-  // stacked on each other; the era colours also only sing against dark.
-  dark: {
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution: CARTO_ATTR,
-    maxZoom: 17,
-    subdomains: 'abcd',
-    dark: true,
-  },
-  light: {
-    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    attribution: CARTO_ATTR,
-    maxZoom: 19,
-    subdomains: 'abcd',
-  },
-  // Satellit und Relief kommen von EOX (maps.eox.at), nicht mehr von Esri:
-  // beide unter CC-BY 4.0 frei nutzbar, beide ohne Beschriftung – und damit
-  // ohne die Nutzungsbedingungen, die Esri für Karten außerhalb eines
-  // ArcGIS-Kontos verlangt. Die WMTS-Adresse ist RESTful und zählt Zeile vor
-  // Spalte: .../default/g/{z}/{y}/{x}.jpg.
-  satellite: {
-    url: 'https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg',
-    attribution: {
-      de: `Sentinel-2 cloudless 2020 &copy; <a href="https://s2maps.eu">EOX IT Services</a> (modifizierte Copernicus-Sentinel-Daten 2020, CC-BY) ${OB.de}`,
-      en: `Sentinel-2 cloudless 2020 &copy; <a href="https://s2maps.eu">EOX IT Services</a> (modified Copernicus Sentinel data 2020, CC-BY) ${OB.en}`,
-    },
-    // Die Aufnahmen lösen 10 m auf – ab Stufe 14 wird vergrößert statt
-    // nachgeladen, sonst liefe die Karte in leere Kacheln.
-    maxZoom: 18,
-    maxNativeZoom: 14,
-    subdomains: '',
-    dark: true,
-  },
-  relief: {
-    url: 'https://tiles.maps.eox.at/wmts/1.0.0/terrain-light_3857/default/g/{z}/{y}/{x}.jpg',
-    attribution: {
-      de: `Terrain Light &copy; <a href="https://maps.eox.at">EOX</a> · Daten: OpenStreetMap-Mitwirkende, SRTM, Natural Earth (CC-BY) ${OB.de}`,
-      en: `Terrain Light &copy; <a href="https://maps.eox.at">EOX</a> · Data: OpenStreetMap contributors, SRTM, Natural Earth (CC-BY) ${OB.en}`,
-    },
-    maxZoom: 14,
-    maxNativeZoom: 12,
-    subdomains: '',
-  },
-  antique: {
-    // Digital Atlas of the Roman Empire (DARE / "Imperium"), Univ. of Gothenburg.
-    url: 'https://dh.gu.se/tiles/imperium/{z}/{x}/{y}.png',
-    attribution: {
-      de: `Historische Karte &copy; <a href="https://imperium.ahlfeldt.se/">DARE</a> (Univ. Göteborg, CC-BY) ${OB.de}`,
-      en: `Historical map &copy; <a href="https://imperium.ahlfeldt.se/">DARE</a> (Univ. of Gothenburg, CC-BY) ${OB.en}`,
-    },
-    maxZoom: 14,
-    maxNativeZoom: 11,
-  },
-};
 
 function primaryEraColor(p: Place): string {
   const eras = erasForPlace(p);
@@ -222,17 +157,17 @@ export default function MapView({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang, attr(BASEMAPS[basemap]?.attribution ?? BASEMAPS.dark.attribution, lang));
+    return localizeMap(map, lang, basemapAttr(basemap, lang));
   }, [lang, basemap]);
 
   // basemap tile layer (swappable)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    const bm = BASEMAPS[basemap] ?? BASEMAPS.dark;
+    const bm = BASEMAPS[basemap] ?? BASEMAPS[DEFAULT_BASEMAP];
     if (tileRef.current) map.removeLayer(tileRef.current);
     const layer = L.tileLayer(bm.url, {
-      subdomains: bm.subdomains ?? 'abc',
+      subdomains: bm.subdomains ?? '',
       maxZoom: bm.maxZoom,
       maxNativeZoom: bm.maxNativeZoom ?? bm.maxZoom,
     });
@@ -248,6 +183,7 @@ export default function MapView({
     let reported = false;
     const onLoad = () => {
       failures = 0;
+      if (!bm.dark) map.getContainer().classList.add('bm-light-tiles');
       if (!reported) return;
       reported = false;
       onTilesRecoveredRef.current?.(basemap);
@@ -273,8 +209,9 @@ export default function MapView({
       : watchTiles(layer, map, langRef.current);
     tileRef.current = layer;
     tileRef.current.setZIndex(0);
-    const c = map.getContainer();
-    c.classList.toggle('bm-dark', !!bm.dark);
+    layer.getContainer()?.style.setProperty('filter', bm.filter ?? 'none');
+    // Erst wenn eine helle Kachel wirklich ankommt – siehe `addBasemap`.
+    map.getContainer().classList.remove('bm-light-tiles');
     // Ohne Abmelden feuern die noch laufenden Kachelabrufe einer längst
     // abgelegten Ebene weiter – und melden einen Stil, den niemand mehr sieht.
     return () => {

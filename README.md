@@ -49,13 +49,16 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Damaskus aramäisch.
 - **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
   robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
-- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit**
+- **Kartenmaterial umschaltbar** – **helle Karte** (OpenStreetMap; die Vorgabe),
+  **Nachtkarte** (dieselbe Kachel, im Browser umgerechnet), **Satellit**
   (Sentinel-2 cloudless von EOX – ein wolkenfreies Mosaik aus einem Jahr
   Copernicus-Aufnahmen, 10 m je Bildpunkt) und **Relief/„historisch"**
   (Terrain Light von EOX). Beide stehen unter CC-BY 4.0; die früheren
   Esri-Kacheln verlangten außerhalb eines ArcGIS-Kontos einen Vertrag.
-  Antwortet ein fremder Kachelserver nicht, fällt die Karte auf die Nachtkarte
-  zurück und sagt, warum – statt eine leere Fläche zu zeigen. **Das sagt jetzt
+  Antwortet ein fremder Kachelserver nicht, weicht die Karte auf die Vorgabe
+  aus und sagt, warum – statt eine leere Fläche zu zeigen. Kommt der stumme
+  Server vom selben Rechner wie die Vorgabe, gibt es nichts, worauf man
+  ausweichen könnte; dann bleibt es beim Hinweis. **Das sagt jetzt
   jede Karte**, nicht nur die erste: Reisen, Mission, Quiz, Kirchengeschichte,
   Vergleich, Heilsgeschichte, Eigener Weg, Entdeckermodus und die Stammeskarte.
   Vorher war der einzige Hinweis der der Hauptkarte – im Vollbild-Modus lag er
@@ -178,6 +181,12 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Waffenstillstandslinie, keine Grenze, und das Abkommen sagt das selbst.
   „Besetzt" ist der Begriff des Völkerrechts, kein Urteil. Die Karte sagt, was
   wann geschah und wer es festhält – nicht, wer recht hat.
+
+  **Der Untergrund ist wählbar.** Dieselben fünf Grundkarten wie auf der
+  Hauptkarte – Karte, Nachtkarte, Satellit, Relief, Antike Welt –, auf dem
+  Rechner in der Kopfzeile, auf dem Telefon in der Legende. Wer die
+  Waffenstillstandslinie von 1949 im Gelände lesen will, legt sie aufs Relief;
+  wer 63 v. Chr. sucht, auf die antike Welt.
 
 - **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
   Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
@@ -912,7 +921,29 @@ aushebeln.
 ## Technik
 
 Vite · React · TypeScript · Tailwind CSS · Leaflet (+ markercluster, heat) ·
-CARTO/OpenStreetMap-Kartenkacheln.
+OpenStreetMap-Kartenkacheln.
+
+**Kacheln ohne Schlüssel.** Im August 2026 fing CARTO an, für seine Kachel-
+server einen API-Schlüssel zu verlangen; über Nacht antwortete jede der sieben
+Karten dieser App mit „API key required" und blieb leer. Der Grund, warum das
+so weh tat, stand im eigenen Quelltext: dieselbe Adresse lag in fünf Dateien.
+Sie steht jetzt an einer Stelle – `src/lib/basemaps.ts` –, und jede Karte holt
+sie sich dort mit `addBasemap()`. Die nächste Quelle, die dichtmacht, ist eine
+Zeile.
+
+Gewählt sind ausschließlich **schlüsselfreie** Quellen. Für die helle Karte ist
+das der Kachelserver der OpenStreetMap Foundation; er ist an deren
+[Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/)
+gebunden, die Projekte dieser Größenordnung erlaubt, aber schweren Verkehr
+untersagt – wächst die Seite über ein Hobbyprojekt hinaus, gehört hier ein
+eigener oder bezahlter Kachelserver hin.
+
+Eine dunkle Rasterkarte ohne Schlüssel gibt es nicht mehr – CARTO, Stadia und
+Esri verlangen alle einen. Die **Nachtkarte** ist deshalb dieselbe helle
+Kachel, im Browser umgerechnet: `invert(1)` macht aus hellem Land dunkles,
+`hue-rotate(185deg)` dreht die dabei verdrehten Farbtöne zurück, so dass Wasser
+wieder blau ist und Wald wieder grün. Das ist ein Zugeständnis und sieht nicht
+so gut aus wie eine gezeichnete Nachtkarte; es kostet dafür kein Konto.
 
 **Schriften im Haus.** Montserrat und Fraunces werden nicht von Google Fonts
 geladen, sondern liegen als variable Schriften (`woff2`, Teilmengen latin und
@@ -946,7 +977,7 @@ entfernt, ist an diese Wahl nicht mehr gebunden.
 - Bibeltext: Lutherbibel 1912 & World English Bible (gemeinfrei), aufbereitet in
   [seven1m/open-bibles](https://github.com/seven1m/open-bibles) (MIT)
 - Reichsgrenzen: [aourednik/historical-basemaps](https://github.com/aourednik/historical-basemaps) (GPL-3.0)
-- Kartenkacheln: © OpenStreetMap-Mitwirkende, © CARTO; Satellit
+- Kartenkacheln: © OpenStreetMap-Mitwirkende (ODbL); Satellit
   © [Sentinel-2 cloudless 2020](https://s2maps.eu/) (EOX IT Services, modifizierte
   Copernicus-Sentinel-Daten 2020, CC-BY 4.0); Relief © [Terrain Light](https://maps.eox.at/)
   (EOX, CC-BY 4.0); „Antike Welt“

@@ -508,6 +508,62 @@ body {
   overflow: hidden;
 }
 
+/* ------------------------------------------------------------------ */
+/* Helle Kacheln                                                       */
+/*                                                                     */
+/* Die App zeichnet ihre eigenen Namen auf die Karte – Stämme, Städte,  */
+/* Länder, Gewässer, Reiche. Alle waren für den dunklen Untergrund      */
+/* gemacht: weiß mit dunklem Schein. Seit die helle Karte die Vorgabe   */
+/* ist, wären sie darauf unsichtbar. `bm-light-tiles` am Behälter       */
+/* dreht sie um – dunkle Schrift mit hellem Schein –, und zwar an einer */
+/* Stelle für alle sieben Karten.                                       */
+/* ------------------------------------------------------------------ */
+.bm-light-tiles .bm-tribe-label,
+.bm-light-tiles .bm-polity-label {
+  color: #10201f;
+  text-shadow:
+    0 0 3px rgba(255, 255, 255, 0.98),
+    0 0 7px rgba(255, 255, 255, 0.9),
+    0 0 14px rgba(255, 255, 255, 0.75);
+}
+.bm-light-tiles .bm-tribe-label.is-on {
+  filter: brightness(0.75) saturate(1.4);
+}
+.bm-light-tiles .bm-water-label {
+  color: #1d5f7a;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.95);
+}
+.bm-light-tiles .bm-country-label {
+  color: rgba(16, 32, 31, 0.55);
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 12px rgba(255, 255, 255, 0.8);
+}
+.bm-light-tiles .bm-city {
+  color: rgba(16, 32, 31, 0.85);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.98), 0 0 10px rgba(255, 255, 255, 0.85);
+}
+.bm-light-tiles .bm-city i {
+  background: rgba(16, 32, 31, 0.6);
+}
+/* Die großen Städtenamen brauchen eine eigene Zeile, keine geerbte:
+   `.bm-city.is-big` weiter unten wiegt genauso schwer wie
+   `.bm-light-tiles .bm-city` und steht später – ohne diese Regel gewann sein
+   Weiß, und Tel Aviv, Gaza und Jerusalem standen weiß auf heller Kachel. */
+.bm-light-tiles .bm-city.is-big {
+  color: #10201f;
+}
+.bm-light-tiles .bm-city.is-big i {
+  background: #10201f;
+}
+.bm-light-tiles .bm-exile-label {
+  color: #8a5a12;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.95);
+}
+/* Der Punkt, der ein Einschlagzeichen trägt, braucht auf hellem Grund
+   einen hellen Ring statt eines dunklen. */
+.bm-light-tiles .bm-impact {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 0 14px var(--c, #e0a449);
+}
+
 /* ---- Israel: die Karte im Nachrichtenstil ---- */
 
 /* Die Bauchbinde. Eine Nachrichtensendung setzt sie unten über das Bild, mit

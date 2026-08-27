@@ -12,11 +12,11 @@ import {
   formatYear,
 } from '../data/israel';
 import { SNAPSHOT_BY_ID, snapshotForYear, PLACES, NEIGHBOURS, type Area } from '../data/israelGeo';
-import { BASEMAPS } from './MapView';
+import { addBasemap, BASEMAPS, DEFAULT_BASEMAP, basemapAttr, type BasemapId } from '../lib/basemaps';
+import { watchTiles } from '../lib/tileNotice';
 import { flyOptions } from '../lib/motion';
 import { readableOnDark } from '../lib/contrast';
 import { localizeMap } from '../lib/mapLocale';
-import { attr } from '../lib/mapAttribution';
 import { markVectorsDecorative } from '../lib/mapKeyboard';
 import ShareLink from './ShareLink';
 import { wikiUrl } from '../data/mission';
@@ -35,6 +35,15 @@ import { wikiUrl } from '../data/mission';
  * ist nicht rot: Der Gegenstand liefert die Dringlichkeit von selbst, die
  * Gestaltung muss sie nicht dazuerfinden.
  */
+
+/** Dieselben Namen wie im Kartenmenü der Hauptkarte. */
+const BASEMAP_LABEL: Record<BasemapId, 'basemapLight' | 'basemapDark' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'> = {
+  light: 'basemapLight',
+  dark: 'basemapDark',
+  satellite: 'basemapSatellite',
+  relief: 'basemapRelief',
+  antique: 'basemapAntique',
+};
 
 interface Props {
   lang: Lang;
@@ -135,6 +144,8 @@ export default function IsraelMode({ lang, onExit, initial, onNavigate }: Props)
   const start = initial && EVENT_BY_ID[initial] ? initial : EVENTS[EVENTS.length - 1].id;
   const [id, setId] = useState(start);
   const [legend, setLegend] = useState(false);
+  const [basemap, setBasemap] = useState<BasemapId>(DEFAULT_BASEMAP);
+  const tileRef = useRef<L.TileLayer | null>(null);
 
   const ev = EVENT_BY_ID[id] ?? EVENTS[0];
   const index = EVENTS.findIndex((e) => e.id === id);
@@ -168,9 +179,6 @@ export default function IsraelMode({ lang, onExit, initial, onNavigate }: Props)
     const map = L.map(elRef.current, { zoomControl: false, attributionControl: true, minZoom: 3 });
     map.fitBounds(HOME, { animate: false, ...pad() });
     L.control.zoom({ position: 'topright' }).addTo(map);
-    const bm = BASEMAPS.dark;
-    L.tileLayer(bm.url, { subdomains: bm.subdomains ?? 'abc', maxZoom: 12, maxNativeZoom: bm.maxZoom }).addTo(map);
-
     map.createPane('bmTerritory').style.zIndex = '410';
     map.createPane('bmImpact').style.zIndex = '620';
     map.getPane('bmImpact')!.style.pointerEvents = 'none';
@@ -214,8 +222,23 @@ export default function IsraelMode({ lang, onExit, initial, onNavigate }: Props)
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang, attr(BASEMAPS.dark.attribution, lang));
-  }, [lang]);
+    return localizeMap(map, lang, basemapAttr(basemap, lang));
+  }, [lang, basemap]);
+
+  // ---- Grundkarte, umschaltbar -------------------------------------------
+  // `watchTiles` sagt Bescheid, wenn von einem Server nichts kommt. Das war
+  // hier bisher die einzige der sieben Karten ohne diesen Hinweis – und mit
+  // dem Umschalter ist sie die, auf der man einen stummen Server überhaupt
+  // erst auswählen kann.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    tileRef.current?.remove();
+    const kacheln = addBasemap(map, basemap, { maxZoom: 12 });
+    kacheln.setZIndex(0);
+    tileRef.current = kacheln;
+    return watchTiles(kacheln, map, langRef.current);
+  }, [basemap]);
 
   // ---- Gebietsstand -------------------------------------------------------
   useEffect(() => {
@@ -321,6 +344,19 @@ export default function IsraelMode({ lang, onExit, initial, onNavigate }: Props)
           </h1>
         </div>
         <div className="pointer-events-auto flex items-center gap-1.5">
+          {/* Grundkarte: dieselben fünf wie überall sonst in der App. */}
+          <div className="bm-seg hidden bg-deepest/94 backdrop-blur sm:flex" role="group" aria-label={t('basemap')}>
+            {(Object.keys(BASEMAPS) as BasemapId[]).map((id) => (
+              <button
+                key={id}
+                onClick={() => setBasemap(id)}
+                className={basemap === id ? 'is-on' : ''}
+                aria-pressed={basemap === id}
+              >
+                {t(BASEMAP_LABEL[id])}
+              </button>
+            ))}
+          </div>
           <button onClick={() => setLegend((v) => !v)} aria-pressed={legend} className="bm-btn bm-btn-ghost bg-deepest/94 backdrop-blur">
             {t('israelLegend')}
           </button>
@@ -341,7 +377,24 @@ export default function IsraelMode({ lang, onExit, initial, onNavigate }: Props)
               </li>
             ))}
           </ul>
-          <p className="mt-2.5 border-t border-white/10 pt-2 text-[10.5px] leading-relaxed text-white/45">
+          <div className="mt-2.5 border-t border-white/10 pt-2 sm:hidden">
+            <div className="bm-eyebrow bm-eyebrow-dim mb-1.5">{t('basemap')}</div>
+            <div className="grid grid-cols-3 gap-px">
+              {(Object.keys(BASEMAPS) as BasemapId[]).map((id) => (
+                <button
+                  key={id}
+                  onClick={() => setBasemap(id)}
+                  aria-pressed={basemap === id}
+                  className={`truncate py-1 text-[10px] font-bold transition ${
+                    basemap === id ? 'bg-signal text-white' : 'bg-white/8 text-white/70'
+                  }`}
+                >
+                  {t(BASEMAP_LABEL[id])}
+                </button>
+              ))}
+            </div>
+          </div>
+          <p className="mt-2.5 border-t border-white/10 pt-2 text-[10.5px] leading-relaxed text-white/60">
             {t('israelGeoNote')}
           </p>
         </div>

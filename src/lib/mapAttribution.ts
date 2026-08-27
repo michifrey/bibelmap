@@ -10,13 +10,12 @@ import type { Lang } from '../i18n';
  *
  * Was hier übersetzt wird, sind unsere eigenen Worte: „Orte", „Routen",
  * „schematisch", „modifizierte Copernicus-Daten". Namen bleiben Namen –
- * OpenStreetMap, CARTO, EOX, DARE heißen in jeder Sprache so.
+ * OpenStreetMap, EOX, DARE heißen in jeder Sprache so.
  */
 
 type Zweisprachig = { de: string; en: string };
 
 const OSM = '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-const CARTO = '<a href="https://carto.com/attributions">CARTO</a>';
 const OPENBIBLE = '<a href="https://www.openbible.info/geo/">OpenBible.info</a>';
 
 /** Woher die Orte kommen – hängt an jeder Karte dieser App. */
@@ -25,10 +24,17 @@ export const ORTE_ATTR: Zweisprachig = {
   en: `· Places: ${OPENBIBLE} (CC-BY)`,
 };
 
-/** Die dunkle und die helle CARTO-Karte tragen dieselbe Zeile. */
-export const CARTO_ATTR: Zweisprachig = {
-  de: `&copy; ${OSM} &copy; ${CARTO} ${ORTE_ATTR.de}`,
-  en: `&copy; ${OSM} &copy; ${CARTO} ${ORTE_ATTR.en}`,
+/**
+ * Die Standardkarte. Bis August 2026 kamen die helle und die dunkle Karte von
+ * CARTO; seither verlangt deren Kachelserver einen Schlüssel und antwortet
+ * sonst mit „API key required" – über Nacht war jede der sieben Karten dieser
+ * App leer. Beide kommen jetzt direkt von OpenStreetMap, das ohne Schlüssel
+ * ausliefert. Die dunkle ist dieselbe Kachel, nur umgerechnet (siehe
+ * `basemaps.ts`) – ein zweiter Anbieter wäre ein zweites Abhängigkeitsrisiko.
+ */
+export const OSM_ATTR: Zweisprachig = {
+  de: `&copy; ${OSM}-Mitwirkende (ODbL) ${ORTE_ATTR.de}`,
+  en: `&copy; ${OSM} contributors (ODbL) ${ORTE_ATTR.en}`,
 };
 
 /**
@@ -37,13 +43,13 @@ export const CARTO_ATTR: Zweisprachig = {
  * jemand tatsächlich nahm.
  */
 export const ROUTEN_ATTR: Zweisprachig = {
-  de: `${CARTO_ATTR.de} · Routen: schematisch`,
-  en: `${CARTO_ATTR.en} · Routes: schematic`,
+  de: `${OSM_ATTR.de} · Routen: schematisch`,
+  en: `${OSM_ATTR.en} · Routes: schematic`,
 };
 
 export const KIRCHE_ATTR: Zweisprachig = {
-  de: '&copy; OpenStreetMap &copy; CARTO · Orte der Kirchenväter & Konzilien: schematisch',
-  en: '&copy; OpenStreetMap &copy; CARTO · Places of the church fathers & councils: schematic',
+  de: `&copy; ${OSM}-Mitwirkende (ODbL) · Orte der Kirchenväter & Konzilien: schematisch`,
+  en: `&copy; ${OSM} contributors (ODbL) · Places of the church fathers & councils: schematic`,
 };
 
 export function attr(zwei: Zweisprachig, lang: Lang): string {

@@ -3,6 +3,7 @@ import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
 import { attr, KIRCHE_ATTR } from '../lib/mapAttribution';
+import { addBasemap } from '../lib/basemaps';
 import { markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import type { Lang } from '../i18n';
@@ -30,7 +31,9 @@ type Tab = 'fathers' | 'councils';
 
 // The dark basemap, like every other map in the app. A light map inside this
 // dark shell read as two designs stacked on each other.
-const CARTO = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+// Die Kacheln kommen aus `lib/basemaps.ts` – eine Adresse für alle sieben
+// Karten, statt in jeder Datei eine eigene Kopie.
+const TILES = 'light' as const;
 
 export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenInTree, onOpenMission }: Props) {
   const t = useT();
@@ -57,9 +60,7 @@ export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenIn
   useEffect(() => {
     if (!mapEl.current || mapRef.current) return;
     const map = L.map(mapEl.current, { center: [38, 26], zoom: 5, minZoom: 3, maxZoom: 12, worldCopyJump: true });
-    const kacheln = L.tileLayer(CARTO, {
-      subdomains: 'abcd',
-    }).addTo(map);
+    const kacheln = addBasemap(map, TILES);
     tileWatchRef.current = watchTiles(kacheln, map, lang);
     overlayRef.current = L.layerGroup().addTo(map);
     mapRef.current = map;
