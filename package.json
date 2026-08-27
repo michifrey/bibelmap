@@ -11,6 +11,7 @@
     "build": "tsc --noEmit && vite build",
     "check": "node scripts/check-all.mjs",
     "check:aliases": "node scripts/check-aliases.mjs",
+    "check:church": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-church.mjs",
     "check:bp": "node scripts/check-bp-guides.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:gospel": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-gospel.mjs",

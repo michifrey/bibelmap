@@ -27,10 +27,11 @@ export interface Route {
    */
   media?: { source?: string; place?: string; ref?: { osis: string; chapter: number } };
   /**
-   * Reiter + Auswahl (Kirchengeschichte). `#kirche=vater,augustinus` und
-   * `#kirche=konzil,nicaea1`; ohne Angabe steht der Modus auf seinem Anfang.
+   * Reiter + Auswahl (Kirchengeschichte). `#kirche=zeit,thesen`,
+   * `#kirche=vater,augustinus` und `#kirche=konzil,nicaea1`; ohne Angabe steht
+   * der Modus auf seinem Anfang.
    */
-  church?: { tab: 'fathers' | 'councils'; id?: string };
+  church?: { tab: 'timeline' | 'fathers' | 'councils'; id?: string };
   /**
    * Akt und Station der Jesus-Sektion: `#jesus=passion,golgotha`. Ein Mensch
    * statt eines Akts steht als `#jesus=mensch,petrus` – die Akte heißen nie
@@ -168,7 +169,13 @@ export function parseHash(hash: string): Route | null {
         : { view: 'map', mode: 'compare' };
     case 'kirche': {
       if (!args[0]) return { view: 'map', mode: 'church' };
-      const tab = args[0] === 'konzil' ? ('councils' as const) : ('fathers' as const);
+      // „zeit" ist der Zeitstrahl, der Anfang dieses Modus. „vater" bleibt die
+      // Vorgabe für alles Unbekannte – alte Adressen ohne Reiter zeigten auf
+      // die Väterliste und sollen das weiter tun.
+      const tab =
+        args[0] === 'konzil' ? ('councils' as const)
+        : args[0] === 'zeit' ? ('timeline' as const)
+        : ('fathers' as const);
       return { view: 'map', mode: 'church', church: { tab, id: args[1] } };
     }
     case 'hoeren': {
@@ -231,7 +238,7 @@ export function formatRoute(route: Route): string {
   if (mode === 'church') {
     const c = route.church;
     if (!c) return '#kirche';
-    const key = c.tab === 'councils' ? 'konzil' : 'vater';
+    const key = c.tab === 'councils' ? 'konzil' : c.tab === 'timeline' ? 'zeit' : 'vater';
     return c.id ? `#kirche=${key},${c.id}` : '#kirche';
   }
   if (mode === 'media') {

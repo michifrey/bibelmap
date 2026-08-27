@@ -172,7 +172,7 @@ export default function App() {
   const ownHash = useRef<string>(window.location.hash);
   // Cross-links between the time tree and the church-history map (shared data).
   const [treeFocus, setTreeFocus] = useState<string | null>(null);
-  const [churchNav, setChurchNav] = useState<{ tab: 'fathers' | 'councils'; id?: string } | null>(
+  const [churchNav, setChurchNav] = useState<{ tab: 'timeline' | 'fathers' | 'councils'; id?: string } | null>(
     INITIAL_ROUTE?.church ?? null,
   );
   const [compareNav, setCompareNav] = useState<string | null>(INITIAL_ROUTE?.compare ?? null);
