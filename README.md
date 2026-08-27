@@ -146,11 +146,48 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   **Zeitraffer**: ein Jahresregler von 30 bis heute, die Karte füllt sich mit
   jedem Jahrhundert, die Phase wechselt von selbst mit (Tastatur ← / →). Jede Reisestation nennt Entfernung
   und Tagesmärsche zur vorigen, ein Klick auf *Auf Karte* springt zur Ortskarte.
-- **Kirchengeschichte-Modus** – **Kirchenväter** (westlich/lateinisch ·
-  östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
-  7 ökumenischen) auf der Karte; jede Person und jedes Konzil hat eine eigene
-  Adresse (`#kirche=vater,augustinus`, `#kirche=konzil,chalcedon`). Paulus’ Reisen stehen nicht hier, sondern in
-  *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
+- **Kirchengeschichte-Modus** – drei Reiter: **Zeitstrahl**, **Kirchenväter**
+  (westlich/lateinisch · östlich/griechisch · orientalisch) und die
+  **Konzilien**. Jeder Eintrag hat eine eigene Adresse (`#kirche=zeit,thesen`,
+  `#kirche=vater,augustinus`, `#kirche=konzil,chalcedon`). Paulus’ Reisen stehen
+  nicht hier, sondern in *Mission & Ausbreitung* – ein Link im Modus führt
+  hinüber.
+
+  **Der Zeitstrahl** führt **41 Ereignisse von Pfingsten bis heute** über die
+  sechs nachbiblischen Epochen – Apostolische Zeit, Kirchenväter, Mittelalter,
+  Reformation, Erweckung & Mission, Moderne. Unten eine Bauchbinde mit Jahr und
+  Schlagzeile, darüber die Karte, die zeigt, was **bis zu diesem Jahr** geschehen
+  ist: die Bewegung von Jerusalem nach Norden und Westen – und im letzten
+  Jahrhundert wieder nach Süden. Die Epochen sind **dieselben wie im Zeitbaum**
+  (`GEN_EPOCHS`), samt Farbe: Wer im Baum Luther anklickt, findet ihn auf der
+  Schiene in genau demselben Ton wieder. Siebzehn Ereignisse führen mit einem
+  Klick zur Person im Zeitbaum.
+
+  Vorher endete dieser Modus bei 787 – nicht aus einem Urteil, sondern aus einem
+  Datenmangel: Die Karte zog ihre Leute aus dem Zeitbaum, und dort trugen nur
+  die Kirchenväter Koordinaten. Hus, Luther, Calvin, Wesley und Bonhoeffer
+  standen längst im Baum, nur ohne Ort – und damit unsichtbar auf einer Karte.
+
+  **Die Konzilien sagen jetzt, wer sie zählt.** „Die ökumenischen Konzilien"
+  gibt es als *eine* Liste nicht: Rom zählt einundzwanzig, die Orthodoxie bleibt
+  bei den ersten sieben, die orientalischen Kirchen erkennen nur die ersten drei
+  an. Jedes Konzil trägt darum drei Punkte – einen je Tradition –, und man sieht
+  die Kirche die Liste hinunter auseinandergehen: drei Punkte bis 431, zwei ab
+  **Chalcedon 451**, einer ab **Laterankonzil IV 1215**. Wer stattdessen eine
+  glatte Liste hinschreibt, hat unbemerkt eine Seite gewählt und verkauft sie
+  als die gemeinsame.
+
+  **Zu den Quellen.** Dieselbe Regel wie bei der Israel-Karte, und aus demselben
+  Grund: Ein Modus, der Spaltungen erzählt – 451, 1054, 1517 –, redet über
+  Dinge, bei denen jede Seite ihre eigene Fassung hat. Jedes Ereignis nennt
+  darum mindestens eine Quelle, und sie steht unter dem Ereignis, nicht in einer
+  Liste am Ende: eine Angabe, die man erst suchen muss, belegt nichts.
+  Bevorzugt der Text selbst statt des Referats darüber – Konzilsakten, die
+  Kanones von Trient, die Barmer Erklärung im Wortlaut. `npm run check:church`
+  hält das fest, prüft auch, dass keine Quelle unbenutzt herumsteht, dass jedes
+  Band der Schiene Ereignisse trägt, dass jeder Sprung in den Zeitbaum eine
+  Person trifft – und dass Nicäa II das letzte von Ost und West gemeinsam
+  anerkannte Konzil bleibt.
 - **Israel: Land, Staat, Konflikt** – eine Karte im Stil einer
   Nachrichtensendung: unten eine Bauchbinde mit Jahr und Schlagzeile, darüber
   die **Gebietsstände**, die sich mit dem Zeitstrahl ablösen – Mandat,
