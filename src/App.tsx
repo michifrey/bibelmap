@@ -28,6 +28,7 @@ const Mission = lazy(() => import('./components/Mission'));
 const JourneyMode = lazy(() => import('./components/JourneyMode'));
 const Gospel = lazy(() => import('./components/Gospel'));
 const QuizMode = lazy(() => import('./components/QuizMode'));
+const IsraelMode = lazy(() => import('./components/IsraelMode'));
 const MediaMode = lazy(() => import('./components/MediaMode'));
 const OwnRoute = lazy(() => import('./components/OwnRoute'));
 const PlaceIndex = lazy(() => import('./components/PlaceIndex'));
@@ -174,6 +175,7 @@ export default function App() {
     INITIAL_ROUTE?.church ?? null,
   );
   const [compareNav, setCompareNav] = useState<string | null>(INITIAL_ROUTE?.compare ?? null);
+  const [israelNav, setIsraelNav] = useState<string | null>(INITIAL_ROUTE?.israel ?? null);
   const [historyNav, setHistoryNav] = useState<string | null>(INITIAL_ROUTE?.history ?? null);
   const [treeNav, setTreeNav] = useState(INITIAL_ROUTE?.tree ?? null);
   /*
@@ -302,6 +304,7 @@ export default function App() {
     }
     if (m === 'church') setChurchNav(null);
     if (m === 'compare') setCompareNav(null);
+    if (m === 'israel') setIsraelNav(null);
     if (m === 'media') setMediaNav(null);
     setMode(m);
   }
@@ -366,6 +369,7 @@ export default function App() {
           media: mediaNav ?? undefined,
           church: churchNav ?? undefined,
           compare: compareNav ?? undefined,
+          israel: israelNav ?? undefined,
           history: historyNav ?? undefined,
           own: mode === 'route' ? ownIds : undefined,
           tree: treeNav ?? undefined,
@@ -429,6 +433,7 @@ export default function App() {
       setMediaNav(route.media ?? null);
       setChurchNav(route.church ?? null);
       setCompareNav(route.compare ?? null);
+      setIsraelNav(route.israel ?? null);
       setHistoryNav(route.history ?? null);
       if (route.own?.length) setOwnIds(route.own);
       setTreeNav(route.tree ?? null);
@@ -1009,6 +1014,21 @@ export default function App() {
               />
               </Suspense>
             )}
+            {mode === 'israel' && (
+              <Suspense fallback={<ModeFallback />}>
+                <IsraelMode
+                  key={`israel-${navEpoch}`}
+                  lang={lang}
+                  initial={israelNav}
+                  onNavigate={setIsraelNav}
+                  onExit={() => {
+                    setMode(null);
+                    setIsraelNav(null);
+                  }}
+                />
+              </Suspense>
+            )}
+
             {mode === 'church' && (
               <Suspense fallback={<ModeFallback />}>
                 <ChurchMode

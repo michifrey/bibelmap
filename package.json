@@ -14,6 +14,7 @@
     "check:bp": "node scripts/check-bp-guides.mjs",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:gospel": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-gospel.mjs",
+    "check:israel": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-israel.mjs",
     "check:links": "node scripts/check-support-links.mjs",
     "check:sources": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-sources.mjs",
     "check:tribes": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-tribes.mjs",
