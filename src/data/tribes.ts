@@ -38,6 +38,23 @@ export interface TribePerson {
   node?: string;
 }
 
+/**
+ * Ein Eintrag der Chronik zu einem Stamm. `null` heißt hier nicht „noch nicht
+ * eingetragen", sondern **die Chronik führt ihn nicht** – und das ist selbst
+ * eine Aussage, die in der Oberfläche stehen bleiben soll, statt still zu
+ * fehlen. Sebulon und Dan haben kein Register, Gad und Asser keinen Fürsten.
+ */
+export interface Chronicles {
+  /** Das Geschlechterregister des Stammes in 1. Chronik – oder `null`. */
+  register: string | null;
+  /** Die Verse, die sagen, wo sie wohnten. Nicht jeder Stamm bekommt welche. */
+  dwelling?: string;
+  /** Der Fürst über den Stamm unter David, 1. Chronik 27,16-22 – oder `null`. */
+  prince: { de: string; en: string; ref: string } | null;
+  /** Ein Satz dazu, wo die Chronik etwas anderes sagt als Josua – oder schweigt. */
+  note: BiText;
+}
+
 export interface Tribe {
   /** Node id in `nationsTribes.ts`, so the map can open the family tree. */
   id: string;
@@ -65,6 +82,20 @@ export interface Tribe {
   meaning: BiText;
   /** Josua's allotment passage. */
   lot: string;
+  /**
+   * Was die Chronik über dieses Gebiet führt – der zweite Zeuge neben Josua.
+   *
+   * Josua erzählt die Verteilung: wer welches Los zog, wo die Grenze lief. Die
+   * Chronik erzählt sie nicht, sie **führt** sie – als Register, Jahrhunderte
+   * später aufgeschrieben, aus der Sicht der Rückkehrer aus Babel. Zwei
+   * verschiedene Arten von Text über dasselbe Land, und sie decken sich nicht
+   * überall. Genau das ist der Grund, beide zu zeigen.
+   *
+   * Alle Stellen sind gegen den Text in `public/data/text/1Chr.json` und
+   * `2Chr.json` gelesen, nicht aus dem Gedächtnis gesetzt; `check:tribes`
+   * prüft sie bei jedem Lauf nach.
+   */
+  chronicles: Chronicles;
   /** Jakob's blessing (1. Mose 49) and Mose's blessing (5. Mose 33). */
   blessing: string;
   mosesBlessing?: string;
@@ -136,6 +167,14 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Glücklich bin ich"', en: '"Happy am I"' },
     lot: 'Jos 19,24-31',
+    chronicles: {
+      register: '1Chr 7,30-40',
+      prince: null,
+      note: {
+        de: 'Ein Register hat Asser – aber unter Davids Fürsten fehlt er, zusammen mit Gad. Die Chronik zählt dort nur zwölf Namen und nennt Levi und Aaron getrennt.',
+        en: 'Asher has a register – but he is missing from David’s princes, together with Gad. The list there counts only twelve names and gives Levi and Aaron separately.',
+      },
+    },
     blessing: '1Mo 49,20',
     mosesBlessing: '5Mo 33,24-25',
     land: {
@@ -185,6 +224,14 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Ich habe gerungen"', en: '"I have wrestled"' },
     lot: 'Jos 19,32-39',
+    chronicles: {
+      register: '1Chr 7,13',
+      prince: { de: 'Jeremoth', en: 'Jeremoth', ref: '1Chr 27,19' },
+      note: {
+        de: 'Ein einziger Vers – vier Namen, kein Gebiet. Die Chronik gibt Naftali weniger Raum als jedem anderen Stamm im Norden.',
+        en: 'A single verse – four names, no territory. The Chronicler gives Naphtali less room than any other northern tribe.',
+      },
+    },
     blessing: '1Mo 49,21',
     mosesBlessing: '5Mo 33,23',
     land: {
@@ -236,6 +283,14 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Wohnung"', en: '"Dwelling"' },
     lot: 'Jos 19,10-16',
+    chronicles: {
+      register: null,
+      prince: { de: 'Jismaja', en: 'Ishmaiah', ref: '1Chr 27,19' },
+      note: {
+        de: 'Die Chronik führt Sebulon in keinem Register. Er steht in der Namensliste (1Chr 2,1), gibt Levitenstädte ab (1Chr 6,62), zieht mit David (1Chr 12,33) und hat einen Fürsten – ein Gebiet bekommt er nicht.',
+        en: 'The Chronicler keeps no register for Zebulun. He appears in the name list (1 Chr 2:1), gives up Levitical towns (6:62), marches with David (12:33) and has a prince – but no territory.',
+      },
+    },
     blessing: '1Mo 49,13',
     mosesBlessing: '5Mo 33,18-19',
     land: {
@@ -290,6 +345,14 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Lohn"', en: '"Reward"' },
     lot: 'Jos 19,17-23',
+    chronicles: {
+      register: '1Chr 7,1-5',
+      prince: { de: 'Omri', en: 'Omri', ref: '1Chr 27,18' },
+      note: {
+        de: 'Ein Wehrverzeichnis statt einer Landbeschreibung: die Chronik zählt Isaschars streitbare Männer, nicht seine Grenzen.',
+        en: 'A muster roll rather than a description of land: the Chronicler counts Issachar’s fighting men, not his borders.',
+      },
+    },
     blessing: '1Mo 49,14-15',
     mosesBlessing: '5Mo 33,18-19',
     land: {
@@ -349,6 +412,15 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Gott ließ mich vergessen"', en: '"God has made me forget"' },
     lot: 'Jos 17,7-13',
+    chronicles: {
+      register: '1Chr 7,14-19',
+      dwelling: '1Chr 7,29',
+      prince: { de: 'Joel', en: 'Joel', ref: '1Chr 27,20' },
+      note: {
+        de: 'Die Wohnorte stehen nicht bei Manasse, sondern im Abschnitt Ephraims: Bet-Schean, Taanach, Megiddo und Dor „an der Seite der Kinder Manasse“ (1Chr 7,29). Josua zählt dieselben Städte – und sagt dazu, dass Manasse sie nicht einnehmen konnte.',
+        en: 'The dwellings stand not under Manasseh but inside Ephraim’s section: Beth-shean, Taanach, Megiddo and Dor "beside the children of Manasseh" (1 Chr 7:29). Joshua names the same towns – and adds that Manasseh could not take them.',
+      },
+    },
     blessing: '1Mo 49,22-26',
     mosesBlessing: '5Mo 33,13-17',
     land: {
@@ -412,6 +484,15 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Fruchtbar im Land meines Elends"', en: '"Fruitful in the land of my affliction"' },
     lot: 'Jos 16',
+    chronicles: {
+      register: '1Chr 7,20-29',
+      dwelling: '1Chr 7,28-29',
+      prince: { de: 'Hosea', en: 'Hoshea', ref: '1Chr 27,20' },
+      note: {
+        de: 'Der einzige Nordstamm, dem die Chronik eine Wohnliste gibt: Bet-El, Naaran, Geser, Sichem und Aja mit ihren Ortschaften.',
+        en: 'The only northern tribe the Chronicler gives a list of dwellings: Bethel, Naaran, Gezer, Shechem and Ayyah with their villages.',
+      },
+    },
     blessing: '1Mo 49,22-26',
     mosesBlessing: '5Mo 33,13-17',
     land: {
@@ -461,6 +542,14 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Er hat Recht geschafft"', en: '"He has judged"' },
     lot: 'Jos 19,40-48',
+    chronicles: {
+      register: null,
+      prince: { de: 'Asareel', en: 'Azarel', ref: '1Chr 27,22' },
+      note: {
+        de: 'Wie Sebulon ohne Register. Dan steht in der Namensliste (1Chr 2,2), gibt Levitenstädte ab (1Chr 6,46) und hat einen Fürsten – seine Wanderung nach Norden, die Josua und Richter erzählen, erwähnt die Chronik nicht.',
+        en: 'Like Zebulun, without a register. Dan appears in the name list (1 Chr 2:2), gives up Levitical towns (6:46) and has a prince – the migration north that Joshua and Judges tell is absent from Chronicles.',
+      },
+    },
     blessing: '1Mo 49,16-18',
     mosesBlessing: '5Mo 33,22',
     land: {
@@ -532,6 +621,15 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Sohn der rechten Hand"', en: '"Son of the right hand"' },
     lot: 'Jos 18,11-28',
+    chronicles: {
+      register: '1Chr 7,6-12',
+      dwelling: '1Chr 8,1-40',
+      prince: { de: 'Jaesiel', en: 'Jaasiel', ref: '1Chr 27,21' },
+      note: {
+        de: 'Zweimal geführt: kurz in 1Chr 7,6-12 und noch einmal ausführlich in Kapitel 8, mit Sauls Haus und den Orten Geba, Ono, Lod und Ajalon. Nach der Reichsteilung bleibt Benjamin bei Juda (2Chr 11,12).',
+        en: 'Registered twice: briefly in 1 Chr 7:6-12 and again at length in chapter 8, with Saul’s house and the towns Geba, Ono, Lod and Aijalon. After the kingdom splits, Benjamin stays with Judah (2 Chr 11:12).',
+      },
+    },
     blessing: '1Mo 49,27',
     mosesBlessing: '5Mo 33,12',
     land: {
@@ -610,6 +708,15 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Ich will den HERRN preisen"', en: '"I will praise the LORD"' },
     lot: 'Jos 15',
+    chronicles: {
+      register: '1Chr 2,3-4,23',
+      dwelling: '1Chr 4,1-23',
+      prince: { de: 'Elihu', en: 'Elihu', ref: '1Chr 27,18' },
+      note: {
+        de: 'Das größte Register der Chronik – anderthalb Kapitel, ehe irgendein anderer Stamm drankommt, und darin Davids Linie. Rehabeam befestigt später die Städte in Juda und Benjamin (2Chr 11,5-12).',
+        en: 'The Chronicler’s largest register – a chapter and a half before any other tribe, and David’s line inside it. Rehoboam later fortifies the towns of Judah and Benjamin (2 Chr 11:5-12).',
+      },
+    },
     blessing: '1Mo 49,8-12',
     mosesBlessing: '5Mo 33,7',
     land: {
@@ -661,6 +768,15 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Der HERR hat gehört"', en: '"The LORD has heard"' },
     lot: 'Jos 19,1-9',
+    chronicles: {
+      register: '1Chr 4,24-43',
+      dwelling: '1Chr 4,28-33',
+      prince: { de: 'Sephatja', en: 'Shephatiah', ref: '1Chr 27,16' },
+      note: {
+        de: 'Beer-Scheba, Ziklag, Horma – und der Satz, sie hätten „ihr eigenes Geschlechtsregister" (1Chr 4,33). Dass dieses Gebiet in Judas Los liegt, sagt Josua 19,1, nicht die Chronik. Sie erzählt stattdessen zwei Auszüge unter Hiskia: nach Gedor und ins Gebirge Seir (1Chr 4,39-43).',
+        en: 'Beersheba, Ziklag, Hormah – and the remark that they had "their own genealogy" (1 Chr 4:33). That this land lies inside Judah’s lot is said by Joshua 19:1, not by the Chronicler. He tells instead of two departures under Hezekiah: to Gedor and to Mount Seir (1 Chr 4:39-43).',
+      },
+    },
     blessing: '1Mo 49,5-7',
     land: {
       de: 'Kein eigenes Gebiet, sondern „mitten im Erbteil Judas" (Jos 19,1): der Negev um Beerscheba mit seinen Brunnen. Jakobs Wort über Simeon und Levi ist kein Segen, sondern ein Urteil – „ich will sie zerteilen in Jakob" –, und genau so kommt es: Simeon geht in Juda auf, Levi wird über das ganze Land verteilt.',
@@ -705,6 +821,15 @@ export const TRIBES: Tribe[] = [
     side: 'east',
     meaning: { de: '„Seht, ein Sohn"', en: '"See, a son"' },
     lot: 'Jos 13,15-23',
+    chronicles: {
+      register: '1Chr 5,1-10',
+      dwelling: '1Chr 5,8-10',
+      prince: { de: 'Elieser', en: 'Eliezer', ref: '1Chr 27,16' },
+      note: {
+        de: 'Aroer, Nebo und Baal-Meon, ostwärts bis an die Wüste am Euphrat. Die Chronik erklärt hier auch, warum Ruben trotz Erstgeburt nicht das Erstgeburtsrecht hat (1Chr 5,1-2).',
+        en: 'Aroer, Nebo and Baal-meon, eastward to the desert at the Euphrates. Here the Chronicler also explains why Reuben, though firstborn, does not hold the birthright (1 Chr 5:1-2).',
+      },
+    },
     blessing: '1Mo 49,3-4',
     mosesBlessing: '5Mo 33,6',
     land: {
@@ -759,6 +884,15 @@ export const TRIBES: Tribe[] = [
     side: 'east',
     meaning: { de: '„Ein Glücksfall"', en: '"Good fortune"' },
     lot: 'Jos 13,24-28',
+    chronicles: {
+      register: '1Chr 5,11-17',
+      dwelling: '1Chr 5,11-16',
+      prince: null,
+      note: {
+        de: 'Im Land Basan bis gen Salcha, in Gilead und „in allen Fluren Sarons“. Einen Fürsten unter David bekommt Gad nicht – wie Asser fehlt er in 1Chr 27,16-22.',
+        en: 'In Bashan as far as Salecah, in Gilead and "in all the pasturelands of Sharon". Gad gets no prince under David – like Asher he is missing from 1 Chr 27:16-22.',
+      },
+    },
     blessing: '1Mo 49,19',
     mosesBlessing: '5Mo 33,20-21',
     land: {
@@ -808,6 +942,15 @@ export const TRIBES: Tribe[] = [
     side: 'east',
     meaning: { de: '„Gott ließ mich vergessen"', en: '"God has made me forget"' },
     lot: 'Jos 13,29-31',
+    chronicles: {
+      register: '1Chr 5,23-26',
+      dwelling: '1Chr 5,23',
+      prince: { de: 'Iddo', en: 'Iddo', ref: '1Chr 27,21' },
+      note: {
+        de: 'Von Basan bis an den Hermon. Dieser Abschnitt endet, wo die Ostgebiete enden: mit der Wegführung durch Assyrien (1Chr 5,26) – die Chronik nennt das Ende gleich beim Anfang.',
+        en: 'From Bashan to Hermon. This section ends where the eastern lands end: with the Assyrian deportation (1 Chr 5:26) – the Chronicler names the end alongside the beginning.',
+      },
+    },
     blessing: '1Mo 49,22-26',
     mosesBlessing: '5Mo 33,13-17',
     land: {
@@ -893,6 +1036,15 @@ export const TRIBES: Tribe[] = [
     side: 'west',
     meaning: { de: '„Nun wird er sich mir zuwenden"', en: '"Now he will be joined to me"' },
     lot: 'Jos 21',
+    chronicles: {
+      register: '1Chr 5,27-6,66',
+      dwelling: '1Chr 6,39-66',
+      prince: { de: 'Hasabja', en: 'Hashabiah', ref: '1Chr 27,17' },
+      note: {
+        de: 'Kein Los, aber die längste Ortsliste der Chronik: die Levitenstädte, aus jedem Stamm herausgelöst. Neben Levi steht ein zweiter Fürst für die Aaroniten – Zadok (1Chr 27,17).',
+        en: 'No allotment, but the Chronicler’s longest list of places: the Levitical towns, taken out of every tribe. Beside Levi stands a second prince for the Aaronites – Zadok (1 Chr 27:17).',
+      },
+    },
     blessing: '1Mo 49,5-7',
     mosesBlessing: '5Mo 33,8-11',
     land: {

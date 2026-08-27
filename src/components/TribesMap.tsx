@@ -564,6 +564,24 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
                 <div className="bm-eyebrow">{phaseYear(phase, lang)} · {phase.ref}</div>
                 <h2 className="font-display mt-1 text-[19px] leading-tight text-white">{name(phase)}</h2>
                 <p className="mt-1.5 text-[11.5px] leading-relaxed text-white/60">{name(phase.text)}</p>
+                {/*
+                  Derselbe Zeitraum, ein zweites Mal erzählt. Die Züge oben
+                  stehen bei Josua, den Richtern und den Königen; die Chronik
+                  sieht denselben Vorgang aus Juda und Jahrhunderte später.
+                  Der Balken links macht sichtbar, dass hier ein anderer Zeuge
+                  spricht – und wo er schweigt, steht auch das da.
+                */}
+                <div className="mt-2.5 border-l-2 border-gold/50 pl-2.5">
+                  <div className="bm-eyebrow bm-eyebrow-dim">
+                    {t('tribesChronicles')}
+                    {phase.chronicles.ref && (
+                      <span className="ml-1.5 font-semibold text-mint">{phase.chronicles.ref}</span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-[11.5px] leading-relaxed text-white/60">
+                    {name(phase.chronicles.text)}
+                  </p>
+                </div>
               </div>
               {phaseIdx > 0 ? (
                 <FateList
@@ -580,7 +598,7 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
                   <div key={m.id}>
                     <div className="sticky top-0 z-10 flex items-baseline gap-2 bg-deepest/95 px-4 py-1.5 backdrop-blur">
                       <span className="bm-eyebrow bm-eyebrow-dim">{name(m)}</span>
-                      <span className="text-[10px] text-white/30">{byMother.get(m.id)!.length}</span>
+                      <span className="text-[10px] text-white/55">{byMother.get(m.id)!.length}</span>
                     </div>
                     {byMother.get(m.id)!.map((tr) => (
                       <button
@@ -602,7 +620,7 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
                             {tr.polygon ? t(tr.side === 'east' ? 'tribesEast' : 'tribesWest') : t('tribesNoLand')}
                           </span>
                         </span>
-                        <span className="flex-none text-[10px] font-semibold text-white/35">{tr.lot}</span>
+                        <span className="flex-none text-[10px] font-semibold text-white/60">{tr.lot}</span>
                       </button>
                     ))}
                   </div>
@@ -755,7 +773,7 @@ function FateList({
           <div className="sticky top-0 z-10 flex items-baseline gap-2 bg-deepest/95 px-4 py-1.5 backdrop-blur">
             <span className="h-2.5 w-2.5 flex-none" style={{ background: FATE_COLOR[g.fate] }} />
             <span className="bm-eyebrow bm-eyebrow-dim">{name(FATE_LABEL[g.fate])}</span>
-            <span className="text-[10px] text-white/30">{g.ids.length}</span>
+            <span className="text-[10px] text-white/55">{g.ids.length}</span>
           </div>
           {g.ids.map((id) => (
             <button
@@ -860,6 +878,43 @@ function TribeCard({ tribe: tr, lang, phase, onBack, onOpenInTree, onFly, onSele
             </>
           )}
         </div>
+
+        {/*
+          Josua und die Chronik nebeneinander. Josua ERZÄHLT die Verteilung –
+          wer welches Los zog, wo die Grenze lief. Die Chronik FÜHRT sie: ein
+          Register, Jahrhunderte später aus der Sicht der Rückkehrer aus Babel
+          geschrieben. Wo sie schweigt, steht das da, statt still zu fehlen:
+          Sebulon und Dan haben kein Register, Gad und Asser keinen Fürsten.
+          Eine Leerstelle, die man sieht, ist eine Auskunft; eine, die man
+          nicht sieht, sieht aus wie ein Datenfehler.
+        */}
+        <div className="bm-eyebrow bm-eyebrow-dim mt-4 mb-1.5">{t('tribesChronicles')}</div>
+        <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[11.5px]">
+          <span className="text-white/40">{t('tribesRegister')}</span>
+          {tr.chronicles.register ? (
+            <span className="font-semibold text-mint">{tr.chronicles.register}</span>
+          ) : (
+            <span className="text-white/55">{t('tribesNoRegister')}</span>
+          )}
+          {tr.chronicles.dwelling && (
+            <>
+              <span className="text-white/40">{t('tribesDwelling')}</span>
+              <span className="font-semibold text-mint">{tr.chronicles.dwelling}</span>
+            </>
+          )}
+          <span className="text-white/40">{t('tribesPrince')}</span>
+          {tr.chronicles.prince ? (
+            <span>
+              <span className="font-semibold text-white/85">
+                {lang === 'de' ? tr.chronicles.prince.de : tr.chronicles.prince.en}
+              </span>{' '}
+              <span className="font-semibold text-mint">{tr.chronicles.prince.ref}</span>
+            </span>
+          ) : (
+            <span className="text-white/55">{t('tribesNoPrince')}</span>
+          )}
+        </div>
+        <p className="mt-2 text-[11.5px] leading-relaxed text-white/65">{name(tr.chronicles.note)}</p>
 
         {tr.cities.length > 0 && (
           <>
