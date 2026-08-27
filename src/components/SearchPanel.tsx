@@ -60,7 +60,7 @@ function Row({ p, onSelect, t }: { p: Place; onSelect: (p: Place) => void; t: (k
           <span className="truncate text-[15px] font-bold text-white">{placeName(p, lang)}</span>
           <EraDots place={p} />
         </span>
-        <span className="mt-0.5 block truncate text-[11px] text-white/45">
+        <span className="mt-0.5 block truncate text-[11px] text-white/60">
           {p.mentionCount === 1 ? t('mention') : t('mentions')}
           {p.types[0] ? ` · ${p.types[0]}` : ''}
         </span>
@@ -78,7 +78,7 @@ function StoryRow({ hit, onOpen }: { hit: SearchHit; onOpen: (h: SearchHit) => v
       <span className="h-8 w-1 flex-none" style={{ background: hit.color }} />
       <span className="min-w-0 flex-1">
         <span className="block truncate text-[14px] font-bold text-white">{hit.title}</span>
-        <span className="mt-0.5 block truncate text-[11px] text-white/45">{hit.subtitle}</span>
+        <span className="mt-0.5 block truncate text-[11px] text-white/60">{hit.subtitle}</span>
       </span>
       <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4 flex-none text-white/30 transition group-hover:text-gold" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9 5l7 7-7 7" />
@@ -138,7 +138,7 @@ export default function SearchPanel({
             </svg>
             <span className="min-w-0 flex-1">
               <span className="block truncate text-[15px] font-bold text-white">{refHit.label}</span>
-              <span className="mt-0.5 block truncate text-[11px] text-white/45">
+              <span className="mt-0.5 block truncate text-[11px] text-white/60">
                 {refHit.count} {refHit.count === 1 ? t('place') : t('places')} · {t('readChapter')}
               </span>
             </span>
