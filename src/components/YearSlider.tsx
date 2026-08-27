@@ -145,10 +145,10 @@ export default function YearSlider({
           </div>
 
           <div className="flex justify-between pb-1">
-            <span className="text-[10px] font-bold tracking-[0.16em] text-white/35">
+            <span className="text-[10px] font-bold tracking-[0.16em] text-white/60">
               {formatYear(YEAR_MIN, lang).toUpperCase()}
             </span>
-            <span className="text-[10px] font-bold tracking-[0.16em] text-white/35">
+            <span className="text-[10px] font-bold tracking-[0.16em] text-white/60">
               {formatYear(YEAR_MAX, lang).toUpperCase()}
             </span>
           </div>

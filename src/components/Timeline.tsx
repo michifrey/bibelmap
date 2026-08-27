@@ -41,7 +41,7 @@ export default function Timeline({
         </span>
       )}
       <div className="ml-auto flex items-center gap-2 sm:gap-3">
-        <span className="hidden text-[10.5px] text-white/40 sm:block">{t('timelineScaleHint')}</span>
+        <span className="hidden text-[10.5px] text-white/60 sm:block">{t('timelineScaleHint')}</span>
         {onCumulative && (
           <button
             onClick={onCumulative}
@@ -92,8 +92,8 @@ export default function Timeline({
       </div>
 
       <div className="flex justify-between pt-2">
-        <span className="text-[10px] font-bold tracking-[0.16em] text-white/35">2000 V. CHR.</span>
-        <span className="text-[10px] font-bold tracking-[0.16em] text-white/35">100 N. CHR.</span>
+        <span className="text-[10px] font-bold tracking-[0.16em] text-white/60">2000 V. CHR.</span>
+        <span className="text-[10px] font-bold tracking-[0.16em] text-white/60">100 N. CHR.</span>
       </div>
     </MapPanel>
   );

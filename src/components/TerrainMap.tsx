@@ -57,6 +57,20 @@ maplibregl.setWorkerUrl(`${import.meta.env.BASE_URL}vendor/maplibre/maplibre-gl-
 /** Die Reiseroute trägt die Farbe des Weges, nicht die der Orte. */
 const ROUTE_COLOR = '#e0a449';
 
+/**
+ * Die Zeile unter der Geländeansicht: Grundkarte und Höhendaten zusammen.
+ *
+ * Beide hingen vorher an ihren Quellen und gingen dort auf je eigene Weise
+ * verloren – die Grundkarte beim Kachelwechsel, die Höhen beim Sprachwechsel.
+ * Eine Stelle, ein Aufruf, kein Auseinanderlaufen.
+ */
+function nennungen(id: BasemapId, lang: Lang): string[] {
+  return [
+    attr(BASEMAPS[id]?.attribution ?? BASEMAPS[DEFAULT_BASEMAP].attribution, lang),
+    attr(DEM_ATTR, lang),
+  ];
+}
+
 /** Was aus der hellen Kachel eine dunkle macht – oder nichts, bei allen anderen. */
 function rasterPaint(id: BasemapId) {
   return BASEMAPS[id]?.filter ? { ...DARK_RASTER_PAINT } : {};
@@ -143,6 +157,8 @@ export default function TerrainMap({
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const popupRef = useRef<maplibregl.Popup | null>(null);
+  /** Das Attributions-Control – es trägt die Nennung der Grundkarte. */
+  const nennungRef = useRef<maplibregl.AttributionControl | null>(null);
   const reduced = useReducedMotion();
   const [ready, setReady] = useState(false);
   /** Wie stark das Gelände überzeichnet wird. 1 wäre wahr, aber flach. */
@@ -201,7 +217,12 @@ export default function TerrainMap({
             tiles: tileUrls(basemap),
             tileSize: 256,
             maxzoom: 17,
-            attribution: BASEMAPS[basemap] ? attr(BASEMAPS[basemap].attribution, lang) : '',
+            /*
+             * Bewusst LEER: Die Nennung der Grundkarte hängt am
+             * Attributions-Control, nicht an der Quelle – sonst überschreibt
+             * `load()` sie beim nächsten Kachelwechsel wieder. Siehe unten.
+             */
+            attribution: '',
           },
           dem: {
             type: 'raster-dem',
@@ -209,7 +230,14 @@ export default function TerrainMap({
             tileSize: 256,
             maxzoom: 13,
             encoding: 'terrarium',
-            attribution: attr(DEM_ATTR, lang),
+            /*
+             * Auch leer, und aus demselben Grund wie oben – hier kam es nur
+             * anders heraus: Die Höhenquelle wird nie neu geladen, also blieb
+             * ihre Zeile stehen, wie sie beim Aufbau gesetzt wurde. Auf
+             * Englisch stand darum weiter „Höhen: …" unter der Karte. Beide
+             * Nennungen hängen jetzt am Control und wechseln zusammen.
+             */
+            attribution: '',
           },
           places: { type: 'geojson', data: toGeoJSON(places, newIds) },
           route: { type: 'geojson', data: journeyGeoJSON(route).line },
@@ -283,7 +311,11 @@ export default function TerrainMap({
     });
 
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
-    map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-left');
+    nennungRef.current = new maplibregl.AttributionControl({
+      compact: true,
+      customAttribution: nennungen(basemap, lang),
+    });
+    map.addControl(nennungRef.current, 'bottom-left');
     map.touchZoomRotate.enableRotation();
 
     // Eine Karte, die still nichts anzeigt, ist schwerer zu finden als eine,
@@ -422,9 +454,29 @@ export default function TerrainMap({
     // Ansicht geöffnet wurde – und blieb stehen.
     // `attribution` steht in MapLibres Typen nicht, wird zur Laufzeit aber
     // genau von dort gelesen, wo die Zeile entsteht.
-    (src as unknown as { attribution?: string }).attribution =
-      BASEMAPS[basemap] ? attr(BASEMAPS[basemap].attribution, lang) : '';
     src.setTiles(tileUrls(basemap));
+    /*
+     * Die Zeile unter der Karte gehört zur Kachel, nicht zur Ansicht: Wer auf
+     * den Satelliten wechselt, muss EOX genannt bekommen und nicht weiter
+     * OpenStreetMap.
+     *
+     * Der Umweg über das Control hat einen Grund. Die Nennung an der Quelle zu
+     * setzen sieht richtig aus und hält nicht: `setTiles()` ruft intern
+     * `load()`, und das schreibt die Quelle aus ihren ursprünglichen Optionen
+     * neu, `attribution` eingeschlossen. Gemessen hieß das, der Satellit zeigte
+     * EOX-Kacheln und nannte weiter OpenStreetMap.
+     *
+     * `customAttribution` liest das Control nur beim Aufbau – also wird es
+     * ausgetauscht. Ein DOM-Knoten von der Größe einer Zeile; billiger, als an
+     * MapLibres privaten Feldern zu drehen, und es hält auch, wenn die
+     * Bibliothek ihre Innereien umbaut.
+     */
+    if (nennungRef.current) map.removeControl(nennungRef.current);
+    nennungRef.current = new maplibregl.AttributionControl({
+      compact: true,
+      customAttribution: nennungen(basemap, lang),
+    });
+    map.addControl(nennungRef.current, 'bottom-left');
     // Umkehren ist ein Regler, kein Zustand: ohne Zurückstellen zeigte der
     // Satellit nach der Nachtkarte ein Negativ.
     const paint = { ...PLAIN_RASTER_PAINT, ...rasterPaint(basemap) };
