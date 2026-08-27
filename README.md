@@ -211,6 +211,32 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Jona aus Gat-Hefer in Sebulon, Elia aus Tischbe in Gilead, Hanna aus dem
   Stamm Asser, Paulus aus Benjamin. Wen der Zeitbaum führt, den öffnet ein
   Klick dort. Jeder Ortsname führt außerdem auf seine Ortskarte.
+
+  **Zwei Zeugen, nicht einer.** Josua *erzählt* die Verteilung – wer welches Los
+  zog, wo die Grenze lief. Die Chronik *führt* sie: als Register, Jahrhunderte
+  später aus der Sicht der Rückkehrer aus Babel aufgeschrieben. Jeder Stamm
+  zeigt deshalb beides: das Los aus Josua und daneben, was **1. Chronik**
+  über ihn führt – sein Geschlechterregister, die Verse, die seine Wohnorte
+  nennen, und seinen **Fürsten unter David** (1. Chronik 27,16-22). Auch die
+  Zeitleiste bekommt zu jeder Phase die Chronik-Parallele, meist aus
+  **2. Chronik**: Rehabeams fünfzehn Festungsstädte „in Juda und Benjamin"
+  (2Chr 11,5-12), Abias Rückgewinn von Bet-El (2Chr 13,19), Hiskias Läufer, die
+  nach dem Fall Samarias noch „bis gen Sebulon" kommen (2Chr 30,10-11).
+
+  Wo die Chronik schweigt, steht das da, statt still zu fehlen: **Sebulon und
+  Dan haben kein Register** – sie stehen in der Namensliste, geben Levitenstädte
+  ab, ziehen mit David, bekommen aber kein Gebiet. **Gad und Asser haben keinen
+  Fürsten** – in 1. Chronik 27 fehlen sie. Und die **Richterzeit lässt die
+  Chronik ganz aus**. Eine Leerstelle, die man sieht, ist eine Auskunft; eine,
+  die man nicht sieht, sieht aus wie ein Datenfehler.
+
+  Alle diese Stellen sind gegen den Bibeltext im Haus gelesen, nicht aus dem
+  Gedächtnis gesetzt: `npm run check:tribes` schlägt jede nach, prüft, dass der
+  genannte Fürst wirklich in seinem Vers steht, dass jedes Zitat **wörtlich** so
+  dasteht – und dass jedes `null` stimmt, indem es selbst im Text nachsieht, wer
+  in 1. Chronik 2–8 ein Register und in 1. Chronik 27 einen Fürsten hat. Ohne
+  das Letzte wäre `null` bequem: Man setzte es, wo man nicht nachsehen mochte,
+  und die Oberfläche behauptete dann ruhig, die Chronik schweige.
   Dazu die Sonderfälle, die eine reine Loskarte
   verschweigt: **Levi** bekommt kein Land, sondern die sechs **Zufluchtsstädte**,
   und **Dan** hält sein Los nicht, sondern zieht ans Nordende des Landes.

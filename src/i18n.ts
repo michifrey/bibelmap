@@ -523,6 +523,19 @@ const STRINGS: Dict = {
   tribesBlessing: { de: 'Jakobs Segen', en: "Jacob's blessing" },
   tribesMoses: { de: 'Mose-Segen', en: "Moses' blessing" },
   tribesTowns: { de: 'Orte im Gebiet', en: 'Towns in the territory' },
+  // Die Chronik als zweiter Zeuge neben Josua – siehe `Chronicles` in tribes.ts.
+  tribesChronicles: { de: 'Was die Chronik führt', en: 'What Chronicles records' },
+  tribesRegister: { de: 'Register', en: 'Register' },
+  tribesDwelling: { de: 'Wohnorte', en: 'Dwellings' },
+  tribesPrince: { de: 'Fürst unter David', en: 'Prince under David' },
+  tribesNoRegister: {
+    de: 'Kein Register – die Chronik führt diesen Stamm nicht.',
+    en: 'No register – Chronicles keeps no record of this tribe.',
+  },
+  tribesNoPrince: {
+    de: 'Kein Fürst – in 1Chr 27,16-22 fehlt er.',
+    en: 'No prince – he is missing from 1 Chr 27:16-22.',
+  },
   tribesRefuge: { de: 'Zufluchtsstädte', en: 'Cities of refuge' },
   tribesFlyTo: { de: 'Auf der Karte zeigen', en: 'Show on the map' },
   tribesNeighbours: { de: 'Grenzt an', en: 'Borders on' },
