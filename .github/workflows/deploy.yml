@@ -38,6 +38,22 @@ jobs:
       # unter /bibelmap/. VITE_BASE bleibt als Notausgang in vite.config.ts.
       - name: Build
         run: npm run build
+      # Fotoscan liegt als eigenständige App unter apps/fotoscan und fährt als
+      # Unterpfad /fotoscan/ mit. Bewusst mit continue-on-error: Fotoscan ist
+      # hier zu Gast und darf die Karte nicht aus dem Netz nehmen. Schlägt der
+      # Bau fehl, ist das im Lauf sichtbar, die Karte geht trotzdem online.
+      - name: Fotoscan bauen
+        continue-on-error: true
+        working-directory: apps/fotoscan
+        run: npm ci && npm run build
+        env:
+          VITE_BASE: /fotoscan/
+          # Der Bau braucht keinen Browser; Playwright soll beim Installieren
+          # keine 150 MB nachladen.
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+      - name: Fotoscan übernehmen
+        continue-on-error: true
+        run: cp -r apps/fotoscan/dist dist/fotoscan
       - uses: actions/configure-pages@v5
         with:
           # Enable GitHub Pages (build type "GitHub Actions") on first run,

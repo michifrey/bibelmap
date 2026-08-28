@@ -79,6 +79,12 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
 
+  // Fotoscan liegt unter /fotoscan/ und bringt einen eigenen Service Worker
+  // mit. Dieser hier hält sich vollständig heraus: Ohne das legte der erste
+  // Aufruf von /fotoscan/ dessen Einstiegsseite unter './index.html' im Cache
+  // der Karte ab – und die Karte zeigte ohne Netz die falsche Anwendung.
+  if (url.origin === self.location.origin && url.pathname.startsWith('/fotoscan/')) return;
+
   // Seitenaufruf: erst das Netz, sonst der zuletzt gesehene Einstieg.
   if (request.mode === 'navigate') {
     event.respondWith(
