@@ -3,7 +3,7 @@ import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
 import { attr, ROUTEN_ATTR } from '../lib/mapAttribution';
-import { addBasemap } from '../lib/basemaps';
+import { addBasemap } from '../lib/basemapLayer';
 import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions, useReducedMotion } from '../lib/motion';

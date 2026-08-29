@@ -3,7 +3,7 @@ import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
 import { attr, KIRCHE_ATTR } from '../lib/mapAttribution';
-import { addBasemap } from '../lib/basemaps';
+import { addBasemap } from '../lib/basemapLayer';
 import { markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';
 import type { Lang } from '../i18n';

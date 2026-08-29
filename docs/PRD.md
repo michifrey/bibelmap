@@ -1324,8 +1324,13 @@ anzurühren.
 | Startbündel | 521,59 kB | **359,83 kB** |
 | gzip | 173,39 kB | **110,81 kB** |
 
-−162 kB roh, −63 kB gzip, **36 % weniger** auf dem kritischen Pfad. Die beiden
-Dateien sind jetzt eigene Bündel (`journeys` 106 kB, `mission` 56 kB).
+−162 kB roh, −63 kB gzip. Die beiden Dateien sind jetzt eigene Bündel
+(`journeys` 106 kB, `mission` 56 kB).
+
+*Nachtrag aus § 4.55:* „Startbündel" meinte hier eine einzelne Datei, nicht
+die Kette, die der Browser vor dem ersten Bild abarbeitet – die lag bei 720 kB
+und nach dieser Änderung bei 562. Die Ersparnis von 162 kB stimmt, der Nenner
+war zu klein.
 
 **Was das ausdrücklich *nicht* heißt.** Der erste Kommentar im Code behauptete
 „erst geladen, wenn jemand dorthin geht". Die Messung im Browser zeigte etwas
@@ -1409,7 +1414,62 @@ eine Station davon berührt wird, steht der Eintrag als Marke darunter.
 - [ ] **Offen:** Der Netzzugang der Arbeitsumgebung lässt bibleproject.com,
       bibletunes.de und thechosen.tv nicht durch. Die Adressen stammen aus der
       Websuche, `check:gospel-links` konnte sie noch nicht bestätigen.
-### 4.55 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.55 Die Startseite lud eine Karte, die sie nie zeigt — P1 ✅
+
+§ 4.53 hat 162 kB aus dem Startbündel geholt – **mit dem falschen Werkzeug
+gemessen**. Zeichenketten im fertigen Bündel zu suchen führt in die Irre:
+„passages" steht dort als Dateiname, nicht als Datei; drei meiner Proben waren
+Fehlalarme.
+
+**Erst die Sourcemaps geben eine Antwort.** `BIBELMAP_SOURCEMAP=1 npm run build`
+schreibt sie, ein kleines Skript rechnet die Segmente auf Quelldateien zurück –
+99 % zugeordnet. Damit stand zum ersten Mal da, woraus die Kette wirklich
+besteht. Und die Kette war größer als gedacht: nicht 360 kB, sondern **562 kB**,
+weil das HTML per `modulepreload` noch Leaflet (149 kB) mitzieht. Die Angabe in
+§ 4.53 meinte eine einzelne Datei und war als „erstes Bündel" zu großzügig.
+
+**Der Befund:** Leaflet 145 kB, `leaflet.markercluster` 35 kB, `leaflet.heat`
+3 kB und `tribes.ts` 28 kB lagen im kritischen Pfad – auf einer Startseite, die
+mit `if (atStart) return <Landing …>` früh zurückkehrt und **gar keine Karte
+zeigt**.
+
+Drei Schnitte:
+
+1. **`MapView` wird nachgeladen** wie jede andere Ansicht. Nimmt markercluster
+   und heat mit.
+2. **`basemaps.ts` in Katalog und Leaflet-Anbindung getrennt.** `App.tsx` las
+   daraus nur `DEFAULT_BASEMAP`, `fallbackFor` und einen Typ – und zog über den
+   einen Import `addBasemap` die ganze Bibliothek nach. `addBasemap` steht jetzt
+   in `src/lib/basemapLayer.ts`; die Kacheladressen bleiben in `basemaps.ts`,
+   weil `check:tiles` genau diese Datei liest.
+3. **`PlaceDetail` wird nachgeladen.** Es erscheint erst, wenn jemand einen Ort
+   anklickt, und zieht `tribes.ts` mit – 28 kB Stammesgebiete für eine Zeile
+   „liegt im Gebiet von".
+
+| | vorher | nachher |
+|---|---|---|
+| JavaScript beim Aufruf von `/` | 562 kB | **325 kB** |
+
+−237 kB, **42 %**. Was bleibt, ist kaum noch zu drücken: react-dom 174 kB,
+Übersetzungen 41 kB, Startseite 28 kB, App 20 kB.
+
+**Wieder gilt: das heißt nicht „wird nie geladen".** Der Vorabruf im Leerlauf
+holt alles nach, damit die App offline vollständig ist – gemessen kommen
+MapView und Leaflet nach gut einer Sekunde. Gewonnen ist, was **vor dem ersten
+Bild** geparst werden muss.
+
+**Akzeptanzkriterien**
+- [x] Erster Aufruf von `/`: 562 → 325 kB, aus `dist/index.html` gezählt.
+- [x] Die Karte funktioniert: `#karte` zeigt 147 Marker in einem
+      `.leaflet-container`, `#ort=a15257a` öffnet das Ortsfenster samt
+      Stammesgebiet, die Kartenebenen liegen an (36 Kacheln).
+- [x] Rundgang über 29 Ansichten × 2 Sprachen: kein Leerlauf, kein
+      `null`/`undefined` im Text, kein JavaScript-Fehler.
+- [x] `a11y-audit` und `check-i18n` weiter sauber; alle 11 Prüfungen grün.
+- [x] Sourcemaps sind **nicht** dauerhaft an: `BIBELMAP_SOURCEMAP=1` schaltet
+      sie zu. Die Veröffentlichung bleibt wie sie war.
+
+### 4.56 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
@@ -1420,12 +1480,13 @@ Startseite und Seite „Projekte unterstützen".
 
 ## 5. Nicht-funktionale Anforderungen
 
-- **Performance:** Erstes Bündel **360 kB (gzip 111 kB)** – die Ansichten liegen
-  in eigenen Dateien und kommen auf Abruf; im Leerlauf werden sie nachgeholt,
-  damit die App offline vollständig bleibt. (Die Zahl stand lange bei 462/136 und
-  war veraltet; gemessen waren es 522/173, bevor `journeys.ts` und `mission.ts`
-  ausgelagert wurden – siehe § 4.53.) Flüssige Karte bei 1.300+ Markern,
-  Bibeltext lazy pro Buch.
+- **Performance:** Beim ersten Aufruf von `/` referenziert das HTML **325 kB**
+  JavaScript – die Kette, die der Browser vor dem ersten Bild abarbeitet. Die
+  Ansichten liegen in eigenen Dateien und kommen auf Abruf; im Leerlauf werden
+  sie nachgeholt, damit die App offline vollständig bleibt. (Werdegang: 462 kB
+  laut alter Angabe, gemessen 720, dann 562 nach § 4.53, jetzt 325 nach
+  § 4.55. Die alten Zahlen meinten eine einzelne Datei, nicht die ganze Kette.)
+  Flüssige Karte bei 1.300+ Markern, Bibeltext lazy pro Buch.
 - **Responsiv:** nutzbar ab 360 px Breite; Präsentationsmodus stapelt auf Mobile.
 - **Barrierefreiheit:** `prefers-reduced-motion` wird beachtet (Karte setzt statt
   zu fliegen, Reisender springt statt zu gleiten, Pulsringe stehen still);

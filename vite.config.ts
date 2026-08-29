@@ -9,4 +9,14 @@ export default defineConfig({
   base: process.env.VITE_BASE ?? '/',
   plugins: [react(), tailwindcss()],
   server: { host: true },
+  build: {
+    // Sourcemaps nur auf Abruf: `BIBELMAP_SOURCEMAP=1 npm run build`.
+    //
+    // Sie kosten die Veröffentlichung nichts (kein Browser lädt eine .map ohne
+    // offene Entwicklerwerkzeuge), aber sie sind das einzige Werkzeug, mit dem
+    // sich verlässlich sagen lässt, woraus ein Bündel besteht. Zeichenketten
+    // im fertigen Bündel zu suchen führt in die Irre: „passages" steht dort als
+    // Dateiname, nicht als Datei.
+    sourcemap: process.env.BIBELMAP_SOURCEMAP === '1',
+  },
 });
