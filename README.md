@@ -194,6 +194,20 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   glatte Liste hinschreibt, hat unbemerkt eine Seite gewählt und verkauft sie
   als die gemeinsame.
 
+  **Und sie sagen, worum gestritten wurde.** Jedes der vierzehn trägt einen
+  ausgeführten Absatz statt einer Zeile: dass Nicäa mit einem Wort antwortete,
+  das nirgends in der Bibel steht, und dass genau das der Haupteinwand war;
+  dass das „Nicänische Glaubensbekenntnis", das heute gebetet wird, in
+  Wahrheit die Fassung von 381 ist; dass Kyrill in Ephesus eröffnete, bevor die
+  Bischöfe aus Antiochia da waren, und Nestorius nicht zu Wort kam; dass
+  Chalcedons berühmte Formel vor allem sagt, was man *nicht* sagen darf – und
+  dass gemeinsame Erklärungen seit den 1970er Jahren festhalten, der Streit
+  habe weitgehend an einem Wort gehangen. Konstantinopel III verurteilte einen
+  längst verstorbenen Papst, was zwölfhundert Jahre später gegen die
+  Unfehlbarkeit ins Feld geführt wurde; Konstanz verbrannte Jan Hus trotz
+  Geleitbrief; Vatikanum II ist das erste Konzil, das keinen Lehrsatz festlegt
+  und niemanden verurteilt.
+
   **Zu den Quellen.** Dieselbe Regel wie bei der Israel-Karte, und aus demselben
   Grund: Ein Modus, der Spaltungen erzählt – 451, 1054, 1517 –, redet über
   Dinge, bei denen jede Seite ihre eigene Fassung hat. Jedes Ereignis nennt

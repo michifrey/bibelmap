@@ -1129,7 +1129,61 @@ zu etikettieren wäre keine Ergänzung, sondern eine falsche Einordnung. Das ist
 eine Entscheidung über die Taxonomie, keine Datenlücke – der Zeitstrahl der
 Kirchengeschichte deckt diese Jahrhunderte bereits über **Ereignisse** ab.
 
-### 4.50 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.50 Die Konzilien sagen, worum gestritten wurde — P1 ✅
+
+Nach den Kirchenvätern die letzte dünne Stelle derselben Messung: **14
+Konzilien, Ø 100 Zeichen**. Nicäa I – der Streit, an dem sich entschied, ob
+Christus Geschöpf ist – stand in **72 Zeichen** da: „Gegen den Arianismus; das
+Nicänische Glaubensbekenntnis, „wesensgleich"."
+
+Jetzt **Ø 270 Zeichen** (226–324), in beiden Sprachen. § 4.49 hatte die späteren
+Konzilien schon ausführlicher (98–135); die sind mitgezogen, damit die Liste
+nicht in der Mitte kippt.
+
+**Was jetzt dasteht, weil es zur Sache gehört:**
+
+- **Nicäa I** antwortete mit einem Wort, das nirgends in der Bibel steht –
+  „wesensgleich" –, und **genau das war der Haupteinwand dagegen**.
+- **Konstantinopel I**: Was heute als „Nicänisches Glaubensbekenntnis" gebetet
+  wird, ist die Fassung von 381, nicht die von 325.
+- **Ephesus**: Kyrill eröffnete, bevor die Bischöfe aus Antiochia eintrafen,
+  und Nestorius kam nicht zu Wort – ein Vorgehen, das bis heute umstritten ist.
+- **Chalcedon**: Die berühmteste Formel der Christenheit sagt vor allem, was
+  man *nicht* sagen darf. Und: seit den 1970er Jahren halten gemeinsame
+  Erklärungen fest, dass der Streit mit den orientalischen Kirchen weitgehend
+  an einem Wort hing.
+- **Konstantinopel II**: Justinian ließ drei längst Verstorbene verurteilen, um
+  die Gegner Chalcedons zurückzugewinnen. Zurückgewonnen wurde niemand.
+- **Konstantinopel III** verurteilte einen längst verstorbenen Papst wegen
+  Nachgiebigkeit – zwölfhundert Jahre später ein Hauptargument **gegen** die
+  Unfehlbarkeit, um die es weiter unten bei Vatikanum I geht.
+- **Nicäa II**: Die fränkischen Bischöfe lehnten das Konzil zunächst ab, weil
+  ihre lateinische Übersetzung aus der Verehrung eine Anbetung gemacht hatte.
+- **Konstanz** erklärte sich über alle drei Päpste – ein Anspruch, den Rom
+  später verwarf – und verbrannte Jan Hus trotz kaiserlichem Geleitbrief.
+- **Vatikanum I**: Rund sechzig Bischöfe reisten vor der Abstimmung ab, statt
+  dagegen zu stimmen.
+- **Vatikanum II**: das erste Konzil, das keinen Lehrsatz festlegt und
+  niemanden verurteilt.
+
+**Akzeptanzkriterien**
+- [x] Alle 14 zwischen 226 und 324 Zeichen, beide Sprachen gefüllt; kein
+      englisches Feld enthält deutsche Funktionswörter.
+- [x] `recognisedBy` unverändert – die Prüfung `check:church` besteht weiter
+      darauf, dass jedes Konzil sagt, wer es zählt, und dass Nicäa II das
+      letzte von Ost **und** West anerkannte bleibt.
+- [x] Im Browser in beiden Sprachen **zeichengenau** gegen die Daten geprüft:
+      jeder der 28 Texte (14 × 2) erscheint mit exakt der Länge, die in
+      `church.ts` steht. Ein Test, der nur „irgendein langer Absatz ist da"
+      prüft, würde auch dann bestehen, wenn die Ansicht den falschen Text
+      zeigt.
+- [x] Kein JavaScript-Fehler, alle zehn Prüfungen sauber.
+
+Damit stehen **Reisen (178 Stationen), Heilsgeschichte (30), Kirchenväter (22)
+und Konzilien (14)** auf demselben Stand: 200 bis 300 Zeichen je Eintrag, in
+zwei Sprachen, mit dem Strittigen im Text statt daneben.
+
+### 4.51 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
