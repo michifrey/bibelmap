@@ -36,6 +36,7 @@ const CHECKS = [
   { name: 'Heilsgeschichte', script: 'check-history.mjs', ts: true },
   { name: 'Reisen & Mission', script: 'check-journeys.mjs', ts: true },
   { name: 'Startzahlen', script: 'build-counts.mjs', ts: true, args: ['--pruefen'] },
+  { name: 'Ortsdatei', script: 'build-places-compact.mjs', ts: true, args: ['--pruefen'] },
 ];
 
 const results = [];

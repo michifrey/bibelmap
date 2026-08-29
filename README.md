@@ -550,11 +550,11 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die zwölf Prüfungen, die von sich aus immer dasselbe
+`npm run check` bündelt die dreizehn Prüfungen, die von sich aus immer dasselbe
 Ergebnis liefern – Buchkürzel, Zeitdokumente, Stammesgrenzen, Farbkontraste,
 Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen, Quizfragen,
-Heilsgeschichte, **Reisen & Mission** und **Startzahlen** – und läuft in der CI
-**vor** dem Build: ein Tippfehler in `bookAliases.json` oder
+Heilsgeschichte, Reisen & Mission, Startzahlen und **Ortsdatei** – und läuft in
+der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
 
@@ -1052,17 +1052,25 @@ Woraus die 325 kB bestehen, ist gemessen und nicht geraten (`BIBELMAP_SOURCEMAP=
 npm run build` und die Zuordnung über die Sourcemaps): 174 kB react-dom, 41 kB
 Übersetzungen, 28 kB Startseite, 20 kB App – der Rest liegt unter 8 kB.
 
-Und das größte Einzelstück der App ist gar kein JavaScript: `places.json` wiegt
-**1.365 kB**. Die Startseite zeigt daraus zehn Zahlen und keine Karte – wartete
+Und das größte Einzelstück der App ist gar kein JavaScript: `places.json`. Sie
+wog **1.365 kB** (215 kB gzip) und wiegt jetzt **560 kB** (**109 kB gzip**):
+Zwei Drittel davon waren siebenfach gespeicherte Wiederholung – je Vers ein
+Objekt aus `osis`, `ref`, `book`, `bookNum`, `chapter`, `verse` und `sort`,
+wobei sechs Felder aus dem ersten folgen. Jetzt steht dort `"Josh.10.1"`, die
+Datei nennt oben ihre 61 Bücher, und `expandPlaces` rechnet zurück –
+Zeichen für Zeichen gegengeprüft. Die alte Form wird weiter gelesen.
+
+Die Startseite zeigt daraus zehn Zahlen und keine Karte – wartete
 aber trotzdem darauf, weil der Ladebildschirm vor ihr stand. Die Zahlen stehen
 jetzt in `counts.json` (**147 Bytes**, beim Bauen aus derselben Datei
 gerechnet), die Ortsdaten laufen im Hintergrund weiter. Auf einer Leitung mit
-1,6 Mbit/s und 150 ms Latenz gemessen, je drei Läufe:
+1,6 Mbit/s und 150 ms Latenz gemessen, je drei Läufe, mit gzip wie in der
+Produktion:
 
 | | vorher | nachher |
 |---|---|---|
-| Startseite steht | 2.501 ms | **1.236 ms** |
-| bis Marker auf der Karte | 2.968 ms | **1.711 ms** |
+| Startseite steht | 2.424 ms | **1.160 ms** |
+| bis Marker auf der Karte | 3.144 ms | **2.622 ms** |
 
 Sobald der Browser Ruhe hat **und** der Service Worker steht, werden die
 Ansichten im Hintergrund nachgeholt. So bleibt der Start leicht und die App

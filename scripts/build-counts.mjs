@@ -16,14 +16,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const { erasForPlace } = await import(path.join(ROOT, 'src/lib/places.ts'));
+const { erasForPlace, expandPlaces } = await import(path.join(ROOT, 'src/lib/places.ts'));
 const { ERAS } = await import(path.join(ROOT, 'src/data/eras.ts'));
 
 const QUELLE = path.join(ROOT, 'public/data/places.json');
 const ZIEL = path.join(ROOT, 'public/data/counts.json');
 
 const roh = JSON.parse(fs.readFileSync(QUELLE, 'utf8'));
-const places = Array.isArray(roh) ? roh : roh.places;
+const places = expandPlaces(roh);
 
 if (places.length < 1000) {
   console.error(`✗ Nur ${places.length} Orte in places.json – das sieht nach einer halben Datei aus.`);

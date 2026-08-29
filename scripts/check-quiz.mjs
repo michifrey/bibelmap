@@ -26,8 +26,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const { buildRound } = await import(path.join(ROOT, 'src/lib/quiz.ts'));
 const { JOURNEYS } = await import(path.join(ROOT, 'src/data/journeys.ts'));
+const { expandPlaces } = await import(path.join(ROOT, 'src/lib/places.ts'));
 const roh = JSON.parse(fs.readFileSync(path.join(ROOT, 'public/data/places.json'), 'utf8'));
-const PLACES = Array.isArray(roh) ? roh : roh.places;
+const PLACES = expandPlaces(roh);
 
 const RUNDEN = 400;
 /** Wie nah die richtige Antwort an der Linie liegen muss (wie in `along.ts`). */

@@ -31,11 +31,64 @@ export function loadCounts(): Promise<PlaceCounts> {
   return zaehlCache;
 }
 
+/**
+ * Die Verse eines Ortes, wie sie in `places.json` stehen dürfen.
+ *
+ * Lange stand dort je Vers ein Objekt mit sieben Feldern:
+ *
+ *     {"osis":"Josh.10.1","ref":"Josh 10:1","book":"Josh","bookNum":6,
+ *      "chapter":10,"verse":1,"sort":"06010001"}
+ *
+ * Sechs davon folgen aus dem ersten. 8.707 solcher Objekte machten **921 kB**
+ * aus – zwei Drittel der Datei – für Information, die schon dasteht. Jetzt
+ * genügt `"Josh.10.1"`; die Datei nennt oben ihre Bücher, und `expandPlaces`
+ * rechnet den Rest zurück.
+ *
+ * Beide Formen werden gelesen: eine Datei aus `build-data.mjs`, die noch die
+ * alte Form hat, funktioniert unverändert weiter.
+ */
+export interface CompactPlaces {
+  /** OSIS-Kürzel → [Anzeigekürzel, Nummer im Kanon]. */
+  books: Record<string, [string, number]>;
+  places: (Omit<Place, 'verses'> & { verses: string[] })[];
+}
+
+/** Ein Vers aus seinem OSIS-Kürzel, mit der Buchtabelle der Datei. */
+function verseFromOsis(osis: string, books: CompactPlaces['books']): Place['verses'][number] {
+  const [book, kap, vers] = osis.split('.');
+  const [anzeige, num] = books[book] ?? [book, 99];
+  const chapter = Number(kap);
+  const verse = Number(vers);
+  return {
+    osis,
+    ref: `${anzeige} ${chapter}:${verse}`,
+    book,
+    bookNum: num,
+    chapter,
+    verse,
+    sort: `${String(num).padStart(2, '0')}${String(chapter).padStart(3, '0')}${String(verse).padStart(3, '0')}`,
+  };
+}
+
+/**
+ * Beide Formen von `places.json` zu Orten machen. Auch die Prüfskripte gehen
+ * hier durch, damit es die Regel nur einmal gibt.
+ */
+export function expandPlaces(roh: unknown): Place[] {
+  if (Array.isArray(roh)) return roh as Place[];
+  const daten = roh as CompactPlaces;
+  const books = daten.books ?? {};
+  return daten.places.map((p) => ({
+    ...p,
+    verses: p.verses.map((v) => (typeof v === 'string' ? verseFromOsis(v, books) : v)),
+  })) as Place[];
+}
+
 export function loadPlaces(): Promise<Place[]> {
   if (!cache) {
-    cache = fetch(`${import.meta.env.BASE_URL}data/places.json`).then((r) => {
+    cache = fetch(`${import.meta.env.BASE_URL}data/places.json`).then(async (r) => {
       if (!r.ok) throw new Error(`Failed to load places.json: ${r.status}`);
-      return r.json() as Promise<Place[]>;
+      return expandPlaces(await r.json());
     });
   }
   return cache;
