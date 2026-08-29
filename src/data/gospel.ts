@@ -656,6 +656,19 @@ export const STATIONS: GospelStation[] = [
     people: ['zacharias', 'elisabeth', 'johannes-taeufer'],
   },
   {
+    id: 'genealogies', act: 'promise', book: 'Matt',
+    de: 'Zwei Stammbäume, die nicht zusammenpassen', en: 'Two family trees that do not match',
+    where: { de: 'Bethlehem, die Stadt Davids', en: 'Bethlehem, the city of David' },
+    lat: 31.7043, lon: 35.2076, placeId: 'a112427',
+    ref: { de: 'Matthäus 1,1-17', en: 'Matt 1:1-17' },
+    also: { de: 'Lukas 3,23-38', en: 'Luke 3:23-38' },
+    text: {
+      de: 'Zwei Evangelien beginnen mit einer Ahnenliste, und zwischen David und Josef decken sich die beiden Listen nicht. Matthäus zählt in drei Vierzehnergruppen bis Abraham zurück und nimmt vier Frauen hinein, deren Geschichten anstößig sind; Lukas geht über David hinaus bis Adam. Keiner der beiden schreibt ein Melderegister – beide schreiben eine These.',
+      en: 'Two gospels open with a list of ancestors, and between David and Joseph the two lists do not agree. Matthew counts back to Abraham in three groups of fourteen and takes in four women whose stories are scandalous; Luke goes past David to Adam. Neither is writing a civil register – both are making a case.',
+    },
+    people: ['josef', 'maria'],
+  },
+  {
     id: 'joseph-dream', act: 'promise', book: 'Matt',
     de: 'Josef beschließt zu bleiben', en: 'Joseph decides to stay',
     where: { de: 'Nazareth', en: 'Nazareth' },
@@ -781,6 +794,18 @@ export const STATIONS: GospelStation[] = [
   },
 
   /* ============ Akt 3: Taufe, Wüste, erste Zeichen ===================== */
+  {
+    id: 'tiberius-dating', act: 'beginnings', book: 'Luke',
+    de: 'Im fünfzehnten Jahr des Kaisers', en: 'In the fifteenth year of the emperor',
+    where: { de: 'Das Land, in sieben Namen vermessen', en: 'The country, measured out in seven names' },
+    lat: 31.7614, lon: 35.5583, placeId: 'ae686c9',
+    ref: { de: 'Lukas 3,1-2', en: 'Luke 3:1-2' },
+    text: {
+      de: 'Lukas datiert wie ein Historiker: fünfzehntes Regierungsjahr des Tiberius, Pilatus in Judäa, Herodes in Galiläa, sein Bruder Philippus im Norden, Lysanias in Abilene, Hannas und Kaiphas im Amt. Sechs Machthaber, um zu sagen, wann in der Wüste ein Siebter zu reden anfing.',
+      en: 'Luke dates like a historian: the fifteenth year of Tiberius, Pilate in Judea, Herod in Galilee, his brother Philip in the north, Lysanias in Abilene, Annas and Caiaphas in office. Six men in power, to say when a seventh started speaking in the wilderness.',
+    },
+    people: ['johannes-taeufer', 'pilatus', 'herodes-antipas', 'hannas', 'kaiphas'],
+  },
   {
     id: 'baptist-preaches', act: 'beginnings', book: 'Mark',
     de: 'Der Rufer am Jordan', en: 'The voice at the Jordan',
@@ -958,6 +983,19 @@ export const STATIONS: GospelStation[] = [
     people: ['matthaeus'],
   },
   {
+    id: 'sabbath-conflicts', act: 'galilee', book: 'Mark',
+    de: 'Ähren am Sabbat', en: 'Grain on the sabbath',
+    where: { de: 'Auf den Feldern und in der Synagoge', en: 'In the fields and in the synagogue' },
+    lat: 32.8811, lon: 35.575, placeId: 'af2161c',
+    ref: { de: 'Markus 2,23-3,6', en: 'Mark 2:23-3:6' },
+    text: {
+      de: 'Zweimal derselbe Streit an einem Sabbat: Die Jünger raufen Ähren, ein Mann mit verdorrter Hand steht in der Synagoge. Markus notiert hier das einzige Mal, dass Jesus zornig wird – über das Schweigen der Zuschauer. Am Ende des Kapitels beraten Pharisäer und Anhänger des Herodes, wie sie ihn umbringen könnten.',
+      en: 'The same argument twice on one sabbath: the disciples pluck heads of grain, a man with a withered hand stands in the synagogue. Here Mark records the one time Jesus is angry – at the silence of the onlookers. At the end of the chapter Pharisees and Herodians confer about how to destroy him.',
+    },
+    quote: { de: '„Der Sabbat ist um des Menschen willen gemacht und nicht der Mensch um des Sabbats willen.“', en: '"The sabbath was made for man, not man for the sabbath."' },
+    people: [],
+  },
+  {
     id: 'twelve-chosen', act: 'galilee', book: 'Luke',
     de: 'Die Zwölf', en: 'The Twelve',
     where: { de: 'Auf einem Berg bei Kapernaum', en: 'On a hill near Capernaum' },
@@ -969,6 +1007,18 @@ export const STATIONS: GospelStation[] = [
       en: 'After a night alone he picks twelve – as many as there were tribes. Four fishermen, a tax collector, a resistance fighter, plus names the gospels never mention again, and one whom every list marks with what he later did.',
     },
     people: ['petrus', 'andreas', 'jakobus-zebedaeus', 'johannes-zebedaeus', 'philippus', 'natanael', 'matthaeus', 'thomas', 'jakobus-alphaeus', 'thaddaeus', 'simon-zelot', 'judas'],
+  },
+  {
+    id: 'hometown-family', act: 'galilee', book: 'Mark',
+    de: 'Die Familie will ihn holen', en: 'The family comes to take him home',
+    where: { de: 'Kapernaum, vor dem Haus', en: 'Capernaum, outside the house' },
+    lat: 32.8811, lon: 35.575, placeId: 'af2161c',
+    ref: { de: 'Markus 3,20-35', en: 'Mark 3:20-35' },
+    text: {
+      de: 'Der Andrang ist so groß, dass niemand zum Essen kommt. Seine Angehörigen machen sich auf, ihn mit Gewalt zurückzuholen: Er sei von Sinnen. Die Schriftgelehrten sagen etwas Schlimmeres. Als Mutter und Brüder draußen stehen und rufen lassen, sieht er die im Kreis um sich und nennt sie seine Familie.',
+      en: 'The crush is such that nobody can even eat. His relatives set out to seize him: he is out of his mind. The scribes say something worse. When his mother and brothers stand outside and send word, he looks at the circle around him and calls them his family.',
+    },
+    people: ['maria', 'jakobus-bruder'],
   },
   {
     id: 'sermon-mount', act: 'galilee', book: 'Matt',
@@ -1032,6 +1082,18 @@ export const STATIONS: GospelStation[] = [
       en: 'Three verses rarely preached: alongside the Twelve women travel too, and it is they who support the group "out of their own means". One of them is the wife of Herod’s steward – money from the opponent’s household.',
     },
     people: ['maria-magdalena', 'johanna', 'susanna'],
+  },
+  {
+    id: 'parables-by-the-lake', act: 'galilee', book: 'Mark',
+    de: 'Vom Boot aus in Gleichnissen', en: 'Parables from a boat',
+    where: { de: 'Am Ufer des Sees', en: 'On the shore of the lake' },
+    lat: 32.8189, lon: 35.59, placeId: 'a562fcc',
+    ref: { de: 'Markus 4,1-34', en: 'Mark 4:1-34' },
+    text: {
+      de: 'Er setzt sich in ein Boot und schiebt ab, damit ihn die Menge am Hang hören kann – der See als Verstärker. Was er erzählt, klingt nach Landwirtschaft: Saat auf vier Böden, ein Senfkorn, eine Saat, die von selbst wächst. Erklärt wird es nur im engsten Kreis; die Gleichnisse verbergen so viel, wie sie zeigen.',
+      en: 'He gets into a boat and pushes off so the crowd on the slope can hear him – the lake as amplifier. What he tells sounds like farming: seed on four soils, a mustard seed, a crop that grows by itself. He explains it only to the inner circle; the parables hide as much as they show.',
+    },
+    people: [],
   },
   {
     id: 'storm', act: 'galilee', book: 'Mark',
@@ -1230,6 +1292,18 @@ export const STATIONS: GospelStation[] = [
     people: [],
   },
   {
+    id: 'who-is-greatest', act: 'galilee', book: 'Mark',
+    de: 'Worüber sie unterwegs gestritten haben', en: 'What they argued about on the road',
+    where: { de: 'Kapernaum, im Haus', en: 'Capernaum, in the house' },
+    lat: 32.8811, lon: 35.575, placeId: 'af2161c',
+    ref: { de: 'Markus 9,33-37', en: 'Mark 9:33-37' },
+    text: {
+      de: 'Er fragt, worüber sie unterwegs geredet haben, und sie schweigen – sie hatten darüber gestritten, wer der Größte sei, kurz nachdem er zum zweiten Mal vom Sterben gesprochen hat. Er stellt ein Kind in die Mitte, ein Wesen ohne Rang und ohne Stimme, und nimmt es in den Arm.',
+      en: 'He asks what they were discussing on the way, and they say nothing – they had been arguing about who was greatest, right after he spoke of dying for the second time. He puts a child in the middle, a person of no rank and no voice, and takes it in his arms.',
+    },
+    people: ['petrus'],
+  },
+  {
     id: 'temple-tax', act: 'galilee', book: 'Matt',
     de: 'Die Münze im Fisch', en: 'The coin in the fish',
     where: { de: 'Kapernaum', en: 'Capernaum' },
@@ -1317,6 +1391,18 @@ export const STATIONS: GospelStation[] = [
     people: ['blindgeborener'],
   },
   {
+    id: 'children-blessed', act: 'road', book: 'Mark',
+    de: 'Lasst die Kinder durch', en: 'Let the children through',
+    where: { de: 'Jenseits des Jordan', en: 'Beyond the Jordan' },
+    lat: 31.8375, lon: 35.5583,
+    ref: { de: 'Markus 10,13-16', en: 'Mark 10:13-16' },
+    text: {
+      de: 'Die Jünger sortieren die Warteschlange und weisen die Kinder ab – vernünftig, denn ein Lehrer hatte Wichtigeres zu tun. Es ist die zweite Stelle, an der Markus ihn ausdrücklich unwillig nennt. Er nimmt die Kinder in den Arm und legt ihnen die Hände auf.',
+      en: 'The disciples manage the queue and turn the children away – sensibly, for a teacher had more important things to do. It is the second place where Mark calls him indignant outright. He takes the children in his arms and lays his hands on them.',
+    },
+    people: [],
+  },
+  {
     id: 'rich-man', act: 'road', book: 'Mark',
     de: 'Der Mann, der traurig weggeht', en: 'The man who walks away sad',
     where: { de: 'Unterwegs, jenseits des Jordan', en: 'On the road, beyond the Jordan' },
@@ -1329,6 +1415,20 @@ export const STATIONS: GospelStation[] = [
     people: ['reicher-juengling', 'petrus'],
   },
   {
+    id: 'sons-of-zebedee', act: 'road', book: 'Mark',
+    de: 'Die Bitte um die beiden besten Plätze', en: 'The request for the two best seats',
+    where: { de: 'Unterwegs, hinauf nach Jerusalem', en: 'On the road, going up to Jerusalem' },
+    lat: 31.85, lon: 35.5,
+    ref: { de: 'Markus 10,35-45', en: 'Mark 10:35-45' },
+    also: { de: 'Matthäus 20,20-28', en: 'Matt 20:20-28' },
+    text: {
+      de: 'Unmittelbar nach der dritten Ankündigung seines Todes fragen zwei nach den Ehrenplätzen rechts und links – bei Matthäus fragt ihre Mutter für sie. Die anderen zehn sind empört, vermutlich nicht aus Demut. Die Antwort dreht die Rangordnung um: Wer oben stehen will, bedient die anderen.',
+      en: 'Right after the third announcement of his death two ask for the seats of honour at his right and left – in Matthew their mother asks for them. The other ten are indignant, probably not out of humility. The answer inverts the order: whoever wants the top serves the rest.',
+    },
+    quote: { de: '„Der Menschensohn ist nicht gekommen, dass er sich dienen lasse, sondern dass er diene.“', en: '"The Son of Man came not to be served but to serve."' },
+    people: ['jakobus-zebedaeus', 'johannes-zebedaeus', 'salome'],
+  },
+  {
     id: 'perea', act: 'road', book: 'Luke',
     de: 'Die Gleichnisse jenseits des Jordan', en: 'The parables beyond the Jordan',
     where: { de: 'Peräa, wo der Täufer angefangen hatte', en: 'Perea, where the Baptist had begun' },
@@ -1338,6 +1438,18 @@ export const STATIONS: GospelStation[] = [
     text: {
       de: 'Weil Zöllner und Sünder ihm zuhören und die Frommen murren, erzählt er drei Geschichten über Verlorenes: ein Schaf, eine Münze, einen Sohn. Die dritte hat kein Ende – der ältere Bruder steht noch draußen, als der Vorhang fällt.',
       en: 'Because tax collectors and sinners listen to him and the pious grumble, he tells three stories about things lost: a sheep, a coin, a son. The third has no ending – the older brother is still outside when the curtain falls.',
+    },
+    people: [],
+  },
+  {
+    id: 'ten-lepers', act: 'road', book: 'Luke',
+    de: 'Zehn werden rein, einer kommt zurück', en: 'Ten are cleansed, one comes back',
+    where: { de: 'Zwischen Samarien und Galiläa', en: 'Between Samaria and Galilee' },
+    lat: 32.2761, lon: 35.195, placeId: 'a041bb3',
+    ref: { de: 'Lukas 17,11-19', en: 'Luke 17:11-19' },
+    text: {
+      de: 'Zehn Aussätzige bleiben auf Rufweite stehen, wie es das Gesetz verlangt. Er schickt sie zu den Priestern, und unterwegs werden sie rein. Einer kehrt um und dankt – ausgerechnet der Samaritaner, der Einzige, den kein Priester in Jerusalem angesehen hätte.',
+      en: 'Ten men with leprosy keep their distance, as the law required. He sends them to the priests, and on the way they are cleansed. One turns back to give thanks – the Samaritan, of all people, the one no priest in Jerusalem would have looked at.',
     },
     people: [],
   },
@@ -1514,6 +1626,19 @@ export const STATIONS: GospelStation[] = [
     people: ['hannas', 'kaiphas', 'petrus', 'johannes-zebedaeus'],
   },
   {
+    id: 'judas-end', act: 'passion', book: 'Matt',
+    de: 'Er bringt das Geld zurück', en: 'He brings the money back',
+    where: { de: 'Jerusalem, im Tempel', en: 'Jerusalem, in the temple' },
+    lat: 31.7784, lon: 35.2354, placeId: 'a15257a',
+    day: { de: 'Freitag früh', en: 'Friday, early' },
+    ref: { de: 'Matthäus 27,3-10', en: 'Matt 27:3-10' },
+    text: {
+      de: 'Als das Urteil feststeht, reut es ihn. Er bringt die dreißig Silberstücke zurück und bekommt die kälteste Antwort der Passionsgeschichte: „Was geht uns das an? Da sieh du zu!“ Er wirft das Geld in den Tempel und erhängt sich; gekauft wird davon ein Friedhof für Fremde.',
+      en: 'When the verdict is settled he is seized with remorse. He brings the thirty pieces of silver back and gets the coldest line in the passion story: "What is that to us? See to it yourself." He throws the money into the temple and hangs himself; with it a burial ground for foreigners is bought.',
+    },
+    people: ['judas', 'kaiphas'],
+  },
+  {
     id: 'pilate', act: 'passion', book: 'John',
     de: 'Vor dem Präfekten', en: 'Before the prefect',
     where: { de: 'Jerusalem, im Prätorium', en: 'Jerusalem, in the praetorium' },
@@ -1620,6 +1745,18 @@ export const STATIONS: GospelStation[] = [
       en: 'She stays when everyone has gone, and weeps. He is recognised by a single word: her name. The first witness of the resurrection is a woman whose testimony was worthless in court – no inventor would have written it that way.',
     },
     people: ['maria-magdalena'],
+  },
+  {
+    id: 'guards-report', act: 'risen', book: 'Matt',
+    de: 'Die Wache wird bezahlt', en: 'The guard is paid off',
+    where: { de: 'Jerusalem', en: 'Jerusalem' },
+    lat: 31.7784, lon: 35.2354, placeId: 'a15257a',
+    ref: { de: 'Matthäus 28,11-15', en: 'Matt 28:11-15' },
+    text: {
+      de: 'Matthäus erzählt, was seine Gegner erzählten: Die Jünger hätten den Leichnam gestohlen, während die Wache schlief. Er schreibt es auf, um es zu widerlegen – und überliefert damit den ältesten Einwand gegen Ostern. Beide Seiten waren sich einig, dass das Grab leer war; sie stritten darüber, warum.',
+      en: 'Matthew tells what his opponents were telling: the disciples stole the body while the guard slept. He writes it down to refute it – and so preserves the oldest objection to Easter. Both sides agreed the tomb was empty; they disagreed about why.',
+    },
+    people: ['kaiphas'],
   },
   {
     id: 'emmaus', act: 'risen', book: 'Luke',

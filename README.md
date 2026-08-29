@@ -123,19 +123,29 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   die Route mitwachsen und einen Punkt die Etappen abgehen, während links die
   Station mit Bibelstelle und kurzem Text mitläuft (← / → blättern, Leertaste
   startet). Jede Station verlinkt auf ihre Ortskarte.
-- **Jesus – Leben und Wege** – eine eigene Sektion für die Evangelien: **86
+- **Jesus – Leben und Wege** – eine eigene Sektion für die Evangelien: **97
   Stationen in sieben Akten**, von der Ankündigung an Maria über die Geburt in
   Bethlehem, das Jahr am See, den Weg nach Jerusalem und die Passionswoche **Tag
   für Tag** (Palmsonntag → Grabesruhe) bis zu Emmaus, dem See Tiberias und dem
   Abschied am Ölberg. Jede Station nennt Ort, Bibelstelle (mit Parallelstellen),
   einen erzählenden Text und – wo sie hängen bleibt – die Stelle im Wortlaut.
   **52 Menschen der Evangelien** stehen in einem eigenen Verzeichnis: ein Klick
-  auf *Simon Petrus* zeigt seine 24 Stationen vom Bootssteg bis zum Kohlenfeuer,
-  ein Klick auf *Maria von Magdala* ihre Spur bis zum leeren Grab. Jede Station
-  verlinkt den **BibleProject-Guide** ihres Evangeliums, und wo eine Folge von
-  **The Chosen** die Szene spielt, steht sie daneben – als Verfilmung
-  gekennzeichnet, mit der Bibelstelle direkt darüber. Adressen wie
-  `#jesus=passion,golgotha` und `#jesus=mensch,petrus` sind teilbar.
+  auf *Simon Petrus* zeigt seine Stationen vom Bootssteg bis zum Kohlenfeuer,
+  ein Klick auf *Maria von Magdala* ihre Spur bis zum leeren Grab.
+  **Anderswo:** zu jeder Station das passende **BibleProject**-Video – die
+  Buchüberblicke sind nach Kapiteln geschnitten, deshalb zeigt Golgatha
+  *Johannes 13-21* und nicht „Johannes“ –, dazu Themenvideos, wo das Thema die
+  Szene trägt (*Opfer und Sühne* am Kreuz, *Menschensohn* bei der Verklärung),
+  die passende **bibletunes.de**-Folge zum Kapitel und, wo eine Folge von **The
+  Chosen** die Szene spielt, deren Angabe – als Verfilmung gekennzeichnet. Ein
+  Knopf führt in **Hören & Sehen** zu allem, was der eigene Medienindex zu
+  diesem Kapitel hat.
+  **Was außerhalb der Bibel steht:** dreizehn Einträge mit Quelle und
+  Datierung – Tacitus, Josephus, Plinius, Sueton, der Talmud, dazu der
+  Pilatus-Stein, das Kaiphas-Ossuar, der Gekreuzigte von Giv’at ha-Mivtar, die
+  Synagoge von Magdala, die Stufen des Teichs Siloah. Umstrittenes steht als
+  umstritten da, und dabei steht, was ein Fund **nicht** zeigt.
+  Adressen wie `#jesus=passion,golgotha` und `#jesus=mensch,petrus` sind teilbar.
 - **Mission & Ausbreitung** – wie das Evangelium in die Welt kam: die vier
   Reisen des Paulus (plus die Wege vor ihm, Apg 1–11) als Route mit nummerierten
   Stationen und Bibelstellen – und danach die Ausbreitung bis heute, in sieben
@@ -846,6 +856,27 @@ dazu, dass es eine ist.
 Ort), jede Bibelstelle auf Lesbarkeit und darauf, dass ihr Buch zum
 verlinkten Guide passt, jede Person einer Station gegen das Verzeichnis. Die
 Prüfung läuft in `npm run check` mit.
+
+**Medienverweise** (`src/data/gospelMedia.ts`): Die BibleProject-Videoadressen
+sind einzeln belegt, nicht aus einem Muster geraten; welches Übersichtsvideo zu
+einer Station gehört, entscheidet ihr Kapitel (Matthäus 1-13 und 14-28, Lukas
+1-9 und 10-24, Johannes 1-12 und 13-21, Markus in einem Stück). Für
+bibletunes.de führt der Weg über die Staffelseite des Evangeliums und die erste
+Folge zum Kapitel; wie viele Folgen ein Kapitel hat, weiß nur die Seite selbst.
+`npm run check:gospel-links` klopft alle diese Adressen ab – das braucht Netz
+und läuft deshalb nicht in `npm run check` mit.
+
+Warum nicht der eigene Medienindex: `public/data/media.json` entsteht aus
+RSS-Feeds, und der bibletunes-Feed trägt die letzten hundert Folgen. Die
+Evangelien liefen dort 2010 bis 2024 und sind längst aus dem Fenster gerutscht.
+Deshalb beides nebeneinander – feste Adressen und ein Knopf in den eigenen
+Medienmodus, der zeigt, was der Index gerade hergibt.
+
+**Außerbiblische Zeugnisse** (`src/data/witnesses.ts`): antike Texte und Funde,
+jeder mit Autor, Werk und Stelle bzw. Fundort und Jahr. Umstrittenes ist als
+umstritten gekennzeichnet (Testimonium Flavianum, Sueton, Jakobus-Ossuar), und
+zu jedem Fund steht, was er nicht belegt: Der Pilatus-Stein belegt Pilatus,
+nicht das Verhör.
 
 **The Chosen** (`src/data/chosen.ts`): Die Zuordnung Folge → Station wurde nach
 dem Inhalt der Folgen zusammengetragen, nicht von einer Schnittstelle geholt.

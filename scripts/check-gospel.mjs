@@ -27,6 +27,10 @@ const { ACTS, PEOPLE, STATIONS, STATIONS_BY_PERSON } = await import(
   path.join(ROOT, 'src/data/gospel.ts')
 );
 const { CHOSEN } = await import(path.join(ROOT, 'src/data/chosen.ts'));
+const { BP_THEMES, BP_VIDEO_BY_ID, BT_BY_BOOK, chapterOfRef, overviewVideo } = await import(
+  path.join(ROOT, 'src/data/gospelMedia.ts')
+);
+const { WITNESSES } = await import(path.join(ROOT, 'src/data/witnesses.ts'));
 
 const roh = JSON.parse(fs.readFileSync(path.join(ROOT, 'public/data/places.json'), 'utf8'));
 const PLACES = Array.isArray(roh) ? roh : roh.places;
@@ -45,6 +49,7 @@ const GOSPELS = new Set(['Matt', 'Mark', 'Luke', 'John']);
 const MIN_STATIONEN = 60;
 const MIN_PERSONEN = 40;
 const MIN_AKTE = 5;
+const MIN_ZEUGNISSE = 8;
 
 /** Wie weit eine Station von ihrem verlinkten Ort abweichen darf (km). */
 const MAX_ABWEICHUNG = 6;
@@ -76,6 +81,9 @@ if (PEOPLE.length < MIN_PERSONEN) {
 if (ACTS.length < MIN_AKTE) {
   melde(`Nur ${ACTS.length} Akte gefunden – erwartet mindestens ${MIN_AKTE}.`);
 }
+if (WITNESSES.length < MIN_ZEUGNISSE) {
+  melde(`Nur ${WITNESSES.length} außerbiblische Zeugnisse – erwartet mindestens ${MIN_ZEUGNISSE}.`);
+}
 
 /* --- 1. Kennungen sind eindeutig ---------------------------------------- */
 
@@ -96,6 +104,7 @@ const STATION_IDS = doppelt(STATIONS, 'Stationen');
 
 let mitOrt = 0;
 let stellen = 0;
+let medien = 0;
 
 for (const s of STATIONS) {
   const wo = `Station „${s.id}“`;
@@ -125,6 +134,22 @@ for (const s of STATIONS) {
     melde(`${wo}: liegt mit ${lat}/${lon} außerhalb des Rahmens der Evangelien.`);
   }
 
+  // Medienverweise: zu jeder Station muss sich ein Übersichtsvideo und eine
+  // Hörfolge bilden lassen – sonst steht der Kasten „Anderswo“ halb leer.
+  const kapitel = chapterOfRef(s.ref?.de ?? '');
+  if (kapitel === undefined) {
+    melde(`${wo}: aus „${s.ref?.de}“ lässt sich kein Kapitel lesen.`);
+  } else {
+    if (!overviewVideo(s.book, kapitel)) {
+      melde(`${wo}: kein BibleProject-Übersichtsvideo für ${s.book} ${kapitel}.`);
+    }
+    if (!BT_BY_BOOK[s.book]) {
+      melde(`${wo}: bibletunes kennt keine Staffel zu ${s.book}.`);
+    } else {
+      medien++;
+    }
+  }
+
   // Ortskennung
   if (s.placeId) {
     const ort = PLACE_BY_ID.get(s.placeId);
@@ -152,6 +177,16 @@ for (const s of STATIONS) {
       continue;
     }
     stellen++;
+    // Die Oberfläche liest das Kapitel mit einer eigenen kleinen Regel aus der
+    // Stellenangabe (`chapterOfRef`), weil sie den Parser aus scripts/lib nicht
+    // hat. Hier stehen beide nebeneinander – sonst zeigt ein Videolink
+    // irgendwann auf den falschen Teil.
+    const eigenes = chapterOfRef(text);
+    if (eigenes !== gefunden[0].chapter) {
+      melde(
+        `${wo}: chapterOfRef liest aus „${text}“ Kapitel ${eigenes}, der Stellenparser ${gefunden[0].chapter}.`,
+      );
+    }
     if (gefunden[0].osis !== s.book) {
       melde(
         `${wo}: die Stelle „${text}“ gehört zu ${gefunden[0].osis}, eingetragen ist aber „${s.book}“.`,
@@ -189,6 +224,39 @@ for (const p of PEOPLE) {
   }
 }
 
+/* --- 4b. Themenvideos ----------------------------------------------------- */
+
+for (const [sid, ids] of Object.entries(BP_THEMES)) {
+  if (!STATION_IDS.has(sid)) {
+    melde(`BibleProject-Themen: „${sid}“ ist keine Station.`);
+  }
+  for (const vid of ids) {
+    if (!BP_VIDEO_BY_ID[vid]) melde(`BibleProject-Themen: das Video „${vid}“ steht nicht in BP_VIDEOS.`);
+  }
+}
+
+/* --- 4c. Außerbiblische Zeugnisse ----------------------------------------- */
+
+const zeugnisIds = new Set();
+for (const w of WITNESSES) {
+  const wo = `Zeugnis „${w.id}“`;
+  if (zeugnisIds.has(w.id)) melde(`${wo}: die Kennung kommt zweimal vor.`);
+  zeugnisIds.add(w.id);
+  if (w.kind !== 'text' && w.kind !== 'find') melde(`${wo}: unbekannte Art „${w.kind}“.`);
+  for (const feld of ['de', 'en']) {
+    if (!w[feld]?.trim()) melde(`${wo}: der Titel (${feld}) fehlt.`);
+    if (!w.source?.[feld]?.trim()) melde(`${wo}: die Quellenangabe (${feld}) fehlt.`);
+    if (!w.when?.[feld]?.trim()) melde(`${wo}: die Datierung (${feld}) fehlt.`);
+    if (!w.text?.[feld]?.trim()) melde(`${wo}: der Text (${feld}) fehlt.`);
+  }
+  if (w.text?.de && w.text.de === w.text.en) {
+    melde(`${wo}: deutscher und englischer Text sind gleich – eine Übersetzung fehlt.`);
+  }
+  for (const sid of w.stations ?? []) {
+    if (!STATION_IDS.has(sid)) melde(`${wo}: verweist auf „${sid}“ – diese Station gibt es nicht.`);
+  }
+}
+
 /* --- 5. Die Serienzuordnung ---------------------------------------------- */
 
 const folgen = new Set();
@@ -219,5 +287,6 @@ console.log(
   `✓ ${STATIONS.length} Stationen in ${ACTS.length} Akten geprüft: ` +
     `${mitOrt} Ortskennungen gegen places.json, ${stellen} Bibelstellen gelesen, ` +
     `${personenMitSzene} von ${PEOPLE.length} Personen mit Auftritt, ` +
+    `${medien} Stationen mit Video und Hörfolge, ${WITNESSES.length} außerbiblische Zeugnisse, ` +
     `${CHOSEN.length} Serienfolgen zugeordnet.`,
 );
