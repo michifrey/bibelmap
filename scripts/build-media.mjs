@@ -44,7 +44,13 @@ if (!fs.existsSync(sourcesFile)) fail(`${sourcesFile} fehlt.`);
 const books = loadBooks();
 const lexicon = buildLexicon(books);
 const bookByOsis = new Map(books.map((b) => [b.osis, b]));
-const places = JSON.parse(fs.readFileSync(PLACES, 'utf8'));
+// `places.json` steht seit der Verkleinerung kompakt da: je Vers nur noch
+// `"Josh.10.1"`, die Bücher einmal oben. Zurückgerechnet wird mit
+// `expandPlaces` aus `src/lib/places.ts` – derselben Funktion, die auch die App
+// und jede andere Prüfung benutzt. Eine zweite Implementierung hier hätte genau
+// einen Zweck: irgendwann von der ersten abzuweichen.
+const { expandPlaces } = await import(path.join(ROOT, 'src/lib/places.ts'));
+const places = expandPlaces(JSON.parse(fs.readFileSync(PLACES, 'utf8')));
 const sources = JSON.parse(fs.readFileSync(sourcesFile, 'utf8')).sources;
 
 // verse key -> place ids mentioned there

@@ -26,7 +26,7 @@
     "data": "node scripts/build-data.mjs && node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-places-compact.mjs",
     "text": "node scripts/build-text.mjs",
     "names": "node scripts/build-names-de.mjs",
-    "media": "node scripts/build-media.mjs",
+    "media": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-media.mjs",
     "xrefs": "node scripts/build-xrefs.mjs",
     "check:quiz": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-quiz.mjs",
     "check:history": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-history.mjs",
