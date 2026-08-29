@@ -1609,7 +1609,53 @@ je Anfrage neu komprimiert; das kostet Zeit auf beiden Seiten. Der Vergleich
 vorher/nachher gilt, die absoluten Zahlen sind nicht mit denen aus § 4.56
 zusammenzurechnen.
 
-### 4.58 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.58 Kartenstil auf einer Seite ohne Karte — P1 ✅
+
+Derselbe Befund wie in § 4.55, eine Ebene tiefer: `src/index.css` importierte
+`leaflet/dist/leaflet.css` und `MarkerCluster.css` auf oberster Ebene. Damit
+lagen **17 kB roh / 6,7 kB gzip** Kartenstil im Stylesheet, das jeder Besuch
+der Startseite lädt – und ein `<link rel=stylesheet>` hält die erste
+Darstellung auf.
+
+Die beiden Importe und der zugehörige Abschnitt der App (125 Zeilen, von
+`.leaflet-container` bis zu den Popup- und Tooltip-Regeln) stehen jetzt in
+`src/map.css`. Wer Leaflet benutzt, importiert `src/lib/mapStyles.ts` – die
+sieben Kartenansichten tun das.
+
+| | vorher | nachher |
+|---|---|---|
+| `index.css` | 101 kB | **84 kB** |
+| gzip | 22,0 kB | **15,2 kB** |
+
+**Der Beweis, dass die Karte gleich aussieht**
+
+Das war der schwierige Teil, und die ersten zwei Anläufe taugten nichts:
+
+1. **Bildvergleich.** Vier von neun Ansichten wichen ab. Sah nach Regression
+   aus – bis die Gegenprobe zeigte: **derselbe Build liefert bei genau diesen
+   vier zweimal verschiedene Bilder.** Sie animieren; Bildpunkte sind dort
+   kein Maß.
+2. **Berechnete Stile am Popup.** Vier von fünf Proben meldeten „nicht
+   sichtbar" und verglichen damit zwei Nichtse – ein Haken, der nichts belegt.
+   Die App öffnet kein Leaflet-Popup, sondern ihr eigenes Seitenfenster.
+3. **Regelmengen vergleichen.** Beide Builds komplett zerlegt: **1.341 Regeln
+   vorher, 1.341 nachher.** Zwei scheinen abzuweichen – nachgerechnet sind es
+   dieselben vier Deklarationen in anderer Präfix-Reihenfolge, weil der
+   Minifizierer sie in der neuen Datei anders sortiert. Funktional identisch.
+
+Dazu berechnete Stile an sechs Elementen, die wirklich im DOM sind
+(`.leaflet-container`, `.leaflet-control-attribution`, `.leaflet-bar a`,
+`.leaflet-pane`, `.leaflet-tile-pane`, `.leaflet-marker-icon`): alle identisch.
+
+**Akzeptanzkriterien**
+- [x] Regelmenge unverändert: 1.341 vor und nach der Verschiebung, gleiche
+      Deklarationen.
+- [x] Reihenfolge bleibt: Tailwind aus `index.css` zuerst, dann Leaflet, dann
+      die eigenen Überschreibungen – wie vorher.
+- [x] Rundgang über 29 Ansichten × 2 Sprachen ohne Befund; alle 13 Prüfungen
+      grün.
+
+### 4.59 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/

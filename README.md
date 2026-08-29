@@ -1052,6 +1052,11 @@ Woraus die 325 kB bestehen, ist gemessen und nicht geraten (`BIBELMAP_SOURCEMAP=
 npm run build` und die Zuordnung über die Sourcemaps): 174 kB react-dom, 41 kB
 Übersetzungen, 28 kB Startseite, 20 kB App – der Rest liegt unter 8 kB.
 
+Dasselbe galt fürs Stylesheet: `index.css` zog Leaflets CSS auf oberster Ebene
+herein, also lagen 17 kB Kartenstil im render-blockierenden Stylesheet der
+Startseite. Sie stehen jetzt in `src/map.css` und kommen mit der ersten
+Ansicht, die eine Karte zeigt – **101 → 84 kB, gzip 22,0 → 15,2 kB**.
+
 Und das größte Einzelstück der App ist gar kein JavaScript: `places.json`. Sie
 wog **1.365 kB** (215 kB gzip) und wiegt jetzt **560 kB** (**109 kB gzip**):
 Zwei Drittel davon waren siebenfach gespeicherte Wiederholung – je Vers ein
