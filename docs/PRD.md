@@ -1056,7 +1056,315 @@ Drei Angaben je Station verweisen auf etwas anderes, und alle drei scheitern
 
 `npm run check` führt jetzt **10** Prüfungen aus.
 
-### 4.49 Mehr über Jesus: Anderswo und außerbiblisch — P1 ✅
+### 4.49 Die Kirchenväter bekommen Text — und zwei Frauen — P1 ✅
+
+Nach der Heilsgeschichte ergab dieselbe Messung: **17 Kirchenväter, Ø 69
+Zeichen**. „Goldmund; berühmtester Prediger der Ostkirche." (48 Zeichen) für
+Johannes Chrysostomus. Der Rest der App stand bei 200 bis 250.
+
+Jetzt **22 Väter, Ø 254 Zeichen** (223–291), in beiden Sprachen. Nicht länger
+nur, was jemand war, sondern was er getan hat und woran man es heute noch
+merkt: Ignatius bittet die Gemeinden unterwegs ausdrücklich, ihn **nicht** zu
+retten; Athanasius' Osterbrief von 367 nennt zum ersten Mal genau die
+siebenundzwanzig Schriften des Neuen Testaments; Basilius baut vor Caesarea die
+„Basiliade" aus Krankenhaus, Herberge und Armenküche.
+
+**Was strittig ist, steht dabei.** Die alten Einzeiler waren nicht nur kurz,
+sie waren glatt:
+
+- **Kyrill von Alexandria**, vorher „Führende Stimme beim Konzil von Ephesus
+  (431)" – jetzt auch: seine Mittel waren hart und teils gekauft, und über
+  seine Rolle im Klima, in dem Hypatia ermordet wurde, streiten Historiker bis
+  heute.
+- **Chrysostomus** – dass seine Predigten gegen die Juden später schweren
+  Schaden angerichtet haben.
+- **Tertullian** – dass er am Ende mit der Großkirche brach.
+- **Origenes** – dass Sätze aus seinem Werk drei Jahrhunderte nach seinem Tod
+  verurteilt wurden.
+- **Hieronymus** – „streitsüchtig bis zur Bosheit", und dass ein Kreis
+  gelehrter Frauen um Paula einen großen Teil der Arbeit mittrug.
+
+**Alle siebzehn waren Männer.** Neu auf der Karte und im Zeitbaum:
+
+- **Perpetua von Karthago** († 203) – ihr Gefängnistagebuch ist einer der
+  ältesten erhaltenen Texte einer Christin überhaupt.
+- **Makrina die Jüngere** († 379) – ältere Schwester und Lehrerin von Basilius
+  und Gregor von Nyssa. Der Eintrag sagt auch, woher wir das wissen: Gregor hat
+  es aufgeschrieben, aus seiner Sicht, nicht ihrer.
+- **Gregor von Nyssa** – der dritte Kappadokier fehlte, während die anderen
+  beiden dastanden.
+- **Justin der Märtyrer** und **Johannes von Damaskus**.
+
+Justin stand bereits im Zeitbaum und fehlte auf der Karte nur, weil ihm
+`tradition` und Koordinaten fehlten – `FATHERS` ist
+`GENEALOGY.filter(p => p.tradition && p.lat != null)`.
+
+Nebenbei: die letzte Reisenstation unter 100 Zeichen. **Oboth** stand bei 74
+(„Weiter am Rand der edomitischen Berge entlang nach Norden, Lager um Lager.")
+und trägt jetzt, was dort wirklich steht: den einzigen Vers, den 4. Mose selbst
+als Zitat aus dem „Buch von den Kriegen des HERRN" kennzeichnet – einem Buch,
+das die Bibel namentlich nennt und von dem sonst keine Zeile erhalten ist.
+
+**Akzeptanzkriterien**
+- [x] 22 Väter, alle zwischen 223 und 291 Zeichen; kein englisches Feld enthält
+      deutsche Funktionswörter (geprüft).
+- [x] Keine Person hängt im Baum in der Luft: alle `parent`-Kennungen zeigen auf
+      eine vorhandene Person, keine doppelte ID (240 Personen).
+- [x] `tradition` folgt der Sprache, in der jemand schrieb, wie es die
+      Beschriftung sagt („Westlich (lateinisch)" / „Östlich (griechisch)"):
+      Justin schrieb Griechisch, obwohl er in Rom lehrte und starb – also
+      `east`; Perpetuas Passio ist lateinisch – also `west`.
+- [x] Im Browser in beiden Sprachen: alle fünf neuen und vier alte Einträge
+      zeigen ihren vollen Text über `#kirche=vater,<id>`, kein
+      JavaScript-Fehler.
+- [x] Alle zehn Prüfungen sauber – `check:church` prüft weiter, dass jeder
+      Personenverweis der Kirchengeschichte eine Person im Zeitbaum trifft.
+
+**Nicht angefasst, und warum:** 23 Glaubenszeugen stehen im Zeitbaum, aber
+nicht auf der Kirchenväter-Karte – Luther, Calvin, Bonhoeffer, Franz von
+Assisi. Ihnen fehlen `tradition` und Koordinaten. Die Koordinaten wären
+nachzutragen; `Tradition` aber kennt nur `west | east | orient` und meint damit
+die Sprachräume der Alten Kirche. Einen Reformator als „Westlich (lateinisch)"
+zu etikettieren wäre keine Ergänzung, sondern eine falsche Einordnung. Das ist
+eine Entscheidung über die Taxonomie, keine Datenlücke – der Zeitstrahl der
+Kirchengeschichte deckt diese Jahrhunderte bereits über **Ereignisse** ab.
+
+### 4.50 Die Konzilien sagen, worum gestritten wurde — P1 ✅
+
+Nach den Kirchenvätern die letzte dünne Stelle derselben Messung: **14
+Konzilien, Ø 100 Zeichen**. Nicäa I – der Streit, an dem sich entschied, ob
+Christus Geschöpf ist – stand in **72 Zeichen** da: „Gegen den Arianismus; das
+Nicänische Glaubensbekenntnis, „wesensgleich"."
+
+Jetzt **Ø 270 Zeichen** (226–324), in beiden Sprachen. § 4.49 hatte die späteren
+Konzilien schon ausführlicher (98–135); die sind mitgezogen, damit die Liste
+nicht in der Mitte kippt.
+
+**Was jetzt dasteht, weil es zur Sache gehört:**
+
+- **Nicäa I** antwortete mit einem Wort, das nirgends in der Bibel steht –
+  „wesensgleich" –, und **genau das war der Haupteinwand dagegen**.
+- **Konstantinopel I**: Was heute als „Nicänisches Glaubensbekenntnis" gebetet
+  wird, ist die Fassung von 381, nicht die von 325.
+- **Ephesus**: Kyrill eröffnete, bevor die Bischöfe aus Antiochia eintrafen,
+  und Nestorius kam nicht zu Wort – ein Vorgehen, das bis heute umstritten ist.
+- **Chalcedon**: Die berühmteste Formel der Christenheit sagt vor allem, was
+  man *nicht* sagen darf. Und: seit den 1970er Jahren halten gemeinsame
+  Erklärungen fest, dass der Streit mit den orientalischen Kirchen weitgehend
+  an einem Wort hing.
+- **Konstantinopel II**: Justinian ließ drei längst Verstorbene verurteilen, um
+  die Gegner Chalcedons zurückzugewinnen. Zurückgewonnen wurde niemand.
+- **Konstantinopel III** verurteilte einen längst verstorbenen Papst wegen
+  Nachgiebigkeit – zwölfhundert Jahre später ein Hauptargument **gegen** die
+  Unfehlbarkeit, um die es weiter unten bei Vatikanum I geht.
+- **Nicäa II**: Die fränkischen Bischöfe lehnten das Konzil zunächst ab, weil
+  ihre lateinische Übersetzung aus der Verehrung eine Anbetung gemacht hatte.
+- **Konstanz** erklärte sich über alle drei Päpste – ein Anspruch, den Rom
+  später verwarf – und verbrannte Jan Hus trotz kaiserlichem Geleitbrief.
+- **Vatikanum I**: Rund sechzig Bischöfe reisten vor der Abstimmung ab, statt
+  dagegen zu stimmen.
+- **Vatikanum II**: das erste Konzil, das keinen Lehrsatz festlegt und
+  niemanden verurteilt.
+
+**Akzeptanzkriterien**
+- [x] Alle 14 zwischen 226 und 324 Zeichen, beide Sprachen gefüllt; kein
+      englisches Feld enthält deutsche Funktionswörter.
+- [x] `recognisedBy` unverändert – die Prüfung `check:church` besteht weiter
+      darauf, dass jedes Konzil sagt, wer es zählt, und dass Nicäa II das
+      letzte von Ost **und** West anerkannte bleibt.
+- [x] Im Browser in beiden Sprachen **zeichengenau** gegen die Daten geprüft:
+      jeder der 28 Texte (14 × 2) erscheint mit exakt der Länge, die in
+      `church.ts` steht. Ein Test, der nur „irgendein langer Absatz ist da"
+      prüft, würde auch dann bestehen, wenn die Ansicht den falschen Text
+      zeigt.
+- [x] Kein JavaScript-Fehler, alle zehn Prüfungen sauber.
+
+Damit stehen **Reisen (178 Stationen), Heilsgeschichte (30), Kirchenväter (22)
+und Konzilien (14)** auf demselben Stand: 200 bis 300 Zeichen je Eintrag, in
+zwei Sprachen, mit dem Strittigen im Text statt daneben.
+
+### 4.51 „Vatikanum I" auf Englisch — was die i18n-Prüfung nicht sah — P1 ✅
+
+Die Textlängen-Messung war ausgereizt, also ein anderes Maß: Die App hat durch
+parallele Arbeiten vier neue Ansichten bekommen (Jesus-Sektion, Israel-Karte,
+Kirchen-Zeitstrahl, Konzilien), und weder `check-i18n.mjs` noch `a11y-audit.mjs`
+kannten sie. Beide Listen ergänzt – 19 → 24 und 17 → 21 Ansichten.
+
+**Der Fund war größer als der Anlass.** Der erste Lauf meldete *eine* Stelle:
+„Mar Saba bei Jerusalem", mein eigener Eintrag aus § 4.49. Beim Nachsehen, wie
+das durchgerutscht war, kam heraus, dass `city` (Kirchenväter **und** Konzilien)
+und `name` (Konzilien) je **ein** Feld sind, das unverändert in beide
+Oberflächen ging. Auf Englisch stand also:
+
+| | zeigte auf Englisch | jetzt |
+|---|---|---|
+| Konzil | Vatikanum I · Vatikanum II | Vatican I · Vatican II |
+| | Laterankonzil IV | Lateran IV |
+| | Konstantinopel I / II / III | Constantinople I / II / III |
+| | Nicäa I · Nicäa II · Trient | Nicaea I · Nicaea II · Trent |
+| | Apostelkonzil | Council of Jerusalem |
+| Ort | Rom · Mailand · Karthago | Rome · Milan · Carthage |
+| | Antiochia · Nazianz · Kappadokien | Antioch · Nazianzus · Cappadocia |
+| | Konstantinopel · Florenz · Konstanz | Constantinople · Florence · Constance |
+
+**24 Einträge**, und die Prüfung meldete davon **einen** – und den nur zufällig,
+weil „bei" in ihrer Wortliste steht. Ihre Liste kannte Funktionswörter, keine
+Eigennamen. Jetzt kennt sie beides.
+
+Neu: `cityEn` auf `Person`/`Father`, `nameEn` und `cityEn` auf `Council`, dazu
+`cityName()` und `councilName()` in `church.ts` statt acht Einzelentscheidungen
+in `ChurchMode.tsx`. Ein fehlendes `…En` ist kein Mangel, sondern die Regel:
+Alexandria, Smyrna, Ephesus, Hippo und Chalcedon heißen in beiden Sprachen
+gleich.
+
+**Zwei weitere Funde derselben Runde**
+
+- `SearchPanel` – der farbige Punkt der Epoche trug seine Beschriftung fest auf
+  Deutsch (`title={e.de}`), in **jeder** Ansicht mit Karte, für Maus wie
+  Screenreader.
+- Das eigene Deutsch war uneinheitlich: die Ortsdaten und alle Reisen schreiben
+  „Bethlehem", Hieronymus' Eintrag als einziger „Betlehem" (und ein Satz in
+  `nationsTribes.ts`). Angeglichen.
+
+**Werkzeug:** `check-i18n.mjs` und `a11y-audit.mjs` nehmen jetzt `CHROME_PATH`,
+wie `a11y-contrast.mjs` es längst tat – wer einen Chromium hat, lässt Playwright
+keinen zweiten laden.
+
+**Akzeptanzkriterien**
+- [x] `check-i18n.mjs` über 24 Ansichten: **kein deutscher Rest** in der
+      englischen Oberfläche.
+- [x] Gegenprobe auf Deutsch findet **781** Stellen – die Prüfung kann also
+      finden, und „nichts gefunden" ist ein Befund, kein Ausfall.
+- [x] Zusätzlich direkt gemessen, nicht nur „der Wächter schweigt": zehn
+      Einträge in beiden Sprachen darauf geprüft, dass die richtige Form
+      **dasteht** und die andere **nirgends**.
+- [x] „Rom" braucht in der Wortliste eine Sonderregel: `Rom(?!\.?\s*\d)` –
+      „Rom 15,19" ist der Römerbrief. Der erste Lauf mit der neuen Liste meldete
+      genau diesen Fehlalarm fünfmal.
+- [x] `a11y-audit.mjs` über 21 Ansichten: alles benannt, alles im Bild auf
+      390 px, kein Konsolenfehler.
+- [x] Alle zehn `npm run check`-Prüfungen sauber.
+
+**Zwei kaputte Messungen unterwegs, beide korrigiert**
+- Der Sprachtest verglich mit `includes()` und meldete vier Fehler, die keine
+  waren: „Rom" steckt in „Rome", „Trent" in „Trento". Mit Wortgrenzen blieb
+  **ein** Fund übrig – und der war echt (Bethlehem/Betlehem).
+- Ein Test, der prüft, ob *irgendein* langer Absatz da ist, besteht auch, wenn
+  die Ansicht den falschen Text zeigt. Darum die Gegenprobe auf die jeweils
+  andere Sprachform.
+
+### 4.52 Die Prüfung, die es für die Reisen nie gab — P1 ✅
+
+Ein anderes Maß als bisher: **welche Datendatei hat gar keinen Wächter?**
+Antwort: ausgerechnet `journeys.ts` – die Datei, die in § 4.44 bis § 4.46 auf
+178 Stationen wuchs und in jeder dieser Runden **von Hand** nachgemessen wurde.
+`check-quiz.mjs` liest sie zwar, prüft aber nur die Quizfragen. Eine Prüfung,
+die im Kopf dessen läuft, der gerade daran arbeitet, endet mit ihm.
+
+Neu: **`npm run check:journeys`**, die elfte Prüfung. Sie deckt `journeys.ts`
+(15 Reisen, 178 Stationen) **und** `mission.ts` (5 Reisen, 65 Stationen,
+64 Ausbreitungs-Ereignisse) ab – zusammen 243 Stationen, 240 davon mit
+Ortskennung.
+
+Vier Fehlerarten, die alle **still** scheitern:
+
+1. Eine `placeId`, die es nicht gibt – der Knopf „auf der Karte zeigen" führt
+   ins Leere.
+2. Eine Koordinate, die nicht zu ihrer `placeId` passt – der Marker sitzt neben
+   dem Ort, den er verlinkt.
+3. Zwei Stationen auf demselben Punkt – eine Etappe von 0 km, mit Pfeil und
+   Entfernungsangabe daneben.
+4. Deutsch im englischen Feld.
+
+**Und sie fand gleich drei echte Fälle.** In `mission.ts` lagen drei Stationen
+0,47 bis 0,53 km neben ihrem eigenen Ort: Kos stand als `36.82, 27.11` statt
+`36.81528, 27.11028`. Kein Tippfehler, sondern **Rundung auf zwei
+Nachkommastellen** – `journeys.ts` rundet auf drei (höchstens 0,07 km). Ein
+halber Kilometer zwischen Marker und verlinktem Ort ist auf der Karte sichtbar.
+Alle 62 Stationen mit `placeId` stehen jetzt auf der genauen Ortskoordinate;
+die Abweichung ist 0,0000 km.
+
+Die Schwelle bleibt trotzdem bei 0,2 km und nicht bei null: Die Dateien
+schreiben Koordinaten auf drei Nachkommastellen, das sind bis zu 0,08 km. Eine
+vertauschte Kennung liegt um **Kilometer** daneben, nicht um Meter – die fängt
+0,2 km sicher.
+
+**Akzeptanzkriterien**
+- [x] 243 Stationen: jede `placeId` trifft einen Ort in `places.json`, keine
+      liegt weiter als 0,2 km daneben, jede hat eine Bibelstelle in beiden
+      Sprachen, keine Etappe misst null.
+- [x] Jede der vier Fehlerarten **einzeln** gegengeprobt, indem sie absichtlich
+      erzeugt wurde – und jede wurde gemeldet. Die Nulletappe brauchte einen
+      eigenen Lauf: beim ersten Versuch schlug die Koordinatenregel zuerst an,
+      der Beweis für die Nulletappen-Regel stand also noch aus. Erst eine
+      vollständig verdoppelte Station (gleiche `placeId`, gleiche Koordinate)
+      zeigt sie allein.
+- [x] Die Prüfung trägt zusätzlich ihre eigene Gegenprobe im Code und eine
+      Untergrenze (15 Reisen, 200 Stationen, 1.000 Orte), unter der sie sich
+      für kaputt erklärt.
+- [x] `npm run check` führt jetzt **11** Prüfungen aus, alle sauber.
+
+### 4.53 162 kB, die niemand brauchte — P1 ✅
+
+Wieder ein anderes Maß: **was lädt jeder Besuch, ohne es zu benutzen?**
+
+Der Auslöser war eine Zahl, die nicht mehr stimmte. README und PRD nannten
+„erstes Bündel 462 kB (gzip 136)". Gemessen waren es **521,59 kB (gzip
+173,39)** – die App war gewachsen, die Angabe nicht mitgewachsen.
+
+Beim Nachsehen, **was** darin liegt: `journeys.ts` (114 kB Quelltext) und
+`mission.ts` (68 kB) waren im Startbündel. Beide nur wegen zweier Stellen in
+`App.tsx`, und **beide beginnen mit `if (view !== 'terrain') return`** – die
+Geländeansicht, die selbst erst auf Abruf kommt. Jeder Besuch der Startseite
+lud die 178 Bibelstationen und die 65 Missionsstationen mit, um sie nicht
+anzurühren.
+
+| | vorher | nachher |
+|---|---|---|
+| Startbündel | 521,59 kB | **359,83 kB** |
+| gzip | 173,39 kB | **110,81 kB** |
+
+−162 kB roh, −63 kB gzip, **36 % weniger** auf dem kritischen Pfad. Die beiden
+Dateien sind jetzt eigene Bündel (`journeys` 106 kB, `mission` 56 kB).
+
+**Was das ausdrücklich *nicht* heißt.** Der erste Kommentar im Code behauptete
+„erst geladen, wenn jemand dorthin geht". Die Messung im Browser zeigte etwas
+anderes: beide Dateien werden auf der Startseite geholt – vom Vorabruf im
+Leerlauf, der alle Ansichten nachlädt, damit die App offline vollständig ist.
+Das ist Absicht und bleibt so. Gewonnen ist der **kritische Pfad**: 162 kB
+weniger, die vor dem ersten Bild geparst und ausgeführt werden. Der Kommentar
+sagt das jetzt.
+
+**Akzeptanzkriterien**
+- [x] Startbündel gemessen: 521,59 → 359,83 kB (gzip 173,39 → 110,81).
+- [x] Die Geländeansicht funktioniert weiter, auch per Deep-Link:
+      `#gelaende=reise,exodus`, `#gelaende=reise,abraham` und
+      `#gelaende=mission,second` zeigen die Routenleiste („Reisen &
+      Geschichten →" bzw. „Mission & Ausbreitung →") samt Stationsnavigation;
+      `#gelaende` ohne Route zeigt keine. Kein JavaScript-Fehler.
+- [x] Der Hash überlebt: die Prüfung, die eine unbekannte Reise aus der Adresse
+      entfernt, wartet jetzt auf die Daten. Ohne das hätte ein Aufruf von
+      `#gelaende=reise,exodus` seine Reise verloren, weil die Liste eine
+      Zehntelsekunde später kommt.
+- [x] Alle elf Prüfungen sauber.
+
+**Drei kaputte Messungen, bis eine trug**
+
+Der Reihe nach, weil jede etwas zeigt:
+
+1. Erster Test suchte den Reisenamen im Text (`innerText`) – nicht gefunden.
+   Sah nach Regression aus.
+2. Gegen den Stand **vor** der Änderung gemessen: **genau dasselbe Ergebnis**.
+   Also keine Regression, sondern ein Test, der das Falsche prüft – die Route
+   liegt auf der maplibre-Leinwand, nicht im Text.
+3. Zweiter Versuch las die Leinwand mit `readPixels` aus: alles null, weil
+   maplibre den Puffer nach dem Zeichnen verwirft.
+4. Erst der dritte fand den richtigen Beobachtungspunkt: die **Routenleiste im
+   DOM**, die es nur gibt, wenn eine Route gesetzt ist.
+
+Ohne Schritt 2 hätte ich einen Fehler „behoben", den es nie gab.
+
+### 4.54 Mehr über Jesus: Anderswo und außerbiblisch — P1 ✅
 
 **Anlass:** § 4.47 hat die Sektion gebaut, aber zwei naheliegende Fragen offen
 gelassen. Erstens: Wo kann ich das hören und sehen? Der einzige Verweis nach
@@ -1101,7 +1409,7 @@ eine Station davon berührt wird, steht der Eintrag als Marke darunter.
 - [ ] **Offen:** Der Netzzugang der Arbeitsumgebung lässt bibleproject.com,
       bibletunes.de und thechosen.tv nicht durch. Die Adressen stammen aus der
       Websuche, `check:gospel-links` konnte sie noch nicht bestätigen.
-### 4.50 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.55 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
@@ -1112,9 +1420,11 @@ Startseite und Seite „Projekte unterstützen".
 
 ## 5. Nicht-funktionale Anforderungen
 
-- **Performance:** Erstes Bündel 462 kB (gzip 136 kB) – die Ansichten liegen in
-  eigenen Dateien und kommen auf Abruf; im Leerlauf werden sie nachgeholt, damit
-  die App offline vollständig bleibt. Flüssige Karte bei 1.300+ Markern,
+- **Performance:** Erstes Bündel **360 kB (gzip 111 kB)** – die Ansichten liegen
+  in eigenen Dateien und kommen auf Abruf; im Leerlauf werden sie nachgeholt,
+  damit die App offline vollständig bleibt. (Die Zahl stand lange bei 462/136 und
+  war veraltet; gemessen waren es 522/173, bevor `journeys.ts` und `mission.ts`
+  ausgelagert wurden – siehe § 4.53.) Flüssige Karte bei 1.300+ Markern,
   Bibeltext lazy pro Buch.
 - **Responsiv:** nutzbar ab 360 px Breite; Präsentationsmodus stapelt auf Mobile.
 - **Barrierefreiheit:** `prefers-reduced-motion` wird beachtet (Karte setzt statt

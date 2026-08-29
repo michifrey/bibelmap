@@ -15,8 +15,6 @@ import MapView from './components/MapView';
 import { DEFAULT_BASEMAP, fallbackFor, type BasemapId } from './lib/basemaps';
 import Header, { type Mode, type View } from './components/Header';
 import SkipLinks from './components/SkipLinks';
-import { JOURNEY_BY_ID } from './data/journeys';
-import { JOURNEYS as MISSION_JOURNEYS } from './data/mission';
 import type { TerrainRoute } from './components/TerrainMap';
 import { loadMedia } from './lib/media';
 import Timeline from './components/Timeline';
@@ -600,16 +598,44 @@ export default function App() {
     setNavEpoch((n) => n + 1);
   }
   /**
+   * Die Routendaten für das Gelände, nachgeladen statt mitgebündelt.
+   *
+   * `journeys.ts` und `mission.ts` lagen im Startbündel, obwohl beide Stellen
+   * unten mit `view !== 'terrain'` beginnen. Sie sind jetzt eigene Dateien:
+   * das erste Bündel schrumpft von 522 auf 360 kB (gzip 173 → 111).
+   *
+   * Das heißt **nicht**, dass sie nur im Gelände geladen werden – der
+   * Vorabruf im Leerlauf weiter oben holt sie ohnehin, damit die App offline
+   * vollständig ist. Gewonnen ist der kritische Pfad: 162 kB weniger, die vor
+   * dem ersten Bild geparst und ausgeführt werden müssen.
+   */
+  const [terrainDaten, setTerrainDaten] = useState<{
+    byId: Record<string, import('./data/journeys').BibleJourney>;
+    mission: (typeof import('./data/mission'))['JOURNEYS'];
+  } | null>(null);
+
+  useEffect(() => {
+    if (view !== 'terrain' || terrainDaten) return;
+    let aktuell = true;
+    void Promise.all([import('./data/journeys'), import('./data/mission')]).then(([j, m]) => {
+      if (aktuell) setTerrainDaten({ byId: j.JOURNEY_BY_ID, mission: m.JOURNEYS });
+    });
+    return () => {
+      aktuell = false;
+    };
+  }, [view, terrainDaten]);
+
+  /**
    * Die Route, die im Gelände liegt – aus den Bibelreisen oder aus der Mission.
    * Nur in der Geländeansicht, sonst stört sie die flache Karte.
    */
   const terrainRoute = useMemo((): TerrainRoute | null => {
-    if (view !== 'terrain') return null;
+    if (view !== 'terrain' || !terrainDaten) return null;
     if (missionNav?.journey) {
-      const m = MISSION_JOURNEYS.find((j) => j.id === missionNav.journey);
+      const m = terrainDaten.mission.find((j) => j.id === missionNav.journey);
       if (m) return { id: m.id, kind: 'mission', de: m.de, en: m.en, color: m.color, stops: m.stops };
     }
-    const j = journeyNav ? JOURNEY_BY_ID[journeyNav.id] : null;
+    const j = journeyNav ? terrainDaten.byId[journeyNav.id] : null;
     if (!j) return null;
     // Die Bibelreisen tragen keine eigene Farbe – sie erben die ihrer Epoche.
     return {
@@ -620,17 +646,20 @@ export default function App() {
       color: ERA_BY_ID[j.era]?.color ?? '#e0a449',
       stops: j.stops,
     };
-  }, [view, journeyNav, missionNav]);
+  }, [view, journeyNav, missionNav, terrainDaten]);
 
   // Eine Route, die es nicht gibt, verschwindet auch aus der Adresse – ein
   // Hash, der auf nichts zeigt, ist schlechter als gar keiner.
   useEffect(() => {
-    if (view !== 'terrain') return;
-    if (journeyNav && !JOURNEY_BY_ID[journeyNav.id]) setJourneyNav(null);
-    if (missionNav?.journey && !MISSION_JOURNEYS.some((j) => j.id === missionNav.journey)) {
+    // Solange die Daten noch laden, ist „kenne ich nicht" keine Auskunft: ein
+    // Aufruf von #gelaende mit einer Reise darf nicht daran scheitern, dass die
+    // Liste eine Zehntelsekunde später kommt.
+    if (view !== 'terrain' || !terrainDaten) return;
+    if (journeyNav && !terrainDaten.byId[journeyNav.id]) setJourneyNav(null);
+    if (missionNav?.journey && !terrainDaten.mission.some((j) => j.id === missionNav.journey)) {
       setMissionNav(null);
     }
-  }, [view, journeyNav, missionNav]);
+  }, [view, journeyNav, missionNav, terrainDaten]);
 
   /** Aus dem Gelände zurück dorthin, wo die Route herkommt. */
   function openRouteFromTerrain(r: TerrainRoute) {

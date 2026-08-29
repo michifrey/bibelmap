@@ -629,7 +629,7 @@ const TRIBE_JUDAH: GenNode = {
                                                   children: [
                                                     {
                                                       id: 'jesus', de: 'Jesus Christus', en: 'Jesus Christ', ref: 'Mt 1:16 · Lk 3:23', line: 'messiah',
-                                                      note: { de: 'Der Messias – Ziel der Verheißungslinie von Abraham und David (Mt 1:1). Geboren in Betlehem, aufgewachsen in Nazaret.', en: 'The Messiah – goal of the line of promise from Abraham and David (Mt 1:1). Born in Bethlehem, raised in Nazareth.' },
+                                                      note: { de: 'Der Messias – Ziel der Verheißungslinie von Abraham und David (Mt 1:1). Geboren in Bethlehem, aufgewachsen in Nazaret.', en: 'The Messiah – goal of the line of promise from Abraham and David (Mt 1:1). Born in Bethlehem, raised in Nazareth.' },
                                                       place: 'Bethlehem',
                                                     },
                                                   ],

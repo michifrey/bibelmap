@@ -165,7 +165,17 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   und Tagesmärsche zur vorigen, ein Klick auf *Auf Karte* springt zur Ortskarte.
 - **Kirchengeschichte-Modus** – drei Reiter: **Zeitstrahl**, **Kirchenväter**
   (westlich/lateinisch · östlich/griechisch · orientalisch) und die
-  **Konzilien**. Jeder Eintrag hat eine eigene Adresse (`#kirche=zeit,thesen`,
+  **Konzilien**. **22 Väter**, jeder mit einem ausgeführten Absatz statt einer
+  Zeile: was er getan hat, woran man ihn heute noch merkt – und was an ihm
+  strittig ist. Bei Kyrill von Alexandria steht, dass Historiker über seine
+  Rolle im Klima um Hypatias Ermordung bis heute streiten; bei Chrysostomus,
+  dass seine Predigten gegen die Juden später schweren Schaden angerichtet
+  haben; bei Tertullian, dass er am Ende mit der Großkirche brach. Neu dabei
+  sind **Perpetua** (ihr Gefängnistagebuch ist einer der ältesten erhaltenen
+  Texte einer Christin) und **Makrina**, die Lehrerin ihrer beiden berühmten
+  Brüder – bis dahin waren alle siebzehn Väter Männer –, dazu **Justin der
+  Märtyrer**, **Gregor von Nyssa**, der bis dahin fehlende dritte Kappadokier,
+  und **Johannes von Damaskus**. Jeder Eintrag hat eine eigene Adresse (`#kirche=zeit,thesen`,
   `#kirche=vater,augustinus`, `#kirche=konzil,chalcedon`). Paulus’ Reisen stehen
   nicht hier, sondern in *Mission & Ausbreitung* – ein Link im Modus führt
   hinüber.
@@ -193,6 +203,20 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   **Chalcedon 451**, einer ab **Laterankonzil IV 1215**. Wer stattdessen eine
   glatte Liste hinschreibt, hat unbemerkt eine Seite gewählt und verkauft sie
   als die gemeinsame.
+
+  **Und sie sagen, worum gestritten wurde.** Jedes der vierzehn trägt einen
+  ausgeführten Absatz statt einer Zeile: dass Nicäa mit einem Wort antwortete,
+  das nirgends in der Bibel steht, und dass genau das der Haupteinwand war;
+  dass das „Nicänische Glaubensbekenntnis", das heute gebetet wird, in
+  Wahrheit die Fassung von 381 ist; dass Kyrill in Ephesus eröffnete, bevor die
+  Bischöfe aus Antiochia da waren, und Nestorius nicht zu Wort kam; dass
+  Chalcedons berühmte Formel vor allem sagt, was man *nicht* sagen darf – und
+  dass gemeinsame Erklärungen seit den 1970er Jahren festhalten, der Streit
+  habe weitgehend an einem Wort gehangen. Konstantinopel III verurteilte einen
+  längst verstorbenen Papst, was zwölfhundert Jahre später gegen die
+  Unfehlbarkeit ins Feld geführt wurde; Konstanz verbrannte Jan Hus trotz
+  Geleitbrief; Vatikanum II ist das erste Konzil, das keinen Lehrsatz festlegt
+  und niemanden verurteilt.
 
   **Zu den Quellen.** Dieselbe Regel wie bei der Israel-Karte, und aus demselben
   Grund: Ein Modus, der Spaltungen erzählt – 451, 1054, 1517 –, redet über
@@ -526,12 +550,24 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die zehn Prüfungen, die von sich aus immer dasselbe
+`npm run check` bündelt die elf Prüfungen, die von sich aus immer dasselbe
 Ergebnis liefern – Buchkürzel, Zeitdokumente, Stammesgrenzen, Farbkontraste,
-Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen, Quizfragen und
-Heilsgeschichte – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
+Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen, Quizfragen,
+Heilsgeschichte und **Reisen & Mission** – und läuft in der CI **vor** dem
+Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
+
+Zwei weitere Prüfungen brauchen einen Browser und laufen darum von Hand:
+`scripts/check-i18n.mjs` (steht in der englischen Oberfläche noch Deutsch?) und
+`scripts/a11y-audit.mjs` (Namen, Telefonbreite, Tastaturweg). Beide nehmen
+`CHROME_PATH`, wenn schon ein Chromium da ist:
+
+```bash
+CHROME_PATH=/usr/bin/chromium node scripts/check-i18n.mjs http://localhost:4173
+CHROME_PATH=/usr/bin/chromium node scripts/check-i18n.mjs http://localhost:4173 de   # Gegenprobe
+CHROME_PATH=/usr/bin/chromium node scripts/a11y-audit.mjs http://localhost:4173
+```
 
 Bewusst nicht dabei sind `npm run check:bp` und `npm run check:links`. Beide
 fragen fremde Server; ein Anbieter mit Schluckauf darf keinen Deploy blockieren
@@ -1001,8 +1037,13 @@ Modus, dann die Nebenansicht, zuletzt die Ortskarte. In den Reisen blättern
 Die Ansichten (Präsentation, Reisen, Mission, Kirchengeschichte, Vergleich,
 Quiz, Stammbaum, Graph) liegen in eigenen Dateien und werden erst geladen,
 wenn sie geöffnet werden – ebenso der Suchindex über Reisen und Ausbreitung,
-der an den großen Datendateien hängt. Das erste Bündel schrumpft damit von
-855 kB auf 462 kB (gzip: 267 → 136 kB).
+der an den großen Datendateien hängt. Dazu die beiden größten Datendateien
+selbst: `journeys.ts` und `mission.ts` lagen im Startbündel, obwohl beide
+Stellen, die sie brauchten, mit „nur in der Geländeansicht" beginnen.
+
+Das erste Bündel: **360 kB (gzip 111 kB)**. Die Zahl stand hier lange bei
+462 kB / 136 kB und war schlicht veraltet – gewachsen war die App auf 522 kB
+(gzip 173), bevor die beiden Datendateien ausgelagert wurden.
 
 Sobald der Browser Ruhe hat **und** der Service Worker steht, werden die
 Ansichten im Hintergrund nachgeholt. So bleibt der Start leicht und die App
