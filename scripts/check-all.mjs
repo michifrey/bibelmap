@@ -35,6 +35,7 @@ const CHECKS = [
   { name: 'Quizfragen', script: 'check-quiz.mjs', ts: true },
   { name: 'Heilsgeschichte', script: 'check-history.mjs', ts: true },
   { name: 'Reisen & Mission', script: 'check-journeys.mjs', ts: true },
+  { name: 'Startzahlen', script: 'build-counts.mjs', ts: true, args: ['--pruefen'] },
 ];
 
 const results = [];
@@ -42,7 +43,7 @@ for (const check of CHECKS) {
   const args = check.ts
     ? ['--experimental-strip-types', '--import', './scripts/lib/ts-loader.mjs']
     : [];
-  const r = spawnSync(process.execPath, [...args, path.join(ROOT, 'scripts', check.script)], {
+  const r = spawnSync(process.execPath, [...args, path.join(ROOT, 'scripts', check.script), ...(check.args ?? [])], {
     cwd: ROOT,
     encoding: 'utf8',
   });
