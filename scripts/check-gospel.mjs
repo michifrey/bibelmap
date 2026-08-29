@@ -31,9 +31,10 @@ const { BP_THEMES, BP_VIDEO_BY_ID, BT_BY_BOOK, chapterOfRef, overviewVideo } = a
   path.join(ROOT, 'src/data/gospelMedia.ts')
 );
 const { WITNESSES } = await import(path.join(ROOT, 'src/data/witnesses.ts'));
+const { expandPlaces } = await import(path.join(ROOT, 'src/lib/places.ts'));
 
 const roh = JSON.parse(fs.readFileSync(path.join(ROOT, 'public/data/places.json'), 'utf8'));
-const PLACES = Array.isArray(roh) ? roh : roh.places;
+const PLACES = expandPlaces(roh);
 const PLACE_BY_ID = new Map(PLACES.map((p) => [p.id, p]));
 
 const books = loadBooks();

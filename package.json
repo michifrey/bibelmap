@@ -5,9 +5,9 @@
   "license": "GPL-3.0-or-later",
   "type": "module",
   "scripts": {
-    "predev": "node scripts/sync-maplibre-worker.mjs",
+    "predev": "node scripts/sync-maplibre-worker.mjs && node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-counts.mjs",
     "dev": "vite",
-    "prebuild": "node scripts/sync-maplibre-worker.mjs",
+    "prebuild": "node scripts/sync-maplibre-worker.mjs && node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-counts.mjs",
     "build": "tsc --noEmit && vite build",
     "check": "node scripts/check-all.mjs",
     "check:aliases": "node scripts/check-aliases.mjs",
@@ -23,14 +23,16 @@
     "check:tribes": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-tribes.mjs",
     "check:urls": "node scripts/check-urls.mjs",
     "preview": "vite preview",
-    "data": "node scripts/build-data.mjs",
+    "data": "node scripts/build-data.mjs && node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-places-compact.mjs",
     "text": "node scripts/build-text.mjs",
     "names": "node scripts/build-names-de.mjs",
     "media": "node scripts/build-media.mjs",
     "xrefs": "node scripts/build-xrefs.mjs",
     "check:quiz": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-quiz.mjs",
     "check:history": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-history.mjs",
-    "check:journeys": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-journeys.mjs"
+    "check:journeys": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-journeys.mjs",
+    "counts": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-counts.mjs",
+    "data:compact": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-places-compact.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

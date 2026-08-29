@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
+import '../lib/mapStyles';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
-import { addBasemap, basemapAttr } from '../lib/basemaps';
+import { basemapAttr } from '../lib/basemaps';
+import { addBasemap } from '../lib/basemapLayer';
 import { flyOptions } from '../lib/motion';
 import type { Place } from '../types';
 import type { Lang } from '../i18n';

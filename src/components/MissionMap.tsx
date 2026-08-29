@@ -1,8 +1,10 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import '../lib/mapStyles';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
-import { addBasemap, basemapAttr } from '../lib/basemaps';
+import { basemapAttr } from '../lib/basemaps';
+import { addBasemap } from '../lib/basemapLayer';
 import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions } from '../lib/motion';

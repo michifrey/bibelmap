@@ -550,11 +550,11 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die elf Prüfungen, die von sich aus immer dasselbe
+`npm run check` bündelt die dreizehn Prüfungen, die von sich aus immer dasselbe
 Ergebnis liefern – Buchkürzel, Zeitdokumente, Stammesgrenzen, Farbkontraste,
 Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen, Quizfragen,
-Heilsgeschichte und **Reisen & Mission** – und läuft in der CI **vor** dem
-Build: ein Tippfehler in `bookAliases.json` oder
+Heilsgeschichte, Reisen & Mission, Startzahlen und **Ortsdatei** – und läuft in
+der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
 
@@ -1086,9 +1086,41 @@ der an den großen Datendateien hängt. Dazu die beiden größten Datendateien
 selbst: `journeys.ts` und `mission.ts` lagen im Startbündel, obwohl beide
 Stellen, die sie brauchten, mit „nur in der Geländeansicht" beginnen.
 
-Das erste Bündel: **360 kB (gzip 111 kB)**. Die Zahl stand hier lange bei
-462 kB / 136 kB und war schlicht veraltet – gewachsen war die App auf 522 kB
-(gzip 173), bevor die beiden Datendateien ausgelagert wurden.
+Und die Karte selbst: Leaflet samt Erweiterungen sind 187 kB, die **jeder**
+Besuch lud – auch der von `/`, wo die Startseite steht und gar keine Karte
+gezeigt wird.
+
+**Was das HTML beim ersten Aufruf von `/` referenziert: 325 kB.** Vorher waren
+es 562 kB. Die Zahl stand hier lange bei „462 kB" und meinte ohnehin nur eine
+einzelne Datei, nicht die Kette, die der Browser vor dem ersten Bild abarbeitet.
+Woraus die 325 kB bestehen, ist gemessen und nicht geraten (`BIBELMAP_SOURCEMAP=1
+npm run build` und die Zuordnung über die Sourcemaps): 174 kB react-dom, 41 kB
+Übersetzungen, 28 kB Startseite, 20 kB App – der Rest liegt unter 8 kB.
+
+Dasselbe galt fürs Stylesheet: `index.css` zog Leaflets CSS auf oberster Ebene
+herein, also lagen 17 kB Kartenstil im render-blockierenden Stylesheet der
+Startseite. Sie stehen jetzt in `src/map.css` und kommen mit der ersten
+Ansicht, die eine Karte zeigt – **101 → 84 kB, gzip 22,0 → 15,2 kB**.
+
+Und das größte Einzelstück der App ist gar kein JavaScript: `places.json`. Sie
+wog **1.365 kB** (215 kB gzip) und wiegt jetzt **560 kB** (**109 kB gzip**):
+Zwei Drittel davon waren siebenfach gespeicherte Wiederholung – je Vers ein
+Objekt aus `osis`, `ref`, `book`, `bookNum`, `chapter`, `verse` und `sort`,
+wobei sechs Felder aus dem ersten folgen. Jetzt steht dort `"Josh.10.1"`, die
+Datei nennt oben ihre 61 Bücher, und `expandPlaces` rechnet zurück –
+Zeichen für Zeichen gegengeprüft. Die alte Form wird weiter gelesen.
+
+Die Startseite zeigt daraus zehn Zahlen und keine Karte – wartete
+aber trotzdem darauf, weil der Ladebildschirm vor ihr stand. Die Zahlen stehen
+jetzt in `counts.json` (**147 Bytes**, beim Bauen aus derselben Datei
+gerechnet), die Ortsdaten laufen im Hintergrund weiter. Auf einer Leitung mit
+1,6 Mbit/s und 150 ms Latenz gemessen, je drei Läufe, mit gzip wie in der
+Produktion:
+
+| | vorher | nachher |
+|---|---|---|
+| Startseite steht | 2.424 ms | **1.160 ms** |
+| bis Marker auf der Karte | 3.144 ms | **2.622 ms** |
 
 Sobald der Browser Ruhe hat **und** der Service Worker steht, werden die
 Ansichten im Hintergrund nachgeholt. So bleibt der Start leicht und die App

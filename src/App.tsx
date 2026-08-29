@@ -3,6 +3,8 @@ import type { Place } from './types';
 import { LangContext, type Lang, useT, t as tr } from './i18n';
 import {
   loadPlaces,
+  loadCounts,
+  type PlaceCounts,
   placesInEra,
   placesUpToEra,
   placesInChapter,
@@ -11,7 +13,6 @@ import {
   placeName,
 } from './lib/places';
 import { ERAS, ERA_BY_ID } from './data/eras';
-import MapView from './components/MapView';
 import { DEFAULT_BASEMAP, fallbackFor, type BasemapId } from './lib/basemaps';
 import Header, { type Mode, type View } from './components/Header';
 import SkipLinks from './components/SkipLinks';
@@ -20,7 +21,6 @@ import { loadMedia } from './lib/media';
 import Timeline from './components/Timeline';
 import YearSlider from './components/YearSlider';
 import SearchPanel from './components/SearchPanel';
-import PlaceDetail from './components/PlaceDetail';
 const Presentation = lazy(() => import('./components/Presentation'));
 const HistoryMode = lazy(() => import('./components/HistoryMode'));
 const Mission = lazy(() => import('./components/Mission'));
@@ -31,6 +31,14 @@ const IsraelMode = lazy(() => import('./components/IsraelMode'));
 const MediaMode = lazy(() => import('./components/MediaMode'));
 const OwnRoute = lazy(() => import('./components/OwnRoute'));
 const PlaceIndex = lazy(() => import('./components/PlaceIndex'));
+// Die Karte wiegt am schwersten von allem, was jeder lädt: Leaflet mit seinen
+// Erweiterungen sind zusammen 187 kB. Die Startseite kehrt weiter oben früh
+// zurück und zeigt gar keine Karte – wer auf / landet, brauchte davon nichts
+// und bekam trotzdem alles.
+const MapView = lazy(() => import('./components/MapView'));
+// Das Ortsfenster erscheint erst, wenn jemand einen Ort anklickt – und es zieht
+// `tribes.ts` mit (28 kB Stammesgebiete für eine Zeile „liegt im Gebiet von").
+const PlaceDetail = lazy(() => import('./components/PlaceDetail'));
 // MapLibre wiegt schwer – die Geländeansicht kommt erst, wenn jemand sie öffnet.
 const TerrainMap = lazy(() => import('./components/TerrainMap'));
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
@@ -312,8 +320,25 @@ export default function App() {
     setMode(m);
   }
 
+  /*
+   * Die Orte laufen im Hintergrund, die Startseite wartet nicht darauf.
+   *
+   * Zwei Dinge waren verkettet: `places.json` sind 1.365 kB, und der
+   * Ladebildschirm stand vor der Startseite. Also sah man erst „Lade biblische
+   * Orte …", bis eine Datei da war, die eine Seite mit zehn Zahlen und ohne
+   * Karte gar nicht braucht.
+   *
+   * Beides ist entkoppelt: Die Zahlen kommen aus `counts.json` (147 Bytes),
+   * die Startseite steht sofort – und die Ortsdaten laufen trotzdem gleich
+   * los, damit der erste Klick in die Karte nicht darauf wartet.
+   */
   useEffect(() => {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
+  }, []);
+
+  const [zaehler, setZaehler] = useState<PlaceCounts | null>(null);
+  useEffect(() => {
+    loadCounts().then(setZaehler).catch(() => setZaehler(null));
   }, []);
 
   /*
@@ -327,6 +352,8 @@ export default function App() {
       void import('./components/Presentation');
       void import('./components/JourneyMode');
       void import('./components/Gospel');
+      void import('./components/MapView');
+      void import('./components/PlaceDetail');
       void import('./components/Mission');
       void import('./components/HistoryMode');
       void import('./components/QuizMode');
@@ -699,9 +726,12 @@ export default function App() {
     for (const e of ERAS) counts[e.id] = 0;
     if (places) {
       for (const p of places) for (const id of erasForPlace(p)) counts[id] = (counts[id] ?? 0) + 1;
+      return counts;
     }
-    return counts;
-  }, [places]);
+    // Ohne geladene Orte gelten die vorgerechneten Zahlen – sie stammen aus
+    // derselben Datei und derselben Funktion, können also nicht abweichen.
+    return zaehler ? { ...counts, ...zaehler.eras } : counts;
+  }, [places, zaehler]);
 
   function select(p: Place) {
     setSelected(p);
@@ -726,6 +756,28 @@ export default function App() {
       </div>
     );
   }
+  /*
+   * Die Startseite zuerst, dann erst der Ladebildschirm.
+   *
+   * Andersherum stand es hier – und damit wartete eine Seite, die zehn Zahlen
+   * und keine Karte zeigt, auf 1.365 kB Ortsdaten. Wer die Startseite sieht,
+   * soll sie sofort sehen; wer eine Ansicht öffnet, wartet auf die Daten, die
+   * sie braucht.
+   */
+  if (atStart) {
+    return (
+      <LangContext.Provider value={lang}>
+        <Landing
+          lang={lang}
+          onLang={setLang}
+          placeCount={places?.length ?? zaehler?.places ?? 0}
+          eraCounts={eraCounts}
+          onEnter={enterFromStart}
+        />
+      </LangContext.Provider>
+    );
+  }
+
   if (!places) {
     return (
       <LangContext.Provider value={lang}>
@@ -734,19 +786,6 @@ export default function App() {
     );
   }
 
-  if (atStart) {
-    return (
-      <LangContext.Provider value={lang}>
-        <Landing
-          lang={lang}
-          onLang={setLang}
-          placeCount={places.length}
-          eraCounts={eraCounts}
-          onEnter={enterFromStart}
-        />
-      </LangContext.Provider>
-    );
-  }
 
   /*
    * Ein offener Vollbild-Modus liegt über allem – dann gehört der Hintergrund
@@ -803,19 +842,21 @@ export default function App() {
                 />
               </Suspense>
             ) : (
-              <MapView
-                places={visible}
-                heat={heat}
-                selectedId={selected?.id ?? null}
-                lang={lang}
-                onSelect={select}
-                basemap={basemap}
-                onTilesUnavailable={handleTilesUnavailable}
-                onTilesRecovered={handleTilesRecovered}
-                newIds={newIds}
-                flyTo={flyTo}
-                borderYear={borderYear}
-              />
+              <Suspense fallback={<ViewFallback lang={lang} />}>
+                <MapView
+                  places={visible}
+                  heat={heat}
+                  selectedId={selected?.id ?? null}
+                  lang={lang}
+                  onSelect={select}
+                  basemap={basemap}
+                  onTilesUnavailable={handleTilesUnavailable}
+                  onTilesRecovered={handleTilesRecovered}
+                  newIds={newIds}
+                  flyTo={flyTo}
+                  borderYear={borderYear}
+                />
+              </Suspense>
             )}
 
             {/* Search / detail — left rail on desktop, bottom sheet on mobile */}
@@ -839,6 +880,7 @@ export default function App() {
                 </button>
                 <div className={`min-h-0 flex-col overflow-hidden ${sheetOpen ? 'flex max-h-[58vh]' : 'hidden'} sm:flex sm:max-h-none sm:flex-1`}>
                   {selected ? (
+                    <Suspense fallback={<div className="flex-1" />}>
                     <PlaceDetail
                       place={selected}
                       lang={lang}
@@ -850,6 +892,7 @@ export default function App() {
                       onOpenOwnRoute={() => setMode('route')}
                       onClose={() => setSelected(null)}
                     />
+                    </Suspense>
                   ) : (
                     <SearchPanel
                       query={query}

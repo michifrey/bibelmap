@@ -26,9 +26,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { HISTORY } = await import(path.join(ROOT, 'src/data/history.ts'));
 const { ERA_BY_ID } = await import(path.join(ROOT, 'src/data/eras.ts'));
 const { BOOK_BY_OSIS } = await import(path.join(ROOT, 'src/data/books.ts'));
-const { findPlacesByNames } = await import(path.join(ROOT, 'src/lib/places.ts'));
+const { expandPlaces, findPlacesByNames } = await import(path.join(ROOT, 'src/lib/places.ts'));
 const roh = JSON.parse(fs.readFileSync(path.join(ROOT, 'public/data/places.json'), 'utf8'));
-const PLACES = Array.isArray(roh) ? roh : roh.places;
+const PLACES = expandPlaces(roh);
 
 /** Untergrenze, unter der sich die Prüfung selbst für kaputt erklärt. */
 const MIN_STATIONEN = 20;

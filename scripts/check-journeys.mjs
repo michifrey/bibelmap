@@ -30,8 +30,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { JOURNEYS } = await import(path.join(ROOT, 'src/data/journeys.ts'));
 const MISSION = await import(path.join(ROOT, 'src/data/mission.ts'));
 const { ERA_BY_ID } = await import(path.join(ROOT, 'src/data/eras.ts'));
+const { expandPlaces } = await import(path.join(ROOT, 'src/lib/places.ts'));
 const roh = JSON.parse(fs.readFileSync(path.join(ROOT, 'public/data/places.json'), 'utf8'));
-const PLACES = Array.isArray(roh) ? roh : roh.places;
+const PLACES = expandPlaces(roh);
 const ORT = Object.fromEntries(PLACES.map((p) => [p.id, p]));
 
 /** Untergrenzen, unter denen sich die Prüfung selbst für kaputt erklärt. */

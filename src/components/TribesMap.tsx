@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
+import '../lib/mapStyles';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
 import type { Lang } from '../i18n';
@@ -31,7 +32,8 @@ import {
   type Fate,
   type Phase,
 } from '../data/tribeHistory';
-import { addBasemap, DEFAULT_BASEMAP, basemapAttr, type BasemapId } from '../lib/basemaps';
+import { DEFAULT_BASEMAP, basemapAttr, type BasemapId } from '../lib/basemaps';
+import { addBasemap } from '../lib/basemapLayer';
 import { flyOptions } from '../lib/motion';
 import { readableOnDark } from '../lib/contrast';
 import ShareLink from './ShareLink';

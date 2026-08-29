@@ -1332,8 +1332,13 @@ anzurühren.
 | Startbündel | 521,59 kB | **359,83 kB** |
 | gzip | 173,39 kB | **110,81 kB** |
 
-−162 kB roh, −63 kB gzip, **36 % weniger** auf dem kritischen Pfad. Die beiden
-Dateien sind jetzt eigene Bündel (`journeys` 106 kB, `mission` 56 kB).
+−162 kB roh, −63 kB gzip. Die beiden Dateien sind jetzt eigene Bündel
+(`journeys` 106 kB, `mission` 56 kB).
+
+*Nachtrag aus § 4.55:* „Startbündel" meinte hier eine einzelne Datei, nicht
+die Kette, die der Browser vor dem ersten Bild abarbeitet – die lag bei 720 kB
+und nach dieser Änderung bei 562. Die Ersparnis von 162 kB stimmt, der Nenner
+war zu klein.
 
 **Was das ausdrücklich *nicht* heißt.** Der erste Kommentar im Code behauptete
 „erst geladen, wenn jemand dorthin geht". Die Messung im Browser zeigte etwas
@@ -1417,7 +1422,248 @@ eine Station davon berührt wird, steht der Eintrag als Marke darunter.
 - [ ] **Offen:** Der Netzzugang der Arbeitsumgebung lässt bibleproject.com,
       bibletunes.de und thechosen.tv nicht durch. Die Adressen stammen aus der
       Websuche, `check:gospel-links` konnte sie noch nicht bestätigen.
-### 4.55 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.55 Die Startseite lud eine Karte, die sie nie zeigt — P1 ✅
+
+§ 4.53 hat 162 kB aus dem Startbündel geholt – **mit dem falschen Werkzeug
+gemessen**. Zeichenketten im fertigen Bündel zu suchen führt in die Irre:
+„passages" steht dort als Dateiname, nicht als Datei; drei meiner Proben waren
+Fehlalarme.
+
+**Erst die Sourcemaps geben eine Antwort.** `BIBELMAP_SOURCEMAP=1 npm run build`
+schreibt sie, ein kleines Skript rechnet die Segmente auf Quelldateien zurück –
+99 % zugeordnet. Damit stand zum ersten Mal da, woraus die Kette wirklich
+besteht. Und die Kette war größer als gedacht: nicht 360 kB, sondern **562 kB**,
+weil das HTML per `modulepreload` noch Leaflet (149 kB) mitzieht. Die Angabe in
+§ 4.53 meinte eine einzelne Datei und war als „erstes Bündel" zu großzügig.
+
+**Der Befund:** Leaflet 145 kB, `leaflet.markercluster` 35 kB, `leaflet.heat`
+3 kB und `tribes.ts` 28 kB lagen im kritischen Pfad – auf einer Startseite, die
+mit `if (atStart) return <Landing …>` früh zurückkehrt und **gar keine Karte
+zeigt**.
+
+Drei Schnitte:
+
+1. **`MapView` wird nachgeladen** wie jede andere Ansicht. Nimmt markercluster
+   und heat mit.
+2. **`basemaps.ts` in Katalog und Leaflet-Anbindung getrennt.** `App.tsx` las
+   daraus nur `DEFAULT_BASEMAP`, `fallbackFor` und einen Typ – und zog über den
+   einen Import `addBasemap` die ganze Bibliothek nach. `addBasemap` steht jetzt
+   in `src/lib/basemapLayer.ts`; die Kacheladressen bleiben in `basemaps.ts`,
+   weil `check:tiles` genau diese Datei liest.
+3. **`PlaceDetail` wird nachgeladen.** Es erscheint erst, wenn jemand einen Ort
+   anklickt, und zieht `tribes.ts` mit – 28 kB Stammesgebiete für eine Zeile
+   „liegt im Gebiet von".
+
+| | vorher | nachher |
+|---|---|---|
+| JavaScript beim Aufruf von `/` | 562 kB | **325 kB** |
+
+−237 kB, **42 %**. Was bleibt, ist kaum noch zu drücken: react-dom 174 kB,
+Übersetzungen 41 kB, Startseite 28 kB, App 20 kB.
+
+**Wieder gilt: das heißt nicht „wird nie geladen".** Der Vorabruf im Leerlauf
+holt alles nach, damit die App offline vollständig ist – gemessen kommen
+MapView und Leaflet nach gut einer Sekunde. Gewonnen ist, was **vor dem ersten
+Bild** geparst werden muss.
+
+**Akzeptanzkriterien**
+- [x] Erster Aufruf von `/`: 562 → 325 kB, aus `dist/index.html` gezählt.
+- [x] Die Karte funktioniert: `#karte` zeigt 147 Marker in einem
+      `.leaflet-container`, `#ort=a15257a` öffnet das Ortsfenster samt
+      Stammesgebiet, die Kartenebenen liegen an (36 Kacheln).
+- [x] Rundgang über 29 Ansichten × 2 Sprachen: kein Leerlauf, kein
+      `null`/`undefined` im Text, kein JavaScript-Fehler.
+- [x] `a11y-audit` und `check-i18n` weiter sauber; alle 11 Prüfungen grün.
+- [x] Sourcemaps sind **nicht** dauerhaft an: `BIBELMAP_SOURCEMAP=1` schaltet
+      sie zu. Die Veröffentlichung bleibt wie sie war.
+
+### 4.56 1.365 kB für zehn Zahlen — P1 ✅
+
+Nach § 4.55 war der kritische Pfad an JavaScript ausgereizt. Die nächste Frage
+war eine andere: **was lädt ein Besuch insgesamt?** Gemessen im Browser, nach
+Art getrennt:
+
+| | |
+|---|---|
+| Daten (JSON) | **1.569 kB** |
+| JavaScript | 1.289 kB |
+| Schriften | 103 kB |
+| CSS | 101 kB |
+
+Das größte Einzelstück der ganzen App ist kein Programmcode: **`places.json`,
+1.365 kB**, angefordert nach 201 ms – auf der Startseite, die zehn Zahlen zeigt
+und keine Karte.
+
+**Zwei Dinge waren verkettet.** `App.tsx` prüfte `if (!places) return
+<Loading/>` **vor** `if (atStart) return <Landing/>`. Also stand „Lade
+biblische Orte …", bis eine Datei da war, die die Startseite gar nicht braucht.
+
+- `scripts/build-counts.mjs` schreibt **`counts.json`: 147 Bytes** – die Zahl
+  der Orte und je Epoche eine Zahl. Gerechnet mit `erasForPlace` aus
+  `src/lib/places.ts`, nicht mit einer Nachbildung: Die Epoche eines Ortes
+  hängt an den Büchern seiner Verse, und diese Regel darf es nur einmal geben.
+  Läuft im `prebuild`, kann also nicht veralten.
+- Die Reihenfolge in `App.tsx` ist getauscht: erst die Startseite, dann der
+  Ladebildschirm.
+- Die Ortsdaten laufen weiter sofort im Hintergrund los, damit der erste Klick
+  in die Karte nicht darauf wartet.
+
+**Gemessen auf 1,6 Mbit/s mit 150 ms Latenz, je drei Läufe (Median).** *Nachtrag
+aus § 4.57: gemessen gegen `vite preview`, der unkomprimiert ausliefert – mit
+gzip wie in der Produktion sind es 2.424 → 1.160 ms.*
+
+| | vorher | nachher |
+|---|---|---|
+| Startseite steht | 2.501 ms | **1.236 ms** |
+| Aufruf bis Marker auf der Karte | 2.968 ms | **1.711 ms** |
+
+Beides schneller – kein Tausch.
+
+**Der Prüfstand war zuerst der falsche.** Auf localhost gemessen: 212 ms
+vorher, 245 ms nachher. Dort kommen 1,3 MB in Millisekunden an, und die
+Änderung sah aus wie **eine Verschlechterung um 33 ms**. Erst mit gedrosselter
+Leitung wird sichtbar, wofür sie gut ist. Eine Messung ohne Latenz misst nicht
+die Welt, in der die Seite benutzt wird.
+
+**Und ein Zwischenstand, der schlechter war als beides.** Der erste Versuch lud
+die Ortsdaten erst beim Verlassen der Startseite. Die Startseite stand dann
+zwar sofort – aber wer gleich auf „Karte öffnen" klickte, wartete **3.953 ms**
+statt 435. Erst die Trennung von *Anzeigen* (Zahlen aus `counts.json`) und
+*Laden* (Ortsdaten im Hintergrund) bringt beides.
+
+**Akzeptanzkriterien**
+- [x] `counts.json` ist 147 Bytes und entsteht beim Bauen aus `places.json`.
+- [x] Die Startseite zeigt **1.335 Orte** und alle neun Epochenzahlen, bevor
+      `places.json` angefordert ist.
+- [x] Der Übergang „Karte öffnen" → 147 Marker: 435 ms lokal, 1.711 ms
+      gedrosselt.
+- [x] Neue Prüfung **Startzahlen** (`build-counts.mjs --pruefen`) vergleicht die
+      abgelegte Datei mit dem, was aus `places.json` folgt. Gegengeprobt:
+      `places` auf 999 gesetzt, Prüfung schlägt an und zeigt beide Werte.
+      `npm run check` führt jetzt **12** Prüfungen aus.
+- [x] Rundgang über 29 Ansichten × 2 Sprachen ohne Befund.
+
+### 4.57 Zwei Drittel von places.json waren Wiederholung — P1 ✅
+
+**Zuerst eine Korrektur an § 4.56.** Dort steht „1.365 kB", und die gedrosselte
+Messung lief gegen `vite preview` – der liefert **unkomprimiert** aus. GitHub
+Pages schickt gzip: 1.365 kB werden zu **215 kB** auf der Leitung. Der
+Prüfstand war also rund sechsmal härter als die Wirklichkeit.
+
+Nachgemessen mit einem Server, der komprimiert wie die Produktion:
+
+| | § 4.56 (ohne gzip) | mit gzip |
+|---|---|---|
+| Startseite steht, vorher | 2.501 ms | 2.424 ms |
+| Startseite steht, nachher | 1.236 ms | **1.160 ms** |
+
+Die Halbierung bleibt – die Wartezeit hing nicht am Transfer, sondern daran,
+dass die Startseite überhaupt auf die Datei wartete. Aber die Bedingungen waren
+falsch angegeben, und das steht jetzt richtig da.
+
+**Und dann die Datei selbst.** Von 1.365 kB entfielen **921 kB (67 %)** auf
+`verses`. Je Vers stand dort:
+
+```json
+{"osis":"Josh.10.1","ref":"Josh 10:1","book":"Josh","bookNum":6,
+ "chapter":10,"verse":1,"sort":"06010001"}
+```
+
+**Sechs der sieben Felder folgen aus dem ersten.** 8.707 solcher Objekte für
+Information, die schon dasteht. Übrig bleibt `"Josh.10.1"`, plus eine Tabelle
+der 61 Bücher (1,1 kB) am Kopf der Datei.
+
+| | vorher | nachher |
+|---|---|---|
+| places.json roh | 1.365 kB | **560 kB** |
+| gzip (das, was ankommt) | 215 kB | **109 kB** |
+| Aufruf bis Marker auf der Karte | 3.144 ms | **2.622 ms** |
+
+**Wie das abgesichert ist**
+
+- Die Rückrechnung steht **einmal**: `expandPlaces()` in `src/lib/places.ts`.
+  Die App geht dort durch, und die fünf Prüfskripte, die `places.json` direkt
+  lesen, auch. Eine zweite Implementierung im Bauskript hätte genau einen
+  Zweck: irgendwann von der ersten abzuweichen.
+- `build-places-compact.mjs` schreibt nur, wenn die Rückrechnung **Zeichen für
+  Zeichen** dasselbe ergibt. Sonst bricht es ab und zeigt die erste
+  abweichende Stelle.
+- `expandPlaces` liest **beide** Formen. Eine Datei aus `build-data.mjs` in der
+  langen Form funktioniert unverändert; `npm run data` hängt die Verkürzung an.
+- Neue Prüfung **Ortsdatei** – `npm run check` führt jetzt **13** Prüfungen aus.
+
+**Der Weg dahin, weil er zweimal falsch abbog**
+
+1. Erste Ableitung aus `osis`: **2.507 Abweichungen**. Sah nach inkonsistenten
+   Daten aus – war aber meine Regel: `1Sam` heißt in der Anzeige `1 Sam`.
+2. Regel verfeinert (Leerzeichen nach führender Ziffer): **316 übrig**. Auch
+   das keine Dateninkonsistenz, sondern Anzeigekürzel, die vom OSIS-Code
+   abweichen: `Esth` → `Est`, `Song` → `Sng`.
+3. Tabelle aus den Daten selbst gewonnen: **0 Abweichungen**. Erst da war die
+   Verkürzung belegbar verlustfrei – nicht plausibel, sondern nachgerechnet.
+
+**Akzeptanzkriterien**
+- [x] 8.707 Verse rekonstruieren exakt; das Schreiben ist an diesen Beweis
+      gebunden.
+- [x] Gegenprobe der neuen Prüfung: die lange Form zurückgespielt, sie meldet
+      „steht noch in der langen Form".
+- [x] Im Browser: das Register zeigt „Jerusalem 955 · Josua – Offenbarung" –
+      Erwähnungszahl und Buchspanne kommen beide aus `verses`.
+- [x] Rundgang über 29 Ansichten × 2 Sprachen ohne Befund; alle 13 Prüfungen
+      grün.
+
+*Zur Vergleichbarkeit:* Die Zeiten dieser Runde stammen aus einem Server, der
+je Anfrage neu komprimiert; das kostet Zeit auf beiden Seiten. Der Vergleich
+vorher/nachher gilt, die absoluten Zahlen sind nicht mit denen aus § 4.56
+zusammenzurechnen.
+
+### 4.58 Kartenstil auf einer Seite ohne Karte — P1 ✅
+
+Derselbe Befund wie in § 4.55, eine Ebene tiefer: `src/index.css` importierte
+`leaflet/dist/leaflet.css` und `MarkerCluster.css` auf oberster Ebene. Damit
+lagen **17 kB roh / 6,7 kB gzip** Kartenstil im Stylesheet, das jeder Besuch
+der Startseite lädt – und ein `<link rel=stylesheet>` hält die erste
+Darstellung auf.
+
+Die beiden Importe und der zugehörige Abschnitt der App (125 Zeilen, von
+`.leaflet-container` bis zu den Popup- und Tooltip-Regeln) stehen jetzt in
+`src/map.css`. Wer Leaflet benutzt, importiert `src/lib/mapStyles.ts` – die
+sieben Kartenansichten tun das.
+
+| | vorher | nachher |
+|---|---|---|
+| `index.css` | 101 kB | **84 kB** |
+| gzip | 22,0 kB | **15,2 kB** |
+
+**Der Beweis, dass die Karte gleich aussieht**
+
+Das war der schwierige Teil, und die ersten zwei Anläufe taugten nichts:
+
+1. **Bildvergleich.** Vier von neun Ansichten wichen ab. Sah nach Regression
+   aus – bis die Gegenprobe zeigte: **derselbe Build liefert bei genau diesen
+   vier zweimal verschiedene Bilder.** Sie animieren; Bildpunkte sind dort
+   kein Maß.
+2. **Berechnete Stile am Popup.** Vier von fünf Proben meldeten „nicht
+   sichtbar" und verglichen damit zwei Nichtse – ein Haken, der nichts belegt.
+   Die App öffnet kein Leaflet-Popup, sondern ihr eigenes Seitenfenster.
+3. **Regelmengen vergleichen.** Beide Builds komplett zerlegt: **1.341 Regeln
+   vorher, 1.341 nachher.** Zwei scheinen abzuweichen – nachgerechnet sind es
+   dieselben vier Deklarationen in anderer Präfix-Reihenfolge, weil der
+   Minifizierer sie in der neuen Datei anders sortiert. Funktional identisch.
+
+Dazu berechnete Stile an sechs Elementen, die wirklich im DOM sind
+(`.leaflet-container`, `.leaflet-control-attribution`, `.leaflet-bar a`,
+`.leaflet-pane`, `.leaflet-tile-pane`, `.leaflet-marker-icon`): alle identisch.
+
+**Akzeptanzkriterien**
+- [x] Regelmenge unverändert: 1.341 vor und nach der Verschiebung, gleiche
+      Deklarationen.
+- [x] Reihenfolge bleibt: Tailwind aus `index.css` zuerst, dann Leaflet, dann
+      die eigenen Überschreibungen – wie vorher.
+- [x] Rundgang über 29 Ansichten × 2 Sprachen ohne Befund; alle 13 Prüfungen
+      grün.
+
+### 4.59 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
@@ -1428,12 +1674,13 @@ Startseite und Seite „Projekte unterstützen".
 
 ## 5. Nicht-funktionale Anforderungen
 
-- **Performance:** Erstes Bündel **360 kB (gzip 111 kB)** – die Ansichten liegen
-  in eigenen Dateien und kommen auf Abruf; im Leerlauf werden sie nachgeholt,
-  damit die App offline vollständig bleibt. (Die Zahl stand lange bei 462/136 und
-  war veraltet; gemessen waren es 522/173, bevor `journeys.ts` und `mission.ts`
-  ausgelagert wurden – siehe § 4.53.) Flüssige Karte bei 1.300+ Markern,
-  Bibeltext lazy pro Buch.
+- **Performance:** Beim ersten Aufruf von `/` referenziert das HTML **325 kB**
+  JavaScript – die Kette, die der Browser vor dem ersten Bild abarbeitet. Die
+  Ansichten liegen in eigenen Dateien und kommen auf Abruf; im Leerlauf werden
+  sie nachgeholt, damit die App offline vollständig bleibt. (Werdegang: 462 kB
+  laut alter Angabe, gemessen 720, dann 562 nach § 4.53, jetzt 325 nach
+  § 4.55. Die alten Zahlen meinten eine einzelne Datei, nicht die ganze Kette.)
+  Flüssige Karte bei 1.300+ Markern, Bibeltext lazy pro Buch.
 - **Responsiv:** nutzbar ab 360 px Breite; Präsentationsmodus stapelt auf Mobile.
 - **Barrierefreiheit:** `prefers-reduced-motion` wird beachtet (Karte setzt statt
   zu fliegen, Reisender springt statt zu gleiten, Pulsringe stehen still);
