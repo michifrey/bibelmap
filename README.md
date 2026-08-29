@@ -71,8 +71,15 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   wo vorhanden. Der Schalter **Beamer** legt den Text über die ganze Breite und
   vergrößert ihn zum Vortragen; die Einstellung bleibt gemerkt.
 - **Heilsgeschichte-Modus** – geführte chronologische Reise von der Schöpfung bis
-  zur neuen Welt (Schöpfung, Abraham, Exodus, Exil, Jesus, frühe Kirche …) mit
-  Karte, Bibelstelle und Video je Station.
+  zur neuen Welt in **30 Stationen**, mit Karte, Bibelstelle und teils Video je
+  Station. Nicht nur die Höhepunkte: der **Sinai** mit dem Bund, die **vierzig
+  Jahre Wüste**, die **Richterzeit** und ihr Satz „jeder tat, was ihn recht
+  dünkte", **Israel verlangt einen König**, **Elia**, **Josias Reform**,
+  **Hesekiels Thron auf Rädern**, die **vierhundert stillen Jahre** zwischen
+  Maleachi und Matthäus, **Johannes der Täufer** und das **Apostelkonzil**, das
+  aus einer jüdischen Erneuerungsbewegung eine Weltreligion machte. Jede Station
+  nennt ihre Orte auf der Karte; `npm run check` prüft, dass jeder davon
+  auflöst und jeder Bibellink auf das Buch zeigt, das darübersteht.
 - **Reisen & Geschichten** – die großen Wege der Bibel als erzählte Reise:
   **Abraham und Sara** von Ur bis zum Grab in Machpela (17 Stationen, 3.494 km,
   140 Tagesmärsche – von der Berufung über Ägypten, den Zug bis Damaskus, die
@@ -382,9 +389,9 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die vier Prüfungen, die von sich aus immer dasselbe
-Ergebnis liefern – Buchkürzel, Zeitdokumente, Stammesgrenzen, Farbkontraste –
-und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
+`npm run check` bündelt die sechs Prüfungen, die von sich aus immer dasselbe
+Ergebnis liefern – Buchkürzel, Zeitdokumente, Stammesgrenzen, Farbkontraste,
+Quizfragen und Heilsgeschichte – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
 
