@@ -1010,9 +1010,16 @@ der an den großen Datendateien hängt. Dazu die beiden größten Datendateien
 selbst: `journeys.ts` und `mission.ts` lagen im Startbündel, obwohl beide
 Stellen, die sie brauchten, mit „nur in der Geländeansicht" beginnen.
 
-Das erste Bündel: **360 kB (gzip 111 kB)**. Die Zahl stand hier lange bei
-462 kB / 136 kB und war schlicht veraltet – gewachsen war die App auf 522 kB
-(gzip 173), bevor die beiden Datendateien ausgelagert wurden.
+Und die Karte selbst: Leaflet samt Erweiterungen sind 187 kB, die **jeder**
+Besuch lud – auch der von `/`, wo die Startseite steht und gar keine Karte
+gezeigt wird.
+
+**Was das HTML beim ersten Aufruf von `/` referenziert: 324 kB.** Vorher waren
+es 562 kB. Die Zahl stand hier lange bei „462 kB" und meinte ohnehin nur eine
+einzelne Datei, nicht die Kette, die der Browser vor dem ersten Bild abarbeitet.
+Woraus die 324 kB bestehen, ist gemessen und nicht geraten (`BIBELMAP_SOURCEMAP=1
+npm run build` und die Zuordnung über die Sourcemaps): 174 kB react-dom, 41 kB
+Übersetzungen, 28 kB Startseite, 20 kB App – der Rest liegt unter 8 kB.
 
 Sobald der Browser Ruhe hat **und** der Service Worker steht, werden die
 Ansichten im Hintergrund nachgeholt. So bleibt der Start leicht und die App

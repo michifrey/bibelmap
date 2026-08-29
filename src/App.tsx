@@ -11,7 +11,6 @@ import {
   placeName,
 } from './lib/places';
 import { ERAS, ERA_BY_ID } from './data/eras';
-import MapView from './components/MapView';
 import { DEFAULT_BASEMAP, fallbackFor, type BasemapId } from './lib/basemaps';
 import Header, { type Mode, type View } from './components/Header';
 import SkipLinks from './components/SkipLinks';
@@ -20,7 +19,6 @@ import { loadMedia } from './lib/media';
 import Timeline from './components/Timeline';
 import YearSlider from './components/YearSlider';
 import SearchPanel from './components/SearchPanel';
-import PlaceDetail from './components/PlaceDetail';
 const Presentation = lazy(() => import('./components/Presentation'));
 const HistoryMode = lazy(() => import('./components/HistoryMode'));
 const Mission = lazy(() => import('./components/Mission'));
@@ -31,6 +29,14 @@ const IsraelMode = lazy(() => import('./components/IsraelMode'));
 const MediaMode = lazy(() => import('./components/MediaMode'));
 const OwnRoute = lazy(() => import('./components/OwnRoute'));
 const PlaceIndex = lazy(() => import('./components/PlaceIndex'));
+// Die Karte wiegt am schwersten von allem, was jeder lädt: Leaflet mit seinen
+// Erweiterungen sind zusammen 187 kB. Die Startseite kehrt weiter oben früh
+// zurück und zeigt gar keine Karte – wer auf / landet, brauchte davon nichts
+// und bekam trotzdem alles.
+const MapView = lazy(() => import('./components/MapView'));
+// Das Ortsfenster erscheint erst, wenn jemand einen Ort anklickt – und es zieht
+// `tribes.ts` mit (28 kB Stammesgebiete für eine Zeile „liegt im Gebiet von").
+const PlaceDetail = lazy(() => import('./components/PlaceDetail'));
 // MapLibre wiegt schwer – die Geländeansicht kommt erst, wenn jemand sie öffnet.
 const TerrainMap = lazy(() => import('./components/TerrainMap'));
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
@@ -327,6 +333,8 @@ export default function App() {
       void import('./components/Presentation');
       void import('./components/JourneyMode');
       void import('./components/Gospel');
+      void import('./components/MapView');
+      void import('./components/PlaceDetail');
       void import('./components/Mission');
       void import('./components/HistoryMode');
       void import('./components/QuizMode');
@@ -803,19 +811,21 @@ export default function App() {
                 />
               </Suspense>
             ) : (
-              <MapView
-                places={visible}
-                heat={heat}
-                selectedId={selected?.id ?? null}
-                lang={lang}
-                onSelect={select}
-                basemap={basemap}
-                onTilesUnavailable={handleTilesUnavailable}
-                onTilesRecovered={handleTilesRecovered}
-                newIds={newIds}
-                flyTo={flyTo}
-                borderYear={borderYear}
-              />
+              <Suspense fallback={<ViewFallback lang={lang} />}>
+                <MapView
+                  places={visible}
+                  heat={heat}
+                  selectedId={selected?.id ?? null}
+                  lang={lang}
+                  onSelect={select}
+                  basemap={basemap}
+                  onTilesUnavailable={handleTilesUnavailable}
+                  onTilesRecovered={handleTilesRecovered}
+                  newIds={newIds}
+                  flyTo={flyTo}
+                  borderYear={borderYear}
+                />
+              </Suspense>
             )}
 
             {/* Search / detail — left rail on desktop, bottom sheet on mobile */}
@@ -839,6 +849,7 @@ export default function App() {
                 </button>
                 <div className={`min-h-0 flex-col overflow-hidden ${sheetOpen ? 'flex max-h-[58vh]' : 'hidden'} sm:flex sm:max-h-none sm:flex-1`}>
                   {selected ? (
+                    <Suspense fallback={<div className="flex-1" />}>
                     <PlaceDetail
                       place={selected}
                       lang={lang}
@@ -850,6 +861,7 @@ export default function App() {
                       onOpenOwnRoute={() => setMode('route')}
                       onClose={() => setSelected(null)}
                     />
+                    </Suspense>
                   ) : (
                     <SearchPanel
                       query={query}

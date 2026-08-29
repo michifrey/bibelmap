@@ -12,7 +12,8 @@ import {
   formatYear,
 } from '../data/israel';
 import { SNAPSHOT_BY_ID, snapshotForYear, PLACES, NEIGHBOURS, type Area } from '../data/israelGeo';
-import { addBasemap, BASEMAPS, DEFAULT_BASEMAP, basemapAttr, type BasemapId } from '../lib/basemaps';
+import { BASEMAPS, DEFAULT_BASEMAP, basemapAttr, type BasemapId } from '../lib/basemaps';
+import { addBasemap } from '../lib/basemapLayer';
 import { watchTiles } from '../lib/tileNotice';
 import { flyOptions } from '../lib/motion';
 import { readableOnDark } from '../lib/contrast';
