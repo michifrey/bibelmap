@@ -988,10 +988,77 @@ Serienseite.
       als unbestätigt aus. Ebenso offen: Folgen aus Staffel 2 und 5, die hier
       bewusst fehlen, statt geraten zu werden.
 
-### 4.48 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.48 Heilsgeschichte: 20 → 30 Stationen, und eine Prüfung dafür — P1 ✅
 
-Nicht in dieser PRD entstanden, aber Teil der App: **Heilsgeschichte-Modus**
-(geführte Stationen von der Schöpfung bis zur neuen Welt), **Kirchengeschichte**
+Der Modus, der die ganze Bibel in einem Durchgang erzählt, war der dünnste Text
+der App: **97 Zeichen je Station** – und schief verteilt. Sechs Stationen für
+Urgeschichte und Erzväter, **eine** für den Auszug aus Ägypten. Der **Sinai
+fehlte ganz**: das Ereignis, auf das sich der Rest des Alten Testaments dauernd
+beruft, kam in der Übersicht nicht vor. Ebenso die Richterzeit, ein Zeitraum von
+dreihundert Jahren.
+
+Jetzt **30 Stationen** zu Ø **241 Zeichen** (199–271), und die Verteilung folgt
+dem Stoff statt dem Zufall:
+
+| Epoche | vorher | jetzt |
+|---|---|---|
+| Erzväter | 6 | 6 |
+| Exodus & Wüste | 1 | **3** |
+| Landnahme & Richter | 1 | **2** |
+| Vereintes Königreich | 2 | **3** |
+| Geteiltes Königreich | 2 | **4** |
+| Exil | 1 | **2** |
+| Rückkehr | 1 | **2** |
+| Jesus & Evangelien | 3 | **4** |
+| Frühe Kirche | 3 | **4** |
+
+Neu: **Sinai** (Bund und Gebote), **vierzig Jahre Wüste**, **die Zeit der
+Richter**, **Israel will einen König**, **Elia und die Propheten**, **Josias
+Reform**, **Hesekiel: Gott zieht mit**, **vierhundert stille Jahre**,
+**Johannes der Täufer**, **das Apostelkonzil**.
+
+**Die Prüfung, die dabei entstand — `npm run check:history`**
+
+Drei Angaben je Station verweisen auf etwas anderes, und alle drei scheitern
+**still**:
+
+- `places` sind **englische** Namen, zur Laufzeit gegen `places.json`
+  aufgelöst. Ein Name, den es nicht gibt, erzeugt keine Fehlermeldung, sondern
+  eine Station ohne Orte. Beim Schreiben passiert genau das: „Sinai" löst nicht
+  auf (der Berg heißt in den Daten `Mount Sinai`), und „Carmel" trifft den
+  Karmel in **Juda** – 140 km vom Berg des Elia entfernt.
+- `era` färbt die Station und ordnet sie auf dem Zeitband ein.
+- `ref` baut den Link zum Bibeltext. Ich hatte für „1. Samuel 8–10" das Kürzel
+  `2Sam` gesetzt: der Link führte ins falsche Buch, und im sichtbaren Text war
+  davon nichts zu sehen. Insgesamt sechs solche Verweise, alle beim ersten Lauf
+  gefunden.
+
+**Akzeptanzkriterien**
+- [x] 30 Stationen, 68 Ortsnamen – **alle** gegen `places.json` aufgelöst.
+- [x] Jede Epoche existiert, und die Epochen springen nicht zurück (die
+      Stationen stehen chronologisch).
+- [x] Jeder Bibellink zeigt auf das Buch und das Kapitel, das im Label
+      darübersteht. Ein Kapitel innerhalb einer Spanne gilt – der erste Entwurf
+      der Prüfung verlangte die exakte Zahl und meldete vier Fehlalarme
+      („1. Mose 6–9" nennt Kapitel 7). Eine Prüfung, die Richtiges anstreicht,
+      wird abgeschaltet und prüft danach gar nichts mehr.
+- [x] Die Prüfung trägt ihre **eigene Gegenprobe**: sie baut zwei Fehler in
+      eine Kopie der Daten ein und bricht ab, wenn sie die nicht findet. Dazu
+      eine Untergrenze für Stationen und Orte, unter der sie sich für kaputt
+      erklärt.
+- [x] Von Hand gegengeprobt: `1Sam` → `2Sam` zurückgedreht, und die Prüfung
+      meldet „Link zeigt auf 2. Samuel, im Label steht „1. Samuel 8–10"".
+- [x] Im Browser in beiden Sprachen: alle 30 Stationen zeigen **genau so viele
+      Orte, wie die Daten nennen**, jeder Link steht auf dem richtigen Buch,
+      kein JavaScript-Fehler. (Der erste Messversuch zählte 214–219 „Marker" je
+      Station – das waren alle Marker der Karte, nicht die der Station. Eine
+      Zahl, die überall gleich ist, misst nichts.)
+
+`npm run check` führt jetzt **10** Prüfungen aus.
+
+### 4.49 Weitere Ansichten (aus parallelen Arbeiten)
+
+Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
 Völkertafel** samt Zeitbaum und Graph, **Reiche & Grenzen** auf der Karte,
 Startseite und Seite „Projekte unterstützen".
