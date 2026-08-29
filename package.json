@@ -27,7 +27,9 @@
     "names": "node scripts/build-names-de.mjs",
     "media": "node scripts/build-media.mjs",
     "xrefs": "node scripts/build-xrefs.mjs",
-    "check:quiz": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-quiz.mjs"
+    "check:quiz": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-quiz.mjs",
+    "check:history": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-history.mjs",
+    "check:journeys": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-journeys.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
