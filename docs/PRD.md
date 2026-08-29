@@ -1183,7 +1183,77 @@ Damit stehen **Reisen (178 Stationen), Heilsgeschichte (30), Kirchenväter (22)
 und Konzilien (14)** auf demselben Stand: 200 bis 300 Zeichen je Eintrag, in
 zwei Sprachen, mit dem Strittigen im Text statt daneben.
 
-### 4.51 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.51 „Vatikanum I" auf Englisch — was die i18n-Prüfung nicht sah — P1 ✅
+
+Die Textlängen-Messung war ausgereizt, also ein anderes Maß: Die App hat durch
+parallele Arbeiten vier neue Ansichten bekommen (Jesus-Sektion, Israel-Karte,
+Kirchen-Zeitstrahl, Konzilien), und weder `check-i18n.mjs` noch `a11y-audit.mjs`
+kannten sie. Beide Listen ergänzt – 19 → 24 und 17 → 21 Ansichten.
+
+**Der Fund war größer als der Anlass.** Der erste Lauf meldete *eine* Stelle:
+„Mar Saba bei Jerusalem", mein eigener Eintrag aus § 4.49. Beim Nachsehen, wie
+das durchgerutscht war, kam heraus, dass `city` (Kirchenväter **und** Konzilien)
+und `name` (Konzilien) je **ein** Feld sind, das unverändert in beide
+Oberflächen ging. Auf Englisch stand also:
+
+| | zeigte auf Englisch | jetzt |
+|---|---|---|
+| Konzil | Vatikanum I · Vatikanum II | Vatican I · Vatican II |
+| | Laterankonzil IV | Lateran IV |
+| | Konstantinopel I / II / III | Constantinople I / II / III |
+| | Nicäa I · Nicäa II · Trient | Nicaea I · Nicaea II · Trent |
+| | Apostelkonzil | Council of Jerusalem |
+| Ort | Rom · Mailand · Karthago | Rome · Milan · Carthage |
+| | Antiochia · Nazianz · Kappadokien | Antioch · Nazianzus · Cappadocia |
+| | Konstantinopel · Florenz · Konstanz | Constantinople · Florence · Constance |
+
+**24 Einträge**, und die Prüfung meldete davon **einen** – und den nur zufällig,
+weil „bei" in ihrer Wortliste steht. Ihre Liste kannte Funktionswörter, keine
+Eigennamen. Jetzt kennt sie beides.
+
+Neu: `cityEn` auf `Person`/`Father`, `nameEn` und `cityEn` auf `Council`, dazu
+`cityName()` und `councilName()` in `church.ts` statt acht Einzelentscheidungen
+in `ChurchMode.tsx`. Ein fehlendes `…En` ist kein Mangel, sondern die Regel:
+Alexandria, Smyrna, Ephesus, Hippo und Chalcedon heißen in beiden Sprachen
+gleich.
+
+**Zwei weitere Funde derselben Runde**
+
+- `SearchPanel` – der farbige Punkt der Epoche trug seine Beschriftung fest auf
+  Deutsch (`title={e.de}`), in **jeder** Ansicht mit Karte, für Maus wie
+  Screenreader.
+- Das eigene Deutsch war uneinheitlich: die Ortsdaten und alle Reisen schreiben
+  „Bethlehem", Hieronymus' Eintrag als einziger „Betlehem" (und ein Satz in
+  `nationsTribes.ts`). Angeglichen.
+
+**Werkzeug:** `check-i18n.mjs` und `a11y-audit.mjs` nehmen jetzt `CHROME_PATH`,
+wie `a11y-contrast.mjs` es längst tat – wer einen Chromium hat, lässt Playwright
+keinen zweiten laden.
+
+**Akzeptanzkriterien**
+- [x] `check-i18n.mjs` über 24 Ansichten: **kein deutscher Rest** in der
+      englischen Oberfläche.
+- [x] Gegenprobe auf Deutsch findet **781** Stellen – die Prüfung kann also
+      finden, und „nichts gefunden" ist ein Befund, kein Ausfall.
+- [x] Zusätzlich direkt gemessen, nicht nur „der Wächter schweigt": zehn
+      Einträge in beiden Sprachen darauf geprüft, dass die richtige Form
+      **dasteht** und die andere **nirgends**.
+- [x] „Rom" braucht in der Wortliste eine Sonderregel: `Rom(?!\.?\s*\d)` –
+      „Rom 15,19" ist der Römerbrief. Der erste Lauf mit der neuen Liste meldete
+      genau diesen Fehlalarm fünfmal.
+- [x] `a11y-audit.mjs` über 21 Ansichten: alles benannt, alles im Bild auf
+      390 px, kein Konsolenfehler.
+- [x] Alle zehn `npm run check`-Prüfungen sauber.
+
+**Zwei kaputte Messungen unterwegs, beide korrigiert**
+- Der Sprachtest verglich mit `includes()` und meldete vier Fehler, die keine
+  waren: „Rom" steckt in „Rome", „Trent" in „Trento". Mit Wortgrenzen blieb
+  **ein** Fund übrig – und der war echt (Bethlehem/Betlehem).
+- Ein Test, der prüft, ob *irgendein* langer Absatz da ist, besteht auch, wenn
+  die Ansicht den falschen Text zeigt. Darum die Gegenprobe auf die jeweils
+  andere Sprachform.
+
+### 4.52 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/

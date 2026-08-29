@@ -20,6 +20,9 @@ interface Props {
 }
 
 function EraDots({ place }: { place: Place }) {
+  // `title` ist die einzige Beschriftung dieses Punktes – für die Maus wie für
+  // den Screenreader. Sie stand fest auf Deutsch.
+  const lang = useLang();
   const eras = erasForPlace(place)
     .map((id) => ERA_BY_ID[id])
     .filter(Boolean)
@@ -27,7 +30,7 @@ function EraDots({ place }: { place: Place }) {
   return (
     <span className="flex items-center gap-0.5">
       {eras.map((e) => (
-        <span key={e.id} className="h-2 w-2 rounded-full" style={{ background: e.color }} title={e.de} />
+        <span key={e.id} className="h-2 w-2 rounded-full" style={{ background: e.color }} title={lang === 'de' ? e.de : e.en} />
       ))}
     </span>
   );

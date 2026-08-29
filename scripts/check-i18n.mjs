@@ -18,16 +18,26 @@
 import { chromium } from 'playwright';
 
 /**
- * Wörter, die es im Englischen nicht gibt. Bewusst Funktionswörter und ein
- * paar Fachwörter der App, keine Namen: „Karte" wäre als Name einer Kartenwahl
- * ein Fehlalarm, „und" ist keiner.
+ * Wörter, die es im Englischen nicht gibt. Zwei Gruppen, und die zweite kam
+ * spät dazu.
+ *
+ * Zuerst Funktionswörter und ein paar Fachwörter der App: „Karte" wäre als
+ * Name einer Kartenwahl ein Fehlalarm, „und" ist keiner.
+ *
+ * Dann **deutsche Formen fremder Eigennamen**. Die fehlten, und die Lücke war
+ * teuer: In der Kirchengeschichte standen Ortsname und Konzilname als je *ein*
+ * Feld und gingen unverändert in beide Oberflächen – auf Englisch also
+ * „Mailand", „Karthago", „Betlehem", „Konstantinopel", „Vatikanum I",
+ * „Laterankonzil IV". 24 Einträge, und die Prüfung meldete davon **einen**,
+ * und den nur zufällig, weil „Mar Saba bei Jerusalem" das Wörtchen „bei"
+ * enthielt. Eine Prüfung sieht nur, wonach sie sucht.
  *
  * Kein `\b` als Grenze, sondern eine, die auch den Bindestrich ausschließt:
  * das Ortsregister enthält „Beth-zur", und `\bzur\b` hielt das für ein
  * deutsches „zur". Ein Wort in einem Namen ist kein Wort.
  */
 const DEUTSCH =
-  /(?<![-\w])(und|oder|nicht|wird|werden|sind|waren|eine|einen|einer|dem|den|des|der|die|das|mit|von|für|auf|aus|zum|zur|bei|nach|über|unter|zwischen|durch|ohne|gegen|noch|schon|kein|keine|mehr|hier|dort|diese|dieser|dieses|jeder|jede|alle|Orte|Reise|Reisen|Kapitel|Erwähnungen|Stationen|Tagesmärsche|Luftlinie|schematisch|Konzilien|Kirchenväter|Mitwirkende|Freiwillige|Universität)(?![-\w])/;
+  /(?<![-\w])(und|oder|nicht|wird|werden|sind|waren|eine|einen|einer|dem|den|des|der|die|das|mit|von|für|auf|aus|zum|zur|bei|nach|über|unter|zwischen|durch|ohne|gegen|noch|schon|kein|keine|mehr|hier|dort|diese|dieser|dieses|jeder|jede|alle|Orte|Reise|Reisen|Kapitel|Erwähnungen|Stationen|Tagesmärsche|Luftlinie|schematisch|Konzilien|Kirchenväter|Mitwirkende|Freiwillige|Universität|Mailand|Karthago|Betlehem|Konstantinopel|Nicäa|Trient|Florenz|Konstanz|Antiochia|Nazianz|Kappadokien|Vatikanum|Laterankonzil|Apostelkonzil|Ägypten|Rom(?!\.?\s*\d)|Kirche|Konzil|Konzilien|Bischof|Bischöfe|Jahrhundert|Jahrhunderts)(?![-\w])/;
 
 const ANSICHTEN = [
   '',
@@ -41,6 +51,11 @@ const ANSICHTEN = [
   '#stammbaum=gebiete,juda',
   '#graph',
   '#kirche=vater,augustinus',
+  '#kirche=zeit,thesen',
+  '#kirche=konzil,chalcedon',
+  '#jesus=passion',
+  '#jesus=mensch,petrus',
+  '#israel',
   '#vergleich=abraham',
   '#hoeren',
   '#weg=a15257a,a112427',
@@ -100,7 +115,10 @@ const base = process.argv[2] ?? 'http://localhost:5173';
 // nicht dasselbe wie eine Oberfläche ohne Fehler.
 const sprache = process.argv[3] === 'de' ? 'de' : 'en';
 
-const b = await chromium.launch();
+// Wie in `a11y-contrast.mjs`: Wer einen eigenen Chromium hat (Distribution,
+// CI-Abbild, vorinstallierter Browser), gibt ihn über CHROME_PATH an, statt
+// Playwright einen zweiten herunterladen zu lassen.
+const b = await chromium.launch({ executablePath: process.env.CHROME_PATH || undefined });
 const ctx = await b.newContext({
   locale: sprache === 'de' ? 'de-DE' : 'en-US',
   viewport: { width: 1440, height: 950 },
