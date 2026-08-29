@@ -225,6 +225,14 @@ Legende Priorität: **P0** = Muss (implementiert/geplant für GA) · **P1** = So
       nutzen `import.meta.env.BASE_URL`.
 - [ ] Einmalig: *Settings → Pages → Source: GitHub Actions* aktivieren (Nutzer).
 - [ ] Lighthouse-Messung ≥ 90 (nach erstem Deploy verifizieren).
+- [x] Vier wiederkehrende Läufe halten aktuell, was von aussen altert: Links
+      (täglich), Podcasts, Forschung und Israel-Karte (wöchentlich). Jeder legt
+      seinen Fund als Entwurf hin, keiner schreibt auf den Default-Branch —
+      siehe `docs/Agenten.md`.
+- [ ] Einmalig: ein Secret (`CLAUDE_CODE_OAUTH_TOKEN` **oder**
+      `ANTHROPIC_API_KEY`) und *Settings → Actions → General → Workflow
+      permissions → Allow GitHub Actions to create and approve pull requests*
+      (Nutzer).
 
 
 ### 4.12 Reisen & Geschichten — P1 ✅

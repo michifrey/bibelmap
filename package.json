@@ -20,6 +20,7 @@
     "check:sources": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-sources.mjs",
     "check:tiles": "node scripts/check-tiles.mjs",
     "check:tribes": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-tribes.mjs",
+    "check:urls": "node scripts/check-urls.mjs",
     "preview": "vite preview",
     "data": "node scripts/build-data.mjs",
     "text": "node scripts/build-text.mjs",
