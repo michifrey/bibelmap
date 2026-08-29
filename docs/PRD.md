@@ -1741,7 +1741,28 @@ aus – und erst damit ist belegt, dass die Prüfung wirklich den Cache misst.
 - [x] `CHROME_PATH` wie bei den beiden anderen Browserprüfungen; im README
       dokumentiert samt dem Hinweis, dass ein gebauter Stand nötig ist.
 
-### 4.61 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.61 Gemessen und nichts gefunden — P2 ✅
+
+Nicht jede Messung führt zu einer Änderung. Diese hier taten es nicht, und das
+ist ihr Ergebnis – festgehalten, damit sie niemand ein zweites Mal anstellt.
+Alle Zahlen vom 29. August 2026, gegen den Stand nach § 4.60.
+
+| gemessen | Ergebnis | Urteil |
+|---|---|---|
+| **Laufzeit** – lange Aufgaben über 11 Ansichten | schlimmste 162 ms (`#graph`, einmal beim Aufbau); 7 von 11 Ansichten ohne eine Aufgabe über 50 ms; Suche „Jer" bis Treffer 47 ms | nichts zu holen |
+| **Layoutsprünge** (CLS), 8 Ansichten, gedrosselt | schlimmster Wert **0,01** – Google nennt unter 0,1 „gut" | nichts zu holen |
+| **Schriften** | vier Dateien, aber nur zwei geladen (103 kB): `latin-ext` kommt nur, wenn türkische Namen wie „İznik" auf der Seite stehen | funktioniert wie gedacht |
+| **Abhängigkeiten** | `npm audit`: **0 Schwachstellen**. Zwölf Pakete liegen ein Patch/Minor zurück, TypeScript eine Hauptversion | Wartung, keine Optimierung – nicht unaufgefordert |
+| **Übersetzungen nach Sprache trennen** | `i18n.ts` ist `Record<key, {de, en}>`: die Sprachen liegen **pro Schlüssel verschachtelt**, und `t()` ist synchron. Der Umbau wären ~600 Einträge plus ein asynchroner Pfad beim Sprachwechsel – für rund 5 kB gzip | Aufwand und Risiko stehen nicht dafür |
+| **`tribes.ts` aus dem Startbündel** | erledigt in § 4.55 als Nebenwirkung: `PlaceDetail` wird nachgeladen und nimmt die Datei mit | schon behoben |
+| **Nachweise gegen benutzte Server abgleichen** | 41 Hosts stehen im Quelltext und nicht in den Nachweisen – aber die Liste wirft „zitiert als Quelle" (UN-Dokumente, Reuters), „verlinkt" (bible.com) und „unter Lizenz benutzt" durcheinander | als Prüfung untauglich: 41 Fehlalarme, sie wäre in einer Woche abgeschaltet |
+
+**Was am Startbündel bleibt** (325 kB), aufgeschlüsselt über die Sourcemaps:
+react-dom 174 kB, Übersetzungen 41 kB, Startseite 28 kB, App 20 kB, Rest unter
+8 kB. Über die Hälfte ist das Framework. Das bewegt nur ein Wechsel des
+Frameworks – keine Optimierung, sondern eine andere App.
+
+### 4.62 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
