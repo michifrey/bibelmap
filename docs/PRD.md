@@ -1655,7 +1655,57 @@ Dazu berechnete Stile an sechs Elementen, die wirklich im DOM sind
 - [x] Rundgang über 29 Ansichten × 2 Sprachen ohne Befund; alle 13 Prüfungen
       grün.
 
-### 4.59 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.59 Ein Budget, damit es so bleibt — P1 ✅
+
+**Zuerst die Laufzeit, weil sie noch nie gemessen war.** Lange Aufgaben auf dem
+Hauptthread, über elf Ansichten:
+
+| | |
+|---|---|
+| schlimmste einzelne Aufgabe | 162 ms (`#graph`, einmal beim Aufbau) |
+| Suche „Jer" bis Treffer | **47 ms** |
+| sieben von elf Ansichten | **keine** Aufgabe über 50 ms |
+
+Da ist nichts zu holen. Das ist ein Befund, kein Versäumnis – und der Grund,
+warum diese Runde nichts an der Laufzeit ändert.
+
+**Der eigentliche Punkt: die Zahlen absichern.** § 4.55 bis § 4.58 haben den
+ersten Aufruf von 720 auf 325 kB JavaScript gebracht, das Stylesheet von 22 auf
+15,2 kB gzip, die Ortsdaten von 215 auf 109. **Jede dieser Verbesserungen war
+ein Import, der an der falschen Stelle stand.** Ein neuer Import an einer
+falschen Stelle macht sie rückgängig – lautlos: Nichts geht kaputt, die Seite
+wird nur wieder langsam.
+
+`scripts/check-budget.mjs` misst, was `dist/index.html` referenziert, und
+vergleicht mit drei Grenzen:
+
+```
+· JavaScript (roh)       325.3 kB  von höchstens 360.0 kB
+· CSS (gzip)              15.2 kB  von höchstens  18.0 kB
+· Ortsdaten (gzip)       108.4 kB  von höchstens 130.0 kB
+```
+
+Die Grenzen liegen bewusst dicht über dem Gemessenen: Ein Puffer, in den man
+dreimal hineinwachsen kann, ist keine Grenze, sondern eine Einladung.
+
+**Und ein Fehler, den ich beinahe ausgeliefert hätte.** Zuerst hing die Prüfung
+in `npm run check` – das läuft in der CI **vor** dem Build. Ohne `dist/` gibt es
+nichts zu messen, also hätte sie **jeden CI-Lauf rot gemacht**. Aufgefallen ist
+das nur, weil ich `dist/` beiseitegeschoben und `npm run check` noch einmal
+laufen lassen habe. Sie hängt jetzt als `postbuild` am Build, also an der
+einzigen Stelle, an der die Zahlen existieren.
+
+**Akzeptanzkriterien**
+- [x] Gegenprobe mit dem Rückfall, für den die Prüfung geschrieben ist:
+      `MapView` wieder statisch importiert → **523,2 kB statt 325,3** und
+      21,9 statt 15,2 kB CSS; beide Grenzen schlagen an, und der **Build endet
+      mit Exit 1**.
+- [x] `npm run check` läuft weiter ohne `dist/` (13 Prüfungen).
+- [x] Die Prüfung erklärt sich für kaputt, wenn sie weniger als zwei Dateien
+      in `index.html` findet – eine Prüfung, die ihre Quelle verliert, meldet
+      sonst null Bytes und besteht.
+
+### 4.60 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/

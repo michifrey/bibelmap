@@ -1057,6 +1057,18 @@ herein, also lagen 17 kB Kartenstil im render-blockierenden Stylesheet der
 Startseite. Sie stehen jetzt in `src/map.css` und kommen mit der ersten
 Ansicht, die eine Karte zeigt – **101 → 84 kB, gzip 22,0 → 15,2 kB**.
 
+**Damit das so bleibt**, hängt `scripts/check-budget.mjs` als `postbuild` am
+Build und misst, was `dist/index.html` referenziert – die Kette vor dem ersten
+Bild. Über der Grenze bricht der Build ab. Jede dieser Verbesserungen war ein
+Import, der an der falschen Stelle stand; ein neuer Import an einer falschen
+Stelle macht sie lautlos rückgängig.
+
+```
+· JavaScript (roh)       325.3 kB  von höchstens 360.0 kB
+· CSS (gzip)              15.2 kB  von höchstens  18.0 kB
+· Ortsdaten (gzip)       108.4 kB  von höchstens 130.0 kB
+```
+
 Und das größte Einzelstück der App ist gar kein JavaScript: `places.json`. Sie
 wog **1.365 kB** (215 kB gzip) und wiegt jetzt **560 kB** (**109 kB gzip**):
 Zwei Drittel davon waren siebenfach gespeicherte Wiederholung – je Vers ein
