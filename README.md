@@ -547,6 +547,17 @@ Heilsgeschichte – und läuft in der CI **vor** dem Build: ein Tippfehler in `b
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
 
+Zwei weitere Prüfungen brauchen einen Browser und laufen darum von Hand:
+`scripts/check-i18n.mjs` (steht in der englischen Oberfläche noch Deutsch?) und
+`scripts/a11y-audit.mjs` (Namen, Telefonbreite, Tastaturweg). Beide nehmen
+`CHROME_PATH`, wenn schon ein Chromium da ist:
+
+```bash
+CHROME_PATH=/usr/bin/chromium node scripts/check-i18n.mjs http://localhost:4173
+CHROME_PATH=/usr/bin/chromium node scripts/check-i18n.mjs http://localhost:4173 de   # Gegenprobe
+CHROME_PATH=/usr/bin/chromium node scripts/a11y-audit.mjs http://localhost:4173
+```
+
 Bewusst nicht dabei sind `npm run check:bp` und `npm run check:links`. Beide
 fragen fremde Server; ein Anbieter mit Schluckauf darf keinen Deploy blockieren
 und keinen falschen Befund erzeugen. Die laufen von Hand.

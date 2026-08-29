@@ -9,7 +9,7 @@ import { flyOptions } from '../lib/motion';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import {
-  FATHERS, COUNCILS, TRADITION_COLOR, TRADITION_LABEL, type Tradition,
+  FATHERS, COUNCILS, TRADITION_COLOR, TRADITION_LABEL, cityName, councilName, type Tradition,
 } from '../data/church';
 import {
   EVENTS, CHURCH_ERAS, CHURCH_ERA_BY_ID, SOURCE_BY_ID, type ChurchEvent,
@@ -162,7 +162,7 @@ export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenIn
           fillColor: TRADITION_COLOR[f.tradition],
           fillOpacity: 0.95,
         })
-          .bindTooltip(`${lang === 'de' ? f.de : f.en} · ${f.city}`, { direction: 'top' })
+          .bindTooltip(`${lang === 'de' ? f.de : f.en} · ${cityName(f, lang)}`, { direction: 'top' })
           .on('click', () => setSel(f.id))
           .addTo(group);
       }
@@ -178,7 +178,7 @@ export default function ChurchMode({ lang, onExit, initial, onNavigate, onOpenIn
           fillColor: '#e0a449',
           fillOpacity: 1,
         })
-          .bindTooltip(`${c.name} · ${c.year}`, { direction: 'top' })
+          .bindTooltip(`${councilName(c, lang)} · ${c.year}`, { direction: 'top' })
           .on('click', () => setSel(c.id))
           .addTo(group);
       }
@@ -282,7 +282,7 @@ markVectorsDecorative(map.getContainer());
                 ) : 'years' in detail ? (
                   <>
                     <div className="font-display text-base font-semibold text-white">{lang === 'de' ? detail.de : detail.en}</div>
-                    <div className="text-[11px] text-white/60">{detail.city} · {detail.years} · {lang === 'de' ? TRADITION_LABEL[detail.tradition].de : TRADITION_LABEL[detail.tradition].en}</div>
+                    <div className="text-[11px] text-white/60">{cityName(detail, lang)} · {detail.years} · {lang === 'de' ? TRADITION_LABEL[detail.tradition].de : TRADITION_LABEL[detail.tradition].en}</div>
                     <p className="mt-1.5 text-sm leading-relaxed text-white">{lang === 'de' ? detail.deNote : detail.enNote}</p>
                     {onOpenInTree && (
                       <button
@@ -296,8 +296,8 @@ markVectorsDecorative(map.getContainer());
                   </>
                 ) : (
                   <>
-                    <div className="font-display text-base font-semibold text-white">{detail.name} · {detail.year}</div>
-                    <div className="text-[11px] text-white/60">{detail.city}</div>
+                    <div className="font-display text-base font-semibold text-white">{councilName(detail, lang)} · {detail.year}</div>
+                    <div className="text-[11px] text-white/60">{cityName(detail, lang)}</div>
                     <p className="mt-1.5 text-sm leading-relaxed text-white">{lang === 'de' ? detail.de.note : detail.en.note}</p>
                     {/* „Die ökumenischen Konzilien" gibt es als eine Liste
                         nicht – Rom zählt einundzwanzig, die Orthodoxie sieben,
@@ -389,7 +389,7 @@ markVectorsDecorative(map.getContainer());
                       <span className="h-2.5 w-2.5 flex-none rounded-full" style={{ background: TRADITION_COLOR[f.tradition] }} />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-medium text-white">{lang === 'de' ? f.de : f.en}</span>
-                        <span className="text-[11px] text-white/60">{f.city} · {f.years}</span>
+                        <span className="text-[11px] text-white/60">{cityName(f, lang)} · {f.years}</span>
                       </span>
                     </button>
                   ))}
@@ -450,8 +450,8 @@ markVectorsDecorative(map.getContainer());
                   >
                     <span className="grid h-6 w-6 flex-none place-items-center rounded-full bg-gold/30 text-[10px] font-semibold text-white">{c.year.slice(0, 4)}</span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium text-white">{c.name}</span>
-                      <span className="text-[11px] text-white/60">{c.city}</span>
+                      <span className="block truncate text-sm font-medium text-white">{councilName(c, lang)}</span>
+                      <span className="text-[11px] text-white/60">{cityName(c, lang)}</span>
                     </span>
                     {/* Drei Punkte, drei Traditionen: ab 451 fehlt einer, ab
                         787 zwei. Die Liste zeigt damit auf einen Blick, wo aus

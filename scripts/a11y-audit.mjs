@@ -83,7 +83,10 @@ const audit = () => {
   return out;
 };
 const base = process.argv[2] ?? 'http://localhost:5173';
-const b = await chromium.launch();
+// Wie in `a11y-contrast.mjs`: Wer einen eigenen Chromium hat (Distribution,
+// CI-Abbild, vorinstallierter Browser), gibt ihn über CHROME_PATH an, statt
+// Playwright einen zweiten herunterladen zu lassen.
+const b = await chromium.launch({ executablePath: process.env.CHROME_PATH || undefined });
 const ctx = await b.newContext({ viewport: { width: 1440, height: 950 }, locale: 'de-DE' });
 const p = await ctx.newPage();
 await p.addInitScript((quelle) => {
@@ -92,7 +95,7 @@ await p.addInitScript((quelle) => {
 const errs = [];
 let offen = 0;
 p.on('pageerror', (e) => errs.push(e.message));
-const ANSICHTEN = ['', '#karte', '#reise=exodus,2', '#mission=modern', '#quiz', '#lesen=Acts,13', '#stammbaum', '#graph', '#kirche', '#vergleich', '#hoeren', '#weg=a15257a,a112427', '#gelaende', '#heilsgeschichte', '#register', '#israel=okt2023', '#unterstuetzen'];
+const ANSICHTEN = ['', '#karte', '#reise=exodus,2', '#mission=modern', '#quiz', '#lesen=Acts,13', '#stammbaum', '#graph', '#kirche', '#vergleich', '#hoeren', '#weg=a15257a,a112427', '#gelaende', '#heilsgeschichte', '#register', '#israel=okt2023', '#jesus=passion', '#jesus=mensch,petrus', '#kirche=zeit,thesen', '#unterstuetzen', '#nachweise'];
 for (const hash of ANSICHTEN) {
   await p.goto(base + '/' + hash, { waitUntil: 'networkidle' });
   await p.waitForTimeout(2200);
