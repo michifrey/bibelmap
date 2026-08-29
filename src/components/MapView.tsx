@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import L from 'leaflet';
+import '../lib/mapStyles';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
 import { BASEMAPS, basemapAttr, DEFAULT_BASEMAP, type BasemapId } from '../lib/basemaps';

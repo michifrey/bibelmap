@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
+import '../lib/mapStyles';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import {
