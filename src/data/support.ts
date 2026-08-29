@@ -195,12 +195,12 @@ export const SUPPORT_PROJECTS: SupportProject[] = [
     by: { de: 'OpenStreetMap Foundation und Mitwirkende', en: 'OpenStreetMap Foundation and contributors' },
     kind: 'data',
     role: {
-      de: 'Die Landkarte selbst – Küsten, Flüsse, Städte und Straßen, auf denen die biblischen Orte liegen. Die Kacheln in dieser Darstellung liefert CARTO.',
-      en: 'The map itself – coasts, rivers, cities and roads the biblical places sit on. The tiles in this style come from CARTO.',
+      de: 'Die Landkarte selbst – Küsten, Flüsse, Städte und Straßen, auf denen die biblischen Orte liegen. Seit August 2026 kommen auch die Kachelbilder von dort: helle wie dunkle Karte holen sie vom Kachelserver der Foundation, der sie ohne Schlüssel ausliefert.',
+      en: 'The map itself – coasts, rivers, cities and roads the biblical places sit on. Since August 2026 the tile imagery comes from there too: both the light and the dark style pull it from the Foundation\'s tile server, which serves them without a key.',
     },
     credit: {
-      de: 'Kartendaten © OpenStreetMap-Mitwirkende, Kacheln © CARTO.',
-      en: 'Map data © OpenStreetMap contributors, tiles © CARTO.',
+      de: 'Kartendaten und Kacheln © OpenStreetMap-Mitwirkende (ODbL).',
+      en: 'Map data and tiles © OpenStreetMap contributors (ODbL).',
     },
     home: 'https://www.openstreetmap.org/',
     donate: 'https://supporting.openstreetmap.org/donate/',

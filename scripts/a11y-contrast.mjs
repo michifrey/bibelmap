@@ -46,7 +46,8 @@ const VIEWS = [
   '', '#karte', '#reise=exodus,2', '#mission=modern', '#mission=journeys',
   '#quiz', '#lesen=Acts,13', '#stammbaum', '#stammbaum=baum', '#stammbaum=gebiete',
   '#graph', '#kirche', '#kirche=konzil,chalcedon', '#vergleich', '#hoeren',
-  '#gelaende', '#heilsgeschichte', '#unterstuetzen', '#nachweise',
+  '#gelaende', '#heilsgeschichte', '#israel=okt2023', '#israel=un181',
+  '#unterstuetzen', '#nachweise',
 ];
 
 const measure = () => {

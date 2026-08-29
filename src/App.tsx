@@ -11,7 +11,8 @@ import {
   placeName,
 } from './lib/places';
 import { ERAS, ERA_BY_ID } from './data/eras';
-import MapView, { type BasemapId } from './components/MapView';
+import MapView from './components/MapView';
+import { DEFAULT_BASEMAP, fallbackFor, type BasemapId } from './lib/basemaps';
 import Header, { type Mode, type View } from './components/Header';
 import SkipLinks from './components/SkipLinks';
 import { JOURNEY_BY_ID } from './data/journeys';
@@ -26,7 +27,9 @@ const Presentation = lazy(() => import('./components/Presentation'));
 const HistoryMode = lazy(() => import('./components/HistoryMode'));
 const Mission = lazy(() => import('./components/Mission'));
 const JourneyMode = lazy(() => import('./components/JourneyMode'));
+const Gospel = lazy(() => import('./components/Gospel'));
 const QuizMode = lazy(() => import('./components/QuizMode'));
+const IsraelMode = lazy(() => import('./components/IsraelMode'));
 const MediaMode = lazy(() => import('./components/MediaMode'));
 const OwnRoute = lazy(() => import('./components/OwnRoute'));
 const PlaceIndex = lazy(() => import('./components/PlaceIndex'));
@@ -149,7 +152,7 @@ export default function App() {
   const [selected, setSelected] = useState<Place | null>(null);
   const [flyTo, setFlyTo] = useState<{ lat: number; lon: number; zoom?: number; key: number } | null>(null);
   const [mode, setMode] = useState<Mode | null>(INITIAL_ROUTE?.mode ?? null);
-  const [basemap, setBasemap] = useState<BasemapId>('dark');
+  const [basemap, setBasemap] = useState<BasemapId>(DEFAULT_BASEMAP);
   /** Welcher Kartenstil ausgefallen ist – und ob es ein Ausweichen gab. */
   const [tileNotice, setTileNotice] = useState<{ id: BasemapId; fellBack: boolean } | null>(null);
   const [view, setView] = useState<View>(INITIAL_ROUTE?.view ?? 'map');
@@ -158,6 +161,7 @@ export default function App() {
   const [atStart, setAtStart] = useState(!INITIAL_ROUTE);
   // Unterzustand der Nebenansichten, damit die Adresse ihn mitschreibt.
   const [journeyNav, setJourneyNav] = useState(INITIAL_ROUTE?.journey ?? null);
+  const [gospelNav, setGospelNav] = useState(INITIAL_ROUTE?.gospel ?? null);
   const [missionNav, setMissionNav] = useState(INITIAL_ROUTE?.mission ?? null);
   const [readingNav, setReadingNav] = useState(INITIAL_ROUTE?.reading ?? null);
   const [mediaNav, setMediaNav] = useState(INITIAL_ROUTE?.media ?? null);
@@ -168,10 +172,11 @@ export default function App() {
   const ownHash = useRef<string>(window.location.hash);
   // Cross-links between the time tree and the church-history map (shared data).
   const [treeFocus, setTreeFocus] = useState<string | null>(null);
-  const [churchNav, setChurchNav] = useState<{ tab: 'fathers' | 'councils'; id?: string } | null>(
+  const [churchNav, setChurchNav] = useState<{ tab: 'timeline' | 'fathers' | 'councils'; id?: string } | null>(
     INITIAL_ROUTE?.church ?? null,
   );
   const [compareNav, setCompareNav] = useState<string | null>(INITIAL_ROUTE?.compare ?? null);
+  const [israelNav, setIsraelNav] = useState<string | null>(INITIAL_ROUTE?.israel ?? null);
   const [historyNav, setHistoryNav] = useState<string | null>(INITIAL_ROUTE?.history ?? null);
   const [treeNav, setTreeNav] = useState(INITIAL_ROUTE?.tree ?? null);
   /*
@@ -219,15 +224,19 @@ export default function App() {
    * Ein fremder Kachelserver antwortet nicht: zurück auf die Karte, die aus
    * der eigenen Ecke kommt – und ein Wort dazu, damit niemand die leere
    * Fläche für einen Fehler der App hält.
+   *
+   * Worauf ausgewichen wird, entscheidet `fallbackFor` am Rechnernamen und
+   * nicht mehr eine Kennung hier: Seit die Nachtkarte aus derselben
+   * OpenStreetMap-Kachel gerechnet wird wie die helle, wäre ein Wechsel
+   * zwischen den beiden kein Ausweichen, sondern derselbe Fehler in anderer
+   * Farbe.
    */
   function handleTilesUnavailable(id: BasemapId) {
     // Wer den Stil längst gewechselt hat, braucht die Nachricht nicht mehr.
     if (basemap !== id) return;
-    // Fällt die Nachtkarte selbst aus, ist nicht ein Anbieter stumm, sondern
-    // das Netz – dann gibt es nichts, worauf man ausweichen könnte.
-    const fellBack = id !== 'dark';
-    if (fellBack) setBasemap('dark');
-    setTileNotice({ id, fellBack });
+    const ersatz = fallbackFor(id);
+    if (ersatz) setBasemap(ersatz);
+    setTileNotice({ id, fellBack: ersatz !== null });
   }
 
   /** Der Server ist zurück – der Hinweis darf gehen. */
@@ -300,6 +309,7 @@ export default function App() {
     }
     if (m === 'church') setChurchNav(null);
     if (m === 'compare') setCompareNav(null);
+    if (m === 'israel') setIsraelNav(null);
     if (m === 'media') setMediaNav(null);
     setMode(m);
   }
@@ -318,6 +328,7 @@ export default function App() {
     const prefetch = () => {
       void import('./components/Presentation');
       void import('./components/JourneyMode');
+      void import('./components/Gospel');
       void import('./components/Mission');
       void import('./components/HistoryMode');
       void import('./components/QuizMode');
@@ -358,10 +369,12 @@ export default function App() {
           placeId: selected?.id,
           journey: journeyNav ?? undefined,
           mission: missionNav ?? undefined,
+          gospel: gospelNav ?? undefined,
           reading: readingNav ?? undefined,
           media: mediaNav ?? undefined,
           church: churchNav ?? undefined,
           compare: compareNav ?? undefined,
+          israel: israelNav ?? undefined,
           history: historyNav ?? undefined,
           own: mode === 'route' ? ownIds : undefined,
           tree: treeNav ?? undefined,
@@ -375,6 +388,7 @@ export default function App() {
     mode,
     selected,
     journeyNav,
+    gospelNav,
     missionNav,
     readingNav,
     mediaNav,
@@ -419,10 +433,12 @@ export default function App() {
       setMode(route.mode);
       setJourneyNav(route.journey ?? null);
       setMissionNav(route.mission ?? null);
+      setGospelNav(route.gospel ?? null);
       setReadingNav(route.reading ?? null);
       setMediaNav(route.media ?? null);
       setChurchNav(route.church ?? null);
       setCompareNav(route.compare ?? null);
+      setIsraelNav(route.israel ?? null);
       setHistoryNav(route.history ?? null);
       if (route.own?.length) setOwnIds(route.own);
       setTreeNav(route.tree ?? null);
@@ -574,6 +590,9 @@ export default function App() {
     } else if (hit.target.mode === 'history') {
       setHistoryNav(hit.target.history);
       setMode('history');
+    } else if (hit.target.mode === 'gospel') {
+      setGospelNav(hit.target.gospel);
+      setMode('gospel');
     } else {
       setMissionNav(hit.target.mission);
       setMode('mission');
@@ -973,6 +992,19 @@ export default function App() {
               />
               </Suspense>
             )}
+            {mode === 'gospel' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Gospel
+                key={`gospel-${navEpoch}`}
+                places={places}
+                lang={lang}
+                onShowPlace={showPlaceFromGenealogy}
+                initial={gospelNav}
+                onNavigate={setGospelNav}
+                onExit={() => setMode(null)}
+              />
+              </Suspense>
+            )}
             {mode === 'mission' && (
               <Suspense fallback={<ModeFallback />}>
                 <Mission
@@ -987,6 +1019,21 @@ export default function App() {
               />
               </Suspense>
             )}
+            {mode === 'israel' && (
+              <Suspense fallback={<ModeFallback />}>
+                <IsraelMode
+                  key={`israel-${navEpoch}`}
+                  lang={lang}
+                  initial={israelNav}
+                  onNavigate={setIsraelNav}
+                  onExit={() => {
+                    setMode(null);
+                    setIsraelNav(null);
+                  }}
+                />
+              </Suspense>
+            )}
+
             {mode === 'church' && (
               <Suspense fallback={<ModeFallback />}>
                 <ChurchMode

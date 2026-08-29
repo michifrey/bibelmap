@@ -69,7 +69,13 @@ function colorsIn(file) {
   return [...new Set(text.match(/#[0-9a-fA-F]{6}\b/g) ?? [])];
 }
 
-const DATA = ['src/data/eras.ts', 'src/data/mission.ts', 'src/data/genealogy.ts', 'src/data/personSources.ts'];
+const DATA = [
+  'src/data/eras.ts',
+  'src/data/mission.ts',
+  'src/data/gospel.ts',
+  'src/data/genealogy.ts',
+  'src/data/personSources.ts',
+];
 let worst = Infinity;
 let geprueft = 0;
 const tooDark = [];

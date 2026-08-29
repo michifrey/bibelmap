@@ -49,13 +49,16 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Damaskus aramäisch.
 - **Marker-Popups** mit Bild und weiterführenden Links direkt auf der Karte;
   robuste Bild-Fallback-Kette (OpenBible → Wikidata/Commons → Platzhalter).
-- **Kartenmaterial umschaltbar** – helle Karte (CARTO), **Satellit**
+- **Kartenmaterial umschaltbar** – **helle Karte** (OpenStreetMap; die Vorgabe),
+  **Nachtkarte** (dieselbe Kachel, im Browser umgerechnet), **Satellit**
   (Sentinel-2 cloudless von EOX – ein wolkenfreies Mosaik aus einem Jahr
   Copernicus-Aufnahmen, 10 m je Bildpunkt) und **Relief/„historisch"**
   (Terrain Light von EOX). Beide stehen unter CC-BY 4.0; die früheren
   Esri-Kacheln verlangten außerhalb eines ArcGIS-Kontos einen Vertrag.
-  Antwortet ein fremder Kachelserver nicht, fällt die Karte auf die Nachtkarte
-  zurück und sagt, warum – statt eine leere Fläche zu zeigen. **Das sagt jetzt
+  Antwortet ein fremder Kachelserver nicht, weicht die Karte auf die Vorgabe
+  aus und sagt, warum – statt eine leere Fläche zu zeigen. Kommt der stumme
+  Server vom selben Rechner wie die Vorgabe, gibt es nichts, worauf man
+  ausweichen könnte; dann bleibt es beim Hinweis. **Das sagt jetzt
   jede Karte**, nicht nur die erste: Reisen, Mission, Quiz, Kirchengeschichte,
   Vergleich, Heilsgeschichte, Eigener Weg, Entdeckermodus und die Stammeskarte.
   Vorher war der einzige Hinweis der der Hauptkarte – im Vollbild-Modus lag er
@@ -127,6 +130,19 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   die Route mitwachsen und einen Punkt die Etappen abgehen, während links die
   Station mit Bibelstelle und kurzem Text mitläuft (← / → blättern, Leertaste
   startet). Jede Station verlinkt auf ihre Ortskarte.
+- **Jesus – Leben und Wege** – eine eigene Sektion für die Evangelien: **86
+  Stationen in sieben Akten**, von der Ankündigung an Maria über die Geburt in
+  Bethlehem, das Jahr am See, den Weg nach Jerusalem und die Passionswoche **Tag
+  für Tag** (Palmsonntag → Grabesruhe) bis zu Emmaus, dem See Tiberias und dem
+  Abschied am Ölberg. Jede Station nennt Ort, Bibelstelle (mit Parallelstellen),
+  einen erzählenden Text und – wo sie hängen bleibt – die Stelle im Wortlaut.
+  **52 Menschen der Evangelien** stehen in einem eigenen Verzeichnis: ein Klick
+  auf *Simon Petrus* zeigt seine 24 Stationen vom Bootssteg bis zum Kohlenfeuer,
+  ein Klick auf *Maria von Magdala* ihre Spur bis zum leeren Grab. Jede Station
+  verlinkt den **BibleProject-Guide** ihres Evangeliums, und wo eine Folge von
+  **The Chosen** die Szene spielt, steht sie daneben – als Verfilmung
+  gekennzeichnet, mit der Bibelstelle direkt darüber. Adressen wie
+  `#jesus=passion,golgotha` und `#jesus=mensch,petrus` sind teilbar.
 - **Mission & Ausbreitung** – wie das Evangelium in die Welt kam: die vier
   Reisen des Paulus (plus die Wege vor ihm, Apg 1–11) als Route mit nummerierten
   Stationen und Bibelstellen – und danach die Ausbreitung bis heute, in sieben
@@ -137,11 +153,85 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   **Zeitraffer**: ein Jahresregler von 30 bis heute, die Karte füllt sich mit
   jedem Jahrhundert, die Phase wechselt von selbst mit (Tastatur ← / →). Jede Reisestation nennt Entfernung
   und Tagesmärsche zur vorigen, ein Klick auf *Auf Karte* springt zur Ortskarte.
-- **Kirchengeschichte-Modus** – **Kirchenväter** (westlich/lateinisch ·
-  östlich/griechisch · orientalisch) und die **Konzilien** (Apostelkonzil + die
-  7 ökumenischen) auf der Karte; jede Person und jedes Konzil hat eine eigene
-  Adresse (`#kirche=vater,augustinus`, `#kirche=konzil,chalcedon`). Paulus’ Reisen stehen nicht hier, sondern in
-  *Mission & Ausbreitung* – ein Link im Modus führt hinüber.
+- **Kirchengeschichte-Modus** – drei Reiter: **Zeitstrahl**, **Kirchenväter**
+  (westlich/lateinisch · östlich/griechisch · orientalisch) und die
+  **Konzilien**. Jeder Eintrag hat eine eigene Adresse (`#kirche=zeit,thesen`,
+  `#kirche=vater,augustinus`, `#kirche=konzil,chalcedon`). Paulus’ Reisen stehen
+  nicht hier, sondern in *Mission & Ausbreitung* – ein Link im Modus führt
+  hinüber.
+
+  **Der Zeitstrahl** führt **41 Ereignisse von Pfingsten bis heute** über die
+  sechs nachbiblischen Epochen – Apostolische Zeit, Kirchenväter, Mittelalter,
+  Reformation, Erweckung & Mission, Moderne. Unten eine Bauchbinde mit Jahr und
+  Schlagzeile, darüber die Karte, die zeigt, was **bis zu diesem Jahr** geschehen
+  ist: die Bewegung von Jerusalem nach Norden und Westen – und im letzten
+  Jahrhundert wieder nach Süden. Die Epochen sind **dieselben wie im Zeitbaum**
+  (`GEN_EPOCHS`), samt Farbe: Wer im Baum Luther anklickt, findet ihn auf der
+  Schiene in genau demselben Ton wieder. Siebzehn Ereignisse führen mit einem
+  Klick zur Person im Zeitbaum.
+
+  Vorher endete dieser Modus bei 787 – nicht aus einem Urteil, sondern aus einem
+  Datenmangel: Die Karte zog ihre Leute aus dem Zeitbaum, und dort trugen nur
+  die Kirchenväter Koordinaten. Hus, Luther, Calvin, Wesley und Bonhoeffer
+  standen längst im Baum, nur ohne Ort – und damit unsichtbar auf einer Karte.
+
+  **Die Konzilien sagen jetzt, wer sie zählt.** „Die ökumenischen Konzilien"
+  gibt es als *eine* Liste nicht: Rom zählt einundzwanzig, die Orthodoxie bleibt
+  bei den ersten sieben, die orientalischen Kirchen erkennen nur die ersten drei
+  an. Jedes Konzil trägt darum drei Punkte – einen je Tradition –, und man sieht
+  die Kirche die Liste hinunter auseinandergehen: drei Punkte bis 431, zwei ab
+  **Chalcedon 451**, einer ab **Laterankonzil IV 1215**. Wer stattdessen eine
+  glatte Liste hinschreibt, hat unbemerkt eine Seite gewählt und verkauft sie
+  als die gemeinsame.
+
+  **Zu den Quellen.** Dieselbe Regel wie bei der Israel-Karte, und aus demselben
+  Grund: Ein Modus, der Spaltungen erzählt – 451, 1054, 1517 –, redet über
+  Dinge, bei denen jede Seite ihre eigene Fassung hat. Jedes Ereignis nennt
+  darum mindestens eine Quelle, und sie steht unter dem Ereignis, nicht in einer
+  Liste am Ende: eine Angabe, die man erst suchen muss, belegt nichts.
+  Bevorzugt der Text selbst statt des Referats darüber – Konzilsakten, die
+  Kanones von Trient, die Barmer Erklärung im Wortlaut. `npm run check:church`
+  hält das fest, prüft auch, dass keine Quelle unbenutzt herumsteht, dass jedes
+  Band der Schiene Ereignisse trägt, dass jeder Sprung in den Zeitbaum eine
+  Person trifft – und dass Nicäa II das letzte von Ost und West gemeinsam
+  anerkannte Konzil bleibt.
+- **Israel: Land, Staat, Konflikt** – eine Karte im Stil einer
+  Nachrichtensendung: unten eine Bauchbinde mit Jahr und Schlagzeile, darüber
+  die **Gebietsstände**, die sich mit dem Zeitstrahl ablösen – Mandat,
+  UN-Teilungsplan 1947, Waffenstillstandslinien 1949, nach 1967 mit Sinai,
+  nach der Rückgabe 1982, Oslo mit den Zonen A/B/C, und heute. Die
+  **Schraffur trägt die Aussage**: voll gefüllt ist Staatsgebiet, schräg
+  schraffiert besetztes, gekreuzt einseitig einbezogenes, gestreift
+  fremdverwaltetes, gepunktet zurückgegebenes, nur umrissen ein Plan, der nie
+  in Kraft trat. Konflikte bekommen ein Einschlagzeichen an ihrem Ort.
+  49 Ereignisse von der Landnahme bis zur Waffenruhe in Gaza im Oktober 2025 –
+  die biblischen Kriege (Samaria 722, Sanherib 701, Jerusalem 586) neben den
+  modernen (1948, 1956, 1967, 1973, 1982, die Gazakriege, 7. Oktober 2023,
+  der Libanon 2024, die zwölf Tage mit Iran 2025).
+
+  **Zu den Quellen.** Jedes Ereignis nennt mindestens eine – UN-Resolutionen im
+  Wortlaut, Gutachten des Internationalen Gerichtshofs, Vertragstexte, UN OCHA,
+  UNRWA, Yad Vashem, das British Museum für die Keilschriftzeugnisse, die
+  Bundeszentrale für politische Bildung, Reuters und die Tagesschau für das
+  Laufende. **Jede Zahl nennt die Stelle, die sie erhebt, und den Stand**, auf
+  den sie sich bezieht; wo eine Zahl umstritten ist, steht das dabei. Der
+  laufende Krieg ist in Bewegung, deshalb führt der Eintrag zusätzlich auf eine
+  Stelle, die fortlaufend zählt, statt die Zahl hier zum letzten Wort zu machen.
+
+  **Zur Benennung.** Wo zwei Namen im Gebrauch sind, stehen beide: 1948 heißt
+  Unabhängigkeitskrieg *und* Nakba, 1967 Sechstagekrieg *und* Juni-Krieg. Wer
+  nur einen der beiden Namen kennt, kennt nur eine der beiden Erinnerungen.
+  Linien heißen, was sie juristisch sind – die Linie von 1949 ist eine
+  Waffenstillstandslinie, keine Grenze, und das Abkommen sagt das selbst.
+  „Besetzt" ist der Begriff des Völkerrechts, kein Urteil. Die Karte sagt, was
+  wann geschah und wer es festhält – nicht, wer recht hat.
+
+  **Der Untergrund ist wählbar.** Dieselben fünf Grundkarten wie auf der
+  Hauptkarte – Karte, Nachtkarte, Satellit, Relief, Antike Welt –, auf dem
+  Rechner in der Kopfzeile, auf dem Telefon in der Legende. Wer die
+  Waffenstillstandslinie von 1949 im Gelände lesen will, legt sie aufs Relief;
+  wer 63 v. Chr. sucht, auf die antike Welt.
+
 - **Religionen im Vergleich** – gemeinsame Gestalten von Judentum, Christentum und
   Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
   Bibel und Koran, aus jüdisch-christlich-biblischer Sicht; jede Gestalt hat
@@ -165,6 +255,32 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Jona aus Gat-Hefer in Sebulon, Elia aus Tischbe in Gilead, Hanna aus dem
   Stamm Asser, Paulus aus Benjamin. Wen der Zeitbaum führt, den öffnet ein
   Klick dort. Jeder Ortsname führt außerdem auf seine Ortskarte.
+
+  **Zwei Zeugen, nicht einer.** Josua *erzählt* die Verteilung – wer welches Los
+  zog, wo die Grenze lief. Die Chronik *führt* sie: als Register, Jahrhunderte
+  später aus der Sicht der Rückkehrer aus Babel aufgeschrieben. Jeder Stamm
+  zeigt deshalb beides: das Los aus Josua und daneben, was **1. Chronik**
+  über ihn führt – sein Geschlechterregister, die Verse, die seine Wohnorte
+  nennen, und seinen **Fürsten unter David** (1. Chronik 27,16-22). Auch die
+  Zeitleiste bekommt zu jeder Phase die Chronik-Parallele, meist aus
+  **2. Chronik**: Rehabeams fünfzehn Festungsstädte „in Juda und Benjamin"
+  (2Chr 11,5-12), Abias Rückgewinn von Bet-El (2Chr 13,19), Hiskias Läufer, die
+  nach dem Fall Samarias noch „bis gen Sebulon" kommen (2Chr 30,10-11).
+
+  Wo die Chronik schweigt, steht das da, statt still zu fehlen: **Sebulon und
+  Dan haben kein Register** – sie stehen in der Namensliste, geben Levitenstädte
+  ab, ziehen mit David, bekommen aber kein Gebiet. **Gad und Asser haben keinen
+  Fürsten** – in 1. Chronik 27 fehlen sie. Und die **Richterzeit lässt die
+  Chronik ganz aus**. Eine Leerstelle, die man sieht, ist eine Auskunft; eine,
+  die man nicht sieht, sieht aus wie ein Datenfehler.
+
+  Alle diese Stellen sind gegen den Bibeltext im Haus gelesen, nicht aus dem
+  Gedächtnis gesetzt: `npm run check:tribes` schlägt jede nach, prüft, dass der
+  genannte Fürst wirklich in seinem Vers steht, dass jedes Zitat **wörtlich** so
+  dasteht – und dass jedes `null` stimmt, indem es selbst im Text nachsieht, wer
+  in 1. Chronik 2–8 ein Register und in 1. Chronik 27 einen Fürsten hat. Ohne
+  das Letzte wäre `null` bequem: Man setzte es, wo man nicht nachsehen mochte,
+  und die Oberfläche behauptete dann ruhig, die Chronik schweige.
   Dazu die Sonderfälle, die eine reine Loskarte
   verschweigt: **Levi** bekommt kein Land, sondern die sechs **Zufluchtsstädte**,
   und **Dan** hält sein Los nicht, sondern zieht ans Nordende des Landes.
@@ -253,7 +369,7 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
   `#mission=modern`, `#lesen=Acts,13`, `#stammbaum=gebiete,juda,722`
   (ein Stamm auf der Stammeskarte in einem bestimmten Jahr; `zeit` und `baum`
-  sind die beiden anderen Reiter), `#nachweise`, `#hoeren=keller`
+  sind die beiden anderen Reiter), `#nachweise`, `#israel=okt2023`, `#hoeren=keller`
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
   (Jerusalem im Gelände), `#gelaende=reise,exodus` (der Auszug über dem
@@ -278,6 +394,17 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   dort führt jede Bibelstelle wieder in den Text zurück.
 
 ### Drumherum
+
+- **Modi-Tafel** – dreizehn Modi passen in kein Klappmenü. Als Liste unter dem
+  Knopf war sie 940 Pixel hoch, und die letzten Einträge standen unter dem
+  Bildrand. Sie liegt jetzt als Tafel in der Mitte: nach den drei Familien
+  geordnet, in denen dieses README sie ohnehin beschreibt (Erzählen · Lernen &
+  weitergeben · Über das Projekt), in Spalten statt in einer Säule, mit fester
+  Höhe – gescrollt wird innen, nicht über den Rand hinaus. Dazu ein **Suchfeld**,
+  das Titel *und* Beschreibung durchsucht (`Paulus` findet *Mission &
+  Ausbreitung*), und volle Tastaturbedienung: tippen sucht, ↑ ↓ ← → wählt quer
+  durch die Gruppen, Eingabe öffnet, Esc schließt – und zwar nur die Tafel,
+  nicht den Modus darunter.
 
 - **Der Graph mit der Tastatur** – das Netz aus Büchern, Orten, Personen und
   Stellen hob beim Tippen zwar den passenden Knoten hervor, öffnen ließ er sich
@@ -389,9 +516,10 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die sechs Prüfungen, die von sich aus immer dasselbe
+`npm run check` bündelt die zehn Prüfungen, die von sich aus immer dasselbe
 Ergebnis liefern – Buchkürzel, Zeitdokumente, Stammesgrenzen, Farbkontraste,
-Quizfragen und Heilsgeschichte – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
+Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen, Quizfragen und
+Heilsgeschichte – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
 
@@ -638,6 +766,27 @@ Seite der Grenze, Megiddo in Issachar statt Manasse, Kapernaum und Laisch
 außerhalb jedes Gebiets, Jafo genau auf einem Eckpunkt – und Tyrus mitten in
 Asser.
 
+### Israel-Karte: Belege
+
+`src/data/israel.ts` behauptet über sich, dass jedes Ereignis eine Quelle nennt
+und jede Zahl die Stelle, die sie erhebt, samt Stand. Eine Behauptung, die
+niemand nachprüft, hält nicht lange:
+
+```bash
+npm run check:israel
+```
+
+Geprüft werden Belege (jede Quellenkennung existiert, jede Zahl hat Quelle
+*und* Stand, und die Quelle einer Zahl steht auch in der Liste des Ereignisses,
+damit sie anklickbar ist), die zeitliche Reihenfolge, die Gebietsstände (jeder
+Verweis trifft einen, den es gibt; keiner bleibt ungezeigt), die Flächen
+(mindestens drei Punkte, alle im Kartenausschnitt), die Abschnitte und die
+Zweisprachigkeit – Umlaute im englischen Feld sind deutscher Text an der
+falschen Stelle.
+
+Beim Einbau fand die Prüfung zwei Stellen, an denen die Quelle einer Zahl nicht
+in der Quellenliste ihres Ereignisses stand: sichtbar war sie, anklickbar nicht.
+
 ### BibleProject-Guides
 
 Die Adresse eines Guides entsteht aus dem englischen Buchnamen
@@ -686,6 +835,31 @@ tatsächlichen Marschrouten; einige Orte sind nicht sicher lokalisiert (Sinai,
 Kadesch, Emmaus). Die Animation (`src/components/RouteMap.tsx`) läuft
 imperativ über `requestAnimationFrame` und fasst nur die Leaflet-Ebenen an –
 React rendert währenddessen nicht mit.
+
+### Jesus – Leben und Wege
+
+Die Stationen stehen in `src/data/gospel.ts`: Akte, Stationen und das
+Personenverzeichnis in einer Datei, alles zweisprachig. Die Koordinaten kommen
+über `placeId` aus demselben OpenBible-Datensatz wie die Hauptkarte.
+
+Grundsätze der Daten: Erzählt wird, was die Evangelien berichten, in ihrer
+Reihenfolge – weicht Johannes von den anderen ab (die Tempelreinigung am Anfang
+statt am Ende), steht die Station dort, wo sein Evangelium sie erzählt, und der
+Text sagt es. Nicht sicher lokalisierte Orte (die Wüste der Versuchung, der Berg
+der Verklärung, Emmaus, Machärus) tragen die verbreitete Zuordnung und sagen
+dazu, dass es eine ist.
+
+`npm run check:gospel` prüft, was nachrechenbar ist: jede Ortskennung gegen
+`places.json` (samt Abstand – mehr als 6 km und die Kennung meint einen anderen
+Ort), jede Bibelstelle auf Lesbarkeit und darauf, dass ihr Buch zum
+verlinkten Guide passt, jede Person einer Station gegen das Verzeichnis. Die
+Prüfung läuft in `npm run check` mit.
+
+**The Chosen** (`src/data/chosen.ts`): Die Zuordnung Folge → Station wurde nach
+dem Inhalt der Folgen zusammengetragen, nicht von einer Schnittstelle geholt.
+Solange `VERIFIED` dort `false` ist, weist die Oberfläche die Angaben als
+unbestätigt aus. Verlinkt wird nur die Serienseite – für einzelne Folgen gibt es
+keine Adresse, die sich verlässlich bilden ließe.
 
 ### Mission & Ausbreitung
 
@@ -818,7 +992,29 @@ aushebeln.
 ## Technik
 
 Vite · React · TypeScript · Tailwind CSS · Leaflet (+ markercluster, heat) ·
-CARTO/OpenStreetMap-Kartenkacheln.
+OpenStreetMap-Kartenkacheln.
+
+**Kacheln ohne Schlüssel.** Im August 2026 fing CARTO an, für seine Kachel-
+server einen API-Schlüssel zu verlangen; über Nacht antwortete jede der sieben
+Karten dieser App mit „API key required" und blieb leer. Der Grund, warum das
+so weh tat, stand im eigenen Quelltext: dieselbe Adresse lag in fünf Dateien.
+Sie steht jetzt an einer Stelle – `src/lib/basemaps.ts` –, und jede Karte holt
+sie sich dort mit `addBasemap()`. Die nächste Quelle, die dichtmacht, ist eine
+Zeile.
+
+Gewählt sind ausschließlich **schlüsselfreie** Quellen. Für die helle Karte ist
+das der Kachelserver der OpenStreetMap Foundation; er ist an deren
+[Tile Usage Policy](https://operations.osmfoundation.org/policies/tiles/)
+gebunden, die Projekte dieser Größenordnung erlaubt, aber schweren Verkehr
+untersagt – wächst die Seite über ein Hobbyprojekt hinaus, gehört hier ein
+eigener oder bezahlter Kachelserver hin.
+
+Eine dunkle Rasterkarte ohne Schlüssel gibt es nicht mehr – CARTO, Stadia und
+Esri verlangen alle einen. Die **Nachtkarte** ist deshalb dieselbe helle
+Kachel, im Browser umgerechnet: `invert(1)` macht aus hellem Land dunkles,
+`hue-rotate(185deg)` dreht die dabei verdrehten Farbtöne zurück, so dass Wasser
+wieder blau ist und Wald wieder grün. Das ist ein Zugeständnis und sieht nicht
+so gut aus wie eine gezeichnete Nachtkarte; es kostet dafür kein Konto.
 
 **Schriften im Haus.** Montserrat und Fraunces werden nicht von Google Fonts
 geladen, sondern liegen als variable Schriften (`woff2`, Teilmengen latin und
@@ -852,7 +1048,7 @@ entfernt, ist an diese Wahl nicht mehr gebunden.
 - Bibeltext: Lutherbibel 1912 & World English Bible (gemeinfrei), aufbereitet in
   [seven1m/open-bibles](https://github.com/seven1m/open-bibles) (MIT)
 - Reichsgrenzen: [aourednik/historical-basemaps](https://github.com/aourednik/historical-basemaps) (GPL-3.0)
-- Kartenkacheln: © OpenStreetMap-Mitwirkende, © CARTO; Satellit
+- Kartenkacheln: © OpenStreetMap-Mitwirkende (ODbL); Satellit
   © [Sentinel-2 cloudless 2020](https://s2maps.eu/) (EOX IT Services, modifizierte
   Copernicus-Sentinel-Daten 2020, CC-BY 4.0); Relief © [Terrain Light](https://maps.eox.at/)
   (EOX, CC-BY 4.0); „Antike Welt“

@@ -2,8 +2,9 @@ import { useState } from 'react';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import LangToggle from './LangToggle';
+import ModePalette from './ModePalette';
 
-export type Mode = 'present' | 'history' | 'journeys' | 'mission' | 'compare' | 'church' | 'quiz' | 'nations' | 'media' | 'route' | 'index' | 'support' | 'credits';
+export type Mode = 'israel' | 'present' | 'history' | 'journeys' | 'gospel' | 'mission' | 'compare' | 'church' | 'quiz' | 'nations' | 'media' | 'route' | 'index' | 'support' | 'credits';
 export type View = 'map' | 'terrain' | 'tree' | 'graph';
 
 interface Props {
@@ -22,20 +23,6 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
   const t = useT();
   const [open, setOpen] = useState(false);
 
-  const modes: { id: Mode; label: string; hint: string; icon: string }[] = [
-    { id: 'present', label: t('presentation'), hint: t('presentationHint'), icon: 'M4 5h16v10H4zm0 12h16v2H4zm6-9v6l5-3z' },
-    { id: 'history', label: t('historyMode'), hint: t('historyHint'), icon: 'M12 8v5l3 2' },
-    { id: 'journeys', label: t('journeys'), hint: t('journeysSub'), icon: 'M5 20c4-10 10-10 14-16M5 20h.01M19 4h.01M9 15l1.5 1.5' },
-    { id: 'mission', label: t('mission'), hint: t('missionHint'), icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18' },
-    { id: 'church', label: t('churchMode'), hint: t('churchHint'), icon: 'M12 3v18M7 8h10M5 21h14' },
-    { id: 'quiz', label: t('quiz'), hint: t('quizSub'), icon: 'M12 17h.01M9.5 9a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1 1-1.1 1.8M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z' },
-    { id: 'compare', label: t('compareMode'), hint: t('compareIntro'), icon: 'M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z' },
-    { id: 'index', label: t('placeIndex'), hint: t('placeIndexHint'), icon: 'M4 5h16M4 5v14M8 9h8M8 13h8M8 17h5' },
-    { id: 'route', label: t('ownRoute'), hint: t('ownRouteHint'), icon: 'M6 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.8 14.4l6.4-5.8' },
-    { id: 'media', label: t('media'), hint: t('mediaHint'), icon: 'M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zM5 11a7 7 0 0 0 14 0M12 18v3' },
-    { id: 'support', label: t('support'), hint: t('supportSub'), icon: 'M12 20.3 4.6 13a4.7 4.7 0 0 1 0-6.7 4.7 4.7 0 0 1 6.7 0l.7.7.7-.7a4.7 4.7 0 0 1 6.7 0 4.7 4.7 0 0 1 0 6.7z' },
-    { id: 'credits', label: t('credits'), hint: t('creditsSub'), icon: 'M7 3h7l5 5v13H7zM14 3v5h5M10 12h7M10 16h7' },
-  ];
 
   // Mobile: two rows (logo + language on top, view switch + modi below).
   // Desktop (sm+): a single row, logo left / all controls right.
@@ -97,38 +84,19 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
         {(view === 'map' || view === 'terrain') && (
           <div className="relative">
             <button
-              onClick={() => setOpen((v) => !v)}
+              onClick={() => setOpen(true)}
+              aria-expanded={open}
+              aria-haspopup="dialog"
+              // Auf dem Telefon steht der Text nicht da – ohne Namen wäre der
+              // Knopf für eine Vorlesehilfe stumm.
+              aria-label={t('modes')}
+              title={t('modes')}
               className="flex items-center gap-1.5 bg-signal px-2.5 py-2 text-xs font-medium text-white ring-1 ring-white/10 transition hover:bg-signal sm:px-3.5 sm:py-2.5 sm:text-sm"
             >
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2"/></svg>
               <span className="hidden sm:inline">{t('modes')}</span>
               <svg aria-hidden="true" viewBox="0 0 24 24" className="h-3 w-3" fill="currentColor"><path d="M7 10l5 5 5-5z" /></svg>
             </button>
-            {open && (
-              <>
-                <div className="fixed inset-0 z-[-1]" onClick={() => setOpen(false)} />
-                <div className="absolute right-0 mt-2 w-72 overflow-hidden bg-deepest ring-1 ring-white/10">
-                  {modes.map((m) => (
-                    <button
-                      key={m.id}
-                      onClick={() => {
-                        onMode(m.id);
-                        setOpen(false);
-                      }}
-                      className="flex w-full items-start gap-3 px-4 py-3 text-left transition hover:bg-surface"
-                    >
-                      <span className="mt-0.5 grid h-8 w-8 flex-none place-items-center bg-white/10 text-white">
-                        <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d={m.icon} stroke="currentColor" strokeWidth="1.6" fill={m.id === 'present' || m.id === 'support' ? 'currentColor' : 'none'} /></svg>
-                      </span>
-                      <span className="min-w-0">
-                        <span className="block text-sm font-semibold text-white">{m.label}</span>
-                        <span className="block text-[11px] leading-snug text-white/60 line-clamp-2">{m.hint}</span>
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </>
-            )}
           </div>
         )}
 
@@ -153,6 +121,16 @@ export default function Header({ lang, onLang, heat, onHeat, onMode, view, onVie
         {/* language: inline on desktop (mobile shows it in the top row) */}
         <div className="hidden sm:block"><LangToggle lang={lang} onLang={onLang} /></div>
       </div>
+
+      {open && (
+        <ModePalette
+          onClose={() => setOpen(false)}
+          onPick={(m) => {
+            onMode(m);
+            setOpen(false);
+          }}
+        />
+      )}
     </header>
   );
 }

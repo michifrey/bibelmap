@@ -27,12 +27,21 @@ export interface Route {
    */
   media?: { source?: string; place?: string; ref?: { osis: string; chapter: number } };
   /**
-   * Reiter + Auswahl (Kirchengeschichte). `#kirche=vater,augustinus` und
-   * `#kirche=konzil,nicaea1`; ohne Angabe steht der Modus auf seinem Anfang.
+   * Reiter + Auswahl (Kirchengeschichte). `#kirche=zeit,thesen`,
+   * `#kirche=vater,augustinus` und `#kirche=konzil,nicaea1`; ohne Angabe steht
+   * der Modus auf seinem Anfang.
    */
-  church?: { tab: 'fathers' | 'councils'; id?: string };
+  church?: { tab: 'timeline' | 'fathers' | 'councils'; id?: string };
+  /**
+   * Akt und Station der Jesus-Sektion: `#jesus=passion,golgotha`. Ein Mensch
+   * statt eines Akts steht als `#jesus=mensch,petrus` – die Akte heißen nie
+   * so, deshalb bleibt das eindeutig.
+   */
+  gospel?: { act: string; station?: string; person?: string };
   /** Station der Heilsgeschichte: `#heilsgeschichte=exodus`. */
   history?: string;
+  /** Ereignis der Israel-Karte: `#israel=okt2023`. */
+  israel?: string;
   /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
   compare?: string;
   /**
@@ -133,6 +142,15 @@ export function parseHash(hash: string): Route | null {
             ? { phase: args[0], journey: args[1] }
             : { phase: args[0], event: args[1] },
       };
+    case 'jesus': {
+      if (!args[0]) return { view: 'map', mode: 'gospel' };
+      if (args[0] === 'mensch') {
+        return args[1]
+          ? { view: 'map', mode: 'gospel', gospel: { act: 'promise', person: args[1] } }
+          : { view: 'map', mode: 'gospel' };
+      }
+      return { view: 'map', mode: 'gospel', gospel: { act: args[0], station: args[1] } };
+    }
     case 'heilsgeschichte':
       return args[0]
         ? { view: 'map', mode: 'history', history: args[0] }
@@ -141,13 +159,23 @@ export function parseHash(hash: string): Route | null {
       return args.length
         ? { view: 'map', mode: 'route', own: args.filter(Boolean) }
         : { view: 'map', mode: 'route' };
+    case 'israel':
+      return args[0]
+        ? { view: 'map', mode: 'israel', israel: args[0] }
+        : { view: 'map', mode: 'israel' };
     case 'vergleich':
       return args[0]
         ? { view: 'map', mode: 'compare', compare: args[0] }
         : { view: 'map', mode: 'compare' };
     case 'kirche': {
       if (!args[0]) return { view: 'map', mode: 'church' };
-      const tab = args[0] === 'konzil' ? ('councils' as const) : ('fathers' as const);
+      // „zeit" ist der Zeitstrahl, der Anfang dieses Modus. „vater" bleibt die
+      // Vorgabe für alles Unbekannte – alte Adressen ohne Reiter zeigten auf
+      // die Väterliste und sollen das weiter tun.
+      const tab =
+        args[0] === 'konzil' ? ('councils' as const)
+        : args[0] === 'zeit' ? ('timeline' as const)
+        : ('fathers' as const);
       return { view: 'map', mode: 'church', church: { tab, id: args[1] } };
     }
     case 'hoeren': {
@@ -189,6 +217,15 @@ export function formatRoute(route: Route): string {
     const detail = phase === 'journeys' ? journey : event;
     return detail ? `#mission=${phase},${detail}` : `#mission=${phase}`;
   }
+  if (mode === 'gospel') {
+    if (!route.gospel) return '#jesus';
+    const { act, station, person } = route.gospel;
+    if (person) return `#jesus=mensch,${person}`;
+    return station ? `#jesus=${act},${station}` : `#jesus=${act}`;
+  }
+  if (mode === 'israel') {
+    return route.israel ? `#israel=${route.israel}` : '#israel';
+  }
   if (mode === 'compare') {
     return route.compare ? `#vergleich=${route.compare}` : '#vergleich';
   }
@@ -201,7 +238,7 @@ export function formatRoute(route: Route): string {
   if (mode === 'church') {
     const c = route.church;
     if (!c) return '#kirche';
-    const key = c.tab === 'councils' ? 'konzil' : 'vater';
+    const key = c.tab === 'councils' ? 'konzil' : c.tab === 'timeline' ? 'zeit' : 'vater';
     return c.id ? `#kirche=${key},${c.id}` : '#kirche';
   }
   if (mode === 'media') {

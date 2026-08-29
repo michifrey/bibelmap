@@ -107,8 +107,8 @@ export const CREDITS: CreditEntry[] = [
     group: 'karten',
     license: 'ODbL-1.0',
     use: {
-      de: 'Die Landkarte unter allen Kartenstilen: Küsten, Flüsse, Städte, Straßen.',
-      en: 'The map beneath every style: coasts, rivers, cities, roads.',
+      de: 'Die Landkarte unter allen Kartenstilen – Küsten, Flüsse, Städte, Straßen – und seit August 2026 auch die Kachelbilder selbst: helle wie dunkle Karte kommen vom Kachelserver der OpenStreetMap Foundation.',
+      en: 'The map beneath every style – coasts, rivers, cities, roads – and, since August 2026, the tile imagery itself: both the light and the dark style come from the OpenStreetMap Foundation tile server.',
     },
     attribution: { de: '© OpenStreetMap-Mitwirkende', en: '© OpenStreetMap contributors' },
     note: {
@@ -116,19 +116,6 @@ export const CREDITS: CreditEntry[] = [
       en: 'The ODbL requires the credit wherever the data is shown – so it also sits in the corner of the map itself.',
     },
     home: 'https://www.openstreetmap.org/copyright',
-  },
-  {
-    id: 'carto',
-    name: 'CARTO Basemaps',
-    by: 'CARTO',
-    group: 'karten',
-    license: 'CC-BY-3.0',
-    use: {
-      de: 'Die Kachelbilder der hellen und der dunklen Karte („Positron" und „Dark Matter").',
-      en: 'The tile imagery of the light and dark styles ("Positron" and "Dark Matter").',
-    },
-    attribution: '© CARTO',
-    home: 'https://carto.com/attributions',
   },
   {
     id: 's2cloudless',

@@ -6,7 +6,15 @@ import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { useReducedMotion } from '../lib/motion';
 import { attr } from '../lib/mapAttribution';
-import { BASEMAPS, type BasemapId } from './MapView';
+import {
+  BASEMAPS,
+  DARK_RASTER_PAINT,
+  DEFAULT_BASEMAP,
+  DEM_ATTR,
+  DEM_TILES,
+  PLAIN_RASTER_PAINT,
+  type BasemapId,
+} from '../lib/basemaps';
 /**
  * Eine Route über dem Gelände – aus den Bibelreisen oder aus der Mission. Die
  * beiden Datensätze sehen verschieden aus; hier zählt nur, was das Gelände
@@ -46,21 +54,31 @@ interface Props {
  */
 maplibregl.setWorkerUrl(`${import.meta.env.BASE_URL}vendor/maplibre/maplibre-gl-worker.mjs`);
 
-/**
- * Höhendaten ohne Schlüssel und ohne Anmeldung: die Terrain Tiles, die aus
- * SRTM und weiteren Vermessungen gebaut sind und bei AWS offen liegen. Die
- * Höhe steckt in den Farbwerten („terrarium"), MapLibre rechnet sie zurück.
- */
-const DEM_TILES = 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png';
 /** Die Reiseroute trägt die Farbe des Weges, nicht die der Orte. */
 const ROUTE_COLOR = '#e0a449';
 
-const DEM_ATTR =
-  'Höhen: <a href="https://registry.opendata.aws/terrain-tiles/">Terrain Tiles</a> (AWS Open Data, SRTM u. a.)';
+/**
+ * Die Zeile unter der Geländeansicht: Grundkarte und Höhendaten zusammen.
+ *
+ * Beide hingen vorher an ihren Quellen und gingen dort auf je eigene Weise
+ * verloren – die Grundkarte beim Kachelwechsel, die Höhen beim Sprachwechsel.
+ * Eine Stelle, ein Aufruf, kein Auseinanderlaufen.
+ */
+function nennungen(id: BasemapId, lang: Lang): string[] {
+  return [
+    attr(BASEMAPS[id]?.attribution ?? BASEMAPS[DEFAULT_BASEMAP].attribution, lang),
+    attr(DEM_ATTR, lang),
+  ];
+}
+
+/** Was aus der hellen Kachel eine dunkle macht – oder nichts, bei allen anderen. */
+function rasterPaint(id: BasemapId) {
+  return BASEMAPS[id]?.filter ? { ...DARK_RASTER_PAINT } : {};
+}
 
 /** Leaflets `{s}`-Platzhalter kennt MapLibre nicht – daraus werden Adressen. */
 function tileUrls(id: BasemapId): string[] {
-  const bm = BASEMAPS[id] ?? BASEMAPS.dark;
+  const bm = BASEMAPS[id] ?? BASEMAPS[DEFAULT_BASEMAP];
   // `|| ` statt `?? `: die freien Kachelserver tragen einen leeren String,
   // und aus dem darf keine leere Adressliste werden.
   const subs = bm.subdomains || 'abc';
@@ -139,6 +157,8 @@ export default function TerrainMap({
   const el = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const popupRef = useRef<maplibregl.Popup | null>(null);
+  /** Das Attributions-Control – es trägt die Nennung der Grundkarte. */
+  const nennungRef = useRef<maplibregl.AttributionControl | null>(null);
   const reduced = useReducedMotion();
   const [ready, setReady] = useState(false);
   /** Wie stark das Gelände überzeichnet wird. 1 wäre wahr, aber flach. */
@@ -197,7 +217,12 @@ export default function TerrainMap({
             tiles: tileUrls(basemap),
             tileSize: 256,
             maxzoom: 17,
-            attribution: BASEMAPS[basemap] ? attr(BASEMAPS[basemap].attribution, lang) : '',
+            /*
+             * Bewusst LEER: Die Nennung der Grundkarte hängt am
+             * Attributions-Control, nicht an der Quelle – sonst überschreibt
+             * `load()` sie beim nächsten Kachelwechsel wieder. Siehe unten.
+             */
+            attribution: '',
           },
           dem: {
             type: 'raster-dem',
@@ -205,14 +230,24 @@ export default function TerrainMap({
             tileSize: 256,
             maxzoom: 13,
             encoding: 'terrarium',
-            attribution: DEM_ATTR,
+            /*
+             * Auch leer, und aus demselben Grund wie oben – hier kam es nur
+             * anders heraus: Die Höhenquelle wird nie neu geladen, also blieb
+             * ihre Zeile stehen, wie sie beim Aufbau gesetzt wurde. Auf
+             * Englisch stand darum weiter „Höhen: …" unter der Karte. Beide
+             * Nennungen hängen jetzt am Control und wechseln zusammen.
+             */
+            attribution: '',
           },
           places: { type: 'geojson', data: toGeoJSON(places, newIds) },
           route: { type: 'geojson', data: journeyGeoJSON(route).line },
           routeStops: { type: 'geojson', data: journeyGeoJSON(route).stops },
         },
         layers: [
-          { id: 'base', type: 'raster', source: 'base' },
+          // Die Nachtkarte ist dieselbe helle Kachel, umgerechnet. In den
+          // Leaflet-Karten macht das ein CSS-Filter; hier rechnet MapLibre
+          // selbst, sonst träfe der Filter auch Orte und Route.
+          { id: 'base', type: 'raster', source: 'base', paint: rasterPaint(basemap) },
           {
             // Schattenwurf über dem Tuch: erst dadurch liest sich das Gelände
             // auch von oben, nicht nur in der Schräge.
@@ -276,7 +311,11 @@ export default function TerrainMap({
     });
 
     map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'bottom-right');
-    map.addControl(new maplibregl.AttributionControl({ compact: true }), 'bottom-left');
+    nennungRef.current = new maplibregl.AttributionControl({
+      compact: true,
+      customAttribution: nennungen(basemap, lang),
+    });
+    map.addControl(nennungRef.current, 'bottom-left');
     map.touchZoomRotate.enableRotation();
 
     // Eine Karte, die still nichts anzeigt, ist schwerer zu finden als eine,
@@ -408,8 +447,43 @@ export default function TerrainMap({
     const map = mapRef.current;
     if (!map || !ready) return;
     const src = map.getSource('base') as maplibregl.RasterTileSource | undefined;
-    src?.setTiles(tileUrls(basemap));
-  }, [basemap, ready]);
+    if (!src) return;
+    // Die Zeile unter der Karte gehört zur Kachel, nicht zur Karte: wer auf
+    // den Satelliten wechselt, muss EOX genannt bekommen und nicht weiter
+    // OpenStreetMap. Vorher stand hier die Nennung des Stils, mit dem die
+    // Ansicht geöffnet wurde – und blieb stehen.
+    // `attribution` steht in MapLibres Typen nicht, wird zur Laufzeit aber
+    // genau von dort gelesen, wo die Zeile entsteht.
+    src.setTiles(tileUrls(basemap));
+    /*
+     * Die Zeile unter der Karte gehört zur Kachel, nicht zur Ansicht: Wer auf
+     * den Satelliten wechselt, muss EOX genannt bekommen und nicht weiter
+     * OpenStreetMap.
+     *
+     * Der Umweg über das Control hat einen Grund. Die Nennung an der Quelle zu
+     * setzen sieht richtig aus und hält nicht: `setTiles()` ruft intern
+     * `load()`, und das schreibt die Quelle aus ihren ursprünglichen Optionen
+     * neu, `attribution` eingeschlossen. Gemessen hieß das, der Satellit zeigte
+     * EOX-Kacheln und nannte weiter OpenStreetMap.
+     *
+     * `customAttribution` liest das Control nur beim Aufbau – also wird es
+     * ausgetauscht. Ein DOM-Knoten von der Größe einer Zeile; billiger, als an
+     * MapLibres privaten Feldern zu drehen, und es hält auch, wenn die
+     * Bibliothek ihre Innereien umbaut.
+     */
+    if (nennungRef.current) map.removeControl(nennungRef.current);
+    nennungRef.current = new maplibregl.AttributionControl({
+      compact: true,
+      customAttribution: nennungen(basemap, lang),
+    });
+    map.addControl(nennungRef.current, 'bottom-left');
+    // Umkehren ist ein Regler, kein Zustand: ohne Zurückstellen zeigte der
+    // Satellit nach der Nachtkarte ein Negativ.
+    const paint = { ...PLAIN_RASTER_PAINT, ...rasterPaint(basemap) };
+    for (const [k, v] of Object.entries(paint)) {
+      map.setPaintProperty('base', k as 'raster-saturation', v);
+    }
+  }, [basemap, lang, ready]);
 
   useEffect(() => {
     const map = mapRef.current;

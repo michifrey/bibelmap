@@ -498,6 +498,204 @@ body {
   display: none;
 }
 
+/* Zwei Zeilen und keine mehr. Die Modi-Tafel setzt dreizehn Kacheln in ein
+   Raster; ohne Deckel bestimmt der längste Hinweis die Höhe der ganzen Reihe,
+   und aus einer Tafel wird eine Treppe. */
+.bm-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------ */
+/* Helle Kacheln                                                       */
+/*                                                                     */
+/* Die App zeichnet ihre eigenen Namen auf die Karte – Stämme, Städte,  */
+/* Länder, Gewässer, Reiche. Alle waren für den dunklen Untergrund      */
+/* gemacht: weiß mit dunklem Schein. Seit die helle Karte die Vorgabe   */
+/* ist, wären sie darauf unsichtbar. `bm-light-tiles` am Behälter       */
+/* dreht sie um – dunkle Schrift mit hellem Schein –, und zwar an einer */
+/* Stelle für alle sieben Karten.                                       */
+/* ------------------------------------------------------------------ */
+.bm-light-tiles .bm-tribe-label,
+.bm-light-tiles .bm-polity-label {
+  color: #10201f;
+  text-shadow:
+    0 0 3px rgba(255, 255, 255, 0.98),
+    0 0 7px rgba(255, 255, 255, 0.9),
+    0 0 14px rgba(255, 255, 255, 0.75);
+}
+.bm-light-tiles .bm-tribe-label.is-on {
+  filter: brightness(0.75) saturate(1.4);
+}
+.bm-light-tiles .bm-water-label {
+  color: #1d5f7a;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.95);
+}
+.bm-light-tiles .bm-country-label {
+  color: rgba(16, 32, 31, 0.55);
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.95), 0 0 12px rgba(255, 255, 255, 0.8);
+}
+.bm-light-tiles .bm-city {
+  color: rgba(16, 32, 31, 0.85);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.98), 0 0 10px rgba(255, 255, 255, 0.85);
+}
+.bm-light-tiles .bm-city i {
+  background: rgba(16, 32, 31, 0.6);
+}
+/* Die großen Städtenamen brauchen eine eigene Zeile, keine geerbte:
+   `.bm-city.is-big` weiter unten wiegt genauso schwer wie
+   `.bm-light-tiles .bm-city` und steht später – ohne diese Regel gewann sein
+   Weiß, und Tel Aviv, Gaza und Jerusalem standen weiß auf heller Kachel. */
+.bm-light-tiles .bm-city.is-big {
+  color: #10201f;
+}
+.bm-light-tiles .bm-city.is-big i {
+  background: #10201f;
+}
+.bm-light-tiles .bm-exile-label {
+  color: #8a5a12;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.95);
+}
+/* Der Punkt, der ein Einschlagzeichen trägt, braucht auf hellem Grund
+   einen hellen Ring statt eines dunklen. */
+.bm-light-tiles .bm-impact {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9), 0 0 14px var(--c, #e0a449);
+}
+
+/* ---- Israel: die Karte im Nachrichtenstil ---- */
+
+/* Die Bauchbinde. Eine Nachrichtensendung setzt sie unten über das Bild, mit
+   einem farbigen Block für die Rubrik und der Zeile daneben. Hart, breit, ohne
+   Rundung – dieselbe Sprache wie der Rest der App, nur lauter. */
+.bm-chyron {
+  min-height: 3.25rem;
+  background: linear-gradient(90deg, rgba(2, 31, 30, 0.97), rgba(3, 48, 47, 0.94));
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+}
+
+/* Das Einschlagzeichen: ein Ring, der einmal aufgeht, und ein Kern. Es blinkt
+   nicht – der Gegenstand liefert die Dringlichkeit von selbst. */
+.bm-impact {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 999px;
+  background: var(--c, #e0a449);
+  box-shadow: 0 0 0 3px rgba(2, 31, 30, 0.85), 0 0 14px var(--c, #e0a449);
+}
+.bm-impact::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
+  border: 1.5px solid var(--c, #e0a449);
+  border-radius: 999px;
+  opacity: 0.55;
+}
+/* Krieg, Anschlag, Aufstand bekommen zusätzlich die Zacken. */
+.bm-impact.is-hostile::after {
+  content: '';
+  position: absolute;
+  inset: -16px;
+  background:
+    linear-gradient(var(--c, #e0a449), var(--c, #e0a449)) center/2px 100% no-repeat,
+    linear-gradient(var(--c, #e0a449), var(--c, #e0a449)) center/100% 2px no-repeat;
+  opacity: 0.4;
+  transform: rotate(45deg);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bm-impact::before {
+    animation: bm-impact-ring 2.4s ease-out infinite;
+  }
+}
+@keyframes bm-impact-ring {
+  0% { transform: scale(0.6); opacity: 0.8; }
+  70% { transform: scale(1.35); opacity: 0; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+/* Nachbarländer: groß, blass, gesperrt – wie auf einer Atlas- oder
+   Nachrichtenkarte. Sie sollen den Blick führen, nicht auf sich ziehen. */
+.bm-country-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  /* 0,55 statt 0,28: zurückhaltend genug, um den Blick nicht zu fangen, und
+     gerade lesbar genug für die Kontrastmessung (4,5:1 auf der Bühne). */
+  color: rgba(255, 255, 255, 0.55);
+  text-shadow: 0 0 6px rgba(2, 31, 30, 0.95), 0 0 12px rgba(2, 31, 30, 0.8);
+  pointer-events: none;
+}
+
+/* Städte: Punkt und Name nebeneinander. */
+.bm-city {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transform: translate(-3px, -50%);
+  white-space: nowrap;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  text-shadow: 0 0 5px rgba(2, 31, 30, 0.95), 0 0 10px rgba(2, 31, 30, 0.8);
+  pointer-events: none;
+}
+.bm-city i {
+  width: 3px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+}
+.bm-city.is-big {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.88);
+}
+.bm-city.is-big i {
+  width: 5px;
+  height: 5px;
+  background: #ffffff;
+}
+
+/* Die Legendenfelder zeigen dieselbe Schraffur wie die Flächen auf der Karte –
+   sonst erklärt die Legende etwas anderes, als danebensteht. */
+.bm-fill-state { background: rgba(77, 156, 214, 0.42); border-color: #4d9cd6; }
+.bm-fill-occupied {
+  border-color: #b0436b;
+  background-color: rgba(176, 67, 107, 0.12);
+  background-image: repeating-linear-gradient(45deg, #b0436b 0 1.4px, transparent 1.4px 8px);
+}
+.bm-fill-annexed {
+  border-color: #e0a449;
+  border-style: dashed;
+  background-color: rgba(224, 164, 73, 0.12);
+  background-image:
+    repeating-linear-gradient(45deg, #e0a449 0 1.1px, transparent 1.1px 7px),
+    repeating-linear-gradient(-45deg, #e0a449 0 1.1px, transparent 1.1px 7px);
+}
+.bm-fill-admin {
+  border-color: #c9812f;
+  background-color: rgba(201, 129, 47, 0.12);
+  background-image: repeating-linear-gradient(0deg, #c9812f 0 1.2px, transparent 1.2px 10px);
+}
+.bm-fill-planned { border-color: #7fe3d5; border-style: dashed; background: rgba(127, 227, 213, 0.14); }
+.bm-fill-ceded { border-color: rgba(93, 124, 120, 0.7); border-style: dotted; background: rgba(93, 124, 120, 0.12); }
+
 /* ---- Stämme Israels: the allotment plate ---- */
 
 /* Territory names sit on the land like an atlas plate. The halo does the work

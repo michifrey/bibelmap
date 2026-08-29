@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import L from 'leaflet';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
-import { attr } from '../lib/mapAttribution';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import { GENO_GEO, type GeoKind } from '../data/genoGeo';
@@ -32,7 +31,7 @@ import {
   type Fate,
   type Phase,
 } from '../data/tribeHistory';
-import { BASEMAPS, type BasemapId } from './MapView';
+import { addBasemap, DEFAULT_BASEMAP, basemapAttr, type BasemapId } from '../lib/basemaps';
 import { flyOptions } from '../lib/motion';
 import { readableOnDark } from '../lib/contrast';
 import ShareLink from './ShareLink';
@@ -131,7 +130,7 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
   const [hover, setHover] = useState<string | null>(null);
   const [overlays, setOverlays] = useState<Record<Overlay, boolean>>({ people: false, person: false });
   const [cities, setCities] = useState(true);
-  const [basemap, setBasemap] = useState<BasemapId>('dark');
+  const [basemap, setBasemap] = useState<BasemapId>(DEFAULT_BASEMAP);
   // Phones only: the sheet folds down to its title so the plate can be seen.
   const [folded, setFolded] = useState(false);
   // Same on a phone for the map's own controls.
@@ -211,7 +210,7 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang, attr(BASEMAPS[basemap]?.attribution ?? BASEMAPS.dark.attribution, lang));
+    return localizeMap(map, lang, basemapAttr(basemap, lang));
   }, [lang, basemap]);
 
   // ---- basemap ------------------------------------------------------------
@@ -219,15 +218,12 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
     const map = mapRef.current;
     if (!map) return;
     tileRef.current?.remove();
-    const bm = BASEMAPS[basemap];
     tileWatchRef.current?.();
-    tileRef.current = L.tileLayer(bm.url, {
-      subdomains: bm.subdomains ?? 'abc',
-      maxZoom: 12,
-      maxNativeZoom: bm.maxZoom,
-      opacity: basemap === 'dark' ? 1 : 0.75,
-    }).addTo(map);
-    tileRef.current.getContainer()?.style.setProperty('filter', basemap === 'dark' ? 'none' : 'saturate(.65)');
+    tileRef.current?.remove();
+    // Die Kachel selbst tritt zurück: auf ihr liegen dreizehn Flächen und ihre
+    // Namen, und die sind hier die Karte.
+    tileRef.current = addBasemap(map, basemap, { maxZoom: 12 });
+    tileRef.current.setOpacity(0.8);
     tileWatchRef.current = watchTiles(tileRef.current, map, lang);
   }, [basemap]);
 
@@ -568,6 +564,24 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
                 <div className="bm-eyebrow">{phaseYear(phase, lang)} · {phase.ref}</div>
                 <h2 className="font-display mt-1 text-[19px] leading-tight text-white">{name(phase)}</h2>
                 <p className="mt-1.5 text-[11.5px] leading-relaxed text-white/60">{name(phase.text)}</p>
+                {/*
+                  Derselbe Zeitraum, ein zweites Mal erzählt. Die Züge oben
+                  stehen bei Josua, den Richtern und den Königen; die Chronik
+                  sieht denselben Vorgang aus Juda und Jahrhunderte später.
+                  Der Balken links macht sichtbar, dass hier ein anderer Zeuge
+                  spricht – und wo er schweigt, steht auch das da.
+                */}
+                <div className="mt-2.5 border-l-2 border-gold/50 pl-2.5">
+                  <div className="bm-eyebrow bm-eyebrow-dim">
+                    {t('tribesChronicles')}
+                    {phase.chronicles.ref && (
+                      <span className="ml-1.5 font-semibold text-mint">{phase.chronicles.ref}</span>
+                    )}
+                  </div>
+                  <p className="mt-1 text-[11.5px] leading-relaxed text-white/60">
+                    {name(phase.chronicles.text)}
+                  </p>
+                </div>
               </div>
               {phaseIdx > 0 ? (
                 <FateList
@@ -584,7 +598,7 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
                   <div key={m.id}>
                     <div className="sticky top-0 z-10 flex items-baseline gap-2 bg-deepest/95 px-4 py-1.5 backdrop-blur">
                       <span className="bm-eyebrow bm-eyebrow-dim">{name(m)}</span>
-                      <span className="text-[10px] text-white/30">{byMother.get(m.id)!.length}</span>
+                      <span className="text-[10px] text-white/55">{byMother.get(m.id)!.length}</span>
                     </div>
                     {byMother.get(m.id)!.map((tr) => (
                       <button
@@ -606,7 +620,7 @@ export default function TribesMap({ lang, onOpenInTree, onOpenPlace, onOpenInTim
                             {tr.polygon ? t(tr.side === 'east' ? 'tribesEast' : 'tribesWest') : t('tribesNoLand')}
                           </span>
                         </span>
-                        <span className="flex-none text-[10px] font-semibold text-white/35">{tr.lot}</span>
+                        <span className="flex-none text-[10px] font-semibold text-white/60">{tr.lot}</span>
                       </button>
                     ))}
                   </div>
@@ -759,7 +773,7 @@ function FateList({
           <div className="sticky top-0 z-10 flex items-baseline gap-2 bg-deepest/95 px-4 py-1.5 backdrop-blur">
             <span className="h-2.5 w-2.5 flex-none" style={{ background: FATE_COLOR[g.fate] }} />
             <span className="bm-eyebrow bm-eyebrow-dim">{name(FATE_LABEL[g.fate])}</span>
-            <span className="text-[10px] text-white/30">{g.ids.length}</span>
+            <span className="text-[10px] text-white/55">{g.ids.length}</span>
           </div>
           {g.ids.map((id) => (
             <button
@@ -864,6 +878,43 @@ function TribeCard({ tribe: tr, lang, phase, onBack, onOpenInTree, onFly, onSele
             </>
           )}
         </div>
+
+        {/*
+          Josua und die Chronik nebeneinander. Josua ERZÄHLT die Verteilung –
+          wer welches Los zog, wo die Grenze lief. Die Chronik FÜHRT sie: ein
+          Register, Jahrhunderte später aus der Sicht der Rückkehrer aus Babel
+          geschrieben. Wo sie schweigt, steht das da, statt still zu fehlen:
+          Sebulon und Dan haben kein Register, Gad und Asser keinen Fürsten.
+          Eine Leerstelle, die man sieht, ist eine Auskunft; eine, die man
+          nicht sieht, sieht aus wie ein Datenfehler.
+        */}
+        <div className="bm-eyebrow bm-eyebrow-dim mt-4 mb-1.5">{t('tribesChronicles')}</div>
+        <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-[11.5px]">
+          <span className="text-white/40">{t('tribesRegister')}</span>
+          {tr.chronicles.register ? (
+            <span className="font-semibold text-mint">{tr.chronicles.register}</span>
+          ) : (
+            <span className="text-white/55">{t('tribesNoRegister')}</span>
+          )}
+          {tr.chronicles.dwelling && (
+            <>
+              <span className="text-white/40">{t('tribesDwelling')}</span>
+              <span className="font-semibold text-mint">{tr.chronicles.dwelling}</span>
+            </>
+          )}
+          <span className="text-white/40">{t('tribesPrince')}</span>
+          {tr.chronicles.prince ? (
+            <span>
+              <span className="font-semibold text-white/85">
+                {lang === 'de' ? tr.chronicles.prince.de : tr.chronicles.prince.en}
+              </span>{' '}
+              <span className="font-semibold text-mint">{tr.chronicles.prince.ref}</span>
+            </span>
+          ) : (
+            <span className="text-white/55">{t('tribesNoPrince')}</span>
+          )}
+        </div>
+        <p className="mt-2 text-[11.5px] leading-relaxed text-white/65">{name(tr.chronicles.note)}</p>
 
         {tr.cities.length > 0 && (
           <>
