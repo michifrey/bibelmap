@@ -1006,8 +1006,13 @@ Modus, dann die Nebenansicht, zuletzt die Ortskarte. In den Reisen blättern
 Die Ansichten (Präsentation, Reisen, Mission, Kirchengeschichte, Vergleich,
 Quiz, Stammbaum, Graph) liegen in eigenen Dateien und werden erst geladen,
 wenn sie geöffnet werden – ebenso der Suchindex über Reisen und Ausbreitung,
-der an den großen Datendateien hängt. Das erste Bündel schrumpft damit von
-855 kB auf 462 kB (gzip: 267 → 136 kB).
+der an den großen Datendateien hängt. Dazu die beiden größten Datendateien
+selbst: `journeys.ts` und `mission.ts` lagen im Startbündel, obwohl beide
+Stellen, die sie brauchten, mit „nur in der Geländeansicht" beginnen.
+
+Das erste Bündel: **360 kB (gzip 111 kB)**. Die Zahl stand hier lange bei
+462 kB / 136 kB und war schlicht veraltet – gewachsen war die App auf 522 kB
+(gzip 173), bevor die beiden Datendateien ausgelagert wurden.
 
 Sobald der Browser Ruhe hat **und** der Service Worker steht, werden die
 Ansichten im Hintergrund nachgeholt. So bleibt der Start leicht und die App
