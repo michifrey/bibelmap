@@ -1030,6 +1030,7 @@ export default function App() {
                 onShowPlace={showPlaceFromGenealogy}
                 initial={gospelNav}
                 onNavigate={setGospelNav}
+                onOpenMedia={openMediaForRef}
                 onExit={() => setMode(null)}
               />
               </Suspense>

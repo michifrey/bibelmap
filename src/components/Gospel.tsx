@@ -16,8 +16,16 @@ import {
   type PersonGroup,
 } from '../data/gospel';
 import { CHOSEN_BY_STATION, CHOSEN_URL, VERIFIED as CHOSEN_VERIFIED, episodeLabel } from '../data/chosen';
-import { passageUrl } from '../data/mission';
-import { bibleProjectUrl } from '../data/books';
+import {
+  BP_THEMES,
+  BP_VIDEO_BY_ID,
+  BT_BY_BOOK,
+  bibleTunesEpisodeUrl,
+  chapterOfRef,
+  overviewVideo,
+} from '../data/gospelMedia';
+import { WITNESSES, WITNESSES_BY_STATION, type Witness } from '../data/witnesses';
+import { passageUrl, wikiUrl } from '../data/mission';
 import MissionMap, { type MissionMarker } from './MissionMap';
 import RouteMap from './RouteMap';
 import ShareLink from './ShareLink';
@@ -31,6 +39,8 @@ interface Props {
   initial?: { act: string; station?: string; person?: string } | null;
   /** Meldet den Stand, damit die Adresse mitläuft. */
   onNavigate?: (state: { act: string; station?: string; person?: string }) => void;
+  /** Zu den Folgen, die dieses Kapitel behandeln – der eigene Medienindex. */
+  onOpenMedia?: (osis: string, chapter: number) => void;
   onExit: () => void;
 }
 
@@ -43,7 +53,7 @@ const GROUPS: { id: PersonGroup; de: string; en: string }[] = [
   { id: 'power', de: 'Macht: Rom, Hof und Hoherat', en: 'Power: Rome, court and council' },
 ];
 
-export default function Gospel({ places, lang, onShowPlace, initial, onNavigate, onExit }: Props) {
+export default function Gospel({ places, lang, onShowPlace, initial, onNavigate, onOpenMedia, onExit }: Props) {
   const t = useT();
   // Eine verlinkte Station bestimmt den Akt selbst: `#jesus=galilee,cana`
   // meint die Station, auch wenn der Akt daneben steht.
@@ -59,6 +69,8 @@ export default function Gospel({ places, lang, onShowPlace, initial, onNavigate,
     initial?.person && PERSON_BY_ID[initial.person] ? initial.person : null,
   );
   const [playing, setPlaying] = useState(false);
+  /** Aufgeschlagenes Zeugnis in der Liste am Fuß der Sektion. */
+  const [witness, setWitness] = useState<string | null>(null);
   const [fit, setFit] = useState<{ points: [number, number][]; key: number } | null>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -224,6 +236,13 @@ export default function Gospel({ places, lang, onShowPlace, initial, onNavigate,
               const color = ACT_BY_ID[s.act]?.color ?? act.color;
               const place = s.placeId ? placeById.get(s.placeId) : undefined;
               const scenes = CHOSEN_BY_STATION[s.id] ?? [];
+              const chapter = chapterOfRef(lang === 'de' ? s.ref.de : s.ref.en);
+              const overview = chapter === undefined ? undefined : overviewVideo(s.book, chapter);
+              const themes = (BP_THEMES[s.id] ?? []).map((id) => BP_VIDEO_BY_ID[id]).filter(Boolean);
+              const bt = BT_BY_BOOK[s.book];
+              const tunesUrl = chapter === undefined ? undefined : bibleTunesEpisodeUrl(s.book, chapter);
+              const tunes = bt && tunesUrl ? { url: tunesUrl, book: bt.de, speaker: bt.speaker } : undefined;
+              const found = WITNESSES_BY_STATION[s.id] ?? [];
               return (
                 <li key={s.id} data-item={s.id}>
                   <button
@@ -308,39 +327,89 @@ export default function Gospel({ places, lang, onShowPlace, initial, onNavigate,
                         >
                           {lang === 'de' ? s.ref.de : s.ref.en}
                         </a>
-                        <a
-                          href={bibleProjectUrl(s.book)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="bm-btn bm-btn-ghost"
-                        >
-                          BibleProject →
-                        </a>
                         {place && (
                           <button onClick={() => onShowPlace(place)} className="bm-btn bm-btn-ghost">
                             {t('showOnMap')} →
                           </button>
                         )}
+                        {onOpenMedia && chapter !== undefined && (
+                          <button
+                            onClick={() => onOpenMedia(s.book, chapter)}
+                            className="bm-btn bm-btn-ghost"
+                          >
+                            {t('gospelListenHere')} →
+                          </button>
+                        )}
                       </div>
 
-                      {scenes.length > 0 && (
-                        <div className="border-l-2 border-white/15 pl-3">
-                          <div className="bm-eyebrow text-white/50">{t('gospelOnScreen')}</div>
+                      {/* Was andere dazu erzählen: Video, Hörfolge, Verfilmung */}
+                      <div className="border-l-2 border-white/15 pl-3">
+                        <div className="bm-eyebrow text-white/50">{t('gospelElsewhere')}</div>
+                        <div className="mt-1 space-y-1">
+                          {overview && (
+                            <a
+                              href={overview.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="block text-[12px] text-white/70 underline decoration-white/25 underline-offset-2 transition hover:text-white"
+                            >
+                              BibleProject · {lang === 'de' ? overview.de : overview.en}
+                            </a>
+                          )}
+                          {themes.map((v) => (
+                            <a
+                              key={v.id}
+                              href={v.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="block text-[12px] text-white/70 underline decoration-white/25 underline-offset-2 transition hover:text-white"
+                            >
+                              BibleProject · {lang === 'de' ? v.de : v.en}
+                              <span className="ml-1 text-white/35">{t('gospelTheme')}</span>
+                            </a>
+                          ))}
+                          {tunes && chapter !== undefined && (
+                            <a
+                              href={tunes.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="block text-[12px] text-white/70 underline decoration-white/25 underline-offset-2 transition hover:text-white"
+                            >
+                              bibletunes.de · {tunes.book} {chapter}
+                              <span className="ml-1 text-white/35">{tunes.speaker}</span>
+                            </a>
+                          )}
                           {scenes.map((e) => (
                             <a
                               key={`${e.season}-${e.episode}`}
                               href={CHOSEN_URL}
                               target="_blank"
                               rel="noreferrer"
-                              className="mt-1 block text-[12px] text-white/70 underline decoration-white/25 underline-offset-2 transition hover:text-white"
+                              className="block text-[12px] text-white/70 underline decoration-white/25 underline-offset-2 transition hover:text-white"
                             >
                               The Chosen · {episodeLabel(e, lang)}{' '}
                               {lang === 'de' ? `„${e.title}“` : `“${e.title}”`}
                             </a>
                           ))}
-                          {!CHOSEN_VERIFIED && (
-                            <p className="mt-1 text-[10.5px] leading-snug text-white/40">{t('gospelChosenNote')}</p>
+                          {!CHOSEN_VERIFIED && scenes.length > 0 && (
+                            <p className="text-[10.5px] leading-snug text-white/40">{t('gospelChosenNote')}</p>
                           )}
+                        </div>
+                      </div>
+
+                      {/* Was außerhalb der Bibel dazu bezeugt ist */}
+                      {found.length > 0 && (
+                        <div className="flex flex-wrap items-center gap-1">
+                          <span className="bm-eyebrow text-white/45">{t('gospelOutside')}</span>
+                          {found.map((w) => (
+                            <button
+                              key={w.id}
+                              onClick={() => setWitness(w.id)}
+                              className="bg-white/8 px-2 py-1 text-[11px] font-bold text-white/75 transition hover:bg-white/16 hover:text-white"
+                            >
+                              {lang === 'de' ? w.de : w.en}
+                            </button>
+                          ))}
                         </div>
                       )}
                     </div>
@@ -351,6 +420,7 @@ export default function Gospel({ places, lang, onShowPlace, initial, onNavigate,
           </ol>
 
           {!person && <PeopleList lang={lang} onPick={setPersonId} />}
+          {!person && <WitnessList lang={lang} open={witness} onOpen={setWitness} />}
         </div>
 
         {/* Karte */}
@@ -461,6 +531,95 @@ function PeopleList({ lang, onPick }: { lang: Lang; onPick: (id: string) => void
           </div>
         );
       })}
+    </div>
+  );
+}
+
+function WitnessList({
+  lang,
+  open,
+  onOpen,
+}: {
+  lang: Lang;
+  open: string | null;
+  onOpen: (id: string | null) => void;
+}) {
+  const t = useT();
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Ein Klick auf einen Fund oben in der Station schlägt ihn hier auf –
+  // dann soll er auch zu sehen sein.
+  useEffect(() => {
+    if (!open) return;
+    listRef.current?.querySelector(`[data-witness="${CSS.escape(open)}"]`)?.scrollIntoView({
+      block: 'center',
+      behavior: 'smooth',
+    });
+  }, [open]);
+
+  const gruppen: { kind: Witness['kind']; de: string; en: string }[] = [
+    { kind: 'text', de: 'Was andere aufgeschrieben haben', en: 'What others wrote down' },
+    { kind: 'find', de: 'Was der Boden hergibt', en: 'What the ground gives up' },
+  ];
+
+  return (
+    <div ref={listRef} className="border-t border-white/10 px-5 py-5">
+      <h3 className="font-display text-lg uppercase text-white">{t('gospelWitnesses')}</h3>
+      <p className="mt-1 text-[11.5px] leading-relaxed text-white/50">{t('gospelWitnessesHint')}</p>
+
+      {gruppen.map((g) => (
+        <div key={g.kind} className="mt-4">
+          <div className="bm-eyebrow text-white/45">{lang === 'de' ? g.de : g.en}</div>
+          <ul className="mt-1.5 space-y-1">
+            {WITNESSES.filter((w) => w.kind === g.kind).map((w) => {
+              const on = w.id === open;
+              return (
+                <li key={w.id} data-witness={w.id}>
+                  <button
+                    onClick={() => onOpen(on ? null : w.id)}
+                    className={`w-full px-2.5 py-2 text-left transition ${on ? 'bg-deep' : 'hover:bg-white/6'}`}
+                  >
+                    <span className="flex items-baseline justify-between gap-2">
+                      <span className="text-[13px] font-bold leading-snug text-white">
+                        {lang === 'de' ? w.de : w.en}
+                      </span>
+                      <span className="flex-none text-[10.5px] text-white/45">
+                        {lang === 'de' ? w.when.de : w.when.en}
+                      </span>
+                    </span>
+                    <span className="mt-0.5 block text-[11px] text-gold">
+                      {lang === 'de' ? w.source.de : w.source.en}
+                      {w.disputed && <span className="ml-1 text-white/45">· {t('gospelDisputed')}</span>}
+                    </span>
+                    {on && (
+                      <>
+                        <span className="mt-1.5 block text-[13px] leading-relaxed text-white/75">
+                          {lang === 'de' ? w.text.de : w.text.en}
+                        </span>
+                        {w.quote && (
+                          <span className="mt-2 block border-l-2 border-white/20 pl-3 font-display text-[13px] leading-snug text-white/85">
+                            {lang === 'de' ? w.quote.de : w.quote.en}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </button>
+                  {on && w.topic && (
+                    <a
+                      href={wikiUrl(lang === 'de' ? w.topic : (w.topicEn ?? w.topic), lang)}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="bm-btn bm-btn-ghost ml-2.5 mt-1"
+                    >
+                      {t('lookUp')} →
+                    </a>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
     </div>
   );
 }

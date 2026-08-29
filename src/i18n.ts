@@ -398,6 +398,16 @@ const STRINGS: Dict = {
     de: 'Das Leben Jesu in sieben Akten: jede Station mit Ort, Bibelstelle und den Menschen, die darin vorkommen – und ein Weg durch die Passionswoche Tag für Tag.',
     en: 'The life of Jesus in seven acts: every station with its place, its passage and the people in it – and a way through Holy Week day by day.',
   },
+  gospelListenHere: { de: 'Hören & Sehen', en: 'Listen & watch' },
+  gospelElsewhere: { de: 'Anderswo', en: 'Elsewhere' },
+  gospelTheme: { de: '· Thema', en: '· theme' },
+  gospelOutside: { de: 'Außerbiblisch', en: 'Outside the Bible' },
+  gospelWitnesses: { de: 'Was außerhalb der Bibel steht', en: 'What stands outside the Bible' },
+  gospelWitnessesHint: {
+    de: 'Antike Texte, die nicht von Christen stammen, und Funde aus dem Boden – jeweils mit Quelle, Datierung und dem, was sie nicht zeigen.',
+    en: 'Ancient texts not written by Christians, and finds from the ground – each with its source, its date and what it does not show.',
+  },
+  gospelDisputed: { de: 'umstritten', en: 'disputed' },
   gospelStations: { de: 'Stationen', en: 'stations' },
   gospelPeople: { de: 'Die Menschen der Evangelien', en: 'The people of the gospels' },
   gospelPeopleHint: {
