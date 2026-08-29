@@ -540,10 +540,11 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die zehn Prüfungen, die von sich aus immer dasselbe
+`npm run check` bündelt die elf Prüfungen, die von sich aus immer dasselbe
 Ergebnis liefern – Buchkürzel, Zeitdokumente, Stammesgrenzen, Farbkontraste,
-Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen, Quizfragen und
-Heilsgeschichte – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
+Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen, Quizfragen,
+Heilsgeschichte und **Reisen & Mission** – und läuft in der CI **vor** dem
+Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
 
