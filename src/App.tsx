@@ -3,6 +3,8 @@ import type { Place } from './types';
 import { LangContext, type Lang, useT, t as tr } from './i18n';
 import {
   loadPlaces,
+  loadCounts,
+  type PlaceCounts,
   placesInEra,
   placesUpToEra,
   placesInChapter,
@@ -318,8 +320,25 @@ export default function App() {
     setMode(m);
   }
 
+  /*
+   * Die Orte laufen im Hintergrund, die Startseite wartet nicht darauf.
+   *
+   * Zwei Dinge waren verkettet: `places.json` sind 1.365 kB, und der
+   * Ladebildschirm stand vor der Startseite. Also sah man erst „Lade biblische
+   * Orte …", bis eine Datei da war, die eine Seite mit zehn Zahlen und ohne
+   * Karte gar nicht braucht.
+   *
+   * Beides ist entkoppelt: Die Zahlen kommen aus `counts.json` (147 Bytes),
+   * die Startseite steht sofort – und die Ortsdaten laufen trotzdem gleich
+   * los, damit der erste Klick in die Karte nicht darauf wartet.
+   */
   useEffect(() => {
     loadPlaces().then(setPlaces).catch((e) => setError(String(e)));
+  }, []);
+
+  const [zaehler, setZaehler] = useState<PlaceCounts | null>(null);
+  useEffect(() => {
+    loadCounts().then(setZaehler).catch(() => setZaehler(null));
   }, []);
 
   /*
@@ -707,9 +726,12 @@ export default function App() {
     for (const e of ERAS) counts[e.id] = 0;
     if (places) {
       for (const p of places) for (const id of erasForPlace(p)) counts[id] = (counts[id] ?? 0) + 1;
+      return counts;
     }
-    return counts;
-  }, [places]);
+    // Ohne geladene Orte gelten die vorgerechneten Zahlen – sie stammen aus
+    // derselben Datei und derselben Funktion, können also nicht abweichen.
+    return zaehler ? { ...counts, ...zaehler.eras } : counts;
+  }, [places, zaehler]);
 
   function select(p: Place) {
     setSelected(p);
@@ -734,6 +756,28 @@ export default function App() {
       </div>
     );
   }
+  /*
+   * Die Startseite zuerst, dann erst der Ladebildschirm.
+   *
+   * Andersherum stand es hier – und damit wartete eine Seite, die zehn Zahlen
+   * und keine Karte zeigt, auf 1.365 kB Ortsdaten. Wer die Startseite sieht,
+   * soll sie sofort sehen; wer eine Ansicht öffnet, wartet auf die Daten, die
+   * sie braucht.
+   */
+  if (atStart) {
+    return (
+      <LangContext.Provider value={lang}>
+        <Landing
+          lang={lang}
+          onLang={setLang}
+          placeCount={places?.length ?? zaehler?.places ?? 0}
+          eraCounts={eraCounts}
+          onEnter={enterFromStart}
+        />
+      </LangContext.Provider>
+    );
+  }
+
   if (!places) {
     return (
       <LangContext.Provider value={lang}>
@@ -742,19 +786,6 @@ export default function App() {
     );
   }
 
-  if (atStart) {
-    return (
-      <LangContext.Provider value={lang}>
-        <Landing
-          lang={lang}
-          onLang={setLang}
-          placeCount={places.length}
-          eraCounts={eraCounts}
-          onEnter={enterFromStart}
-        />
-      </LangContext.Provider>
-    );
-  }
 
   /*
    * Ein offener Vollbild-Modus liegt über allem – dann gehört der Hintergrund

@@ -5,6 +5,32 @@ import { ERA_BY_ID } from '../data/eras';
 
 let cache: Promise<Place[]> | null = null;
 
+/** Die Zahlen der Startseite: Orte gesamt und je Epoche. */
+export interface PlaceCounts {
+  places: number;
+  eras: Record<string, number>;
+}
+
+let zaehlCache: Promise<PlaceCounts> | null = null;
+
+/**
+ * Nur die Zahlen, ohne die Orte.
+ *
+ * Die Startseite zeigt zehn Zahlen und keine Karte – und lud dafür
+ * `places.json`: 1.365 kB, das größte Einzelstück der App, größer als alles
+ * JavaScript zusammen. `counts.json` sind 147 Bytes und entstehen beim Bauen
+ * aus derselben Datei (`npm run counts`, hängt im prebuild).
+ */
+export function loadCounts(): Promise<PlaceCounts> {
+  if (!zaehlCache) {
+    zaehlCache = fetch(`${import.meta.env.BASE_URL}data/counts.json`).then((r) => {
+      if (!r.ok) throw new Error(`Failed to load counts.json: ${r.status}`);
+      return r.json() as Promise<PlaceCounts>;
+    });
+  }
+  return zaehlCache;
+}
+
 export function loadPlaces(): Promise<Place[]> {
   if (!cache) {
     cache = fetch(`${import.meta.env.BASE_URL}data/places.json`).then((r) => {

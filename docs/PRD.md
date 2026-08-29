@@ -1469,7 +1469,71 @@ Bild** geparst werden muss.
 - [x] Sourcemaps sind **nicht** dauerhaft an: `BIBELMAP_SOURCEMAP=1` schaltet
       sie zu. Die Veröffentlichung bleibt wie sie war.
 
-### 4.56 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.56 1.365 kB für zehn Zahlen — P1 ✅
+
+Nach § 4.55 war der kritische Pfad an JavaScript ausgereizt. Die nächste Frage
+war eine andere: **was lädt ein Besuch insgesamt?** Gemessen im Browser, nach
+Art getrennt:
+
+| | |
+|---|---|
+| Daten (JSON) | **1.569 kB** |
+| JavaScript | 1.289 kB |
+| Schriften | 103 kB |
+| CSS | 101 kB |
+
+Das größte Einzelstück der ganzen App ist kein Programmcode: **`places.json`,
+1.365 kB**, angefordert nach 201 ms – auf der Startseite, die zehn Zahlen zeigt
+und keine Karte.
+
+**Zwei Dinge waren verkettet.** `App.tsx` prüfte `if (!places) return
+<Loading/>` **vor** `if (atStart) return <Landing/>`. Also stand „Lade
+biblische Orte …", bis eine Datei da war, die die Startseite gar nicht braucht.
+
+- `scripts/build-counts.mjs` schreibt **`counts.json`: 147 Bytes** – die Zahl
+  der Orte und je Epoche eine Zahl. Gerechnet mit `erasForPlace` aus
+  `src/lib/places.ts`, nicht mit einer Nachbildung: Die Epoche eines Ortes
+  hängt an den Büchern seiner Verse, und diese Regel darf es nur einmal geben.
+  Läuft im `prebuild`, kann also nicht veralten.
+- Die Reihenfolge in `App.tsx` ist getauscht: erst die Startseite, dann der
+  Ladebildschirm.
+- Die Ortsdaten laufen weiter sofort im Hintergrund los, damit der erste Klick
+  in die Karte nicht darauf wartet.
+
+**Gemessen auf 1,6 Mbit/s mit 150 ms Latenz, je drei Läufe (Median):**
+
+| | vorher | nachher |
+|---|---|---|
+| Startseite steht | 2.501 ms | **1.236 ms** |
+| Aufruf bis Marker auf der Karte | 2.968 ms | **1.711 ms** |
+
+Beides schneller – kein Tausch.
+
+**Der Prüfstand war zuerst der falsche.** Auf localhost gemessen: 212 ms
+vorher, 245 ms nachher. Dort kommen 1,3 MB in Millisekunden an, und die
+Änderung sah aus wie **eine Verschlechterung um 33 ms**. Erst mit gedrosselter
+Leitung wird sichtbar, wofür sie gut ist. Eine Messung ohne Latenz misst nicht
+die Welt, in der die Seite benutzt wird.
+
+**Und ein Zwischenstand, der schlechter war als beides.** Der erste Versuch lud
+die Ortsdaten erst beim Verlassen der Startseite. Die Startseite stand dann
+zwar sofort – aber wer gleich auf „Karte öffnen" klickte, wartete **3.953 ms**
+statt 435. Erst die Trennung von *Anzeigen* (Zahlen aus `counts.json`) und
+*Laden* (Ortsdaten im Hintergrund) bringt beides.
+
+**Akzeptanzkriterien**
+- [x] `counts.json` ist 147 Bytes und entsteht beim Bauen aus `places.json`.
+- [x] Die Startseite zeigt **1.335 Orte** und alle neun Epochenzahlen, bevor
+      `places.json` angefordert ist.
+- [x] Der Übergang „Karte öffnen" → 147 Marker: 435 ms lokal, 1.711 ms
+      gedrosselt.
+- [x] Neue Prüfung **Startzahlen** (`build-counts.mjs --pruefen`) vergleicht die
+      abgelegte Datei mit dem, was aus `places.json` folgt. Gegengeprobt:
+      `places` auf 999 gesetzt, Prüfung schlägt an und zeigt beide Werte.
+      `npm run check` führt jetzt **12** Prüfungen aus.
+- [x] Rundgang über 29 Ansichten × 2 Sprachen ohne Befund.
+
+### 4.57 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
