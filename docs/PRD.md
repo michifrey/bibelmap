@@ -1327,7 +1327,7 @@ anzurühren.
 −162 kB roh, −63 kB gzip. Die beiden Dateien sind jetzt eigene Bündel
 (`journeys` 106 kB, `mission` 56 kB).
 
-*Nachtrag aus § 4.54:* „Startbündel" meinte hier eine einzelne Datei, nicht
+*Nachtrag aus § 4.55:* „Startbündel" meinte hier eine einzelne Datei, nicht
 die Kette, die der Browser vor dem ersten Bild abarbeitet – die lag bei 720 kB
 und nach dieser Änderung bei 562. Die Ersparnis von 162 kB stimmt, der Nenner
 war zu klein.
@@ -1369,7 +1369,52 @@ Der Reihe nach, weil jede etwas zeigt:
 
 Ohne Schritt 2 hätte ich einen Fehler „behoben", den es nie gab.
 
-### 4.54 Die Startseite lud eine Karte, die sie nie zeigt — P1 ✅
+### 4.54 Mehr über Jesus: Anderswo und außerbiblisch — P1 ✅
+
+**Anlass:** § 4.47 hat die Sektion gebaut, aber zwei naheliegende Fragen offen
+gelassen. Erstens: Wo kann ich das hören und sehen? Der einzige Verweis nach
+draußen war der Buch-Guide von BibleProject – für 86 Stationen viermal
+derselbe Link. Zweitens: Was davon ist unabhängig bezeugt? Darauf gab die
+Sektion gar keine Antwort.
+
+**86 → 97 Stationen.** Neu: die zwei Stammbäume, die zwischen David und Josef
+nicht zusammenpassen; Lukas' Datierung nach sieben Machthabern; die
+Sabbatkonflikte; die Gleichnisse vom Boot aus; die Familie, die ihn holen will;
+der Streit, wer der Größte sei; die Kindersegnung; die Bitte der Zebedäussöhne;
+die zehn Aussätzigen; Judas' Rückgabe des Geldes; die bezahlte Wache am Grab.
+
+**Anderswo** (`src/data/gospelMedia.ts`): je Station das Übersichtsvideo von
+BibleProject **nach Kapitel** (die Videos sind geschnitten: Matthäus 1-13 und
+14-28, Lukas 1-9 und 10-24, Johannes 1-12 und 13-21), acht Themenvideos dort,
+wo das Thema die Szene trägt, die bibletunes.de-Folge zum Kapitel samt
+Staffelseite und Sprecher, dazu „The Chosen“ wie bisher. Ein Knopf führt in
+den eigenen Modus *Hören & Sehen*, gefiltert auf Buch und Kapitel.
+
+**Was außerhalb der Bibel steht** (`src/data/witnesses.ts`): 13 Einträge, nach
+Texten und Funden getrennt – Tacitus (Annalen 15,44), Josephus (Ant. 20,200 und
+das Testimonium), Plinius (Briefe 10,96), Sueton (Claudius 25,4), Talmud
+(Sanhedrin 43a); Pilatus-Stein, Kaiphas-Ossuar, der Gekreuzigte von Giv'at
+ha-Mivtar, Magdala, Siloah, das Wohnhaus in Nazareth, das Jakobus-Ossuar. Wo
+eine Station davon berührt wird, steht der Eintrag als Marke darunter.
+
+**Akzeptanzkriterien**
+- [x] Jede Adresse nach draußen ist einzeln belegt, keine geraten. Wo sich eine
+      Regel bilden ließ (bibletunes: Buch + Kapitel), steht sie als Regel da und
+      wird geprüft, statt als Liste behauptet zu werden.
+- [x] Die Kapitelregel der Oberfläche (`chapterOfRef`) wird in `check:gospel`
+      gegen den echten Stellenparser gerechnet – der Gegentest mit vertauschter
+      Regel meldet 184 Abweichungen.
+- [x] Alle 97 Stationen haben ein Übersichtsvideo und eine Hörfolge; das prüft
+      `check:gospel` und sagt die Zahl im Ergebnis.
+- [x] `check:gospel-links` klopft die 21 fremden Adressen ab und macht aus einem
+      403 keinen Befund; antwortet keine, endet der Lauf mit Code 2 statt mit
+      einer falschen Entwarnung.
+- [x] Umstrittenes steht als umstritten da; zu jedem Fund steht, was er nicht
+      zeigt.
+- [ ] **Offen:** Der Netzzugang der Arbeitsumgebung lässt bibleproject.com,
+      bibletunes.de und thechosen.tv nicht durch. Die Adressen stammen aus der
+      Websuche, `check:gospel-links` konnte sie noch nicht bestätigen.
+### 4.55 Die Startseite lud eine Karte, die sie nie zeigt — P1 ✅
 
 § 4.53 hat 162 kB aus dem Startbündel geholt – **mit dem falschen Werkzeug
 gemessen**. Zeichenketten im fertigen Bündel zu suchen führt in die Irre:
@@ -1403,9 +1448,9 @@ Drei Schnitte:
 
 | | vorher | nachher |
 |---|---|---|
-| JavaScript beim Aufruf von `/` | 562 kB | **324 kB** |
+| JavaScript beim Aufruf von `/` | 562 kB | **325 kB** |
 
-−238 kB, **42 %**. Was bleibt, ist kaum noch zu drücken: react-dom 174 kB,
+−237 kB, **42 %**. Was bleibt, ist kaum noch zu drücken: react-dom 174 kB,
 Übersetzungen 41 kB, Startseite 28 kB, App 20 kB.
 
 **Wieder gilt: das heißt nicht „wird nie geladen".** Der Vorabruf im Leerlauf
@@ -1414,7 +1459,7 @@ MapView und Leaflet nach gut einer Sekunde. Gewonnen ist, was **vor dem ersten
 Bild** geparst werden muss.
 
 **Akzeptanzkriterien**
-- [x] Erster Aufruf von `/`: 562 → 324 kB, aus `dist/index.html` gezählt.
+- [x] Erster Aufruf von `/`: 562 → 325 kB, aus `dist/index.html` gezählt.
 - [x] Die Karte funktioniert: `#karte` zeigt 147 Marker in einem
       `.leaflet-container`, `#ort=a15257a` öffnet das Ortsfenster samt
       Stammesgebiet, die Kartenebenen liegen an (36 Kacheln).
@@ -1424,7 +1469,7 @@ Bild** geparst werden muss.
 - [x] Sourcemaps sind **nicht** dauerhaft an: `BIBELMAP_SOURCEMAP=1` schaltet
       sie zu. Die Veröffentlichung bleibt wie sie war.
 
-### 4.55 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.56 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
@@ -1435,13 +1480,13 @@ Startseite und Seite „Projekte unterstützen".
 
 ## 5. Nicht-funktionale Anforderungen
 
-- **Performance:** Beim ersten Aufruf von `/` referenziert das HTML **324 kB**
+- **Performance:** Beim ersten Aufruf von `/` referenziert das HTML **325 kB**
   JavaScript – die Kette, die der Browser vor dem ersten Bild abarbeitet. Die
   Ansichten liegen in eigenen Dateien und kommen auf Abruf; im Leerlauf werden
   sie nachgeholt, damit die App offline vollständig bleibt. (Werdegang: 462 kB
-  laut alter Angabe, gemessen 720, dann 562 nach § 4.53, jetzt 324 nach
-  § 4.54. Die alten Zahlen meinten eine einzelne Datei, nicht die ganze Kette.) Flüssige Karte bei 1.300+ Markern,
-  Bibeltext lazy pro Buch.
+  laut alter Angabe, gemessen 720, dann 562 nach § 4.53, jetzt 325 nach
+  § 4.55. Die alten Zahlen meinten eine einzelne Datei, nicht die ganze Kette.)
+  Flüssige Karte bei 1.300+ Markern, Bibeltext lazy pro Buch.
 - **Responsiv:** nutzbar ab 360 px Breite; Präsentationsmodus stapelt auf Mobile.
 - **Barrierefreiheit:** `prefers-reduced-motion` wird beachtet (Karte setzt statt
   zu fliegen, Reisender springt statt zu gleiten, Pulsringe stehen still);
