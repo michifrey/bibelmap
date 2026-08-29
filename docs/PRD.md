@@ -1705,7 +1705,43 @@ einzigen Stelle, an der die Zahlen existieren.
       in `index.html` findet – eine Prüfung, die ihre Quelle verliert, meldet
       sonst null Bytes und besteht.
 
-### 4.60 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.60 „Offline vollständig" — jetzt nachgeprüft — P1 ✅
+
+In § 5 steht seit langem, die App sei ohne Netz vollständig benutzbar. **Geprüft
+hat das nichts.** Dabei ist es die Eigenschaft, die am leisesten kaputtgeht: Der
+Service Worker legt keine Liste an, sondern speichert, was einmal geladen wurde –
+wer eine Datei erst auf Klick lädt, hat sie offline nicht, und im Netz merkt das
+niemand.
+
+Besonders nach § 4.55 bis § 4.59: `MapView`, `PlaceDetail`, der Kartenstil und
+`counts.json` sind erst in dieser Runde dorthin gewandert, wo sie jetzt liegen.
+Jede dieser Verschiebungen hätte die Offline-Zusage brechen können.
+
+`scripts/check-offline.mjs` lädt die App, wartet den Vorabruf ab, schaltet das
+Netz ab und ruft **20 Ansichten** auf. Ergebnis: **alle 20 vollständig**, 42
+Dateien im Cache, kein JavaScript-Fehler.
+
+**Die Gegenprobe war beim ersten Versuch wertlos.**
+
+Sie ließ bloß die Wartezeit weg – in der Annahme, ohne Vorabruf müsse etwas
+fehlen. Das Ergebnis: **0 von 20 Ausfällen.** Auf einem lokalen Server ist der
+Vorabruf durch, ehe man abschalten kann; die Gegenprobe unterschied nichts, und
+damit hätte „alles grün" auch heißen können, dass der Browser aus seinem eigenen
+Speicher bedient.
+
+Jetzt leert sie den Cache und meldet den Worker ab. Dann fallen **20 von 20**
+aus – und erst damit ist belegt, dass die Prüfung wirklich den Cache misst.
+
+**Akzeptanzkriterien**
+- [x] 20 Ansichten ohne Netz vollständig, darunter Karte, Ortsfenster,
+      Register, Reisen, Heilsgeschichte, Kirchengeschichte, Stammbaum, Graph,
+      Jesus-Sektion, Israel, Quiz, Hören & Sehen und Gelände.
+- [x] Die Prüfung schlägt fehl, wenn die Gegenprobe **nicht** genug Ausfälle
+      zeigt – eine Prüfung, die nicht scheitern kann, prüft nichts.
+- [x] `CHROME_PATH` wie bei den beiden anderen Browserprüfungen; im README
+      dokumentiert samt dem Hinweis, dass ein gebauter Stand nötig ist.
+
+### 4.61 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
