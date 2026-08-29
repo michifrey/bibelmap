@@ -1500,7 +1500,9 @@ biblische Orte …", bis eine Datei da war, die die Startseite gar nicht braucht
 - Die Ortsdaten laufen weiter sofort im Hintergrund los, damit der erste Klick
   in die Karte nicht darauf wartet.
 
-**Gemessen auf 1,6 Mbit/s mit 150 ms Latenz, je drei Läufe (Median):**
+**Gemessen auf 1,6 Mbit/s mit 150 ms Latenz, je drei Läufe (Median).** *Nachtrag
+aus § 4.57: gemessen gegen `vite preview`, der unkomprimiert ausliefert – mit
+gzip wie in der Produktion sind es 2.424 → 1.160 ms.*
 
 | | vorher | nachher |
 |---|---|---|
@@ -1533,7 +1535,81 @@ statt 435. Erst die Trennung von *Anzeigen* (Zahlen aus `counts.json`) und
       `npm run check` führt jetzt **12** Prüfungen aus.
 - [x] Rundgang über 29 Ansichten × 2 Sprachen ohne Befund.
 
-### 4.57 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.57 Zwei Drittel von places.json waren Wiederholung — P1 ✅
+
+**Zuerst eine Korrektur an § 4.56.** Dort steht „1.365 kB", und die gedrosselte
+Messung lief gegen `vite preview` – der liefert **unkomprimiert** aus. GitHub
+Pages schickt gzip: 1.365 kB werden zu **215 kB** auf der Leitung. Der
+Prüfstand war also rund sechsmal härter als die Wirklichkeit.
+
+Nachgemessen mit einem Server, der komprimiert wie die Produktion:
+
+| | § 4.56 (ohne gzip) | mit gzip |
+|---|---|---|
+| Startseite steht, vorher | 2.501 ms | 2.424 ms |
+| Startseite steht, nachher | 1.236 ms | **1.160 ms** |
+
+Die Halbierung bleibt – die Wartezeit hing nicht am Transfer, sondern daran,
+dass die Startseite überhaupt auf die Datei wartete. Aber die Bedingungen waren
+falsch angegeben, und das steht jetzt richtig da.
+
+**Und dann die Datei selbst.** Von 1.365 kB entfielen **921 kB (67 %)** auf
+`verses`. Je Vers stand dort:
+
+```json
+{"osis":"Josh.10.1","ref":"Josh 10:1","book":"Josh","bookNum":6,
+ "chapter":10,"verse":1,"sort":"06010001"}
+```
+
+**Sechs der sieben Felder folgen aus dem ersten.** 8.707 solcher Objekte für
+Information, die schon dasteht. Übrig bleibt `"Josh.10.1"`, plus eine Tabelle
+der 61 Bücher (1,1 kB) am Kopf der Datei.
+
+| | vorher | nachher |
+|---|---|---|
+| places.json roh | 1.365 kB | **560 kB** |
+| gzip (das, was ankommt) | 215 kB | **109 kB** |
+| Aufruf bis Marker auf der Karte | 3.144 ms | **2.622 ms** |
+
+**Wie das abgesichert ist**
+
+- Die Rückrechnung steht **einmal**: `expandPlaces()` in `src/lib/places.ts`.
+  Die App geht dort durch, und die fünf Prüfskripte, die `places.json` direkt
+  lesen, auch. Eine zweite Implementierung im Bauskript hätte genau einen
+  Zweck: irgendwann von der ersten abzuweichen.
+- `build-places-compact.mjs` schreibt nur, wenn die Rückrechnung **Zeichen für
+  Zeichen** dasselbe ergibt. Sonst bricht es ab und zeigt die erste
+  abweichende Stelle.
+- `expandPlaces` liest **beide** Formen. Eine Datei aus `build-data.mjs` in der
+  langen Form funktioniert unverändert; `npm run data` hängt die Verkürzung an.
+- Neue Prüfung **Ortsdatei** – `npm run check` führt jetzt **13** Prüfungen aus.
+
+**Der Weg dahin, weil er zweimal falsch abbog**
+
+1. Erste Ableitung aus `osis`: **2.507 Abweichungen**. Sah nach inkonsistenten
+   Daten aus – war aber meine Regel: `1Sam` heißt in der Anzeige `1 Sam`.
+2. Regel verfeinert (Leerzeichen nach führender Ziffer): **316 übrig**. Auch
+   das keine Dateninkonsistenz, sondern Anzeigekürzel, die vom OSIS-Code
+   abweichen: `Esth` → `Est`, `Song` → `Sng`.
+3. Tabelle aus den Daten selbst gewonnen: **0 Abweichungen**. Erst da war die
+   Verkürzung belegbar verlustfrei – nicht plausibel, sondern nachgerechnet.
+
+**Akzeptanzkriterien**
+- [x] 8.707 Verse rekonstruieren exakt; das Schreiben ist an diesen Beweis
+      gebunden.
+- [x] Gegenprobe der neuen Prüfung: die lange Form zurückgespielt, sie meldet
+      „steht noch in der langen Form".
+- [x] Im Browser: das Register zeigt „Jerusalem 955 · Josua – Offenbarung" –
+      Erwähnungszahl und Buchspanne kommen beide aus `verses`.
+- [x] Rundgang über 29 Ansichten × 2 Sprachen ohne Befund; alle 13 Prüfungen
+      grün.
+
+*Zur Vergleichbarkeit:* Die Zeiten dieser Runde stammen aus einem Server, der
+je Anfrage neu komprimiert; das kostet Zeit auf beiden Seiten. Der Vergleich
+vorher/nachher gilt, die absoluten Zahlen sind nicht mit denen aus § 4.56
+zusammenzurechnen.
+
+### 4.58 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
