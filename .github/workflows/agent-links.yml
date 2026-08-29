@@ -40,8 +40,8 @@ jobs:
           cache: npm
       - run: npm ci
 
-      # Drei Prüfungen, drei Abschlusscodes. `|| true` fängt sie ab, damit der
-      # Lauf weiterläuft und alle drei Berichte zusammen beim Agenten ankommen –
+      # Vier Prüfungen, vier Abschlusscodes. `|| true` fängt sie ab, damit der
+      # Lauf weiterläuft und alle vier Berichte zusammen beim Agenten ankommen –
       # eine tote Spendenseite und ein toter Guide sind eine Sitzung wert, nicht
       # zwei.
       - name: Adressen abklopfen
@@ -50,7 +50,8 @@ jobs:
           set +e
           : > bericht.txt
           gefunden=0
-          for job in "urls:npm run check:urls" "links:npm run check:links" "bp:npm run check:bp"; do
+          for job in "urls:npm run check:urls" "links:npm run check:links" \
+                     "bp:npm run check:bp" "gospel:npm run check:gospel-links"; do
             name="${job%%:*}"; cmd="${job#*:}"
             echo "### $name" >> bericht.txt
             $cmd >> bericht.txt 2>&1
@@ -73,16 +74,24 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          claude_args: '--allowedTools "Read,Edit,Glob,Grep,WebSearch,WebFetch,Bash(npm run check:urls),Bash(npm run check:links),Bash(npm run check:bp),Bash(git diff:*)"'
+          claude_args: '--allowedTools "Read,Edit,Glob,Grep,WebSearch,WebFetch,Bash(npm run check:urls),Bash(npm run check:links),Bash(npm run check:bp),Bash(npm run check:gospel-links),Bash(git diff:*)"'
           prompt: |
-            In diesem Repository zeigen Adressen ins Leere. Der Bericht der drei
+            In diesem Repository zeigen Adressen ins Leere. Der Bericht der vier
             Prüfläufe steht in `bericht.txt` im Arbeitsverzeichnis – lies ihn
             zuerst.
 
             Deine Aufgabe: für jede mit `✗` gemeldete Adresse die heute gültige
             heraussuchen und an der Stelle eintragen, die der Bericht nennt
-            (`src/data/support.ts`, `src/data/bpGuides.json`, oder die Datei
+            (`src/data/support.ts`, `src/data/bpGuides.json`,
+            `src/data/gospelMedia.ts`, `src/data/chosen.ts`, oder die Datei
             hinter der Adresse in der `check:urls`-Liste).
+
+            Ein Sonderfall bei `check:gospel-links`: Ein Teil der geprüften
+            Adressen ist nicht eingetragen, sondern gebaut – die Folgenadressen
+            von bibletunes.de entstehen aus Buch und Kapitel. Fällt eine davon
+            aus, ist nicht die Adresse falsch, sondern die Regel, die sie baut
+            (`bibleTunesEpisodeUrl`). Dann sag das im Bericht, statt eine
+            einzelne Adresse festzunageln.
 
             Regeln:
             - Nur die gemeldeten Adressen anfassen. Nichts umformulieren,

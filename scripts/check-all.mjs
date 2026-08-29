@@ -10,9 +10,10 @@
 //
 // Hier stehen nur die Prüfungen, die **von sich aus** dasselbe Ergebnis
 // liefern. Was von fremden Servern abhängt (`check:bp`, `check:links`,
-// `check:urls`), bleibt draußen: ein Anbieter, der gerade nicht antwortet, darf
-// keine Veröffentlichung aufhalten und keinen falschen Befund erzeugen. Diese
-// drei laufen täglich für sich, in `.github/workflows/agent-links.yml`.
+// `check:urls` und `check:gospel-links`), bleibt draußen: ein Anbieter, der
+// gerade nicht antwortet, darf keine Veröffentlichung aufhalten und keinen
+// falschen Befund erzeugen. Die vier laufen täglich für sich, in
+// `.github/workflows/agent-links.yml`.
 
 import { spawnSync } from 'node:child_process';
 import path from 'node:path';
@@ -63,5 +64,5 @@ if (failed.length) {
   process.exit(1);
 }
 console.log(`\nAlle ${CHECKS.length} Prüfungen sauber.`);
-console.log('Nicht dabei: check:bp, check:links und check:urls – die brauchen Netz und');
-console.log('fremde Server. Sie laufen täglich für sich (Agent – Links).');
+console.log('Nicht dabei: check:bp, check:links, check:urls und check:gospel-links –');
+console.log('die brauchen Netz und fremde Server. Sie laufen täglich für sich (Agent – Links).');

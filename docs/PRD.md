@@ -1372,7 +1372,52 @@ Der Reihe nach, weil jede etwas zeigt:
 
 Ohne Schritt 2 hätte ich einen Fehler „behoben", den es nie gab.
 
-### 4.54 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.54 Mehr über Jesus: Anderswo und außerbiblisch — P1 ✅
+
+**Anlass:** § 4.47 hat die Sektion gebaut, aber zwei naheliegende Fragen offen
+gelassen. Erstens: Wo kann ich das hören und sehen? Der einzige Verweis nach
+draußen war der Buch-Guide von BibleProject – für 86 Stationen viermal
+derselbe Link. Zweitens: Was davon ist unabhängig bezeugt? Darauf gab die
+Sektion gar keine Antwort.
+
+**86 → 97 Stationen.** Neu: die zwei Stammbäume, die zwischen David und Josef
+nicht zusammenpassen; Lukas' Datierung nach sieben Machthabern; die
+Sabbatkonflikte; die Gleichnisse vom Boot aus; die Familie, die ihn holen will;
+der Streit, wer der Größte sei; die Kindersegnung; die Bitte der Zebedäussöhne;
+die zehn Aussätzigen; Judas' Rückgabe des Geldes; die bezahlte Wache am Grab.
+
+**Anderswo** (`src/data/gospelMedia.ts`): je Station das Übersichtsvideo von
+BibleProject **nach Kapitel** (die Videos sind geschnitten: Matthäus 1-13 und
+14-28, Lukas 1-9 und 10-24, Johannes 1-12 und 13-21), acht Themenvideos dort,
+wo das Thema die Szene trägt, die bibletunes.de-Folge zum Kapitel samt
+Staffelseite und Sprecher, dazu „The Chosen“ wie bisher. Ein Knopf führt in
+den eigenen Modus *Hören & Sehen*, gefiltert auf Buch und Kapitel.
+
+**Was außerhalb der Bibel steht** (`src/data/witnesses.ts`): 13 Einträge, nach
+Texten und Funden getrennt – Tacitus (Annalen 15,44), Josephus (Ant. 20,200 und
+das Testimonium), Plinius (Briefe 10,96), Sueton (Claudius 25,4), Talmud
+(Sanhedrin 43a); Pilatus-Stein, Kaiphas-Ossuar, der Gekreuzigte von Giv'at
+ha-Mivtar, Magdala, Siloah, das Wohnhaus in Nazareth, das Jakobus-Ossuar. Wo
+eine Station davon berührt wird, steht der Eintrag als Marke darunter.
+
+**Akzeptanzkriterien**
+- [x] Jede Adresse nach draußen ist einzeln belegt, keine geraten. Wo sich eine
+      Regel bilden ließ (bibletunes: Buch + Kapitel), steht sie als Regel da und
+      wird geprüft, statt als Liste behauptet zu werden.
+- [x] Die Kapitelregel der Oberfläche (`chapterOfRef`) wird in `check:gospel`
+      gegen den echten Stellenparser gerechnet – der Gegentest mit vertauschter
+      Regel meldet 184 Abweichungen.
+- [x] Alle 97 Stationen haben ein Übersichtsvideo und eine Hörfolge; das prüft
+      `check:gospel` und sagt die Zahl im Ergebnis.
+- [x] `check:gospel-links` klopft die 21 fremden Adressen ab und macht aus einem
+      403 keinen Befund; antwortet keine, endet der Lauf mit Code 2 statt mit
+      einer falschen Entwarnung.
+- [x] Umstrittenes steht als umstritten da; zu jedem Fund steht, was er nicht
+      zeigt.
+- [ ] **Offen:** Der Netzzugang der Arbeitsumgebung lässt bibleproject.com,
+      bibletunes.de und thechosen.tv nicht durch. Die Adressen stammen aus der
+      Websuche, `check:gospel-links` konnte sie noch nicht bestätigen.
+### 4.55 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/

@@ -6,7 +6,7 @@ altern. Sie schreiben nie auf den Default-Branch: jeder legt seinen Fund als
 
 | Agent | Wann | Rührt an | Ruft ein Modell |
 |---|---|---|---|
-| [Links](../.github/workflows/agent-links.yml) | täglich, 05:15 UTC | `src/data/support.ts`, `src/data/bpGuides.json`, die Datei hinter der toten Adresse | nur bei 404/410 |
+| [Links](../.github/workflows/agent-links.yml) | täglich, 05:15 UTC | `src/data/support.ts`, `src/data/bpGuides.json`, `src/data/gospelMedia.ts`, die Datei hinter der toten Adresse | nur bei 404/410 |
 | [Podcasts](../.github/workflows/agent-podcasts.yml) | samstags, 04:40 UTC | `data/media/raw/`, `public/data/media.json`, `data/media/sources.json` | nur bei stummer Quelle |
 | [Nachrichten & Forschung](../.github/workflows/agent-news.yml) | mittwochs, 06:20 UTC | nur `docs/forschung/` | immer |
 | [Israel](../.github/workflows/agent-israel.yml) | montags, 06:00 UTC | `src/data/israel.ts` | immer |
@@ -56,10 +56,10 @@ Arbeit.
 
 `deploy.yml` lässt die netzabhängigen Prüfungen bewusst aus – ein Anbieter mit
 Schluckauf darf keine Veröffentlichung aufhalten. Damit blieb aber niemand
-übrig, der sie laufen lässt. Das ist dieser Lauf: `check:urls`, `check:links`
-und `check:bp`, einmal am Tag, ausserhalb des Wegs.
+übrig, der sie laufen lässt. Das ist dieser Lauf: `check:urls`, `check:links`,
+`check:bp` und `check:gospel-links`, einmal am Tag, ausserhalb des Wegs.
 
-Entscheidend ist, was als Befund zählt. Die drei Skripte trennen das seit je
+Entscheidend ist, was als Befund zählt. Die vier Skripte trennen das seit je
 sauber, und der Agent hält sich daran:
 
 | Code | Heisst | Folge |
@@ -72,6 +72,12 @@ Der letzte Fall ist der wichtige. Ein 403 kommt vom Filter, nicht von der
 Seite; ein geblockter Lauf darf niemals einen Entwurf erzeugen. Neunzig
 „reparierte" Adressen, die nie kaputt waren, sind schlimmer als gar keine
 Prüfung – nach dem dritten Fehlalarm sieht niemand mehr hin.
+
+Ein Sonderfall steckt in `check:gospel-links`: Ein Teil der Adressen dort ist
+nicht eingetragen, sondern gebaut – die Folgenadressen von bibletunes.de
+entstehen aus Buch und Kapitel. Fällt eine davon aus, ist nicht die Adresse
+falsch, sondern die Regel, die sie baut. Der Agent trägt dann keine Adresse
+ein, sondern sagt es im Bericht.
 
 ### Podcasts (wöchentlich)
 

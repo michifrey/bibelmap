@@ -130,19 +130,29 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   die Route mitwachsen und einen Punkt die Etappen abgehen, während links die
   Station mit Bibelstelle und kurzem Text mitläuft (← / → blättern, Leertaste
   startet). Jede Station verlinkt auf ihre Ortskarte.
-- **Jesus – Leben und Wege** – eine eigene Sektion für die Evangelien: **86
+- **Jesus – Leben und Wege** – eine eigene Sektion für die Evangelien: **97
   Stationen in sieben Akten**, von der Ankündigung an Maria über die Geburt in
   Bethlehem, das Jahr am See, den Weg nach Jerusalem und die Passionswoche **Tag
   für Tag** (Palmsonntag → Grabesruhe) bis zu Emmaus, dem See Tiberias und dem
   Abschied am Ölberg. Jede Station nennt Ort, Bibelstelle (mit Parallelstellen),
   einen erzählenden Text und – wo sie hängen bleibt – die Stelle im Wortlaut.
   **52 Menschen der Evangelien** stehen in einem eigenen Verzeichnis: ein Klick
-  auf *Simon Petrus* zeigt seine 24 Stationen vom Bootssteg bis zum Kohlenfeuer,
-  ein Klick auf *Maria von Magdala* ihre Spur bis zum leeren Grab. Jede Station
-  verlinkt den **BibleProject-Guide** ihres Evangeliums, und wo eine Folge von
-  **The Chosen** die Szene spielt, steht sie daneben – als Verfilmung
-  gekennzeichnet, mit der Bibelstelle direkt darüber. Adressen wie
-  `#jesus=passion,golgotha` und `#jesus=mensch,petrus` sind teilbar.
+  auf *Simon Petrus* zeigt seine Stationen vom Bootssteg bis zum Kohlenfeuer,
+  ein Klick auf *Maria von Magdala* ihre Spur bis zum leeren Grab.
+  **Anderswo:** zu jeder Station das passende **BibleProject**-Video – die
+  Buchüberblicke sind nach Kapiteln geschnitten, deshalb zeigt Golgatha
+  *Johannes 13-21* und nicht „Johannes“ –, dazu Themenvideos, wo das Thema die
+  Szene trägt (*Opfer und Sühne* am Kreuz, *Menschensohn* bei der Verklärung),
+  die passende **bibletunes.de**-Folge zum Kapitel und, wo eine Folge von **The
+  Chosen** die Szene spielt, deren Angabe – als Verfilmung gekennzeichnet. Ein
+  Knopf führt in **Hören & Sehen** zu allem, was der eigene Medienindex zu
+  diesem Kapitel hat.
+  **Was außerhalb der Bibel steht:** dreizehn Einträge mit Quelle und
+  Datierung – Tacitus, Josephus, Plinius, Sueton, der Talmud, dazu der
+  Pilatus-Stein, das Kaiphas-Ossuar, der Gekreuzigte von Giv’at ha-Mivtar, die
+  Synagoge von Magdala, die Stufen des Teichs Siloah. Umstrittenes steht als
+  umstritten da, und dabei steht, was ein Fund **nicht** zeigt.
+  Adressen wie `#jesus=passion,golgotha` und `#jesus=mensch,petrus` sind teilbar.
 - **Mission & Ausbreitung** – wie das Evangelium in die Welt kam: die vier
   Reisen des Paulus (plus die Wege vor ihm, Apg 1–11) als Route mit nummerierten
   Stationen und Bibelstellen – und danach die Ausbreitung bis heute, in sieben
@@ -559,10 +569,11 @@ CHROME_PATH=/usr/bin/chromium node scripts/check-i18n.mjs http://localhost:4173 
 CHROME_PATH=/usr/bin/chromium node scripts/a11y-audit.mjs http://localhost:4173
 ```
 
-Bewusst nicht dabei sind `npm run check:bp`, `npm run check:links` und
-`npm run check:urls`. Alle drei fragen fremde Server; ein Anbieter mit
-Schluckauf darf keinen Deploy blockieren und keinen falschen Befund erzeugen.
-Sie laufen täglich für sich – siehe **Agenten** gleich unten.
+Bewusst nicht dabei sind `npm run check:bp`, `npm run check:links`,
+`npm run check:urls` und `npm run check:gospel-links`. Alle vier fragen fremde
+Server; ein Anbieter mit Schluckauf darf keinen Deploy blockieren und keinen
+falschen Befund erzeugen. Sie laufen täglich für sich – siehe **Agenten**
+gleich unten.
 
 ### Agenten
 
@@ -572,7 +583,7 @@ hin, und ein Mensch entscheidet.
 
 | Agent | Wann | Wofür |
 | --- | --- | --- |
-| Links | täglich | die drei netzabhängigen Prüfungen; bei 404/410 die neue Adresse suchen |
+| Links | täglich | die vier netzabhängigen Prüfungen; bei 404/410 die neue Adresse suchen |
 | Podcasts | wöchentlich | Feeds holen, Index neu bauen; bei stummer Quelle nachgehen |
 | Nachrichten & Forschung | wöchentlich | Grabungen, Handschriften, Datierungen → Blatt in `docs/forschung/` |
 | Israel | wöchentlich | Zahlen und Ereignisse in `src/data/israel.ts` fortschreiben |
@@ -586,10 +597,12 @@ npm run check:urls   # alle festen Adressen aus src/data, src/lib, data/media
 ```
 
 Diese Prüfung ist mit den Agenten dazugekommen: `check:links` sah auf die
-Spendenseiten, `check:bp` auf die Guides – die Quellen der Israel-Karte, die
-Zeitdokumente der Personen, die Lizenztexte der Namensnennung lagen unbesehen
-da. Es sind rund neunzig Adressen, mit denen diese App ihre Belege einlöst.
-Dieselbe Regel wie bei den anderen beiden: nur `404`/`410` sind eine Aussage,
+Spendenseiten, `check:bp` auf die Guides, `check:gospel-links` auf die
+Jesus-Sektion – die Quellen der Israel-Karte, die Zeitdokumente der Personen,
+die Lizenztexte der Namensnennung lagen unbesehen da. Es sind über hundert
+Adressen, mit denen diese App ihre Belege einlöst; die Zahl wächst mit den
+Daten, das Skript zählt sie bei jedem Lauf neu.
+Dieselbe Regel wie bei den anderen: nur `404`/`410` sind eine Aussage,
 alles andere bleibt unentschieden, und ein vollständig geblockter Lauf endet mit
 Code 2 statt mit einem Fehlurteil. Adressen mit Platzhalter (`{z}/{x}/{y}`,
 `${slug}`) sind Muster, keine Adressen, und werden übersprungen.
@@ -929,6 +942,30 @@ dazu, dass es eine ist.
 Ort), jede Bibelstelle auf Lesbarkeit und darauf, dass ihr Buch zum
 verlinkten Guide passt, jede Person einer Station gegen das Verzeichnis. Die
 Prüfung läuft in `npm run check` mit.
+
+**Medienverweise** (`src/data/gospelMedia.ts`): Die BibleProject-Videoadressen
+sind einzeln belegt, nicht aus einem Muster geraten; welches Übersichtsvideo zu
+einer Station gehört, entscheidet ihr Kapitel (Matthäus 1-13 und 14-28, Lukas
+1-9 und 10-24, Johannes 1-12 und 13-21, Markus in einem Stück). Für
+bibletunes.de führt der Weg über die Staffelseite des Evangeliums und die erste
+Folge zum Kapitel; wie viele Folgen ein Kapitel hat, weiß nur die Seite selbst.
+`npm run check:gospel-links` klopft alle diese Adressen ab – das braucht Netz
+und läuft deshalb nicht in `npm run check` mit, sondern täglich im
+**[Link-Agenten](docs/Agenten.md)**. Ein Ausfall dort heisst oft nicht „Adresse
+falsch": die Folgenadressen sind gebaut, nicht eingetragen, und dann ist die
+Regel dran, die sie baut.
+
+Warum nicht der eigene Medienindex: `public/data/media.json` entsteht aus
+RSS-Feeds, und der bibletunes-Feed trägt die letzten hundert Folgen. Die
+Evangelien liefen dort 2010 bis 2024 und sind längst aus dem Fenster gerutscht.
+Deshalb beides nebeneinander – feste Adressen und ein Knopf in den eigenen
+Medienmodus, der zeigt, was der Index gerade hergibt.
+
+**Außerbiblische Zeugnisse** (`src/data/witnesses.ts`): antike Texte und Funde,
+jeder mit Autor, Werk und Stelle bzw. Fundort und Jahr. Umstrittenes ist als
+umstritten gekennzeichnet (Testimonium Flavianum, Sueton, Jakobus-Ossuar), und
+zu jedem Fund steht, was er nicht belegt: Der Pilatus-Stein belegt Pilatus,
+nicht das Verhör.
 
 **The Chosen** (`src/data/chosen.ts`): Die Zuordnung Folge → Station wurde nach
 dem Inhalt der Folgen zusammengetragen, nicht von einer Schnittstelle geholt.
