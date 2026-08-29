@@ -1253,7 +1253,58 @@ keinen zweiten laden.
   die Ansicht den falschen Text zeigt. Darum die Gegenprobe auf die jeweils
   andere Sprachform.
 
-### 4.52 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.52 Die Prüfung, die es für die Reisen nie gab — P1 ✅
+
+Ein anderes Maß als bisher: **welche Datendatei hat gar keinen Wächter?**
+Antwort: ausgerechnet `journeys.ts` – die Datei, die in § 4.44 bis § 4.46 auf
+178 Stationen wuchs und in jeder dieser Runden **von Hand** nachgemessen wurde.
+`check-quiz.mjs` liest sie zwar, prüft aber nur die Quizfragen. Eine Prüfung,
+die im Kopf dessen läuft, der gerade daran arbeitet, endet mit ihm.
+
+Neu: **`npm run check:journeys`**, die elfte Prüfung. Sie deckt `journeys.ts`
+(15 Reisen, 178 Stationen) **und** `mission.ts` (5 Reisen, 65 Stationen,
+64 Ausbreitungs-Ereignisse) ab – zusammen 243 Stationen, 240 davon mit
+Ortskennung.
+
+Vier Fehlerarten, die alle **still** scheitern:
+
+1. Eine `placeId`, die es nicht gibt – der Knopf „auf der Karte zeigen" führt
+   ins Leere.
+2. Eine Koordinate, die nicht zu ihrer `placeId` passt – der Marker sitzt neben
+   dem Ort, den er verlinkt.
+3. Zwei Stationen auf demselben Punkt – eine Etappe von 0 km, mit Pfeil und
+   Entfernungsangabe daneben.
+4. Deutsch im englischen Feld.
+
+**Und sie fand gleich drei echte Fälle.** In `mission.ts` lagen drei Stationen
+0,47 bis 0,53 km neben ihrem eigenen Ort: Kos stand als `36.82, 27.11` statt
+`36.81528, 27.11028`. Kein Tippfehler, sondern **Rundung auf zwei
+Nachkommastellen** – `journeys.ts` rundet auf drei (höchstens 0,07 km). Ein
+halber Kilometer zwischen Marker und verlinktem Ort ist auf der Karte sichtbar.
+Alle 62 Stationen mit `placeId` stehen jetzt auf der genauen Ortskoordinate;
+die Abweichung ist 0,0000 km.
+
+Die Schwelle bleibt trotzdem bei 0,2 km und nicht bei null: Die Dateien
+schreiben Koordinaten auf drei Nachkommastellen, das sind bis zu 0,08 km. Eine
+vertauschte Kennung liegt um **Kilometer** daneben, nicht um Meter – die fängt
+0,2 km sicher.
+
+**Akzeptanzkriterien**
+- [x] 243 Stationen: jede `placeId` trifft einen Ort in `places.json`, keine
+      liegt weiter als 0,2 km daneben, jede hat eine Bibelstelle in beiden
+      Sprachen, keine Etappe misst null.
+- [x] Jede der vier Fehlerarten **einzeln** gegengeprobt, indem sie absichtlich
+      erzeugt wurde – und jede wurde gemeldet. Die Nulletappe brauchte einen
+      eigenen Lauf: beim ersten Versuch schlug die Koordinatenregel zuerst an,
+      der Beweis für die Nulletappen-Regel stand also noch aus. Erst eine
+      vollständig verdoppelte Station (gleiche `placeId`, gleiche Koordinate)
+      zeigt sie allein.
+- [x] Die Prüfung trägt zusätzlich ihre eigene Gegenprobe im Code und eine
+      Untergrenze (15 Reisen, 200 Stationen, 1.000 Orte), unter der sie sich
+      für kaputt erklärt.
+- [x] `npm run check` führt jetzt **11** Prüfungen aus, alle sauber.
+
+### 4.53 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
