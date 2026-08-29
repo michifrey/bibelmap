@@ -1056,7 +1056,80 @@ Drei Angaben je Station verweisen auf etwas anderes, und alle drei scheitern
 
 `npm run check` führt jetzt **10** Prüfungen aus.
 
-### 4.49 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.49 Die Kirchenväter bekommen Text — und zwei Frauen — P1 ✅
+
+Nach der Heilsgeschichte ergab dieselbe Messung: **17 Kirchenväter, Ø 69
+Zeichen**. „Goldmund; berühmtester Prediger der Ostkirche." (48 Zeichen) für
+Johannes Chrysostomus. Der Rest der App stand bei 200 bis 250.
+
+Jetzt **22 Väter, Ø 254 Zeichen** (223–291), in beiden Sprachen. Nicht länger
+nur, was jemand war, sondern was er getan hat und woran man es heute noch
+merkt: Ignatius bittet die Gemeinden unterwegs ausdrücklich, ihn **nicht** zu
+retten; Athanasius' Osterbrief von 367 nennt zum ersten Mal genau die
+siebenundzwanzig Schriften des Neuen Testaments; Basilius baut vor Caesarea die
+„Basiliade" aus Krankenhaus, Herberge und Armenküche.
+
+**Was strittig ist, steht dabei.** Die alten Einzeiler waren nicht nur kurz,
+sie waren glatt:
+
+- **Kyrill von Alexandria**, vorher „Führende Stimme beim Konzil von Ephesus
+  (431)" – jetzt auch: seine Mittel waren hart und teils gekauft, und über
+  seine Rolle im Klima, in dem Hypatia ermordet wurde, streiten Historiker bis
+  heute.
+- **Chrysostomus** – dass seine Predigten gegen die Juden später schweren
+  Schaden angerichtet haben.
+- **Tertullian** – dass er am Ende mit der Großkirche brach.
+- **Origenes** – dass Sätze aus seinem Werk drei Jahrhunderte nach seinem Tod
+  verurteilt wurden.
+- **Hieronymus** – „streitsüchtig bis zur Bosheit", und dass ein Kreis
+  gelehrter Frauen um Paula einen großen Teil der Arbeit mittrug.
+
+**Alle siebzehn waren Männer.** Neu auf der Karte und im Zeitbaum:
+
+- **Perpetua von Karthago** († 203) – ihr Gefängnistagebuch ist einer der
+  ältesten erhaltenen Texte einer Christin überhaupt.
+- **Makrina die Jüngere** († 379) – ältere Schwester und Lehrerin von Basilius
+  und Gregor von Nyssa. Der Eintrag sagt auch, woher wir das wissen: Gregor hat
+  es aufgeschrieben, aus seiner Sicht, nicht ihrer.
+- **Gregor von Nyssa** – der dritte Kappadokier fehlte, während die anderen
+  beiden dastanden.
+- **Justin der Märtyrer** und **Johannes von Damaskus**.
+
+Justin stand bereits im Zeitbaum und fehlte auf der Karte nur, weil ihm
+`tradition` und Koordinaten fehlten – `FATHERS` ist
+`GENEALOGY.filter(p => p.tradition && p.lat != null)`.
+
+Nebenbei: die letzte Reisenstation unter 100 Zeichen. **Oboth** stand bei 74
+(„Weiter am Rand der edomitischen Berge entlang nach Norden, Lager um Lager.")
+und trägt jetzt, was dort wirklich steht: den einzigen Vers, den 4. Mose selbst
+als Zitat aus dem „Buch von den Kriegen des HERRN" kennzeichnet – einem Buch,
+das die Bibel namentlich nennt und von dem sonst keine Zeile erhalten ist.
+
+**Akzeptanzkriterien**
+- [x] 22 Väter, alle zwischen 223 und 291 Zeichen; kein englisches Feld enthält
+      deutsche Funktionswörter (geprüft).
+- [x] Keine Person hängt im Baum in der Luft: alle `parent`-Kennungen zeigen auf
+      eine vorhandene Person, keine doppelte ID (240 Personen).
+- [x] `tradition` folgt der Sprache, in der jemand schrieb, wie es die
+      Beschriftung sagt („Westlich (lateinisch)" / „Östlich (griechisch)"):
+      Justin schrieb Griechisch, obwohl er in Rom lehrte und starb – also
+      `east`; Perpetuas Passio ist lateinisch – also `west`.
+- [x] Im Browser in beiden Sprachen: alle fünf neuen und vier alte Einträge
+      zeigen ihren vollen Text über `#kirche=vater,<id>`, kein
+      JavaScript-Fehler.
+- [x] Alle zehn Prüfungen sauber – `check:church` prüft weiter, dass jeder
+      Personenverweis der Kirchengeschichte eine Person im Zeitbaum trifft.
+
+**Nicht angefasst, und warum:** 23 Glaubenszeugen stehen im Zeitbaum, aber
+nicht auf der Kirchenväter-Karte – Luther, Calvin, Bonhoeffer, Franz von
+Assisi. Ihnen fehlen `tradition` und Koordinaten. Die Koordinaten wären
+nachzutragen; `Tradition` aber kennt nur `west | east | orient` und meint damit
+die Sprachräume der Alten Kirche. Einen Reformator als „Westlich (lateinisch)"
+zu etikettieren wäre keine Ergänzung, sondern eine falsche Einordnung. Das ist
+eine Entscheidung über die Taxonomie, keine Datenlücke – der Zeitstrahl der
+Kirchengeschichte deckt diese Jahrhunderte bereits über **Ereignisse** ab.
+
+### 4.50 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/

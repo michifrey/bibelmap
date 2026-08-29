@@ -155,7 +155,17 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   und Tagesmärsche zur vorigen, ein Klick auf *Auf Karte* springt zur Ortskarte.
 - **Kirchengeschichte-Modus** – drei Reiter: **Zeitstrahl**, **Kirchenväter**
   (westlich/lateinisch · östlich/griechisch · orientalisch) und die
-  **Konzilien**. Jeder Eintrag hat eine eigene Adresse (`#kirche=zeit,thesen`,
+  **Konzilien**. **22 Väter**, jeder mit einem ausgeführten Absatz statt einer
+  Zeile: was er getan hat, woran man ihn heute noch merkt – und was an ihm
+  strittig ist. Bei Kyrill von Alexandria steht, dass Historiker über seine
+  Rolle im Klima um Hypatias Ermordung bis heute streiten; bei Chrysostomus,
+  dass seine Predigten gegen die Juden später schweren Schaden angerichtet
+  haben; bei Tertullian, dass er am Ende mit der Großkirche brach. Neu dabei
+  sind **Perpetua** (ihr Gefängnistagebuch ist einer der ältesten erhaltenen
+  Texte einer Christin) und **Makrina**, die Lehrerin ihrer beiden berühmten
+  Brüder – bis dahin waren alle siebzehn Väter Männer –, dazu **Justin der
+  Märtyrer**, **Gregor von Nyssa**, der bis dahin fehlende dritte Kappadokier,
+  und **Johannes von Damaskus**. Jeder Eintrag hat eine eigene Adresse (`#kirche=zeit,thesen`,
   `#kirche=vater,augustinus`, `#kirche=konzil,chalcedon`). Paulus’ Reisen stehen
   nicht hier, sondern in *Mission & Ausbreitung* – ein Link im Modus führt
   hinüber.
