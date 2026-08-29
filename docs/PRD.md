@@ -1304,7 +1304,67 @@ vertauschte Kennung liegt um **Kilometer** daneben, nicht um Meter – die fäng
       für kaputt erklärt.
 - [x] `npm run check` führt jetzt **11** Prüfungen aus, alle sauber.
 
-### 4.53 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.53 162 kB, die niemand brauchte — P1 ✅
+
+Wieder ein anderes Maß: **was lädt jeder Besuch, ohne es zu benutzen?**
+
+Der Auslöser war eine Zahl, die nicht mehr stimmte. README und PRD nannten
+„erstes Bündel 462 kB (gzip 136)". Gemessen waren es **521,59 kB (gzip
+173,39)** – die App war gewachsen, die Angabe nicht mitgewachsen.
+
+Beim Nachsehen, **was** darin liegt: `journeys.ts` (114 kB Quelltext) und
+`mission.ts` (68 kB) waren im Startbündel. Beide nur wegen zweier Stellen in
+`App.tsx`, und **beide beginnen mit `if (view !== 'terrain') return`** – die
+Geländeansicht, die selbst erst auf Abruf kommt. Jeder Besuch der Startseite
+lud die 178 Bibelstationen und die 65 Missionsstationen mit, um sie nicht
+anzurühren.
+
+| | vorher | nachher |
+|---|---|---|
+| Startbündel | 521,59 kB | **359,83 kB** |
+| gzip | 173,39 kB | **110,81 kB** |
+
+−162 kB roh, −63 kB gzip, **36 % weniger** auf dem kritischen Pfad. Die beiden
+Dateien sind jetzt eigene Bündel (`journeys` 106 kB, `mission` 56 kB).
+
+**Was das ausdrücklich *nicht* heißt.** Der erste Kommentar im Code behauptete
+„erst geladen, wenn jemand dorthin geht". Die Messung im Browser zeigte etwas
+anderes: beide Dateien werden auf der Startseite geholt – vom Vorabruf im
+Leerlauf, der alle Ansichten nachlädt, damit die App offline vollständig ist.
+Das ist Absicht und bleibt so. Gewonnen ist der **kritische Pfad**: 162 kB
+weniger, die vor dem ersten Bild geparst und ausgeführt werden. Der Kommentar
+sagt das jetzt.
+
+**Akzeptanzkriterien**
+- [x] Startbündel gemessen: 521,59 → 359,83 kB (gzip 173,39 → 110,81).
+- [x] Die Geländeansicht funktioniert weiter, auch per Deep-Link:
+      `#gelaende=reise,exodus`, `#gelaende=reise,abraham` und
+      `#gelaende=mission,second` zeigen die Routenleiste („Reisen &
+      Geschichten →" bzw. „Mission & Ausbreitung →") samt Stationsnavigation;
+      `#gelaende` ohne Route zeigt keine. Kein JavaScript-Fehler.
+- [x] Der Hash überlebt: die Prüfung, die eine unbekannte Reise aus der Adresse
+      entfernt, wartet jetzt auf die Daten. Ohne das hätte ein Aufruf von
+      `#gelaende=reise,exodus` seine Reise verloren, weil die Liste eine
+      Zehntelsekunde später kommt.
+- [x] Alle elf Prüfungen sauber.
+
+**Drei kaputte Messungen, bis eine trug**
+
+Der Reihe nach, weil jede etwas zeigt:
+
+1. Erster Test suchte den Reisenamen im Text (`innerText`) – nicht gefunden.
+   Sah nach Regression aus.
+2. Gegen den Stand **vor** der Änderung gemessen: **genau dasselbe Ergebnis**.
+   Also keine Regression, sondern ein Test, der das Falsche prüft – die Route
+   liegt auf der maplibre-Leinwand, nicht im Text.
+3. Zweiter Versuch las die Leinwand mit `readPixels` aus: alles null, weil
+   maplibre den Puffer nach dem Zeichnen verwirft.
+4. Erst der dritte fand den richtigen Beobachtungspunkt: die **Routenleiste im
+   DOM**, die es nur gibt, wenn eine Route gesetzt ist.
+
+Ohne Schritt 2 hätte ich einen Fehler „behoben", den es nie gab.
+
+### 4.54 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
@@ -1315,9 +1375,11 @@ Startseite und Seite „Projekte unterstützen".
 
 ## 5. Nicht-funktionale Anforderungen
 
-- **Performance:** Erstes Bündel 462 kB (gzip 136 kB) – die Ansichten liegen in
-  eigenen Dateien und kommen auf Abruf; im Leerlauf werden sie nachgeholt, damit
-  die App offline vollständig bleibt. Flüssige Karte bei 1.300+ Markern,
+- **Performance:** Erstes Bündel **360 kB (gzip 111 kB)** – die Ansichten liegen
+  in eigenen Dateien und kommen auf Abruf; im Leerlauf werden sie nachgeholt,
+  damit die App offline vollständig bleibt. (Die Zahl stand lange bei 462/136 und
+  war veraltet; gemessen waren es 522/173, bevor `journeys.ts` und `mission.ts`
+  ausgelagert wurden – siehe § 4.53.) Flüssige Karte bei 1.300+ Markern,
   Bibeltext lazy pro Buch.
 - **Responsiv:** nutzbar ab 360 px Breite; Präsentationsmodus stapelt auf Mobile.
 - **Barrierefreiheit:** `prefers-reduced-motion` wird beachtet (Karte setzt statt
