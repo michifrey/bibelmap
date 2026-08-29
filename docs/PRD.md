@@ -1663,7 +1663,114 @@ Dazu berechnete Stile an sechs Elementen, die wirklich im DOM sind
 - [x] Rundgang über 29 Ansichten × 2 Sprachen ohne Befund; alle 13 Prüfungen
       grün.
 
-### 4.59 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.59 Ein Budget, damit es so bleibt — P1 ✅
+
+**Zuerst die Laufzeit, weil sie noch nie gemessen war.** Lange Aufgaben auf dem
+Hauptthread, über elf Ansichten:
+
+| | |
+|---|---|
+| schlimmste einzelne Aufgabe | 162 ms (`#graph`, einmal beim Aufbau) |
+| Suche „Jer" bis Treffer | **47 ms** |
+| sieben von elf Ansichten | **keine** Aufgabe über 50 ms |
+
+Da ist nichts zu holen. Das ist ein Befund, kein Versäumnis – und der Grund,
+warum diese Runde nichts an der Laufzeit ändert.
+
+**Der eigentliche Punkt: die Zahlen absichern.** § 4.55 bis § 4.58 haben den
+ersten Aufruf von 720 auf 325 kB JavaScript gebracht, das Stylesheet von 22 auf
+15,2 kB gzip, die Ortsdaten von 215 auf 109. **Jede dieser Verbesserungen war
+ein Import, der an der falschen Stelle stand.** Ein neuer Import an einer
+falschen Stelle macht sie rückgängig – lautlos: Nichts geht kaputt, die Seite
+wird nur wieder langsam.
+
+`scripts/check-budget.mjs` misst, was `dist/index.html` referenziert, und
+vergleicht mit drei Grenzen:
+
+```
+· JavaScript (roh)       325.3 kB  von höchstens 360.0 kB
+· CSS (gzip)              15.2 kB  von höchstens  18.0 kB
+· Ortsdaten (gzip)       108.4 kB  von höchstens 130.0 kB
+```
+
+Die Grenzen liegen bewusst dicht über dem Gemessenen: Ein Puffer, in den man
+dreimal hineinwachsen kann, ist keine Grenze, sondern eine Einladung.
+
+**Und ein Fehler, den ich beinahe ausgeliefert hätte.** Zuerst hing die Prüfung
+in `npm run check` – das läuft in der CI **vor** dem Build. Ohne `dist/` gibt es
+nichts zu messen, also hätte sie **jeden CI-Lauf rot gemacht**. Aufgefallen ist
+das nur, weil ich `dist/` beiseitegeschoben und `npm run check` noch einmal
+laufen lassen habe. Sie hängt jetzt als `postbuild` am Build, also an der
+einzigen Stelle, an der die Zahlen existieren.
+
+**Akzeptanzkriterien**
+- [x] Gegenprobe mit dem Rückfall, für den die Prüfung geschrieben ist:
+      `MapView` wieder statisch importiert → **523,2 kB statt 325,3** und
+      21,9 statt 15,2 kB CSS; beide Grenzen schlagen an, und der **Build endet
+      mit Exit 1**.
+- [x] `npm run check` läuft weiter ohne `dist/` (13 Prüfungen).
+- [x] Die Prüfung erklärt sich für kaputt, wenn sie weniger als zwei Dateien
+      in `index.html` findet – eine Prüfung, die ihre Quelle verliert, meldet
+      sonst null Bytes und besteht.
+
+### 4.60 „Offline vollständig" — jetzt nachgeprüft — P1 ✅
+
+In § 5 steht seit langem, die App sei ohne Netz vollständig benutzbar. **Geprüft
+hat das nichts.** Dabei ist es die Eigenschaft, die am leisesten kaputtgeht: Der
+Service Worker legt keine Liste an, sondern speichert, was einmal geladen wurde –
+wer eine Datei erst auf Klick lädt, hat sie offline nicht, und im Netz merkt das
+niemand.
+
+Besonders nach § 4.55 bis § 4.59: `MapView`, `PlaceDetail`, der Kartenstil und
+`counts.json` sind erst in dieser Runde dorthin gewandert, wo sie jetzt liegen.
+Jede dieser Verschiebungen hätte die Offline-Zusage brechen können.
+
+`scripts/check-offline.mjs` lädt die App, wartet den Vorabruf ab, schaltet das
+Netz ab und ruft **20 Ansichten** auf. Ergebnis: **alle 20 vollständig**, 42
+Dateien im Cache, kein JavaScript-Fehler.
+
+**Die Gegenprobe war beim ersten Versuch wertlos.**
+
+Sie ließ bloß die Wartezeit weg – in der Annahme, ohne Vorabruf müsse etwas
+fehlen. Das Ergebnis: **0 von 20 Ausfällen.** Auf einem lokalen Server ist der
+Vorabruf durch, ehe man abschalten kann; die Gegenprobe unterschied nichts, und
+damit hätte „alles grün" auch heißen können, dass der Browser aus seinem eigenen
+Speicher bedient.
+
+Jetzt leert sie den Cache und meldet den Worker ab. Dann fallen **20 von 20**
+aus – und erst damit ist belegt, dass die Prüfung wirklich den Cache misst.
+
+**Akzeptanzkriterien**
+- [x] 20 Ansichten ohne Netz vollständig, darunter Karte, Ortsfenster,
+      Register, Reisen, Heilsgeschichte, Kirchengeschichte, Stammbaum, Graph,
+      Jesus-Sektion, Israel, Quiz, Hören & Sehen und Gelände.
+- [x] Die Prüfung schlägt fehl, wenn die Gegenprobe **nicht** genug Ausfälle
+      zeigt – eine Prüfung, die nicht scheitern kann, prüft nichts.
+- [x] `CHROME_PATH` wie bei den beiden anderen Browserprüfungen; im README
+      dokumentiert samt dem Hinweis, dass ein gebauter Stand nötig ist.
+
+### 4.61 Gemessen und nichts gefunden — P2 ✅
+
+Nicht jede Messung führt zu einer Änderung. Diese hier taten es nicht, und das
+ist ihr Ergebnis – festgehalten, damit sie niemand ein zweites Mal anstellt.
+Alle Zahlen vom 29. August 2026, gegen den Stand nach § 4.60.
+
+| gemessen | Ergebnis | Urteil |
+|---|---|---|
+| **Laufzeit** – lange Aufgaben über 11 Ansichten | schlimmste 162 ms (`#graph`, einmal beim Aufbau); 7 von 11 Ansichten ohne eine Aufgabe über 50 ms; Suche „Jer" bis Treffer 47 ms | nichts zu holen |
+| **Layoutsprünge** (CLS), 8 Ansichten, gedrosselt | schlimmster Wert **0,01** – Google nennt unter 0,1 „gut" | nichts zu holen |
+| **Schriften** | vier Dateien, aber nur zwei geladen (103 kB): `latin-ext` kommt nur, wenn türkische Namen wie „İznik" auf der Seite stehen | funktioniert wie gedacht |
+| **Abhängigkeiten** | `npm audit`: **0 Schwachstellen**. Zwölf Pakete liegen ein Patch/Minor zurück, TypeScript eine Hauptversion | Wartung, keine Optimierung – nicht unaufgefordert |
+| **Übersetzungen nach Sprache trennen** | `i18n.ts` ist `Record<key, {de, en}>`: die Sprachen liegen **pro Schlüssel verschachtelt**, und `t()` ist synchron. Der Umbau wären ~600 Einträge plus ein asynchroner Pfad beim Sprachwechsel – für rund 5 kB gzip | Aufwand und Risiko stehen nicht dafür |
+| **`tribes.ts` aus dem Startbündel** | erledigt in § 4.55 als Nebenwirkung: `PlaceDetail` wird nachgeladen und nimmt die Datei mit | schon behoben |
+| **Nachweise gegen benutzte Server abgleichen** | 41 Hosts stehen im Quelltext und nicht in den Nachweisen – aber die Liste wirft „zitiert als Quelle" (UN-Dokumente, Reuters), „verlinkt" (bible.com) und „unter Lizenz benutzt" durcheinander | als Prüfung untauglich: 41 Fehlalarme, sie wäre in einer Woche abgeschaltet |
+
+**Was am Startbündel bleibt** (325 kB), aufgeschlüsselt über die Sourcemaps:
+react-dom 174 kB, Übersetzungen 41 kB, Startseite 28 kB, App 20 kB, Rest unter
+8 kB. Über die Hälfte ist das Framework. Das bewegt nur ein Wechsel des
+Frameworks – keine Optimierung, sondern eine andere App.
+
+### 4.62 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/

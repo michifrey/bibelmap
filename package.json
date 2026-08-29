@@ -32,7 +32,10 @@
     "check:history": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-history.mjs",
     "check:journeys": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-journeys.mjs",
     "counts": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-counts.mjs",
-    "data:compact": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-places-compact.mjs"
+    "data:compact": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-places-compact.mjs",
+    "check:budget": "node scripts/check-budget.mjs",
+    "postbuild": "node scripts/check-budget.mjs",
+    "check:offline": "node scripts/check-offline.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

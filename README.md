@@ -558,16 +558,24 @@ der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
 
-Zwei weitere Prüfungen brauchen einen Browser und laufen darum von Hand:
-`scripts/check-i18n.mjs` (steht in der englischen Oberfläche noch Deutsch?) und
-`scripts/a11y-audit.mjs` (Namen, Telefonbreite, Tastaturweg). Beide nehmen
-`CHROME_PATH`, wenn schon ein Chromium da ist:
+Drei weitere Prüfungen brauchen einen Browser und laufen darum von Hand:
+`scripts/check-i18n.mjs` (steht in der englischen Oberfläche noch Deutsch?),
+`scripts/a11y-audit.mjs` (Namen, Telefonbreite, Tastaturweg) und
+`scripts/check-offline.mjs` (funktioniert die App wirklich ohne Netz?). Alle
+drei nehmen `CHROME_PATH`, wenn schon ein Chromium da ist:
 
 ```bash
 CHROME_PATH=/usr/bin/chromium node scripts/check-i18n.mjs http://localhost:4173
 CHROME_PATH=/usr/bin/chromium node scripts/check-i18n.mjs http://localhost:4173 de   # Gegenprobe
 CHROME_PATH=/usr/bin/chromium node scripts/a11y-audit.mjs http://localhost:4173
+CHROME_PATH=/usr/bin/chromium node scripts/check-offline.mjs http://localhost:4173
 ```
+
+`check:offline` braucht einen **gebauten** Stand: den Service Worker gibt es nur
+in der Produktionsfassung. Die Prüfung trägt ihre Gegenprobe mit: Sie leert
+danach den Cache, meldet den Worker ab und besteht darauf, dass **dann** alles
+ausfällt – sonst hätte „funktioniert offline" auch bedeuten können, dass
+irgendetwas anderes bedient.
 
 Bewusst nicht dabei sind `npm run check:bp`, `npm run check:links`,
 `npm run check:urls` und `npm run check:gospel-links`. Alle vier fragen fremde
@@ -606,6 +614,7 @@ Dieselbe Regel wie bei den anderen: nur `404`/`410` sind eine Aussage,
 alles andere bleibt unentschieden, und ein vollständig geblockter Lauf endet mit
 Code 2 statt mit einem Fehlurteil. Adressen mit Platzhalter (`{z}/{x}/{y}`,
 `${slug}`) sind Muster, keine Adressen, und werden übersprungen.
+
 
 ### Deployment (GitHub Pages)
 
@@ -1101,6 +1110,18 @@ Dasselbe galt fürs Stylesheet: `index.css` zog Leaflets CSS auf oberster Ebene
 herein, also lagen 17 kB Kartenstil im render-blockierenden Stylesheet der
 Startseite. Sie stehen jetzt in `src/map.css` und kommen mit der ersten
 Ansicht, die eine Karte zeigt – **101 → 84 kB, gzip 22,0 → 15,2 kB**.
+
+**Damit das so bleibt**, hängt `scripts/check-budget.mjs` als `postbuild` am
+Build und misst, was `dist/index.html` referenziert – die Kette vor dem ersten
+Bild. Über der Grenze bricht der Build ab. Jede dieser Verbesserungen war ein
+Import, der an der falschen Stelle stand; ein neuer Import an einer falschen
+Stelle macht sie lautlos rückgängig.
+
+```
+· JavaScript (roh)       325.3 kB  von höchstens 360.0 kB
+· CSS (gzip)              15.2 kB  von höchstens  18.0 kB
+· Ortsdaten (gzip)       108.4 kB  von höchstens 130.0 kB
+```
 
 Und das größte Einzelstück der App ist gar kein JavaScript: `places.json`. Sie
 wog **1.365 kB** (215 kB gzip) und wiegt jetzt **560 kB** (**109 kB gzip**):
