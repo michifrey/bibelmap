@@ -558,16 +558,24 @@ der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
 
-Zwei weitere Prüfungen brauchen einen Browser und laufen darum von Hand:
-`scripts/check-i18n.mjs` (steht in der englischen Oberfläche noch Deutsch?) und
-`scripts/a11y-audit.mjs` (Namen, Telefonbreite, Tastaturweg). Beide nehmen
-`CHROME_PATH`, wenn schon ein Chromium da ist:
+Drei weitere Prüfungen brauchen einen Browser und laufen darum von Hand:
+`scripts/check-i18n.mjs` (steht in der englischen Oberfläche noch Deutsch?),
+`scripts/a11y-audit.mjs` (Namen, Telefonbreite, Tastaturweg) und
+`scripts/check-offline.mjs` (funktioniert die App wirklich ohne Netz?). Alle
+drei nehmen `CHROME_PATH`, wenn schon ein Chromium da ist:
 
 ```bash
 CHROME_PATH=/usr/bin/chromium node scripts/check-i18n.mjs http://localhost:4173
 CHROME_PATH=/usr/bin/chromium node scripts/check-i18n.mjs http://localhost:4173 de   # Gegenprobe
 CHROME_PATH=/usr/bin/chromium node scripts/a11y-audit.mjs http://localhost:4173
+CHROME_PATH=/usr/bin/chromium node scripts/check-offline.mjs http://localhost:4173
 ```
+
+`check:offline` braucht einen **gebauten** Stand: den Service Worker gibt es nur
+in der Produktionsfassung. Die Prüfung trägt ihre Gegenprobe mit: Sie leert
+danach den Cache, meldet den Worker ab und besteht darauf, dass **dann** alles
+ausfällt – sonst hätte „funktioniert offline" auch bedeuten können, dass
+irgendetwas anderes bedient.
 
 Bewusst nicht dabei sind `npm run check:bp` und `npm run check:links`. Beide
 fragen fremde Server; ein Anbieter mit Schluckauf darf keinen Deploy blockieren
