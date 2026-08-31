@@ -577,9 +577,44 @@ danach den Cache, meldet den Worker ab und besteht darauf, dass **dann** alles
 ausfällt – sonst hätte „funktioniert offline" auch bedeuten können, dass
 irgendetwas anderes bedient.
 
-Bewusst nicht dabei sind `npm run check:bp` und `npm run check:links`. Beide
-fragen fremde Server; ein Anbieter mit Schluckauf darf keinen Deploy blockieren
-und keinen falschen Befund erzeugen. Die laufen von Hand.
+Bewusst nicht dabei sind `npm run check:bp`, `npm run check:links`,
+`npm run check:urls` und `npm run check:gospel-links`. Alle vier fragen fremde
+Server; ein Anbieter mit Schluckauf darf keinen Deploy blockieren und keinen
+falschen Befund erzeugen. Sie laufen täglich für sich – siehe **Agenten**
+gleich unten.
+
+### Agenten
+
+Vier wiederkehrende Läufe halten die Teile aktuell, die von aussen altern. Sie
+schreiben nie auf den Default-Branch: jeder legt seinen Fund als **Entwurf**
+hin, und ein Mensch entscheidet.
+
+| Agent | Wann | Wofür |
+| --- | --- | --- |
+| Links | täglich | die vier netzabhängigen Prüfungen; bei 404/410 die neue Adresse suchen |
+| Podcasts | wöchentlich | Feeds holen, Index neu bauen; bei stummer Quelle nachgehen |
+| Nachrichten & Forschung | wöchentlich | Grabungen, Handschriften, Datierungen → Blatt in `docs/forschung/` |
+| Israel | wöchentlich | Zahlen und Ereignisse in `src/data/israel.ts` fortschreiben |
+
+Einrichtung (ein Secret, eine Repo-Einstellung), was jeder genau tut, warum ein
+geblockter Lauf niemals einen Entwurf erzeugt und warum die Zweige dem Agenten
+gehören: **[docs/Agenten.md](docs/Agenten.md)**.
+
+```bash
+npm run check:urls   # alle festen Adressen aus src/data, src/lib, data/media
+```
+
+Diese Prüfung ist mit den Agenten dazugekommen: `check:links` sah auf die
+Spendenseiten, `check:bp` auf die Guides, `check:gospel-links` auf die
+Jesus-Sektion – die Quellen der Israel-Karte, die Zeitdokumente der Personen,
+die Lizenztexte der Namensnennung lagen unbesehen da. Es sind über hundert
+Adressen, mit denen diese App ihre Belege einlöst; die Zahl wächst mit den
+Daten, das Skript zählt sie bei jedem Lauf neu.
+Dieselbe Regel wie bei den anderen: nur `404`/`410` sind eine Aussage,
+alles andere bleibt unentschieden, und ein vollständig geblockter Lauf endet mit
+Code 2 statt mit einem Fehlurteil. Adressen mit Platzhalter (`{z}/{x}/{y}`,
+`${slug}`) sind Muster, keine Adressen, und werden übersprungen.
+
 
 ### Deployment (GitHub Pages)
 
@@ -841,6 +876,13 @@ falschen Stelle.
 Beim Einbau fand die Prüfung zwei Stellen, an denen die Quelle einer Zahl nicht
 in der Quellenliste ihres Ereignisses stand: sichtbar war sie, anklickbar nicht.
 
+Genau diese Prüfung ist es, die den wöchentlichen **[Israel-Agenten](docs/Agenten.md)**
+möglich macht: Weil die Datei ihre eigenen Regeln kennt und durchsetzt, kann ein
+Lauf die Zahlen fortschreiben, ohne dass dabei etwas hineinrutscht, was von
+einem Menschen nicht auch verlangt würde. Der Kopf der Datei sagt, dass ihre
+Zahlen in dem Augenblick veralten, in dem sie geschrieben sind – der Agent macht
+aus dieser Feststellung eine Zusage.
+
 ### BibleProject-Guides
 
 Die Adresse eines Guides entsteht aus dem englischen Buchnamen
@@ -874,8 +916,9 @@ npm run check:links -- --donate  # nur die Spendenseiten
 
 Dieselben Regeln wie bei `check:bp`: nur `404`/`410` sind eine Aussage, alles
 andere bleibt unentschieden, und ein vollständig geblockter Lauf endet mit Code
-2 statt mit einem Fehlurteil. In der Agenten-Umgebung sind fast alle diese Hosts
-gesperrt; wer Netzzugriff hat, klärt die Frage damit in einer Minute.
+2 statt mit einem Fehlurteil. In einer Umgebung ohne offenes Netz sind fast alle
+diese Hosts gesperrt und der Lauf sagt nichts aus; auf GitHub läuft er täglich
+(**[Agent – Links](docs/Agenten.md)**) und meldet nur echte Befunde.
 
 ### Reisen & Geschichten
 
@@ -916,7 +959,10 @@ einer Station gehört, entscheidet ihr Kapitel (Matthäus 1-13 und 14-28, Lukas
 bibletunes.de führt der Weg über die Staffelseite des Evangeliums und die erste
 Folge zum Kapitel; wie viele Folgen ein Kapitel hat, weiß nur die Seite selbst.
 `npm run check:gospel-links` klopft alle diese Adressen ab – das braucht Netz
-und läuft deshalb nicht in `npm run check` mit.
+und läuft deshalb nicht in `npm run check` mit, sondern täglich im
+**[Link-Agenten](docs/Agenten.md)**. Ein Ausfall dort heisst oft nicht „Adresse
+falsch": die Folgenadressen sind gebaut, nicht eingetragen, und dann ist die
+Regel dran, die sie baut.
 
 Warum nicht der eigene Medienindex: `public/data/media.json` entsteht aus
 RSS-Feeds, und der bibletunes-Feed trägt die letzten hundert Folgen. Die

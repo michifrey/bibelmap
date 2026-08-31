@@ -1,0 +1,101 @@
+name: Entwurf öffnen
+description: >
+  Sichert, was ein Agentenlauf geändert hat: auf den Zweig, der dem Agenten
+  gehört, und von dort in einen Entwurf. Ändert der Lauf nichts, passiert nichts
+  – kein leerer Commit, kein leerer Entwurf.
+
+inputs:
+  branch:
+    description: 'Zweig, der dem Agenten gehört. Wird bei jedem Lauf neu auf den Zielzweig gesetzt.'
+    required: true
+  title:
+    description: 'Titel des Entwurfs.'
+    required: true
+  body:
+    description: 'Rumpf des Entwurfs. Markdown.'
+    required: true
+  commit:
+    description: 'Commit-Nachricht.'
+    required: true
+  token:
+    description: 'Token mit contents:write und pull-requests:write.'
+    required: true
+
+outputs:
+  changed:
+    description: '"true", wenn der Lauf etwas geändert hat.'
+    value: ${{ steps.commit.outputs.changed }}
+  url:
+    description: 'Adresse des Entwurfs, sofern einer offen ist.'
+    value: ${{ steps.pr.outputs.url }}
+
+runs:
+  using: composite
+  steps:
+    # Der Zweig gehört dem Agenten und wird bei jedem Lauf neu vom Zielzweig
+    # aus gesetzt: so trägt der Entwurf immer genau einen Commit gegen den
+    # aktuellen Stand und kann nicht mit der Zeit in einen Konflikt laufen.
+    # Der Preis steht in docs/Agenten.md: wer von Hand auf diesen Zweig
+    # committet, verliert es beim nächsten Lauf.
+    - id: commit
+      shell: bash
+      env:
+        BRANCH: ${{ inputs.branch }}
+        MSG: ${{ inputs.commit }}
+      run: |
+        set -euo pipefail
+        if [ -z "$(git status --porcelain)" ]; then
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+          echo "Der Lauf hat nichts geändert." >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+        fi
+        git config user.name 'bibelmap-agent[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git checkout -B "$BRANCH"
+        git add -A
+        git commit -m "$MSG"
+
+        # Steht auf dem Zweig schon derselbe Baum, ist der Entwurf bereits
+        # aktuell. Dann nicht schieben: ein Commit, der nichts als seinen
+        # Zeitstempel ändert, sieht im Entwurf aus wie neue Arbeit.
+        # Mit ausdrücklicher Refspec: actions/checkout richtet `remote.origin.fetch`
+        # nur für den ausgecheckten Zweig ein, ein blosses `git fetch origin
+        # <zweig>` schriebe hier also nur FETCH_HEAD und keine
+        # `origin/<zweig>`-Referenz – und der Vergleich unten liefe ins Leere.
+        git fetch origin "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH" --depth=1 2>/dev/null || true
+        if git rev-parse --verify -q "origin/$BRANCH" >/dev/null; then
+          if [ "$(git rev-parse HEAD^{tree})" = "$(git rev-parse "origin/$BRANCH^{tree}")" ]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Der Entwurf steht schon auf genau diesem Stand." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+        fi
+
+        git push --force origin "$BRANCH"
+        echo "changed=true" >> "$GITHUB_OUTPUT"
+
+    - id: pr
+      if: steps.commit.outputs.changed == 'true'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.token }}
+        BRANCH: ${{ inputs.branch }}
+        TITLE: ${{ inputs.title }}
+        BODY: ${{ inputs.body }}
+        BASE: ${{ github.event.repository.default_branch }}
+      run: |
+        set -euo pipefail
+        # Für `schedule` liegt `repository` zwar im Payload, aber ein leerer Wert
+        # würde hier lautlos den falschen Zielzweig setzen – lieber nachfragen.
+        [ -n "$BASE" ] || BASE="$(gh repo view --json defaultBranchRef --jq .defaultBranchRef.name)"
+        url="$(gh pr list --head "$BRANCH" --state open --json url --jq '.[0].url // empty')"
+        if [ -n "$url" ]; then
+          # Der offene Entwurf hat den neuen Commit schon; nur Titel und Rumpf
+          # nachziehen, damit der Bericht zum Stand passt.
+          gh pr edit "$url" --title "$TITLE" --body "$BODY"
+          echo "Entwurf aktualisiert: $url" >> "$GITHUB_STEP_SUMMARY"
+        else
+          url="$(gh pr create --draft --base "$BASE" --head "$BRANCH" --title "$TITLE" --body "$BODY")"
+          echo "Entwurf geöffnet: $url" >> "$GITHUB_STEP_SUMMARY"
+        fi
+        echo "url=$url" >> "$GITHUB_OUTPUT"
