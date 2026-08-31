@@ -35,6 +35,14 @@ permissions* muss **Allow GitHub Actions to create and approve pull requests**
 gesetzt sein. Ohne das dürfen die Läufe committen, aber keinen Entwurf öffnen –
 und der Fund liegt auf einem Zweig, den niemand sieht.
 
+**Was es nicht braucht:** die Claude-GitHub-App. Die Workflows reichen der
+Action das mitgelieferte `github.token` durch; damit überspringt sie den Umweg
+über ein OIDC-Token und eine App-Installation. Claude fasst GitHub hier ohnehin
+nicht an – es ändert Dateien im Arbeitsverzeichnis, und Commit, Zweig und
+Entwurf macht danach `.github/actions/entwurf`. Der erste Lauf scheiterte genau
+daran: ohne `github_token` verlangt die Action `id-token: write` und eine App,
+die es hier beide nicht gibt.
+
 ## Der Zweig gehört dem Agenten
 
 Jeder Agent hat genau einen Zweig – `agent/links`, `agent/podcasts`,

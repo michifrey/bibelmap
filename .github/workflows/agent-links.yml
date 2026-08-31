@@ -53,9 +53,13 @@ jobs:
           for job in "urls:npm run check:urls" "links:npm run check:links" \
                      "bp:npm run check:bp" "gospel:npm run check:gospel-links"; do
             name="${job%%:*}"; cmd="${job#*:}"
-            echo "### $name" >> bericht.txt
-            $cmd >> bericht.txt 2>&1
-            code=$?
+            echo "### $name" | tee -a bericht.txt
+            # `tee` statt nur `>>`: Der Bericht gehört in beides. In die Datei,
+            # weil der Agent sie liest – und ins Job-Log, weil sonst niemand
+            # sieht, was die Prüfung gefunden hat, wenn ein späterer Schritt
+            # scheitert. Genau das ist beim ersten Lauf passiert.
+            $cmd 2>&1 | tee -a bericht.txt
+            code=${PIPESTATUS[0]}
             echo "(Abschlusscode $code)" >> bericht.txt
             echo >> bericht.txt
             [ "$code" -eq 1 ] && gefunden=1
@@ -74,6 +78,14 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Ohne dieses Token holt sich die Action ein OIDC-Token und tauscht es
+          # bei der Claude-GitHub-App gegen ein Zugriffstoken – das braucht
+          # `id-token: write` und eine installierte App. Beides ist hier
+          # unnötig: Claude fasst GitHub gar nicht an, es ändert Dateien im
+          # Arbeitsverzeichnis, und Commit, Zweig und Entwurf macht danach
+          # `.github/actions/entwurf`. Das mitgelieferte Token kurzschliesst
+          # den ganzen Umweg.
+          github_token: ${{ github.token }}
           claude_args: '--allowedTools "Read,Edit,Glob,Grep,WebSearch,WebFetch,Bash(npm run check:urls),Bash(npm run check:links),Bash(npm run check:bp),Bash(npm run check:gospel-links),Bash(git diff:*)"'
           prompt: |
             In diesem Repository zeigen Adressen ins Leere. Der Bericht der vier

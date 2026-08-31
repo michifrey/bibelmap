@@ -44,6 +44,14 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # Ohne dieses Token holt sich die Action ein OIDC-Token und tauscht es
+          # bei der Claude-GitHub-App gegen ein Zugriffstoken – das braucht
+          # `id-token: write` und eine installierte App. Beides ist hier
+          # unnötig: Claude fasst GitHub gar nicht an, es ändert Dateien im
+          # Arbeitsverzeichnis, und Commit, Zweig und Entwurf macht danach
+          # `.github/actions/entwurf`. Das mitgelieferte Token kurzschliesst
+          # den ganzen Umweg.
+          github_token: ${{ github.token }}
           claude_args: '--allowedTools "Read,Edit,Write,Glob,Grep,WebSearch,WebFetch,Bash(npm run check:israel),Bash(npx tsc --noEmit),Bash(git diff:*),Bash(git log:*)"'
           prompt: |
             Du schreibst die Israel-Karte dieses Repositories fort.
