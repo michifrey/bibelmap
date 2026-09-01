@@ -111,7 +111,11 @@ const HAM: GenNode = {
       id: 'cush', de: 'Kusch', en: 'Cush', ref: '1Chr 1:8', line: 'ham',
       region: { de: 'Nubien / Äthiopien', en: 'Nubia / Ethiopia' }, place: 'Cush',
       children: [
-        { id: 'seba', de: 'Seba', en: 'Seba', ref: '1Chr 1:9', line: 'ham', place: 'Seba' },
+        // Kein `place`: Die Ortsdaten kennen kein Seba, und die unscharfe Suche
+        // landete auf „Sheba" – in 1. Mose 10,7 und Psalm 72,10 sind Seba und
+        // Saba aber ausdrücklich zwei verschiedene. Lieber kein Kartenlink als
+        // einer, der woandershin führt.
+        { id: 'seba', de: 'Seba', en: 'Seba', ref: '1Chr 1:9', line: 'ham' },
         { id: 'havilah-c', de: 'Hawila', en: 'Havilah', ref: '1Chr 1:9', line: 'ham', region: { de: 'Arabien', en: 'Arabia' }, place: 'Havilah' },
         { id: 'sabta', de: 'Sabta', en: 'Sabta', ref: '1Chr 1:9', line: 'ham' },
         {

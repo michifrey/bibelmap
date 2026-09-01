@@ -38,6 +38,7 @@ const CHECKS = [
   { name: 'Schlüsselstellen', script: 'check-passages.mjs', ts: true },
   { name: 'Religionsvergleich', script: 'check-compare.mjs', ts: true },
   { name: 'Zeitbaum', script: 'check-genealogy.mjs', ts: true },
+  { name: 'Völkertafel', script: 'check-nations.mjs', ts: true },
   { name: 'Startzahlen', script: 'build-counts.mjs', ts: true, args: ['--pruefen'] },
   { name: 'Ortsdatei', script: 'build-places-compact.mjs', ts: true, args: ['--pruefen'] },
 ];

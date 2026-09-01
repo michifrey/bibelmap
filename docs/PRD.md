@@ -2216,7 +2216,59 @@ Probe rutschte im ersten Anlauf durch – sie sollte einen zu engen Abstand
 prüfen, ergab aber 11 Jahre und lag damit über der Schwelle. Mein Rechenfehler,
 nicht der des Prüfers; korrigiert auf 5.
 
-### 4.69 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.69 Seba ist nicht Saba — P2 ✅
+
+Nach dem Zeitbaum (§ 4.68) der nächstgrösste ungeprüfte Datensatz: die
+Völkertafel, 315 Knoten über 21 Ebenen.
+
+**Der Fehler.** Der Knoten `seba` trug `place: 'Seba'`. Die Ortsdaten kennen
+kein Seba – die unscharfe Suche (`searchPlaces`, dieselbe, die auch die
+Oberfläche benutzt) landete deshalb auf **„Sheba"**. In 1. Mose 10,7 und
+Psalm 72,10 sind Seba und Saba aber ausdrücklich zwei verschiedene, beide
+Söhne Kuschs. Wer im Baum auf Seba klickte, bekam eine Karte von Saba.
+Nichts stürzte ab; der Link führte nur woandershin. Das `place` ist
+gestrichen – lieber kein Kartenlink als einer, der anderswohin führt.
+
+**Die Regel, die das fängt, ohne Fehlalarme.** Der gefundene Ortsname muss
+den Suchbegriff **enthalten**. Das lässt die vier richtigen unscharfen
+Treffer durch – „Togarmah" → *Beth-togarmah*, „Seir" → *Mount Seir*,
+„Ephraim" → *Mount Ephraim*, „Zemaraim" → *Mount Zemaraim* – und beanstandet
+nur „Seba" → *Sheba*. Gemessen, bevor sie geschrieben wurde: **48 von 49
+bestanden, ein Treffer, kein Fehlalarm.** Die strengere Regel (Name muss
+gleich sein) hätte vier Fehlalarme erzeugt und wäre in einer Woche
+abgeschaltet worden.
+
+**Die neue Prüfung (`npm run check:nations`, Nr. 17)** deckt dazu ab: Linie
+bekannt, Name in beiden Sprachen, `people`/`region`/`note` nie einsprachig,
+jeder Knoten mit Bibelstelle, keine doppelte Kennung.
+
+**Was zweimal fast durchgerutscht wäre.** Die Bibelstellen prüft sie
+ausdrücklich nicht: In `ref` steht die Fortsetzung hinter einem Mittelpunkt
+im selben Buch („1Chr 6:1 · 6:17"). Wer auf „·" trennt und jede Hälfte für
+sich auflösen will, beanstandet acht gesunde Angaben – genau das meldete die
+erste Sondierung, und es war mein Trennfehler, nicht der der Daten.
+
+Und die Gegenprobe selbst war im ersten Anlauf wertlos. Sie baute ihre sieben
+Proben aus dem Knoten `kush` – den es nicht gibt, er heisst `cush`. Damit
+bestand jede Probe aus `undefined`, und die Prüfung schlug bei jeder an, weil
+*jedes* Feld fehlte: **sechs bestandene Proben, die nichts belegten.**
+Aufgefallen ist es nur, weil ausgerechnet die siebte (doppelte Kennung) laut
+scheiterte – ohne Kennung gibt es kein Duplikat. Die Gegenprobe prüft jetzt
+nicht mehr, *ob* etwas anschlägt, sondern *welche Meldung* kommt, und warnt,
+wenn eine Probe mehr als eine Sache meldet.
+
+**Nachgeprüft.** 17 Prüfungen sauber, `tsc` sauber, 29 Ansichten × 2 Sprachen,
+20 von 20 offline, Budget unverändert.
+
+Was **nicht** gelang: eine bildliche Bestätigung in der Oberfläche. Vier
+Anläufe griffen jeweils das falsche Element (die linke Leiste statt des
+Detailpanels), und ein Klick auf einen Kinder-Chip schlug fehl, weil er keine
+`button`-Rolle trägt – der Fehlschlag war von einem `.catch()` verschluckt
+und lieferte zweimal denselben Messwert. Belegt ist die Änderung an Daten und
+Code: `resolvePlace` gibt ohne `place` `null` zurück, und dann wird der Link
+nicht gezeichnet – zwei Zeilen, eindeutig. Ein Bild davon habe ich nicht.
+
+### 4.70 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
