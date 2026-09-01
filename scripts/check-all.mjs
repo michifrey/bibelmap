@@ -22,6 +22,8 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 const CHECKS = [
+  // Zuerst die Büchertabelle: check:passages und parseRef messen daran.
+  { name: 'Büchertabelle', script: 'check-books.mjs', ts: true },
   { name: 'Buchkürzel', script: 'check-aliases.mjs' },
   { name: 'Zeitdokumente', script: 'check-sources.mjs', ts: true },
   { name: 'Stammesgrenzen', script: 'check-tribes.mjs', ts: true },
