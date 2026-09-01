@@ -1875,7 +1875,73 @@ der Wechsel gutging; das belegt die Gegenprobe oben.
 Das sind knapp sechs Sekunden pro Build – lokal und in der CI, die `tsc` vor
 jedem `vite build` laufen lässt.
 
-### 4.64 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.64 Schlüsselstellen für alle 66 Bücher — P1 ✅
+
+Der Verweis-Graph hängt seine Stellen an die Buchknoten. Gezählt sah das so
+aus: **48 Stellen, verteilt auf 30 von 66 Büchern.** Markus hatte keine – das
+älteste Evangelium. Hiob keine, Jona keine, Jakobus keine, 1. Petrus keine,
+1. Johannes keine. Wer im Graphen auf eines dieser 36 Bücher klickte, bekam
+einen Knoten ohne Inhalt.
+
+Dazu waren die Erklärungen mit **Ø 100 Zeichen** die dünnsten Texte der App –
+zum Vergleich: Reisestationen 160–242, Kirchenväter 254.
+
+**Was jetzt dasteht:** 86 Stellen, **jedes der 66 Bücher hat mindestens eine**,
+Erklärungen Ø 259 (de) / 243 (en) Zeichen. Die 48 bestehenden wurden
+ausgebaut, ohne Titel und Untertitel anzutasten; 38 kamen dazu (Markus und
+Hiob je zwei – für das eine, weil es die Vorlage der anderen ist, für das
+andere, weil Kapitel 1 und Kapitel 38 zwei verschiedene Bücher wären).
+
+Die bestehenden Einträge wurden **aus dem echten Modul ausgelesen**, nicht
+abgetippt: Titel, Untertitel, Referenz und Kennung stehen unverändert im
+neuen Stand. Aus der Reisen-Arbeit ist bekannt, was passiert, wenn man
+vorhandene Zeilen aus dem Gedächtnis rekonstruiert.
+
+**Die neue Prüfung (`npm run check:passages`, Nr. 14).** In `passages.ts`
+steht die Bibelstelle zweimal – als Text für Menschen (`ref: 'Mk 6'`) und als
+OSIS-Kürzel für den Graphen (`book: 'Mark'`). Stimmen die nicht überein, zeigt
+die Oberfläche „Markus 6" und verlinkt in ein anderes Buch: nichts stürzt ab,
+niemand merkt es. Genau dieser Fehler ist in § 4.57 schon einmal passiert –
+sechs falsche OSIS-Kürzel in `history.ts`. Die Prüfung löst deshalb jede
+Stelle mit demselben `parseRef` auf, das auch die Suche benutzt, und
+vergleicht.
+
+Sie rechnet die Kapitelzahl selbst nach, statt sich auf `parseRef` zu
+verlassen: Das klemmt eine zu große Zahl stillschweigend auf die letzte
+Kapitelnummer – „Ps 200" wird zu Psalm 150. Für die Suche ist das freundlich,
+für eine Prüfung wäre es blind.
+
+Die Gegenprobe (`--gegenprobe`) baut sieben Fehler ein – falsches Kürzel,
+unbekanntes Kürzel, nicht auflösbare Stelle, Kapitel jenseits des Buches, zu
+kurzer Text je Sprache, doppelte Kennung – und verlangt, dass jeder gefunden
+wird. Alle sieben werden gefunden. Vor dem Schreiben des Inhalts lief die
+Prüfung gegen den alten Stand und meldete genau die 97 Beanstandungen, die es
+dort zu melden gab.
+
+Die 36 neuen Kurzformen (`Ri`, `Klgl`, `Obd`, `Jak`, `1Petr`, `Zef` …) wurden
+einzeln gegen `parseRef` geprüft, **bevor** sie in die Datei kamen.
+
+**Was es wiegt.** Der erste Aufruf ändert sich nicht: 325,5 kB, die Stellen
+liegen im nachgeladenen Graph-Bündel. Das wächst von **14,5 auf 31,2 kB
+gzip**.
+
+Ob das gedrosselt etwas kostet, lässt sich mit dem hier verfügbaren Aufbau
+**nicht sagen** – und das ist ehrlicher als eine Zahl. Erst maß eine Sonde
+2337 gegen 2340 ms; die Gegenprobe mit einem künstlich auf **387 kB gzip**
+aufgeblähten Bündel ergab dieselben 2340 ms, also war die Sonde blind (sie
+wartete auf den ersten Anstrich des Canvas, nicht auf die Datei). Die zweite
+Sonde misst, wann das Bündel fertig geladen ist – 1866 gegen 1867 ms –, und
+die zwölffache Größe schlägt dort nur in **einem von drei Läufen** durch
+(1878, 1897, 3598 ms): Das Bündel lädt im Wettlauf mit 37 anderen aus dem
+Leerlauf-Vorabruf, die Reihenfolge ist nicht festgelegt. Ein Werkzeug, das
+eine Verzwölffachung nur manchmal sieht, kann über +16,7 kB nichts aussagen.
+Festgehalten ist also die Größe, nicht eine Behauptung über die Zeit.
+
+In der Oberfläche geprüft: Ebenen bis auf „Stellen" abgeschaltet, einen Knoten
+geöffnet – 3. Johannes, ein Buch, das vorher keine Stelle hatte, erscheint in
+beiden Sprachen mit vollem Text (240 / 225 Zeichen) und richtiger Referenz.
+
+### 4.65 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
