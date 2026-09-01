@@ -2598,7 +2598,53 @@ würden. Im Kommentar steht ein gemessener Fehler, den es behebt – der erste
 Tabulatorschlag landete in der Reiseansicht mitten in der Stationsliste.
 Nichts zu tun.
 
-### 4.77 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.77 Ein vertippter Schlüssel steht in der Oberfläche — P2 ✅
+
+Die letzte stille Bruchstelle in der Textschicht. `useT` und `t` fallen bei
+einem unbekannten Schlüssel auf den Schlüssel selbst zurück:
+
+```ts
+STRINGS[key]?.[lang] ?? String(key)
+```
+
+Nachgemessen: `t('de', 'quizz')` liefert `"quizz"`. Ein Tippfehler zeigt also
+den Schlüsselnamen in der Oberfläche.
+
+**Und der Typ fängt es nicht.** `STRINGS` ist als `Dict = Record<string, …>`
+typisiert; `keyof typeof STRINGS` ist damit schlicht `string`, jeder
+beliebige Text ist ein gültiger Schlüssel. Mit einem eingebauten `t('quizz')`
+lief `tsc --noEmit` mit **Abschlusscode 0** durch.
+
+**Die neue Prüfung (`npm run check:i18n-keys`, Nr. 21)** liest beide Seiten:
+479 Übersetzungen, alle zweisprachig und ohne leeren Wert, und 430
+geschriebene Schlüssel im Quelltext, jeder davon vorhanden. Gegen den
+eingebauten Tippfehler meldet sie Datei und Zeile:
+
+```
+· „quizz" gibt es in i18n.ts nicht – die Oberfläche zeigt dann „quizz".
+  (src/components/QuizMode.tsx:194)
+```
+
+**Was sie bewusst nicht meldet: „unbenutzte" Schlüssel.** Einundfünfzig
+stehen im Wörterbuch, ohne dass ein geschriebener Aufruf sie nennt – aber die
+meisten sind über einen berechneten Namen erreichbar (`BASEMAP_LABEL[id]`,
+`churchKind_${kind}`). Eine Liste mit fünfzig Fehlalarmen schaltet man ab;
+dieselbe Überlegung wie in § 4.61 und § 4.65.
+
+**Drei Sondierungen ohne Fund** gingen voraus – festgehalten, damit sie
+niemand wiederholt: die Büchertabelle (§ 4.71), `witnesses.ts` (§ 4.71) und
+das Wörterbuch selbst, das in allen 479 Einträgen vollständig ist. Der Fund
+war hier nicht ein Fehler in den Daten, sondern das Fehlen eines Wächters.
+
+**Und ein vierter Fehlversuch beim Nachweisen.** Ich wollte den Tippfehler
+erst in der Oberfläche vorführen und baute ihn in `QuizMode` ein – die Seite
+zeigte weiter „Bibelquiz". Zweimal. Der Grund: Die sichtbare Überschrift
+kommt seit § 4.74 von der vorgelesenen `h1` der App, nicht aus `QuizMode`,
+und die eine geänderte Stelle lag in einem Zweig, der gerade nicht gezeichnet
+wurde. Der Mechanismus liess sich direkt an der Funktion zeigen – das ist
+kürzer und beweist mehr.
+
+### 4.78 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
