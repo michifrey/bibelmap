@@ -30,6 +30,7 @@
     "xrefs": "node scripts/build-xrefs.mjs",
     "check:quiz": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-quiz.mjs",
     "check:history": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-history.mjs",
+    "check:books": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-books.mjs",
     "check:israel-geo": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-israel-geo.mjs",
     "check:nations": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-nations.mjs",
     "check:genealogy": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-genealogy.mjs",

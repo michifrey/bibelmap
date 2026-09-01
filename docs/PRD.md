@@ -2322,7 +2322,55 @@ Duplikat-Probe hängt an einer sauberen Fläche, weil eine Kopie einer
 fehlerhaften deren Fehler mitgeerbt und zwei Dinge gemeldet hätte. 6 von 6
 plus Duplikat.
 
-### 4.71 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.71 Woran die Prüfungen messen — P2 ✅
+
+Nach vier Sondierungen mit drei Funden (§ 4.68–4.70) blieben zwei Datensätze
+übrig, die sauber waren – und eine Lücke, die keiner von ihnen ist.
+
+**Die Lücke: `books.ts` prüft niemand.** Die Tabelle ist nicht bloss eine
+Liste von Namen. `parseRef` klemmt jede Kapitelzahl daran, und
+`check:passages` prüft mit ihr, ob ein Kapitel überhaupt existiert. Eine
+Prüfung ist nur so viel wert wie das, woran sie misst – und woran diese misst,
+mass niemand nach.
+
+Vorgeführt statt behauptet: Markus in `books.ts` auf 200 Kapitel gesetzt und
+eine Stelle auf „Mk 99" geändert.
+
+```
+check:passages  ✓ 86 Stellen: … jedes Kapitel existiert …
+check:books     ✗ Mark („Markus"): 200 Kapitel, der Kanon hat 16.
+```
+
+`check:passages` lässt ein Markusevangelium mit 99 Kapiteln anstandslos
+durch. Nicht falsch – blind.
+
+**Die neue Prüfung (`npm run check:books`, Nr. 19)** führt die Kapitelzahlen
+des protestantischen Kanons als **zweite, unabhängige Quelle** neben der
+Tabelle: 66 Bücher, 1189 Kapitel, alle stimmen überein. Dazu Nummerierung
+lückenlos 1–66, Testament passend zur Nummer, Epoche aus `eras.ts`, keine
+doppelten Kürzel. Sie steht in `check-all.mjs` **an erster Stelle**: Was die
+anderen als Massstab benutzen, wird zuerst geprüft. Gegenprobe: 5 von 5 mit
+der erwarteten Meldung.
+
+**Zwei Datensätze waren sauber** – festgehalten, damit niemand sie ein zweites
+Mal durchgeht:
+
+*`books.ts`* – alle 66 Kapitelzahlen stimmten schon vorher mit dem Kanon
+überein. Zwei unabhängige Quellen, die sich decken; die Prüfung hält das nur
+fest.
+
+*`witnesses.ts`* (13 ausserbiblische Zeugnisse zu Jesus) – der Dateikopf
+verlangt, dass Umstrittenes als umstritten dasteht, und nennt zwei Fälle beim
+Namen: das Testimonium Flavianum und das Jakobus-Ossuar. Beide tragen
+`disputed`, dazu Sueton. Alle Felder zweisprachig, Texte Ø 293 Zeichen,
+jede Quelle mit Autor, Werk und Stelle. Nichts zu ändern.
+
+*Ein Fehlalarm meinerseits:* Die erste Sondierung meldete für alle 66 Bücher
+eine unbekannte Epoche. Ich hatte gegen `GEN_EPOCHS` aus dem Zeitbaum geprüft;
+Bücher benutzen `ERAS` aus `eras.ts`. Mein falscher Massstab – dieselbe Sorte
+Fehler, gegen die diese Prüfung schützt.
+
+### 4.72 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
