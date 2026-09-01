@@ -30,6 +30,7 @@
     "xrefs": "node scripts/build-xrefs.mjs",
     "check:quiz": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-quiz.mjs",
     "check:history": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-history.mjs",
+    "check:compare": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-compare.mjs",
     "check:passages": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-passages.mjs",
     "check:journeys": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-journeys.mjs",
     "counts": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-counts.mjs",
