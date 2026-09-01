@@ -72,8 +72,38 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
+      # Ohne Anthropic-Schlüssel kann der Agent nicht laufen. Ohne diesen
+      # Schritt scheitert stattdessen die Action selbst – mit einer Meldung
+      # über Umgebungsvariablen, zehn Zeilen unter dem eigentlichen Befund.
+      # Genau so ist der Lauf vom 1. September untergegangen: Die Prüfungen
+      # fanden elf tote Adressen, und die Meldung darüber sah aus wie eine
+      # Folge des Fehlers statt wie das Ergebnis des Laufs.
+      #
+      # Der Schlüssel wird hier nur auf leer/nicht leer geprüft und nie
+      # ausgegeben. Ist er nicht da, wird der Agent übersprungen und der
+      # Grund steht in der Job-Zusammenfassung und als Annotation.
+      - name: Schlüssel vorhanden?
+        id: schluessel
+        env:
+          A: ${{ secrets.ANTHROPIC_API_KEY }}
+          O: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -n "$A" ] || [ -n "$O" ]; then
+            echo 'da=1' >> "$GITHUB_OUTPUT"
+          else
+            echo 'da=0' >> "$GITHUB_OUTPUT"
+            {
+              echo '> [!IMPORTANT]'
+              echo '> Der Agent wurde übersprungen: Weder `ANTHROPIC_API_KEY`'
+              echo '> noch `CLAUDE_CODE_OAUTH_TOKEN` ist in den'
+              echo '> Repository-Geheimnissen gesetzt. Was der Lauf gefunden'
+              echo '> hat, steht trotzdem oben – nachgezogen hat es niemand.'
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo '::warning::Kein Anthropic-Schlüssel gesetzt – Agent übersprungen. Der Bericht steht in der Job-Zusammenfassung.'
+          fi
+
       - name: Adressen nachziehen
-        if: steps.probe.outputs.gefunden == '1'
+        if: steps.probe.outputs.gefunden == '1' && steps.schluessel.outputs.da == '1'
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -124,7 +154,7 @@ jobs:
             neu, warum. Das ist der Rumpf des Entwurfs; halt ihn kurz.
 
       - name: Bericht einlesen
-        if: steps.probe.outputs.gefunden == '1'
+        if: steps.probe.outputs.gefunden == '1' && steps.schluessel.outputs.da == '1'
         id: rumpf
         run: |
           {
@@ -141,7 +171,7 @@ jobs:
           rm -f AGENTENBERICHT.md bericht.txt
 
       - name: Entwurf
-        if: steps.probe.outputs.gefunden == '1'
+        if: steps.probe.outputs.gefunden == '1' && steps.schluessel.outputs.da == '1'
         uses: ./.github/actions/entwurf
         with:
           branch: agent/links
@@ -149,3 +179,13 @@ jobs:
           body: ${{ steps.rumpf.outputs.body }}
           commit: 'Tote Adressen ersetzt'
           token: ${{ github.token }}
+
+      # Ein Befund, den niemand nachgezogen hat, darf nicht wie ein
+      # gelungener Lauf aussehen. Ohne diesen Schritt wäre der Lauf grün,
+      # sobald der Agent übersprungen wird – und ein grüner Lauf sagt: nichts
+      # zu tun. Genau das Gegenteil ist der Fall.
+      - name: Befund ohne Schlüssel ist kein grüner Lauf
+        if: always() && steps.schluessel.outputs.da == '0' && steps.probe.outputs.gefunden == '1'
+        run: |
+          echo '::error::Der Lauf hat etwas gefunden, konnte es aber nicht nachziehen: kein Anthropic-Schlüssel in den Repository-Geheimnissen. Der Bericht steht in der Job-Zusammenfassung.'
+          exit 1
