@@ -146,9 +146,15 @@ export const SNAPSHOTS: Snapshot[] = [
       en: 'Jewish state – coastal plain',
       color: '#4d9cd6',
       fill: 'planned',
+      // Haifa [32.82, 34.98] stand zwischen Akko und dem Landesinneren und
+      // damit auf der falschen Seite des Rings: Die Schlusskante schnitt
+      // quer hindurch, der Umriss war eine Schleife. Der Punkt gehört ans
+      // Ende der Küstenseite – dann läuft die Ostseite von Akko nach Süden,
+      // die Küste wieder hinauf bis Haifa, und die kurze Nordkante geht über
+      // die Bucht zurück nach Akko. Keine neue Koordinate, nur die richtige
+      // Stelle. `check:israel-geo` hält das fest.
       polygon: [
         [32.92, 35.06],
-        [32.82, 34.98],
         [32.7, 35.05],
         [32.55, 35.03],
         [32.4, 34.98],
@@ -160,6 +166,7 @@ export const SNAPSHOTS: Snapshot[] = [
         [32.05, 34.75],
         [32.33, 34.85],
         [32.69, 34.94],
+        [32.82, 34.98],
       ],
     },
     {
