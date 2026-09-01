@@ -1770,7 +1770,57 @@ react-dom 174 kB, Übersetzungen 41 kB, Startseite 28 kB, App 20 kB, Rest unter
 8 kB. Über die Hälfte ist das Framework. Das bewegt nur ein Wechsel des
 Frameworks – keine Optimierung, sondern eine andere App.
 
-### 4.62 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.62 Abhängigkeiten angehoben — P2 ✅
+
+§ 4.61 hielt fest: „Zwölf Pakete liegen ein Patch/Minor zurück, TypeScript
+eine Hauptversion – Wartung, keine Optimierung." Die Wartung ist jetzt getan,
+die Hauptversion bewusst nicht.
+
+`npm update --save` hat zehn Pakete gehoben: **Vite 8.1 → 8.2.2**, **React und
+React-DOM 19.2.8**, **maplibre-gl 6.6.0**, **Tailwind 4.3.3** (Plugin und Paket
+im Gleichschritt), **@vitejs/plugin-react 6.1.1** sowie die Typpakete für Node,
+React, React-DOM und Leaflet. Alles innerhalb derselben Hauptversion, kein
+Eingriff in eine Quelldatei – der Diff besteht aus `package.json` und
+`package-lock.json`.
+
+**TypeScript 7 bleibt aussen vor.** 6.0.3 → 7.0.2 ist ein Hauptversionssprung
+und gehört nicht in denselben Commit wie zehn verträgliche Aktualisierungen:
+Geht danach etwas schief, will man wissen, welches der elf Pakete es war.
+
+Nachgeprüft wurde nicht, dass es „baut", sondern dass sich nichts verändert
+hat, was man merken würde:
+
+| geprüft | Ergebnis |
+|---|---|
+| `npm audit` | 0 Schwachstellen |
+| `tsc --noEmit` | sauber |
+| `npm run check` | alle 13 Prüfungen sauber |
+| 29 Ansichten × 2 Sprachen | keine leer, kein `null`/`undefined` im Text, kein JavaScript-Fehler |
+| `check:offline` | 20 von 20 Ansichten ohne Netz vollständig; Gegenprobe mit geleertem Cache: 20 von 20 fallen aus |
+| Budget | 325,5 kB JavaScript, 15,2 kB CSS, 108,4 kB Ortsdaten – alle drei Grenzen gehalten |
+
+**Die eine Abweichung, und warum sie keine ist.** Das Budget meldete auf einmal
+„aus 3 Dateien" statt „aus 2". Vite 8.2 legt die Rolldown-Laufzeit in ein
+eigenes Bündel (`rolldown-runtime`, 716 Byte, per `modulepreload` vorgeladen)
+statt sie in `index.js` zu schreiben; deshalb auch die 325,3 → 325,5 kB. Eine
+Option, sie wieder einzubetten, gibt es in Rolldown 1.2 nicht.
+
+Ob die zusätzliche Anfrage etwas kostet, wurde nicht geschätzt, sondern
+gemessen: derselbe Quellstand zweimal gebaut, einmal mit dem alten und einmal
+mit dem neuen Paketstand (der alte Stand reproduzierte die 325,3 kB und „2
+Dateien" exakt), beide über den gzip-Server, gedrosselt auf 1,6 Mbit/s und
+150 ms, je drei Läufe, zweimal wiederholt – Aufruf bis Marker auf der Karte:
+
+| | Läufe | Median |
+|---|---|---|
+| alt | 2573, 2577, 2594, 2605, 2703, 2706 ms | 2599 ms |
+| neu | 2573, 2576, 2614, 2650, 2651, 2658 ms | 2632 ms |
+
+Die Streubereiche überlappen vollständig; 33 ms Unterschied liegen innerhalb
+des Rauschens eines einzelnen Laufs. Die vorgeladenen 716 Byte kosten nichts
+Messbares.
+
+### 4.63 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
