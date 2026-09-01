@@ -162,6 +162,12 @@ export default function RouteMap({
     travellerRef.current = L.marker(points[0], {
       icon: L.divIcon({ className: '', html: '<div class="bm-traveller"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }),
       interactive: false,
+      // `keyboard` ist bei Leaflet von `interactive` unabhängig: Ohne diese
+      // Zeile setzt es trotzdem `tabindex="0"` und `role="button"`. Der
+      // Punkt, der die Reise entlangläuft, lag damit in der Tabreihenfolge –
+      // als Schaltfläche ohne Namen. Die acht anderen unbeweglichen Marker
+      // der App setzen beides; `check:map-keyboard` hält das fest.
+      keyboard: false,
       zIndexOffset: 1000,
     }).addTo(map);
 
