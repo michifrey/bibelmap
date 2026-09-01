@@ -2370,7 +2370,53 @@ eine unbekannte Epoche. Ich hatte gegen `GEN_EPOCHS` aus dem Zeitbaum geprüft;
 Bücher benutzen `ERAS` aus `eras.ts`. Mein falscher Massstab – dieselbe Sorte
 Fehler, gegen die diese Prüfung schützt.
 
-### 4.72 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.72 Ein Punkt in der Tabreihenfolge — P1 ✅
+
+Nach den Daten die Bedienung. Zwölf Ansichten auf die Grundlagen abgeklopft:
+Namen an Bedienelementen, `alt` an Bildern, Überschriftenfolge, beschriftete
+Felder, `lang`.
+
+**Der Fehler.** In `#reise=…` und `#jesus=…` lag je ein Element in der
+Tabreihenfolge, das keinen Namen hatte – 158 von 159 Markern trugen einen
+(die Stationsnummern), einer nicht. Es war `bm-traveller`: der Punkt, der die
+Reise entlangläuft.
+
+Bei Leaflet sind `interactive` und `keyboard` **zwei unabhängige Optionen**.
+`RouteMap` setzte `interactive: false` – der Marker ist also per Maus tot –,
+aber Leaflet setzt trotzdem `tabindex="0"` und `role="button"`. Wer sich mit
+der Tastatur durch die Karte bewegt, landet auf einem Schmuckelement und hört
+„Schaltfläche".
+
+**Die Redewendung stand schon im Projekt.** Ein Durchgang durch alle sechzehn
+`L.marker`-Aufrufe: neun sind unbeweglich, und **acht davon setzen beides**.
+`IsraelMode`, `MapView` und `TribesMap` machen es durchgehend richtig; genau
+eine Stelle hatte es vergessen. Die Korrektur ist damit keine Setzung von
+aussen, sondern das Durchhalten einer Regel, die die App sich selbst gegeben
+hat.
+
+Die drei anderen `interactive: false` in `RouteMap` sind Polylinien – die
+haben keine `keyboard`-Option; sie hier zu verlangen wäre ein Fehlalarm.
+
+**Die neue Prüfung (`npm run check:map-keyboard`, Nr. 20)** liest den
+Quelltext, nicht den Browser: Die Regel ist eine Frage der Aufrufoptionen,
+und so läuft sie in `npm run check` mit – ohne Playwright, ohne gebautes
+`dist/`. Vorgeführt: Mit der Korrektur zurückgenommen meldet sie
+`src/components/RouteMap.tsx:162` mit Zeilennummer; danach 16 Marker, 9
+unbeweglich, alle sauber. Im Browser gegengeprüft: vorher je ein namenloses
+Element in beiden Ansichten, danach keines.
+
+**Zwei Befunde bleiben offen** – anderer Art, deshalb nicht hier:
+
+* **Fünf von zwölf Ansichten haben keine `h1`.** Die Startseite, `#israel` und
+  `#nachweise` haben eine, `#karte`, `#quiz` und andere beginnen bei `h2`. Wer
+  per Überschrift navigiert, findet dort keinen Einstieg. Das an der
+  Überschriftenstruktur zu ändern greift in die Gestaltung ein und gehört
+  angesehen, nicht nebenbei erledigt.
+* **Der `<title>` ist in jeder Ansicht derselbe** („Bibelmap · Biblische Orte
+  auf der Karte"), auch bei Tieflinks wie `#quiz` oder `#israel`. Lesezeichen,
+  Verlauf und Tableiste sind damit ununterscheidbar.
+
+### 4.73 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
