@@ -45,6 +45,7 @@ import { formatRoute, parseHash, type Route } from './lib/deepLink';
 import type { SearchHit } from './lib/globalSearch';
 import { parseRef } from './lib/parseRef';
 import { bearing, compass, distanceKm, KM_PER_DAY } from './lib/route';
+import { baseTitle, pageTitle } from './lib/pageTitle';
 const CompareMode = lazy(() => import('./components/CompareMode'));
 const ChurchMode = lazy(() => import('./components/ChurchMode'));
 const GraphView = lazy(() => import('./components/GraphView'));
@@ -383,6 +384,12 @@ export default function App() {
     else start();
     return () => cancel();
   }, []);
+
+  // Der Fenstertitel sagt, was zu sehen ist. Vorher stand in jeder Ansicht
+  // derselbe Satz – drei Lesezeichen sahen gleich aus, der Verlauf auch.
+  useEffect(() => {
+    document.title = atStart ? baseTitle(lang) : pageTitle(lang, view, mode);
+  }, [atStart, view, mode, lang]);
 
   // Die Adresse schreibt mit, wo man steht – ohne Verlaufseinträge zu häufen.
   useEffect(() => {

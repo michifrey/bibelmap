@@ -2416,7 +2416,59 @@ Element in beiden Ansichten, danach keines.
   auf der Karte"), auch bei Tieflinks wie `#quiz` oder `#israel`. Lesezeichen,
   Verlauf und Tableiste sind damit ununterscheidbar.
 
-### 4.73 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.73 Neunzehn Ansichten, ein Titel — P1 ✅
+
+Der zweite Befund aus § 4.72. Der `<title>` war in **jeder** Ansicht derselbe
+Satz, auch bei Tieflinks: `#quiz`, `#israel` und `#nachweise` hiessen alle
+„Bibelmap · Biblische Orte auf der Karte". Wer sich drei Ansichten als
+Lesezeichen legt, hat dreimal denselben Eintrag und muss raten; im Verlauf
+und in der Tableiste dasselbe.
+
+**Jetzt trägt jede Ansicht ihren Namen** – „Bibelquiz · Bibelmap",
+„Kirchengeschichte · Bibelmap", „Israel: Land, Staat, Konflikt · Bibelmap".
+Der Name vorn, damit die abgeschnittene Tableiste ihn noch zeigt. Gemessen:
+**19 verschiedene Titel aus 19 Ansichten, in beiden Sprachen**, kein roher
+Schlüssel darunter.
+
+**Nichts zweitübersetzt.** Die Schlüssel sind die, die `ModePalette` und die
+Kopfzeile ohnehin benutzen. `src/lib/pageTitle.ts` bildet sie auf die 15 Modi
+und 4 Ansichten ab – und zwar als `Record<Mode, …>` und `Record<View, …>`.
+**Das ist die Prüfung:** Wer einen Modus hinzufügt und den Titel vergisst,
+bekommt keinen stillen Rückfall auf den alten Satz, sondern einen Fehler von
+`tsc`. Kein zusätzliches Prüfskript nötig.
+
+**Was die Startseite behält.** Der erste Entwurf baute auch ihren Titel neu,
+aus `appTitle` und `tagline` – und damit sprang er beim Laden sichtbar um, von
+„Biblische Orte auf der Karte" auf „Biblische Orte erkunden – …". Der Satz in
+`index.html` ist eigene Kopie und steht in Suchergebnissen und
+Linkvorschauen; ihn still zu ersetzen wäre eine Entscheidung über die
+Aussenwirkung gewesen, nicht über die Bedienung. Deshalb wird er beim Laden
+einmal festgehalten und für die Startseite wiederhergestellt.
+
+Der Preis, offen gesagt: Auf der Startseite bleibt der Titel deutsch, auch auf
+Englisch. Das war vorher so und bleibt es – ihn zweisprachig zu machen hiesse,
+den Satz in `index.html` zu ersetzen.
+
+**Nachgeprüft** – nicht nur per Tieflink, sondern auf dem Weg, den man
+wirklich geht:
+
+| | Ergebnis |
+|---|---|
+| Startseite sofort und nach 2 s | identisch – kein Umspringen |
+| Klick auf „Karte öffnen" (ohne Neuladen) | „Karte · Bibelmap" |
+| Sprache auf EN umgeschaltet | „Map · Bibelmap" |
+| zurück zur Startseite | wieder der Satz aus `index.html` |
+| 19 Tieflinks × 2 Sprachen | 19 verschiedene Titel je Sprache |
+
+Dazu 20 Prüfungen sauber, 29 Ansichten × 2 Sprachen ohne Befund, 20 von 20
+offline. Erster Aufruf 325,5 → **326,0 kB** – die halbe Kilobyte ist die
+Zuordnungstabelle.
+
+**Offen bleibt** der erste Befund aus § 4.72: Fünf von zwölf Ansichten haben
+keine `h1`. Das greift in die Überschriftenstruktur und damit in die
+Gestaltung ein und gehört angesehen, nicht nebenbei erledigt.
+
+### 4.74 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
