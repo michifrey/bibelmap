@@ -37,6 +37,7 @@ const CHECKS = [
   { name: 'Reisen & Mission', script: 'check-journeys.mjs', ts: true },
   { name: 'Schlüsselstellen', script: 'check-passages.mjs', ts: true },
   { name: 'Religionsvergleich', script: 'check-compare.mjs', ts: true },
+  { name: 'Zeitbaum', script: 'check-genealogy.mjs', ts: true },
   { name: 'Startzahlen', script: 'build-counts.mjs', ts: true, args: ['--pruefen'] },
   { name: 'Ortsdatei', script: 'build-places-compact.mjs', ts: true, args: ['--pruefen'] },
 ];
