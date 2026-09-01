@@ -1941,7 +1941,71 @@ In der Oberfläche geprüft: Ebenen bis auf „Stellen" abgeschaltet, einen Knot
 geöffnet – 3. Johannes, ein Buch, das vorher keine Stelle hatte, erscheint in
 beiden Sprachen mit vollem Text (240 / 225 Zeichen) und richtiger Referenz.
 
-### 4.65 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.65 Religionen im Vergleich — ausgebaut — P1 ✅
+
+Nach § 4.64 blieb genau ein dünner Datensatz übrig. Gemessen über alle
+Erzähldaten: Kirchenväter Ø 254, Kirchengeschichte Ø 272, Jesus-Zeugnisse
+Ø 293 – und **Vergleich Ø 158, davon 10 von 14 unter 160**.
+
+*(Eine erste Messung meldete für Kirchenväter Ø 17 und Kirchengeschichte Ø 28.
+Das war ein Fehler meines generischen Zugriffs, der `de` als Namensfeld statt
+`deNote` las – keine Beobachtung. Die Zahlen oben stehen mit den richtigen
+Feldnamen.)*
+
+**Jetzt: 24 Gestalten, Notizen Ø 321 (de) / 306 (en) Zeichen.** Die 14
+bestehenden wurden ausgebaut, ohne Namen, `islamName` oder Stellenangaben
+anzufassen; zehn kamen dazu: Henoch, Lot, Hiob, Aaron, Pharao, Saul, die
+Königin von Saba, Elia, Elisa und Zacharias.
+
+Die Notizen halten sich an die Regel, die im Kopf der Datei steht: Parallelen
+und Unterschiede neutral benennen. Die Unterschiede sind dabei das
+Interessantere und stehen deshalb ausdrücklich da – das goldene Kalb geht im
+Koran nicht auf Aaron zurück; einer von Noahs Söhnen ertrinkt; die
+Batseba-Geschichte fehlt; der zu opfernde Sohn wird in Sure 37 nicht benannt,
+während 1. Mose 22 Isaak nennt; die Kreuzigung wird bestritten. Wo eine
+Zuordnung Auslegung ist und nicht im Text steht, sagt die Notiz das – bei
+Henoch/Idrīs und bei „Bilqīs“, das aus späterer Überlieferung stammt.
+
+**Die neue Prüfung (`npm run check:compare`, Nr. 15) – und ihre Grenzen.**
+
+Geprüft wird, was lautlos brechen kann: Die Ortsnamen in `places` werden über
+`findPlacesByNames` aufgelöst – über den **Namen**, nicht über eine Kennung.
+Ein Name, der nichts trifft, lässt die kleine Karte unter der Figur
+verschwinden; die Seite bleibt heil, das Bild fehlt. Dazu Notizlänge je
+Sprache, doppelte Kennungen, leere Stellenfelder, die arabische Schreibung im
+`islamName` und die Sure-Nummer (der Koran hat 114). Sieben eingebaute Fehler,
+sieben gefunden. Gegen den alten Stand meldete sie genau die 20 Beanstandungen,
+die dort standen – alle Länge, kein einziger Ortsname und keine Sure daneben.
+
+Zwei Dinge prüft sie **ausdrücklich nicht**, und das ist eine Entscheidung,
+keine Lücke:
+
+*Die Bibelstellen.* `RefCard` zeigt `tanakh` und `christian` als reinen Text –
+kein Link, kein OSIS-Kürzel daneben. Der gefährliche Fehler aus § 4.64
+(„zeigt Markus, verlinkt Matthäus") kann hier gar nicht auftreten. Ein Parser
+müsste „1. Mose 12–25", „2.–5. Mose", „Matthäus–Johannes" und „ganzes NT"
+auseinanderhalten; gemessen lösten sich **19 von 46** heutigen Angaben nicht
+ohne Sonderregeln auf. Das wäre eine Prüfung, die sich an die Daten
+anschmiegt, statt Fehler zu fangen – und nach der dritten Ausnahme schaltet
+sie jemand ab. Dieselbe Überlegung hat in § 4.61 schon den Abgleich der
+Nachweise gegen benutzte Server verworfen.
+
+*Der Inhalt der Koranstellen.* Ob Sure 12 tatsächlich von Yūsuf handelt, kann
+die Prüfung nicht wissen: Die App führt keinen Korantext mit, und eine aus dem
+Gedächtnis getippte Verstabelle wäre eine erfundene Autorität – schlimmer als
+keine. Geprüft wird deshalb nur, dass die Sure existiert.
+
+**Nachgeprüft.** 15 Prüfungen sauber; erster Aufruf unverändert bei 325,5 kB;
+29 Ansichten × 2 Sprachen ohne Fehler; 20 von 20 offline. In der Oberfläche:
+alle zehn neuen Tieflinks (`#vergleich=lot` …) geöffnet, in beiden Sprachen,
+jede mit Titel, Notiz über 160 Zeichen und Sure-Karte.
+
+Diese Prüfung wäre fast wertlos gewesen: Ein unbekannter Tieflink fällt auf
+die erste Gestalt zurück, also hätte zehnmal „Adam" wie zehn Treffer
+ausgesehen. Erst die ausgegebenen Titel – zehn verschiedene, und
+`#vergleich=gibtsnicht` → „Adam" als Gegenprobe – machen sie zu einem Beleg.
+
+### 4.66 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
