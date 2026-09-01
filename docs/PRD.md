@@ -1820,7 +1820,62 @@ Die Streubereiche überlappen vollständig; 33 ms Unterschied liegen innerhalb
 des Rauschens eines einzelnen Laufs. Die vorgeladenen 716 Byte kosten nichts
 Messbares.
 
-### 4.63 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.63 TypeScript 7 — P2 ✅
+
+Der Hauptversionssprung, den § 4.62 bewusst liegenliess: **6.0.3 → 7.0.2**,
+allein und mit eigener Begründung.
+
+**Warum das hier ein kleiner Schritt ist.** In `tsconfig.json` steht
+`"noEmit": true`. TypeScript erzeugt in diesem Projekt keine einzige Datei,
+die ausgeliefert wird – Rolldown übersetzt den Quelltext, TypeScript liest ihn
+nur. Das Risiko eines Hauptversionssprungs beschränkt sich damit auf eine
+Frage: Findet der neue Prüfer noch, was der alte fand?
+
+**Gegenprobe statt Vertrauen.** „`tsc` läuft durch" beweist nichts – ein
+Prüfer, der gar nichts mehr prüft, läuft auch durch. Also wurden neun Fehler
+einzeln in eine echte Quelldatei geschrieben, jeder für sich geprüft und
+wieder entfernt. TypeScript 7 fand jeden, und zwar mit dem erwarteten Code:
+
+| eingebauter Fehler | gemeldet als |
+|---|---|
+| falsche Zuweisung | TS2322 `Type 'string' is not assignable to type 'number'` |
+| falscher Rückgabetyp | TS2322 `Type 'number' is not assignable to type 'string'` |
+| fehlende Eigenschaft | TS2741 `Property 'b' is missing` |
+| Aufruf mit zu wenig Argumenten | TS2554 `Expected 1 arguments, but got 0` |
+| unbekanntes Feld | TS2339 `Property 'gibtEsNicht' does not exist` |
+| `null` nicht geprüft | TS18047 `'s' is possibly 'null'` |
+| unbenutzte lokale Variable | TS6133 (`noUnusedLocals`) |
+| unbenutzter Parameter | TS6133 (`noUnusedParameters`) |
+| durchfallender `switch`-Zweig | TS7029 (`noFallthroughCasesInSwitch`) |
+
+Drei dieser Proben schlugen im ersten Anlauf auf die falsche Regel an: Eine
+unbenutzte Konstante meldet `noUnusedLocals`, bevor der eigentlich gemeinte
+Fehler drankommt – ein bestandener Test, der nichts belegt. Mit `export`
+davor prüfen sie, was sie prüfen sollen. Die Tabelle zeigt den zweiten Lauf.
+
+**Und was ankommt, ist dasselbe.** Derselbe Stand einmal mit TypeScript 6 und
+einmal mit 7 gebaut, `dist/` gegen `dist/` verglichen: **Byte für Byte
+identisch**, bis auf keine einzige Datei. Was ausgeliefert wird, ändert sich
+nicht.
+
+Ausserdem: `npm run check` alle 13 Prüfungen sauber, 29 Ansichten × 2 Sprachen
+ohne Fehler, Budget unverändert bei 325,5 kB. Der Rundgang kann TypeScript 6
+und 7 allerdings gar nicht unterscheiden – bei identischem `dist/` prüft er
+beide Male dieselben Bytes. Er belegt, dass der Stand gesund ist, nicht dass
+der Wechsel gutging; das belegt die Gegenprobe oben.
+
+**Der Nebeneffekt.** TypeScript 7 ist die native Neufassung des Compilers.
+`tsc --noEmit` über dieses Projekt, je drei Läufe:
+
+| | Läufe | |
+|---|---|---|
+| 6.0.3 | 6919, 6938, 6780 ms | |
+| 7.0.2 | 1043, 1031, 1014 ms | **6,7× schneller** |
+
+Das sind knapp sechs Sekunden pro Build – lokal und in der CI, die `tsc` vor
+jedem `vite build` laufen lässt.
+
+### 4.64 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
