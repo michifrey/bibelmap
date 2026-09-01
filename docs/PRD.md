@@ -2074,8 +2074,29 @@ leeren Entwurf. Nachgelesen, nicht angenommen.
 **Nachgeprüft.** Die Wächter-Logik in allen vier Fällen ausgeführt (kein
 Schlüssel, nur der eine, nur der andere, beide): `da=0` genau im ersten Fall,
 Annotation und Zusammenfassungskasten genau dort. Alle vier YAML-Dateien
-eingelesen und Schritt für Schritt die Bedingungen aufgelistet. Und der Lauf
-selbst von diesem Zweig aus ausgelöst – das Ergebnis steht im PR.
+eingelesen und Schritt für Schritt die Bedingungen aufgelistet.
+
+Und dann der Lauf selbst, von diesem Zweig aus ausgelöst
+([Lauf 33526463941](https://github.com/michifrey/bibelmap/actions/runs/33526463941)) –
+nicht behauptet, sondern vorgeführt:
+
+| Schritt | vorher | jetzt |
+|---|---|---|
+| Adressen abklopfen | ✓ | ✓ (50 s) |
+| Schlüssel vorhanden? | – | ✓ (`A:` und `O:` leer) |
+| Adressen nachziehen | **gescheitert** | **übersprungen** |
+| Bericht einlesen | übersprungen | übersprungen |
+| Entwurf | übersprungen | übersprungen (kein Entwurf mit der Kladde) |
+| Befund ohne Schlüssel … | – | **gescheitert, mit Grund** |
+
+Im Protokoll stehen jetzt zwei lesbare Zeilen statt einer Meldung über
+Umgebungsvariablen: eine Warnung „Kein Anthropic-Schlüssel gesetzt – Agent
+übersprungen" und ein Fehler „Der Lauf hat etwas gefunden, konnte es aber
+nicht nachziehen".
+
+Derselbe Lauf hat die elf Adressen **fünf Stunden nach dem ersten Befund
+erneut gemeldet** – dieselben drei, fünf und drei. Kein Zucken eines
+Anbieters, sondern ein Zustand.
 
 ### 4.67 Weitere Ansichten (aus parallelen Arbeiten)
 
