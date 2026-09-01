@@ -2268,7 +2268,61 @@ und lieferte zweimal denselben Messwert. Belegt ist die Änderung an Daten und
 Code: `resolvePlace` gibt ohne `place` `null` zurück, und dann wird der Link
 nicht gezeichnet – zwei Zeilen, eindeutig. Ein Bild davon habe ich nicht.
 
-### 4.70 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.70 Der Umriss von 1947 war eine Schleife — P1 ✅
+
+Der letzte grosse ungeprüfte Datensatz: die Gebietsstände der Israel-Karte,
+7 Stände, 41 Flächen, 620 Punkte.
+
+**Der Fehler.** In `un1947/j47b` („Jüdischer Staat – Küstenebene") stand Haifa
+[32.82 · 34.98] zwischen Akko und dem Landesinneren – also auf der falschen
+Seite des Rings. Die Schlusskante schnitt quer hindurch: **Der Umriss war
+eine Schleife und damit gar keine Fläche.** Auf einer Karte, auf der das Land
+600 Pixel breit ist, sieht das aus wie ein Zeichenfehler, den man übersieht.
+
+**Kein Schätzwert nötig.** Die erste Diagnose lautete „der Nordkante fehlt ein
+Punkt" – beide Seiten laufen monoton, aber die Westseite endete bei 32,69°
+und die Ostseite begann bei 32,92°, also musste die Schlusskante 25 km
+diagonal schneiden. Der Punkt fehlte aber nicht: Er stand nur an der falschen
+Stelle. [32.82 · 34.98] ist Haifa auf der Küstenlinie, und die Westseite *ist*
+die Küste. Ans Ende der Küstenseite verschoben ist der Ring
+überschneidungsfrei – **ohne eine einzige neue Koordinate.** Danach läuft die
+Ostseite von Akko nach Süden, die Küste wieder hinauf bis Haifa, und die kurze
+Nordkante geht über die Bucht zurück nach Akko.
+
+Die beiden naheliegenden Alternativen wurden verworfen: Punkt 0 streichen
+(−2,6 % Fläche) oder Punkt 1 streichen (−6,7 %) hätten beide den Umriss
+verändert und eine Setzung über eine politische Grenze getroffen. Das
+Verschieben tut das nicht.
+
+**Auf der Karte nachgemessen**, nicht nach Augenmass. Beide Stände über
+`#israel=un181` aufgerufen und die Bilder verglichen:
+
+| | verschiedene Bildpunkte | wo |
+|---|---|---|
+| derselbe Stand zweimal (Rauschen) | 73 (0,03 %) | nur y 210–237 |
+| **vorher gegen nachher** | **1513 (0,61 %)** | y 132–238 – bis in die Bucht von Haifa hinauf |
+
+Zwanzigmal das Rauschen, und in einem Band, das die Streuung nie erreicht. Die
+Änderung ist sichtbar.
+
+**Die neue Prüfung (`npm run check:israel-geo`, Nr. 18)** rechnet jede Kante
+gegen jede andere. Nachbarkanten teilen sich einen Punkt und werden
+übersprungen, ebenso die Schlusskante gegen die erste – sonst meldet jedes
+gesunde Vieleck sich selbst. Dazu: mindestens drei Punkte, keine
+Doppelpunkte, kein am Ende noch einmal geschlossener Ring, Farbe als Hexwert,
+Name und `note` zweisprachig, Jahre aufsteigend, keine doppelten Kennungen.
+
+**Zur Bereichsgrenze.** Der Kasten muss den Sinai einschliessen – Israel hielt
+ihn 1967–1982, und die beiden Flächen dafür liegen weit südwestlich des
+Kernlands. Meine erste Sondierung zog ihn enger und meldete sie prompt als
+Ausreisser: ein Fehlalarm meines Kastens, nicht der Daten.
+
+Die Gegenprobe prüft, **welche Meldung** kommt, nicht ob eine kommt – und die
+Duplikat-Probe hängt an einer sauberen Fläche, weil eine Kopie einer
+fehlerhaften deren Fehler mitgeerbt und zwei Dinge gemeldet hätte. 6 von 6
+plus Duplikat.
+
+### 4.71 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
