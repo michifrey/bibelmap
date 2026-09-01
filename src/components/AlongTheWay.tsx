@@ -40,7 +40,11 @@ export default function AlongTheWay({ places, lang, from, to, stops, onSelect }:
     <div className="bm-noprint pl-3">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="text-[11px] text-white/45 underline decoration-white/20 underline-offset-2 transition hover:text-gold"
+        // `-my-1.5 py-1.5`: 11-px-Schrift ergab eine 17 px hohe Fläche, unter
+        // dem Mindestmass von 24×24. Der Innenabstand macht sie 29 px hoch,
+        // der negative Aussenabstand nimmt sie aus dem Fluss wieder heraus.
+        // Nachgemessen: das Bild ändert sich dadurch um keinen Punkt.
+        className="-my-1.5 py-1.5 text-[11px] text-white/45 underline decoration-white/20 underline-offset-2 transition hover:text-gold"
       >
         {open ? `− ${t('alongHide')}` : `+ ${t('alongShow')}`}
       </button>
