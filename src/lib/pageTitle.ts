@@ -71,3 +71,53 @@ export function pageTitle(lang: Lang, view: View | null, mode: Mode | null): str
   if (!schluessel) return baseTitle(lang);
   return `${t(lang, schluessel)} · ${t(lang, 'appTitle')}`;
 }
+
+/**
+ * Bringt die Ansicht selbst eine sichtbare Hauptüberschrift mit?
+ *
+ * Vier tun das: die Startseite, die Israel-Karte, „Projekte unterstützen" und
+ * „Nachweise & Lizenzen". Ihre Überschriften sind eigene Sätze – „Nichts
+ * davon gehört uns" –, nicht der Name der Ansicht, und sie stehen sichtbar
+ * auf der Seite. Dort eine zweite hinzuzufügen wäre falsch: Eine Seite hat
+ * eine Hauptüberschrift.
+ *
+ * Alle anderen hatten am Bildschirm **gar keine**. Acht zeigen überhaupt
+ * keine Überschrift, sechs nur eine `h2` über einem Detail – „Abraham" im
+ * Religionsvergleich, „Wo liegt Kapernaum?" im Quiz, „A" und „B" im
+ * Register. Die zur Hauptüberschrift zu befördern wäre schlechter als keine:
+ * Die Seite heisst nicht „Abraham".
+ *
+ * (Die `h1` in `JourneyMode`, `OwnRoute` und `PlaceIndex` zählen nicht mit –
+ * sie stehen in `bm-print-only` und erscheinen nur auf dem Ausdruck.)
+ *
+ * `Record<Mode, boolean>` erzwingt die Entscheidung: Wer einen Modus
+ * hinzufügt, muss sagen, ob er seine Überschrift mitbringt.
+ */
+const EIGENE_UEBERSCHRIFT: Record<Mode, boolean> = {
+  israel: true,
+  support: true,
+  credits: true,
+  present: false,
+  history: false,
+  journeys: false,
+  gospel: false,
+  mission: false,
+  compare: false,
+  church: false,
+  quiz: false,
+  nations: false,
+  media: false,
+  route: false,
+  index: false,
+};
+
+/** Der Name der Ansicht, ohne „· Bibelmap" – für die Hauptüberschrift. */
+export function viewLabel(lang: Lang, view: View | null, mode: Mode | null): string {
+  const schluessel = mode ? MODUS[mode] : view ? ANSICHT[view] : null;
+  return schluessel ? t(lang, schluessel) : t(lang, 'appTitle');
+}
+
+/** Braucht diese Ansicht eine vorgelesene Hauptüberschrift von aussen? */
+export function needsHeading(mode: Mode | null): boolean {
+  return mode ? !EIGENE_UEBERSCHRIFT[mode] : true;
+}

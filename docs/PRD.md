@@ -2468,7 +2468,66 @@ Zuordnungstabelle.
 keine `h1`. Das greift in die Überschriftenstruktur und damit in die
 Gestaltung ein und gehört angesehen, nicht nebenbei erledigt.
 
-### 4.74 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.74 Fünfzehn Seiten ohne Hauptüberschrift — P1 ✅
+
+Der letzte offene Befund aus § 4.72. Ich hatte ihn als Gestaltungsfrage
+zurückgestellt – zu Recht, aber nicht ganz: Der Durchgang zeigte, dass ein
+Teil davon gar keine Entscheidung verlangt.
+
+**Was die Zählung ergab.** Von 19 Ansichten hatten **vier** eine `h1`
+(Startseite, Israel-Karte, „Projekte unterstützen", „Nachweise & Lizenzen").
+Von den übrigen fünfzehn zeigten **acht überhaupt keine Überschrift**, und
+sieben nur eine `h2` über einem **Detail**: „Abraham" im Religionsvergleich,
+„Wo liegt Kapernaum?" im Quiz, „A" und „B" im Register.
+
+Damit war klar, was **nicht** geht: die vorhandene `h2` befördern. Die Seite
+heisst nicht „Abraham", und „A" ist keine Hauptüberschrift. Genau das hatte
+die Zurückstellung befürchtet.
+
+Was dagegen keine Entscheidung verlangt: eine **vorgelesene, nicht
+gezeichnete** Hauptüberschrift mit dem Namen der Ansicht. Sie ändert nichts am
+Bild, lässt jede vorhandene Überschrift stehen und benutzt die Zuordnung, die
+seit § 4.73 ohnehin da ist – nichts zweitübersetzt.
+
+**Die vier bleiben unangetastet.** Ihre Überschriften sind eigene Sätze –
+„Nichts davon gehört uns" –, nicht der Name der Ansicht. Eine zweite `h1`
+danebenzusetzen wäre falsch. Welcher der beiden Sätze in diesen vier
+Ansichten die Hauptüberschrift sein soll, bleibt eine Frage an den Autor;
+hier wird sie nicht beantwortet, sondern in Ruhe gelassen.
+
+`Record<Mode, boolean>` erzwingt die Entscheidung für jeden künftigen Modus:
+Wer einen hinzufügt, muss sagen, ob er seine Überschrift mitbringt.
+
+**Die drei `h1` in `JourneyMode`, `OwnRoute` und `PlaceIndex` zählen nicht
+mit** – sie stehen in `bm-print-only` und erscheinen nur auf dem Ausdruck.
+
+**Zwei Sondenfehler, beide rechtzeitig aufgefallen.**
+
+*Der erste:* Die Zählung filterte auf `getComputedStyle(e).display !== 'none'`
+– das prüft aber nur die `h1` selbst. Die Drucküberschriften haben ihr eigenes
+`display: block`; verborgen sind sie über das **Elternelement**. Die Sonde
+meldete deshalb drei Ansichten mit zwei `h1`. `checkVisibility()` prüft die
+Vorfahren mit und lässt `sr-only` gelten – damit 19 von 19.
+
+*Der zweite, schlimmere:* Die Gegenprobe (Überschrift wieder abschalten und
+messen) ergab **dieselben 19 von 19** – also scheinbar keine Wirkung. Der
+Grund: Der Bauversuch war an `tsc` gescheitert (ein Parameter wurde dadurch
+unbenutzt), `dist/` blieb unverändert, und gemessen wurde der alte Stand.
+Aufgefallen nur, weil der Dateiname des Bündels vorher und nachher derselbe
+war. Richtig ausgeführt:
+
+| | Ansichten mit genau einer `h1` |
+|---|---|
+| ohne die Änderung | **4 von 19** |
+| mit | **19 von 19** |
+
+in beiden Sprachen, mit verschiedenen Bündel-Namen als Beleg, dass zwei
+Stände gemessen wurden.
+
+Erster Aufruf 326,0 → **326,4 kB**. 20 Prüfungen sauber, 29 Ansichten × 2
+Sprachen ohne Befund, 20 von 20 offline.
+
+### 4.75 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/

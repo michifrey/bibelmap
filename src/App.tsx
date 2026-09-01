@@ -45,7 +45,7 @@ import { formatRoute, parseHash, type Route } from './lib/deepLink';
 import type { SearchHit } from './lib/globalSearch';
 import { parseRef } from './lib/parseRef';
 import { bearing, compass, distanceKm, KM_PER_DAY } from './lib/route';
-import { baseTitle, pageTitle } from './lib/pageTitle';
+import { baseTitle, needsHeading, pageTitle, viewLabel } from './lib/pageTitle';
 const CompareMode = lazy(() => import('./components/CompareMode'));
 const ChurchMode = lazy(() => import('./components/ChurchMode'));
 const GraphView = lazy(() => import('./components/GraphView'));
@@ -807,6 +807,17 @@ export default function App() {
       <div className="relative h-full w-full overflow-hidden">
         {/* Das Erste, was die Tabulatortaste findet. */}
         <SkipLinks stand={`${view}:${mode}`} />
+        {/*
+          Die Hauptüberschrift der Seite – vorgelesen, nicht gezeichnet.
+          Vierzehn Ansichten hatten am Bildschirm keine: acht gar keine
+          Überschrift, sechs nur eine über einem Detail („Abraham", „Wo liegt
+          Kapernaum?", „A"). Wer per Überschrift navigiert, fand dort keinen
+          Einstieg. Die vier, die eine eigene mitbringen, bekommen hier keine
+          zweite – siehe `needsHeading`.
+        */}
+        {!atStart && needsHeading(mode) && (
+          <h1 className="sr-only">{viewLabel(lang, view, mode)}</h1>
+        )}
         {view === 'tree' ? (
           <Suspense fallback={<ViewFallback lang={lang} />}>
           <Genealogy
