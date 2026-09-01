@@ -2098,7 +2098,55 @@ Derselbe Lauf hat die elf Adressen **fünf Stunden nach dem ersten Befund
 erneut gemeldet** – dieselben drei, fünf und drei. Kein Zucken eines
 Anbieters, sondern ein Zustand.
 
-### 4.67 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.67 Die übrige Agentenmechanik — gemessen, nichts gefunden — P2 ✅
+
+§ 4.66 hat den fehlenden Schlüssel lesbar gemacht. Das sagt aber nichts
+darüber, ob der Rest der vier Läufe funktioniert – und **keiner der anderen
+drei ist je gelaufen** (wöchentlich, heute gelandet). Ihre Mechanik war
+vollständig ungeprüft: Sobald der Schlüssel da ist, würde sie zum ersten Mal
+scharf laufen.
+
+Geprüft wurde deshalb, was ohne Schlüssel prüfbar ist. Ergebnis: nichts zu
+ändern. Festgehalten, damit es niemand ein zweites Mal tut.
+
+**Der Podcast-Erkenner** entscheidet, ob das Modell überhaupt gerufen wird. Er
+sucht in den Berichtszeilen nach zwei stillen Fehlern – ein Feed mit null
+Einträgen, und Einträge ohne Datum (laut § 4.62 haben so einmal 229 Folgen
+unbemerkt ihr Sendedatum verloren). Neun Fälle durchgespielt, alle richtig,
+darunter die drei, an denen ein naiver Ausdruck falsch anschlüge: „10 mit
+Datum", „20 mit Datum", „100 mit Datum" enthalten alle die Ziffernfolge
+„0 mit Datum".
+
+Dann am echten Bericht, nicht am Nachbau:
+
+| | Ergebnis |
+|---|---|
+| echter Lauf von `npm run media` | 0 Befunde – richtig, nichts ist kaputt |
+| dieselbe Ausgabe ohne die `bibleproject`-Ausnahme | 1 Befund – die Ausnahme trägt also wirklich, ohne sie gäbe es **einen Fehlalarm pro Woche** |
+| ein echter Ausfall in die echte Ausgabe gesetzt (`comer … 0 mit Datum`) | erkannt |
+
+Der TypeError aus § 4.62 ist damit auch bestätigt behoben: `npm run media`
+läuft durch, 473 zugeordnete Beiträge, 1278 von 1335 Orten mit mindestens
+einem.
+
+**Der Erstlauf des Forschungs-Agenten** sucht das zuletzt geschriebene Blatt
+mit `ls docs/forschung/*.md`. Beim allerersten Lauf gibt es das Verzeichnis
+nicht – und das ist der heutige Zustand, dort liegt nur ein README. Vier
+Fälle mit `bash -e` nachgestellt, wie Actions es ausführt: ohne Verzeichnis,
+leeres Verzeichnis, Blatt ohne Datum im Namen, zwei datierte Blätter. Alle
+vier mit Abschlusscode 0 und dem richtigen Wert (`keine` bzw. das jüngste
+Blatt), keine Zeile auf stderr.
+
+**Der Israel-Lauf** kontrolliert mit `npm run check:israel` und
+`npx tsc --noEmit` nach – beide laufen ohnehin in `npm run check` und sind
+grün.
+
+Was hier **nicht** geprüft werden konnte: alles, was den Schlüssel braucht.
+Dass die Läufe finden, was sie finden sollen, steht fest (§ 4.66, elf
+Adressen); dass sie es dann richtig nachziehen, zeigt sich erst am ersten
+echten Lauf.
+
+### 4.68 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
