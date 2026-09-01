@@ -2146,7 +2146,77 @@ Dass die Läufe finden, was sie finden sollen, steht fest (§ 4.66, elf
 Adressen); dass sie es dann richtig nachziehen, zeigt sich erst am ersten
 echten Lauf.
 
-### 4.68 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.68 Drei Könige, die zu jung waren — P1 ✅
+
+Der Zeitbaum ist mit 240 Personen einer der grössten Datensätze und hatte
+als einziger keine eigene Prüfung. Die Sondierung fand einen echten Fehler –
+und drei Fehlalarme, die zuerst wie Fehler aussahen.
+
+**Der Fehler.** Drei Könige trugen in `born` ihren **Regierungsantritt statt
+ihres Geburtsjahrs**. Sichtbar wurde das erst eine Generation weiter unten:
+Hiskia (born −715) bekam seinen Sohn Manasse (born −709) mit **sechs Jahren**,
+und Jotam wurde mit **zwei** König. Nichts stürzte ab; der Baum zeichnete das
+brav.
+
+Aufgefallen ist es beim Nachrechnen des Alters beim Antritt – die Bibel nennt
+es bei fast jedem König Judas, und die Datensätze zitieren genau die Kapitel,
+in denen es steht:
+
+| | Alter beim Antritt, wie die Daten es ergaben | was die Stelle sagt |
+|---|---|---|
+| 16 andere Könige | 0–4 Jahre neben der Angabe | – |
+| **Jotam** | **2** | 2. Könige 15,33: fünfundzwanzig |
+| **Ahas** | **0** | 2. Könige 16,2: zwanzig |
+| **Hiskia** | **0** | 2. Könige 18,2: fünfundzwanzig |
+
+Korrigiert auf −775, −755 und −740 – Antritt minus Alter, beides aus der
+Stelle, die der Datensatz ohnehin nennt. Nichts geraten. In der Oberfläche
+nachgesehen: Usija tritt mit 16 an, Jotam mit 25, Ahas mit 20, Hiskia mit 25,
+Manasse mit 12 – jedes Alter genau die biblische Angabe. Hiskia bekommt seinen
+Sohn jetzt mit 31.
+
+**Was dabei stehen bleibt:** Zwischen Ahas (−755) und Hiskia (−740) liegen 15
+Jahre. Nimmt man beide Altersangaben wörtlich, hat Ahas mit fünfzehn Vater
+werden müssen. Das ist eine bekannte Schwierigkeit der Königschronologie, kein
+Rechenfehler dieser Korrektur – und sie wird hier nicht glattgezogen, weil
+Glattziehen hiesse, eine der beiden Zahlen zu erfinden.
+
+**Drei Fehlalarme, die keine Änderung verdienten.** Jeder sah zunächst nach
+einem Befund aus:
+
+| Signal | warum es keiner ist |
+|---|---|
+| 40 Personen ohne Bibelstelle | Es sind Kirchenväter. Polykarp steht in keinem Vers. |
+| „Gen 10:6,13", „Rut 4:17,21-22", „Mt 1:1,16" lösen mit `parseRef` nicht auf | `bibleRefUrl` baut daraus eine **Suchadresse** für Bible.com, kein aufgelöstes Ziel. Als Suchbegriff sind sie richtig. `parseRef` ist hier gar nicht der Mechanismus. |
+| Gregor von Nazianz (329) steht unter Basilius (330) – Kind älter als Elternteil | Bei den 44 `faith`-Personen ist `parent` ein **Nachfolge**-, kein Abstammungsverweis: Athanasius hängt unter Irenäus, Polykarp unter Paulus. Eine Setzung, kein Fehler. |
+
+Ein vierter: 81 Personen tragen `line: true`, aber nur 64 stehen in der Kette
+Jesus → Adam. Die übrigen 17 sind das nachbiblische Rückgrat (Paulus →
+Polykarp → … → Graham). `line` markiert das gezeichnete Rückgrat, nicht die
+Blutlinie.
+
+**Die neue Prüfung (`npm run check:genealogy`, Nr. 16).** Zwei Regeln fangen
+die Fehlerklasse, beide mit einer Schwelle aus den Daten statt aus dem Bauch:
+
+* **Alter beim Antritt ≥ 5.** Die jüngsten Könige Judas waren sieben und acht
+  (Joasch, Joschija); der Fehler ergab null und zwei.
+* **Generationenabstand ≥ 10 Jahre**, nur in der Blutlinie. Kleinster echter
+  Abstand nach der Korrektur: 13 (Jojakim). Der Fehler ergab sechs.
+
+Dazu das Tragende: Elternverweis trifft, keine Schleife, genau eine Wurzel,
+Epoche bekannt, `lat`/`lon` zusammen, `city` nur mit Koordinate, Text in
+beiden Sprachen.
+
+Ausdrücklich **nicht** geprüft: die Geburtsfolge der Glaubenszeugen und die
+Auflösung der Bibelstellen – aus den Gründen in der Tabelle oben.
+
+Sieben eingebaute Fehler, sieben gefunden. Der erste davon ist Hiskia mit
+`born: -715`: **die Prüfung hätte den echten Fehler gefangen.** Eine achte
+Probe rutschte im ersten Anlauf durch – sie sollte einen zu engen Abstand
+prüfen, ergab aber 11 Jahre und lag damit über der Schwelle. Mein Rechenfehler,
+nicht der des Prüfers; korrigiert auf 5.
+
+### 4.69 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
