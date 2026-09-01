@@ -2005,7 +2005,79 @@ die erste Gestalt zurück, also hätte zehnmal „Adam" wie zehn Treffer
 ausgesehen. Erst die ausgegebenen Titel – zehn verschiedene, und
 `#vergleich=gibtsnicht` → „Adam" als Gegenprobe – machen sie zu einem Beleg.
 
-### 4.66 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.66 Die Agenten liefen ins Leere — P1 ✅
+
+Die vier Agentenläufe aus § 4.62 (parallele Arbeit, `.github/workflows/
+agent-*.yml`) halten wach, was von aussen altert. Die naheliegende Frage
+danach ist, ob sie es tun. Sie taten es nicht.
+
+**Beide bisherigen Läufe von „Agent – Links" sind gescheitert** – auch der
+zweite, der die Korrektur des ersten schon enthielt. Die Ursache steht im
+Protokoll:
+
+```
+Either ANTHROPIC_API_KEY, CLAUDE_CODE_OAUTH_TOKEN, or workload identity
+federation ... is required when using direct Anthropic API.
+```
+
+Keines der beiden Geheimnisse ist im Repository gesetzt. Das kann nur der
+Besitzer nachholen; hier wird nichts an Zugangsdaten angefasst. **Alle vier
+Läufe scheitern daran identisch**, sobald sie feuern.
+
+**Was dabei unterging.** Der Schritt davor lief durch – auf GitHubs Runner,
+mit freiem Netz – und fand **elf tote Adressen**:
+
+| Prüfung | tot |
+|---|---|
+| `check:urls` | `bpb.de/…/israel-und-palaestina/` (`israel.ts`), `ekd.de/Barmer-Theologische-Erklarung-11298.htm` (`churchHistory.ts`), `tagesschau.de/ausland/nahost/` (`israel.ts`) |
+| `check:bp` | Guides zu Esra, Nehemia, 1.–3. Johannes (5 Adressen) |
+| `check:gospel-links` | `bibletunes.de/markus-1-teil-1`, `markus-5-teil-1`, `markus-20-teil-1` |
+
+Dieser Befund stand zehn Zeilen über einer Fehlermeldung und sah aus wie
+deren Folge. Niemand hat ihn gesehen.
+
+**Die Markus-Adressen sind kein Adressproblem, sondern ein Regelproblem.**
+Alle drei geprüften Kapitel fallen aus, während die je drei von Matthäus,
+Lukas und Johannes durchgehen. Gebaut werden sie alle von derselben Funktion
+`bibleTunesEpisodeUrl` aus einem Slug; für Markus steht dort `markus`, und
+die Staffel ist von 2024, die anderen von 2010–2019. Ein anderes Schema ist
+plausibel – aber plausibel ist kein Wissen. bibletunes.de antwortet dieser
+Umgebung mit 403, die richtige Adresse lässt sich hier nicht feststellen, und
+eine geratene Adresse einzutragen wäre schlimmer als die tote. Der Befund
+bleibt deshalb ein Befund; nachziehen kann ihn der Lauf, sobald er läuft.
+
+**Was hier geändert wurde.** Nicht die Daten – der Ablauf. Vor jedem
+Agentenschritt steht jetzt ein Wächter, der nur prüft, ob eines der beiden
+Geheimnisse gesetzt ist (leer/nicht leer; ausgegeben wird nie etwas). Fehlt
+es, wird der Agent übersprungen, und der Grund steht als Annotation am Lauf
+und als Kasten in der Job-Zusammenfassung – statt als Meldung über
+Umgebungsvariablen unter dem Bericht.
+
+Ein übersprungener Agent darf den Lauf aber nicht grün machen: Grün heisst
+„nichts zu tun", und das Gegenteil ist der Fall. Ein Abschlussschritt lässt
+den Lauf deshalb weiter scheitern, wenn es einen Befund gab – nur mit einem
+Satz, der sagt, woran es liegt.
+
+**Ein Rückschritt, der beinahe hineingerutscht wäre.** Bisher brach der
+scheiternde Agent den ganzen Job ab, und die Entwurfsschritte kamen nie dran.
+Wird der Agent stattdessen übersprungen, laufen sie – und in `agent-links`
+wäre dann `bericht.txt`, die Kladde des Prüflaufs, die einzige Änderung im
+Baum gewesen: ein Entwurf pro Tag, der nichts als diese Datei enthält.
+Aufgefallen beim Durchgehen aller Schrittbedingungen, bevor irgendetwas
+lief. `Bericht einlesen` und `Entwurf` hängen jetzt ebenfalls am Wächter, und
+`bericht.txt` und `AGENTENBERICHT.md` stehen in `.gitignore`.
+
+Die Entwurfsaktion selbst war nie das Problem: sie hält bei leerem Baum von
+sich aus an (`git status --porcelain`), erzeugt also weder leeren Commit noch
+leeren Entwurf. Nachgelesen, nicht angenommen.
+
+**Nachgeprüft.** Die Wächter-Logik in allen vier Fällen ausgeführt (kein
+Schlüssel, nur der eine, nur der andere, beide): `da=0` genau im ersten Fall,
+Annotation und Zusammenfassungskasten genau dort. Alle vier YAML-Dateien
+eingelesen und Schritt für Schritt die Bedingungen aufgelistet. Und der Lauf
+selbst von diesem Zweig aus ausgelöst – das Ergebnis steht im PR.
+
+### 4.67 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/
