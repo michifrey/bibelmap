@@ -2527,7 +2527,78 @@ Stände gemessen wurden.
 Erster Aufruf 326,0 → **326,4 kB**. 20 Prüfungen sauber, 29 Ansichten × 2
 Sprachen ohne Befund, 20 von 20 offline.
 
-### 4.75 Weitere Ansichten (aus parallelen Arbeiten)
+### 4.75 Drei Tippziele unter dem Mindestmass — P2 ✅
+
+Sechzehn Ansichten auf dem Telefon (390 × 844) durchgegangen. **Keine
+Ansicht scrollt waagerecht** – das war die eigentliche Sorge und sie ist
+unbegründet. Gefunden wurden drei Bedienelemente unter dem Mindestmass von
+24 × 24 (WCAG 2.5.8):
+
+| | vorher | nachher |
+|---|---|---|
+| „×" der Kachel-Warnung | 20 × 20 | 24 × 24 |
+| Umschalter „ZEITLEISTE" auf der Karte | 102 × **16** | 102 × **32** |
+| „+ Orte am Weg" in der Reiseansicht | 84 × **17** | 84 × **29** |
+
+**Bildgleich korrigiert.** Alle drei bekommen Innenabstand und einen gleich
+grossen negativen Aussenabstand: Die Fläche wächst, die Stelle im Fluss
+bleibt. Beim „×" wandert die Mitte des Zeichens nicht – gemessen (360, 620)
+vorher wie nachher.
+
+Nachgemessen, nicht behauptet: **null verschiedene Bildpunkte** zwischen
+vorher und nachher, in beiden Ansichten.
+
+**Dass „null" hier etwas bedeutet, musste erst gezeigt werden.** Die übliche
+Gegenprobe – denselben Stand zweimal – ergibt hier ebenfalls null, weil auf
+diesen Seiten nichts animiert. Sie belegt also nicht, dass das Werkzeug
+überhaupt etwas sähe. Deshalb dieselbe Seite einmal auf Deutsch und einmal auf
+Englisch verglichen: **18 107 verschiedene Punkte**. Das Werkzeug ist
+empfindlich, die Null ist ein Ergebnis.
+
+**Was nicht angefasst wurde, und warum.** Die erste Sonde meldete bis zu 1 349
+zu kleine Tippziele je Ansicht. Davon blieb nach zwei Korrekturen fast nichts
+übrig:
+
+* *Die Sonde filterte auf `display` des Elements selbst* – nicht der Vorfahren.
+  Deshalb tauchten Israel-Bedienelemente im Quiz und in den Nachweisen auf.
+  Derselbe Fehler wie bei den Überschriften in § 4.74; `checkVisibility()`
+  behebt ihn.
+* *Die Schwelle war 32 px, das Mindestmass ist 24.* Chips wie „Erzväter"
+  (67 × 25) bestehen.
+* *WCAG 2.5.8 nimmt Links im Fliesstext ausdrücklich aus.* „Laufende
+  Berichterstattung · Reuters" (340 × 16) und die Fusszeile der Startseite
+  sind Textlinks in einer Zeile, keine Schaltflächen.
+
+**Ein drittes Mal ins Leere gemessen.** Die erste Vorher-Nachher-Messung
+zeigte identische Werte – beide Server zeigten auf dasselbe, gerade neu
+gebaute `dist/`. Erst ein eigenes Verzeichnis für den alten Stand, mit
+verschiedenen Bündel-Namen als Beleg, ergab eine echte Messung. Das war heute
+der dritte Fall dieser Art (§ 4.69, § 4.74); die Bündel-Namen zu vergleichen
+ist inzwischen der erste Handgriff.
+
+CSS 15,2 → **15,3 kB** gzip. 20 Prüfungen sauber, 29 Ansichten × 2 Sprachen,
+20 von 20 offline.
+
+### 4.76 Fokusführung — gemessen, nichts gefunden — P2 ✅
+
+Bei der Gelegenheit die Tastaturführung geprüft, wo sie erfahrungsgemäss
+bricht. Sie bricht nicht:
+
+| geprüft | Ergebnis |
+|---|---|
+| Fokus nach Moduswechsel | auf `nav#sprungmarken` – ein verlässlicher Anker |
+| Fokus nach `Escape` (Quiz, Register) | wieder dort, nicht im Nichts |
+| `Escape` in Vollbildmodi | schliesst, `#quiz` → `#karte` |
+| sichtbarer Fokusring | `outline: solid 2px` |
+| Ausbrechen aus einem offenen Modus | 40 Tabulatorschläge, **kein einziger** erreicht den verdeckten Hintergrund (zwei Bereiche mit `[inert]`) |
+
+`SkipLinks` verdient die Erwähnung: Es holt den Fokus nur zurück, wenn ihn
+niemand hat, und lässt Marken weg, die in einen stillgelegten Zweig führen
+würden. Im Kommentar steht ein gemessener Fehler, den es behebt – der erste
+Tabulatorschlag landete in der Reiseansicht mitten in der Stationsliste.
+Nichts zu tun.
+
+### 4.77 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 (Kirchenväter und Konzilien), **Religionen im Vergleich**, **Stammbäume/

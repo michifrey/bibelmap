@@ -27,7 +27,14 @@ export default function MapPanel({ title, open = false, onToggle, actions, child
           {/* No `order` here: it stays first by DOM order, and callers that need
               to reflow their own header on narrow screens order themselves
               relative to it (see YearSlider). */}
-          <button onClick={onToggle} className="flex items-center gap-1.5 sm:pointer-events-none">
+          {/*
+            `-my-2 py-2`: Der Knopf ist nur so hoch wie seine Schrift – auf dem
+            Telefon gemessene 16 px, unter dem Mindestmass von 24×24. Der
+            Innenabstand macht die Fläche 32 px hoch, der gleich grosse
+            negative Aussenabstand nimmt sie aus dem Fluss wieder heraus: Die
+            Leiste sieht aus wie vorher, der Daumen trifft.
+          */}
+          <button onClick={onToggle} className="-my-2 flex items-center gap-1.5 py-2 sm:pointer-events-none">
             <span className="bm-eyebrow whitespace-nowrap">{title}</span>
             <svg
               aria-hidden="true"

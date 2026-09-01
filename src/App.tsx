@@ -964,7 +964,7 @@ export default function App() {
                   <button
                     onClick={() => setTileNotice(null)}
                     aria-label={tr(lang, 'close')}
-                    className="-mr-1 -mt-1 grid h-5 w-5 flex-none place-items-center text-white/60 transition hover:text-white"
+                    className="-mr-1.5 -mt-1.5 grid h-6 w-6 flex-none place-items-center text-white/60 transition hover:text-white"
                   >
                     ✕
                   </button>
