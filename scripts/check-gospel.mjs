@@ -26,7 +26,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const { ACTS, PEOPLE, STATIONS, STATIONS_BY_PERSON } = await import(
   path.join(ROOT, 'src/data/gospel.ts')
 );
-const { CHOSEN } = await import(path.join(ROOT, 'src/data/chosen.ts'));
+const { CHOSEN, SEASONS, SEASON_BY_NUMBER } = await import(path.join(ROOT, 'src/data/chosen.ts'));
 const { BP_THEMES, BP_VIDEO_BY_ID, BT_BY_BOOK, chapterOfRef, overviewVideo } = await import(
   path.join(ROOT, 'src/data/gospelMedia.ts')
 );
@@ -51,6 +51,8 @@ const MIN_STATIONEN = 60;
 const MIN_PERSONEN = 40;
 const MIN_AKTE = 5;
 const MIN_ZEUGNISSE = 8;
+/** Jede Staffel der Serie hat acht Folgen – fehlt eine, ist die Liste lückenhaft. */
+const FOLGEN_JE_STAFFEL = 8;
 
 /** Wie weit eine Station von ihrem verlinkten Ort abweichen darf (km). */
 const MAX_ABWEICHUNG = 6;
@@ -260,16 +262,39 @@ for (const w of WITNESSES) {
 
 /* --- 5. Die Serienzuordnung ---------------------------------------------- */
 
+/*
+ * Die Liste ist vollständig: fünf Staffeln zu je acht Folgen. Deshalb ist eine
+ * Folge ohne Station hier kein Fehler, sondern eine Aussage – sie erzählt, was
+ * die Serie erfindet. Geprüft wird, dass keine Folge fehlt, keine doppelt
+ * steht und keine auf eine Station zeigt, die es nicht gibt.
+ */
 const folgen = new Set();
+let ohneStation = 0;
 for (const e of CHOSEN) {
   const schluessel = `${e.season}-${e.episode}`;
   if (folgen.has(schluessel)) melde(`The Chosen: S${e.season}E${e.episode} steht zweimal in der Liste.`);
   folgen.add(schluessel);
-  if (!e.stations.length) melde(`The Chosen: S${e.season}E${e.episode} nennt keine Station.`);
+  if (!e.title?.trim()) melde(`The Chosen: S${e.season}E${e.episode} hat keinen Titel.`);
+  if (!SEASON_BY_NUMBER[e.season]) melde(`The Chosen: zu Staffel ${e.season} gibt es keinen Eintrag in SEASONS.`);
+  if (!e.stations.length) ohneStation++;
   for (const sid of e.stations) {
     if (!STATION_IDS.has(sid)) {
       melde(`The Chosen: S${e.season}E${e.episode} verweist auf „${sid}“ – diese Station gibt es nicht.`);
     }
+  }
+}
+
+for (const s of SEASONS) {
+  const eigene = CHOSEN.filter((e) => e.season === s.season).map((e) => e.episode).sort((a, b) => a - b);
+  if (eigene.length !== FOLGEN_JE_STAFFEL) {
+    melde(`The Chosen: Staffel ${s.season} hat ${eigene.length} Folgen, erwartet ${FOLGEN_JE_STAFFEL}.`);
+  }
+  // Lückenlos von 1 an – eine fehlende Folge fällt sonst niemandem auf.
+  eigene.forEach((n, i) => {
+    if (n !== i + 1) melde(`The Chosen: Staffel ${s.season} springt bei Folge ${n} (erwartet ${i + 1}).`);
+  });
+  if (!/^https:\/\/watch\.thechosen\.tv\/page\/season-\d+$/.test(s.url)) {
+    melde(`The Chosen: die Adresse von Staffel ${s.season} folgt nicht dem Muster der Staffelseiten.`);
   }
 }
 
@@ -289,5 +314,5 @@ console.log(
     `${mitOrt} Ortskennungen gegen places.json, ${stellen} Bibelstellen gelesen, ` +
     `${personenMitSzene} von ${PEOPLE.length} Personen mit Auftritt, ` +
     `${medien} Stationen mit Video und Hörfolge, ${WITNESSES.length} außerbiblische Zeugnisse, ` +
-    `${CHOSEN.length} Serienfolgen zugeordnet.`,
+    `${CHOSEN.length} Serienfolgen in ${SEASONS.length} Staffeln, davon ${CHOSEN.length - ohneStation} mit Station.`,
 );
