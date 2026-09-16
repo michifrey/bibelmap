@@ -21,6 +21,25 @@ import {
 import { FINDS, FIND_BY_ID, FIND_KIND, type Find } from '../data/finds';
 import { FIND_PLACES } from '../data/findPlaces';
 import { LAW_BY_ID, LAW_KIND, LAW_TEXTS, MIZWOT, type LawText } from '../data/lawTexts';
+import {
+  PHIL_ACHSE,
+  PHIL_ANSTOSS,
+  PHIL_BREITE,
+  PHIL_BY_ID,
+  PHIL_INTRO,
+  PHIL_KIND,
+  PHIL_LINKS_TO,
+  PHIL_MARKEN,
+  PHIL_PERIODS,
+  PHIL_SPUR_HOEHE,
+  PHIL_STRAHL_BREIT,
+  PHIL_WORKS,
+  philLanes,
+  philMarkX,
+  type PhilLink,
+  type PhilLinkKind,
+  type PhilWork,
+} from '../data/philosophy';
 import { readableOnDark } from '../lib/contrast';
 import { ExternalIcon, ImageCredit, useArticle } from './WikiFigure';
 import { wikiLink } from '../lib/wikipediaArticle';
@@ -57,13 +76,21 @@ import { findPlacesByNames, placeName } from '../lib/places';
  * stimmt nicht. Zu jedem Buch steht deshalb, welche Handschrift es am
  * längsten trägt und wer sie gefunden hat, und unter dem biblischen Regal
  * steht ein zweites mit dem, was danach weitergeschrieben wurde.
+ *
+ * **Und ein drittes: die philosophischen Werke.** Kein Satz dieser Bibel wurde
+ * je ohne Vorverständnis gelesen – „Im Anfang war das Wort" steht auf
+ * Griechisch da, und `logos` war ein besetzter Begriff. Das dritte Regal zeigt,
+ * mit welchen Begriffen gelesen wurde, von Platon bis in die Gegenwart, und es
+ * bekommt als einziges einen Zeitstrahl: Dort ist der Abstand die Aussage.
+ * Zwischen Boethius und Anselm liegen 550 Jahre ohne einen Rücken, und diese
+ * Lücke sieht man nur, wenn die Achse in Jahren rechnet und nicht in Einträgen.
  */
 
 /**
  * Was im Fenster rechts steht. Dieselbe Form steht in der Adresse
  * (`#regal=buch,Isa`), damit Auswahl und Tieflink nicht auseinanderlaufen.
  */
-export type Sel = { kind: 'book' | 'law' | 'find'; id: string };
+export type Sel = { kind: 'book' | 'law' | 'find' | 'phil'; id: string };
 
 type Ordering = 'written' | 'told' | 'canon';
 type Tab = 'shelf' | 'finds';
@@ -101,6 +128,24 @@ const LINK_IN: Record<LinkKind, string> = {
   answers: 'shelfLinkAnswers',
 };
 
+/*
+ * Dieselbe Regel wie oben, für das dritte Regal: Ein Verweis steht beim
+ * späteren Werk, `to` ist immer das frühere. Anders als bei den Büchern ist
+ * hier keine Art symmetrisch – „baut darauf auf" gilt nur in einer Richtung –,
+ * deshalb zwei Wortlaute je Art statt eines gespiegelten Paares.
+ */
+const PHIL_OUT: Record<PhilLinkKind, string> = {
+  builds: 'shelfPhilLinkBuilds',
+  against: 'shelfPhilLinkAgainst',
+  echoes: 'shelfPhilLinkEchoes',
+};
+
+const PHIL_IN: Record<PhilLinkKind, string> = {
+  builds: 'shelfPhilLinkBuiltOn',
+  against: 'shelfPhilLinkOpposed',
+  echoes: 'shelfPhilLinkEchoed',
+};
+
 /**
  * Die Breite eines Rückens auf dem Gesetzesregal. Sie ist für alle gleich, und
  * das ist die Aussage: Diese Texte sind nicht in Kapiteln zu messen, und eine
@@ -108,6 +153,15 @@ const LINK_IN: Record<LinkKind, string> = {
  * unter dem Regal.
  */
 const LAW_BREIT = 54;
+
+/**
+ * Und dieselbe Überlegung im dritten Regal. Die Summa theologiae hat 2600
+ * Artikel, der Brief an Menoikeus zwei Seiten – nur ist das keine gemeinsame
+ * Einheit, sondern zweimal etwas anderes. Statt eine Vergleichszahl zu
+ * erfinden, stehen alle gleich breit; wie umfangreich ein Werk ist, steht im
+ * Fenster daneben als Satz.
+ */
+const PHIL_BREIT = 58;
 
 /** Ein Brett: Überschrift, Zeitangabe, ein Satz – und die Rücken darauf. */
 interface Board {
@@ -136,6 +190,13 @@ function targetName(id: string, lang: Lang): string {
   return bookName(id, lang);
 }
 
+/** Der Werktitel, wie er auf einem Knopf steht: „Platon · Der Staat". */
+function philName(id: string, lang: Lang): string {
+  const w = PHIL_BY_ID[id];
+  if (!w) return id;
+  return `${lang === 'de' ? w.author.de : w.author.en} · ${lang === 'de' ? w.de : w.en}`;
+}
+
 interface Props {
   lang: Lang;
   /** Für den Weg vom Fund auf die Hauptkarte – sonst leer. */
@@ -146,10 +207,28 @@ interface Props {
   initial?: Sel | null;
   /** Damit die Adresse mitläuft, wenn jemand weiterblättert. */
   onNavigate?: (sel: Sel | null) => void;
+  /**
+   * Der Weg vom philosophischen Werk auf die Zeitschiene der
+   * Kirchengeschichte – zu dem Ereignis, das im selben Jahrzehnt liegt, oder
+   * zu der Person, die im Zeitbaum steht. Ohne diesen Weg bliebe das dritte
+   * Regal eine Liste neben der Geschichte statt in ihr.
+   */
+  onOpenChurch?: (nav: { tab: 'timeline' | 'fathers' | 'councils'; id?: string }) => void;
+  /** Und der Weg zur Person im Zeitbaum – Augustinus, Anselm, Maimonides, Luther. */
+  onOpenPerson?: (id: string) => void;
   onExit: () => void;
 }
 
-export default function Bookshelf({ lang, places, onShowPlace, initial, onNavigate, onExit }: Props) {
+export default function Bookshelf({
+  lang,
+  places,
+  onShowPlace,
+  initial,
+  onNavigate,
+  onOpenChurch,
+  onOpenPerson,
+  onExit,
+}: Props) {
   const t = useT();
   const [tab, setTab] = useState<Tab>(initial?.kind === 'find' ? 'finds' : 'shelf');
   const [ordering, setOrdering] = useState<Ordering>('written');
@@ -224,6 +303,27 @@ export default function Bookshelf({ lang, places, onShowPlace, initial, onNaviga
     })).filter((s) => s.texts.length > 0);
   }, [query, lang]);
 
+  /*
+   * Die Bretter des dritten Regals. Gesucht wird über Titel, Verfasser und die
+   * These – wer „Höhle" tippt, sucht Platon, und der Titel heißt anders.
+   */
+  const philBoards = useMemo(() => {
+    const q = norm(query.trim());
+    const passt = (w: PhilWork) =>
+      !q ||
+      norm(lang === 'de' ? w.de : w.en).includes(q) ||
+      norm(lang === 'de' ? w.author.de : w.author.en).includes(q) ||
+      norm(w.original).includes(q) ||
+      norm(lang === 'de' ? w.thesis.de : w.thesis.en).includes(q);
+    return PHIL_PERIODS.map((period) => ({
+      period,
+      works: PHIL_WORKS.filter((w) => w.period === period.id && passt(w)).sort((a, b) => a.year - b.year),
+    })).filter((s2) => s2.works.length > 0);
+  }, [query, lang]);
+
+  /** Alle sichtbaren Werke – für den Zeitstrahl und die Pfeiltasten. */
+  const philFlat = useMemo(() => philBoards.flatMap((s2) => s2.works), [philBoards]);
+
   function pick(next: Sel | null) {
     setSel(next);
     if (next?.kind === 'find') setTab('finds');
@@ -233,20 +333,22 @@ export default function Bookshelf({ lang, places, onShowPlace, initial, onNaviga
   // Pfeiltasten begehen die Rücken in der Reihenfolge der gewählten Ordnung.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (tab !== 'shelf' || sel?.kind !== 'book') return;
+      if (tab !== 'shelf' || (sel?.kind !== 'book' && sel?.kind !== 'phil')) return;
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
       if (!step) return;
-      const i = flat.findIndex((b) => b.osis === sel.id);
+      // Jedes Regal wird für sich begangen: Vom letzten Buch auf Platon zu
+      // springen wäre kein Weiterblättern, sondern ein Themenwechsel.
+      const ids = sel.kind === 'book' ? flat.map((b) => b.osis) : philFlat.map((w) => w.id);
+      const i = ids.indexOf(sel.id);
       if (i < 0) return;
       e.preventDefault();
-      const next = flat[(i + step + flat.length) % flat.length];
-      setSel({ kind: 'book', id: next.osis });
+      setSel({ kind: sel.kind, id: ids[(i + step + ids.length) % ids.length] });
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [flat, sel, tab]);
+  }, [flat, philFlat, sel, tab]);
 
   /*
    * Beim Reiterwechsel nach oben. Die Fundliste erbte sonst den Scrollstand
@@ -268,6 +370,19 @@ export default function Bookshelf({ lang, places, onShowPlace, initial, onNaviga
       ?.querySelector<HTMLElement>(`[data-spine="${sel.kind}:${sel.id}"]`)
       ?.scrollIntoView({ block: 'nearest', inline: 'center' });
   }, [sel, tab]);
+
+  /*
+   * Und dasselbe für den Zeitstrahl: Er ist 1400 Pixel breit und zeigt beim
+   * Öffnen das vierte Jahrhundert vor Christus. Wer aus der Suche auf Hannah
+   * Arendt kommt, sähe seine Marke sonst nicht – sie liegt zweitausend Jahre
+   * weiter rechts, außerhalb des Streifens.
+   */
+  useEffect(() => {
+    if (sel?.kind !== 'phil') return;
+    shelfRef.current
+      ?.querySelector<HTMLElement>(`[data-tick="${sel.id}"]`)
+      ?.scrollIntoView({ block: 'nearest', inline: 'center' });
+  }, [sel]);
 
   // Auf dem Telefon liegt das Fenster über dem Regal; es soll oben anfangen.
   useEffect(() => {
@@ -304,6 +419,8 @@ export default function Bookshelf({ lang, places, onShowPlace, initial, onNaviga
             <ShelfBoards
               boards={boards}
               lawBoards={lawBoards}
+              philBoards={philBoards}
+              philFlat={philFlat}
               ordering={ordering}
               onOrdering={setOrdering}
               query={query}
@@ -333,6 +450,15 @@ export default function Bookshelf({ lang, places, onShowPlace, initial, onNaviga
               <div ref={detailRef} className="scroll-soft min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5">
                 {sel.kind === 'book' && <BookDetail osis={sel.id} lang={lang} onPick={pick} />}
                 {sel.kind === 'law' && <LawDetail id={sel.id} lang={lang} onPick={pick} />}
+                {sel.kind === 'phil' && (
+                  <PhilDetail
+                    id={sel.id}
+                    lang={lang}
+                    onPick={pick}
+                    onOpenChurch={onOpenChurch}
+                    onOpenPerson={onOpenPerson}
+                  />
+                )}
                 {sel.kind === 'find' && (
                   <FindDetail id={sel.id} lang={lang} onPick={pick} places={places} onShowPlace={onShowPlace} />
                 )}
@@ -415,6 +541,8 @@ function Board({
 function ShelfBoards({
   boards,
   lawBoards,
+  philBoards,
+  philFlat,
   ordering,
   onOrdering,
   query,
@@ -425,6 +553,8 @@ function ShelfBoards({
 }: {
   boards: Board[];
   lawBoards: { period: (typeof PERIODS)[number]; texts: LawText[] }[];
+  philBoards: { period: (typeof PHIL_PERIODS)[number]; works: PhilWork[] }[];
+  philFlat: PhilWork[];
   ordering: Ordering;
   onOrdering: (o: Ordering) => void;
   query: string;
@@ -434,7 +564,7 @@ function ShelfBoards({
   lang: Lang;
 }) {
   const t = useT();
-  const nothing = boards.length === 0 && lawBoards.length === 0;
+  const nothing = boards.length === 0 && lawBoards.length === 0 && philBoards.length === 0;
 
   return (
     <div className="py-4">
@@ -522,9 +652,158 @@ function ShelfBoards({
           <p className="px-4 pb-6 text-[12px] leading-relaxed text-white/45 sm:px-5">{t('shelfLawWidth')}</p>
         </div>
       )}
+
+      {/* Das dritte Regal: mit welchen Begriffen gelesen wurde. */}
+      {philBoards.length > 0 && (
+        <div className="border-t border-white/10 pt-6">
+          <div className="mb-2 px-4 sm:px-5">
+            <div className="bm-eyebrow mb-1">{t('shelfPhilKicker')}</div>
+            <h2 className="font-display text-2xl uppercase leading-tight text-white">{t('shelfPhilTitle')}</h2>
+          </div>
+          <p className="mb-5 max-w-prose px-4 text-[12.5px] leading-relaxed text-white/60 sm:px-5">
+            {lang === 'de' ? PHIL_INTRO.de : PHIL_INTRO.en}
+          </p>
+
+          <PhilTimeline works={philFlat} sel={sel} onPick={onPick} lang={lang} />
+
+          {philBoards.map(({ period, works }) => (
+            <Board
+              key={period.id}
+              title={lang === 'de' ? period.de : period.en}
+              range={lang === 'de' ? period.range.de : period.range.en}
+              note={lang === 'de' ? period.note.de : period.note.en}
+              color={period.color}
+            >
+              {works.map((w) => (
+                <Spine
+                  key={w.id}
+                  spineId={`phil:${w.id}`}
+                  label={lang === 'de' ? w.shortDe : w.shortEn}
+                  sub={lang === 'de' ? w.author.de : w.author.en}
+                  width={PHIL_BREIT}
+                  height={spineHeight(Math.abs(w.year))}
+                  color={period.color}
+                  on={sel?.kind === 'phil' && sel.id === w.id}
+                  onClick={() => onPick({ kind: 'phil', id: w.id })}
+                />
+              ))}
+            </Board>
+          ))}
+          <p className="max-w-prose px-4 text-[12px] leading-relaxed text-white/45 sm:px-5">
+            {lang === 'de' ? PHIL_BREITE.de : PHIL_BREITE.en}
+          </p>
+          <p className="max-w-prose px-4 pb-6 pt-2 text-[12px] leading-relaxed text-white/45 sm:px-5">
+            {lang === 'de' ? PHIL_ANSTOSS.de : PHIL_ANSTOSS.en}{' '}
+            <a
+              href="https://www.reflab.ch/category/podcasts/mindmaps/"
+              target="_blank"
+              rel="noreferrer"
+              className="text-mint hover:underline"
+            >
+              Mindmaps (RefLab)
+              <ExternalIcon />
+            </a>
+          </p>
+        </div>
+      )}
     </div>
   );
 }
+
+/* --- Der Zeitstrahl ------------------------------------------------------- */
+
+/**
+ * Ein Punkt je Werk, waagerecht nach dem Jahr, senkrecht nach dem Gedränge.
+ *
+ * Die Achse ist linear – 550 Jahre zwischen Boethius und Anselm sind hier 300
+ * Pixel Leere, und genau die sollen zu sehen sein. Zwei Werke aus demselben
+ * Jahr rücken deshalb **nicht** zur Seite, sondern eine Spur tiefer; die
+ * Rechnung dazu steht in `philLanes` und wird von `check:philosophie` geprüft.
+ *
+ * Die Punkte sind kleiner als 24 Pixel. Das ist zulässig, solange dieselbe
+ * Auswahl auf den Brettern darunter mit vollen Rücken zu treffen ist – und nur
+ * deshalb steht der Strahl hier: als zweiter Weg, nicht als einziger.
+ */
+function PhilTimeline({
+  works,
+  sel,
+  onPick,
+  lang,
+}: {
+  works: PhilWork[];
+  sel: Sel | null;
+  onPick: (s: Sel) => void;
+  lang: Lang;
+}) {
+  const ticks = useMemo(() => philLanes(works), [works]);
+  const spuren = ticks.reduce((max, tick) => Math.max(max, tick.lane + 1), 1);
+  const hoehe = spuren * PHIL_SPUR_HOEHE;
+  // Platz links und rechts für die Jahreszahlen, die mittig unter ihrer Marke
+  // stehen; ohne ihn schnitte der scrollende Streifen „400 v. Chr." in der Mitte ab.
+  const RAND = 40;
+
+  return (
+    <div className="mb-6">
+      <div className="scroll-soft overflow-x-auto px-4 sm:px-5">
+        <div className="relative" style={{ width: PHIL_STRAHL_BREIT + 2 * RAND, height: hoehe + 30 }}>
+          {PHIL_MARKEN.map((m) => (
+            <div
+              key={`grid-${m.year}`}
+              aria-hidden="true"
+              className="absolute top-0 w-px bg-white/10"
+              style={{ left: RAND + philMarkX(m.year), height: hoehe }}
+            />
+          ))}
+          <div className="absolute h-px bg-white/20" style={{ left: RAND, top: hoehe, width: PHIL_STRAHL_BREIT }} />
+          {ticks.map(({ id, x, lane }) => {
+            const w = PHIL_BY_ID[id];
+            const on = sel?.kind === 'phil' && sel.id === id;
+            const label = `${w.year < 0 ? `${-w.year} v. Chr.` : w.year} · ${lang === 'de' ? w.author.de : w.author.en} · ${lang === 'de' ? w.de : w.en}`;
+            return (
+              <button
+                key={id}
+                data-tick={id}
+                onClick={() => onPick({ kind: 'phil', id })}
+                title={label}
+                aria-label={label}
+                aria-pressed={on}
+                className="absolute grid place-items-center"
+                style={{ left: RAND + x - 7, top: lane * PHIL_SPUR_HOEHE, width: 14, height: PHIL_SPUR_HOEHE }}
+              >
+                <span
+                  className="block rounded-full transition-all"
+                  style={{
+                    width: on ? 12 : 8,
+                    height: on ? 12 : 8,
+                    background: on ? '#e0a449' : PHIL_PERIOD_COLOR[w.period],
+                    opacity: on ? 1 : 0.8,
+                  }}
+                />
+              </button>
+            );
+          })}
+          {PHIL_MARKEN.map((m) => (
+            <span
+              key={`label-${m.year}`}
+              className="absolute -translate-x-1/2 whitespace-nowrap text-[10px] text-white/45 tabular-nums"
+              style={{ left: RAND + philMarkX(m.year), top: hoehe + 6 }}
+            >
+              {lang === 'de' ? m.de : m.en}
+            </span>
+          ))}
+        </div>
+      </div>
+      <p className="mt-2 max-w-prose px-4 text-[12px] leading-relaxed text-white/45 sm:px-5">
+        {lang === 'de' ? PHIL_ACHSE.de : PHIL_ACHSE.en}
+      </p>
+    </div>
+  );
+}
+
+/** Die Farbe eines Bretts, nach ID – der Strahl braucht sie ohne die Liste. */
+const PHIL_PERIOD_COLOR: Record<string, string> = Object.fromEntries(
+  PHIL_PERIODS.map((p) => [p.id, p.color]),
+);
 
 /* --- Die Funde ----------------------------------------------------------- */
 
@@ -784,6 +1063,153 @@ function LawDetail({ id, lang, onPick }: { id: string; lang: Lang; onPick: (s: S
         )}
         <WikiOut term={lang === 'de' ? l.wiki : l.wikiEn} lang={lang} label={t('shelfWikipedia')} />
       </div>
+    </div>
+  );
+}
+
+/** Ein Verweis zwischen zwei Werken – dieselbe Form wie bei den Büchern. */
+function PhilLinkRow({
+  link,
+  from,
+  lang,
+  onPick,
+}: {
+  link: PhilLink;
+  from?: string;
+  lang: Lang;
+  onPick: (s: Sel) => void;
+}) {
+  const t = useT();
+  const id = from ?? link.to;
+  return (
+    <li className="border-l-2 border-white/15 py-1.5 pl-2.5">
+      <button
+        onClick={() => onPick({ kind: 'phil', id })}
+        className="text-left text-[13px] font-bold text-mint hover:underline"
+      >
+        {philName(id, lang)}
+      </button>
+      <span className="ml-1.5 text-[10px] uppercase tracking-wide text-white/40">
+        {t((from ? PHIL_IN : PHIL_OUT)[link.kind] as 'shelfPhilLinkBuilds')}
+      </span>
+      <p className="mt-0.5 text-[12.5px] leading-relaxed text-white/70">{lang === 'de' ? link.de : link.en}</p>
+    </li>
+  );
+}
+
+function PhilDetail({
+  id,
+  lang,
+  onPick,
+  onOpenChurch,
+  onOpenPerson,
+}: {
+  id: string;
+  lang: Lang;
+  onPick: (s: Sel) => void;
+  onOpenChurch?: (nav: { tab: 'timeline' | 'fathers' | 'councils'; id?: string }) => void;
+  onOpenPerson?: (id: string) => void;
+}) {
+  const t = useT();
+  const w = PHIL_BY_ID[id];
+  const period = PHIL_PERIODS.find((p) => p.id === w.period)!;
+  const kind = PHIL_KIND[w.kind];
+  // Wie bei den Büchern: Die Rückseite eines Verweises nur dann, wenn sie nicht
+  // schon vorn steht – sonst stünde derselbe Zusammenhang zweimal untereinander.
+  const zeigtAuf = new Set(w.links.map((l) => l.to));
+  const incoming = (PHIL_LINKS_TO[id] ?? []).filter((x) => !zeigtAuf.has(x.from));
+
+  return (
+    <div>
+      <WikiBand term={lang === 'de' ? w.wiki : w.wikiEn} alt={lang === 'de' ? w.de : w.en} lang={lang} />
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span
+          className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-deep"
+          style={{ background: period.color }}
+        >
+          {lang === 'de' ? kind.de : kind.en}
+        </span>
+        <span className="bm-chip">{lang === 'de' ? w.when.de : w.when.en}</span>
+        {w.disputed && <span className="bm-chip text-gold">{t('shelfDisputed')}</span>}
+      </div>
+      <h2 className="mt-2 font-display text-3xl uppercase leading-[0.95] text-white">
+        {lang === 'de' ? w.de : w.en}
+      </h2>
+      <p className="mt-1 text-[13px] text-white/60">
+        {lang === 'de' ? w.author.de : w.author.en} · {lang === 'de' ? w.lived.de : w.lived.en}
+      </p>
+      <p className="mt-0.5 text-[11.5px] italic text-white/45">
+        {w.original}
+        {w.translit ? ` · ${w.translit}` : ''}
+      </p>
+
+      {/* Der eine Satz. Er steht hervorgehoben, weil er das Werk zugleich
+          verkürzt – wer nur ihn liest, soll wenigstens sehen, dass er das tut. */}
+      <p className="mt-4 border-l-2 border-gold pl-3 text-[14px] font-bold leading-snug text-white">
+        {lang === 'de' ? w.thesis.de : w.thesis.en}
+      </p>
+
+      <Section title={t('shelfPhilWho')}>
+        <Prose>{lang === 'de' ? w.who.de : w.who.en}</Prose>
+      </Section>
+      <Section title={t('shelfPhilWhat')}>
+        <Prose>{lang === 'de' ? w.what.de : w.what.en}</Prose>
+      </Section>
+      <Section title={t('shelfPhilBible')}>
+        <Prose>{lang === 'de' ? w.bible.de : w.bible.en}</Prose>
+      </Section>
+
+      <Section title={t('shelfPhilBooks')}>
+        <div className="flex flex-wrap gap-1.5">
+          {w.books.map((osis) => (
+            <button
+              key={osis}
+              onClick={() => onPick({ kind: 'book', id: osis })}
+              className="px-3 py-1.5 text-[11.5px] font-bold text-white transition bg-white/8 hover:bg-white/16"
+            >
+              {bookName(osis, lang)}
+            </button>
+          ))}
+        </div>
+      </Section>
+
+      {w.links.length > 0 && (
+        <Section title={t('shelfPhilLinksOut')}>
+          <ul>
+            {w.links.map((l) => (
+              <PhilLinkRow key={`${l.to}-${l.kind}`} link={l} lang={lang} onPick={onPick} />
+            ))}
+          </ul>
+        </Section>
+      )}
+
+      {incoming.length > 0 && (
+        <Section title={t('shelfPhilLinksIn')}>
+          <ul>
+            {incoming.map(({ from, link }) => (
+              <PhilLinkRow key={`${from}-${link.kind}`} link={link} from={from} lang={lang} onPick={onPick} />
+            ))}
+          </ul>
+        </Section>
+      )}
+
+      <div className="mt-5 flex flex-wrap gap-1.5 border-t border-white/10 pt-4">
+        {w.person && onOpenPerson && (
+          <button onClick={() => onOpenPerson(w.person!)} className="bm-btn bm-btn-ghost">
+            {t('shelfPhilInTree')} ›
+          </button>
+        )}
+        {w.event && onOpenChurch && (
+          <button onClick={() => onOpenChurch({ tab: 'timeline', id: w.event })} className="bm-btn bm-btn-ghost">
+            {t('shelfPhilOnTimeline')} ›
+          </button>
+        )}
+        <WikiOut term={lang === 'de' ? w.wiki : w.wikiEn} lang={lang} label={t('shelfWikipedia')} />
+      </div>
+      <p className="mt-3 text-[11.5px] text-white/45">
+        {lang === 'de' ? period.de : period.en} · {lang === 'de' ? period.range.de : period.range.en} ·{' '}
+        {formatSpan(w.from, w.to, lang)}
+      </p>
     </div>
   );
 }

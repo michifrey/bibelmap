@@ -14,6 +14,7 @@ import { GROUP_BY_ID, SHELF, formatSpan } from '../data/shelf';
 import { BOOK_BY_OSIS } from '../data/books';
 import { FINDS, FIND_KIND } from '../data/finds';
 import { LAW_TEXTS } from '../data/lawTexts';
+import { PHIL_WORKS, PHIL_PERIOD_BY_ID } from '../data/philosophy';
 import type { Sel as ShelfSel } from '../components/Bookshelf';
 
 /**
@@ -393,6 +394,32 @@ export function searchStories(query: string, lang: Lang, limit = 8): SearchHit[]
       subtitle: `${lang === 'de' ? 'Jüdische Gesetzestexte' : 'Jewish legal texts'} · ${lang === 'de' ? l.when.de : l.when.en}`,
       color: '#7a5aa8',
       target: { mode: 'shelf', shelf: { kind: 'law', id: l.id } },
+    });
+  }
+  /*
+   * Das Philosophieregal. Gesucht wird auch über den Verfasser und den
+   * Originaltitel: „Aristoteles" steht in keinem der deutschen Titel, und wer
+   * „Politeia" tippt, meint „Der Staat".
+   */
+  for (const w of PHIL_WORKS) {
+    const name = lang === 'de' ? w.de : w.en;
+    const autor = lang === 'de' ? w.author.de : w.author.en;
+    const s2 = Math.max(
+      score(name, q),
+      score(autor, q) - 5,
+      score(w.original, q) - 5,
+      w.translit ? score(w.translit, q) - 5 : 0,
+      norm(lang === 'de' ? w.thesis.de : w.thesis.en).includes(q) ? 30 : 0,
+      // Auch im Inhalt: „Höhle" steht in keinem Titel und in keiner These,
+      // sondern im Absatz darüber, was in der Politeia steht.
+      norm(lang === 'de' ? w.what.de : w.what.en).includes(q) ? 25 : 0,
+    );
+    add(s2, {
+      key: `sp:${w.id}`,
+      title: `${autor} · ${name}`,
+      subtitle: `${lang === 'de' ? 'Philosophische Werke' : 'Philosophical works'} · ${lang === 'de' ? w.when.de : w.when.en}`,
+      color: PHIL_PERIOD_BY_ID[w.period].color,
+      target: { mode: 'shelf', shelf: { kind: 'phil', id: w.id } },
     });
   }
   for (const f of FINDS) {

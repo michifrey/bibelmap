@@ -78,6 +78,7 @@ const DATA = [
   'src/data/feasts.ts',
   'src/data/shelf.ts',
   'src/data/finds.ts',
+  'src/data/philosophy.ts',
 ];
 let worst = Infinity;
 let geprueft = 0;

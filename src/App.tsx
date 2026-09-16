@@ -1240,6 +1240,11 @@ export default function App() {
                   onShowPlace={showPlaceFromGenealogy}
                   initial={shelfNav}
                   onNavigate={setShelfNav}
+                  onOpenChurch={(nav) => {
+                    setChurchNav(nav);
+                    setMode('church');
+                  }}
+                  onOpenPerson={openPersonInTree}
                   onExit={() => setMode(null)}
                 />
               </Suspense>
