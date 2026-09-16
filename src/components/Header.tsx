@@ -4,7 +4,7 @@ import { useT } from '../i18n';
 import LangToggle from './LangToggle';
 import ModePalette from './ModePalette';
 
-export type Mode = 'israel' | 'present' | 'history' | 'journeys' | 'gospel' | 'mission' | 'compare' | 'church' | 'feasts' | 'quiz' | 'nations' | 'media' | 'route' | 'index' | 'support' | 'credits' | 'roadmap';
+export type Mode = 'israel' | 'present' | 'history' | 'journeys' | 'gospel' | 'mission' | 'compare' | 'church' | 'feasts' | 'shelf' | 'quiz' | 'nations' | 'media' | 'route' | 'index' | 'support' | 'credits' | 'roadmap';
 export type View = 'map' | 'terrain' | 'tree' | 'graph';
 
 interface Props {

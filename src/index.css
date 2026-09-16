@@ -274,6 +274,78 @@ body {
     background: rgba(255, 255, 255, 0.08);
   }
 
+  /* Buchrücken im Regal ---------------------------------------------- */
+  /* Die Schrift steht senkrecht, wie auf einem echten Rücken, und läuft von
+     oben nach unten – so hält es der deutsche Buchhandel, und so liest sich
+     ein Regal, ohne den Kopf zu drehen. `writing-mode` allein genügt dafür;
+     die zusätzliche Drehung um 180° wäre die englische Leserichtung.
+
+     Die Mindestbreite kommt aus `spineWidth()` in `data/shelf.ts` und liegt
+     über den 24 Pixeln, ab denen WCAG 2.2 ein Ziel als treffbar ansieht.
+     Angefasst wird der Rücken über seine ganze Höhe – rund 110 Pixel. */
+  .bm-spine {
+    position: relative;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 0;
+    border: none;
+    border-radius: 1px 1px 0 0;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.14s ease, box-shadow 0.14s ease;
+    /* Ein Rücken hat Kanten: der Verlauf macht aus der Fläche einen Körper. */
+    box-shadow: inset -3px 0 6px rgba(0, 0, 0, 0.35), inset 3px 0 4px rgba(255, 255, 255, 0.14);
+  }
+  .bm-spine-label {
+    writing-mode: vertical-rl;
+    /* Ohne Schranke läuft die Schrift oben UND unten aus dem Rücken heraus –
+       sie steht mittig –, und `text-overflow` greift nie. In vertikaler
+       Schreibrichtung ist die Schranke die Blockrichtung, nicht die Höhe. */
+    max-block-size: 100%;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* Weiß auf den Gruppenfarben trägt; der Schlagschatten hält es auch auf
+       den hellsten (Gold, Ocker) über 4,5:1. */
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.55);
+  }
+  .bm-spine:hover {
+    transform: translateY(-4px);
+  }
+  .bm-spine:focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 2px;
+  }
+  .bm-spine.is-on {
+    transform: translateY(-8px);
+    box-shadow: inset -3px 0 6px rgba(0, 0, 0, 0.35), inset 3px 0 4px rgba(255, 255, 255, 0.14),
+      0 0 0 2px var(--color-gold);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bm-spine,
+    .bm-spine:hover,
+    .bm-spine.is-on {
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* Das Brett, auf dem sie stehen. Es läuft über die ganze Breite, auch wenn
+     der Streifen darüber seitlich scrollt – ein Brett endet nicht beim
+     letzten Buch. */
+  .bm-shelf-board {
+    height: 7px;
+    background: linear-gradient(180deg, var(--color-gold-deep) 0%, rgba(184, 116, 46, 0.55) 55%, rgba(0, 0, 0, 0.35) 100%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  }
+
   /* List row — the mention count on the left carries the weight. */
   .bm-row {
     display: flex;

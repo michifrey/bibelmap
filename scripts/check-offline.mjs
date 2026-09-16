@@ -17,7 +17,7 @@ import { chromium } from 'playwright';
 const ANSICHTEN = [
   '', '#karte', '#ort=a15257a', '#register', '#reise=exodus,2', '#heilsgeschichte=sinai',
   '#kirche=vater,augustinus', '#kirche=konzil,chalcedon', '#stammbaum=gebiete,juda', '#graph',
-  '#jesus=passion', '#israel', '#mission=modern', '#vergleich=abraham', '#feste=sukkot', '#quiz', '#hoeren',
+  '#jesus=passion', '#israel', '#mission=modern', '#vergleich=abraham', '#feste=sukkot', '#regal=buch,Dan', '#quiz', '#hoeren',
   '#weg=a15257a,a112427', '#gelaende', '#unterstuetzen', '#nachweise',
 ];
 

@@ -10,6 +10,11 @@ import { FATHERS, COUNCILS, TRADITION_COLOR, TRADITION_LABEL } from '../data/chu
 import { COMPARE } from '../data/compare';
 import { HISTORY } from '../data/history';
 import { FEASTS, MONTH_BY_ID } from '../data/feasts';
+import { GROUP_BY_ID, SHELF, formatSpan } from '../data/shelf';
+import { BOOK_BY_OSIS } from '../data/books';
+import { FINDS, FIND_KIND } from '../data/finds';
+import { LAW_TEXTS } from '../data/lawTexts';
+import type { Sel as ShelfSel } from '../components/Bookshelf';
 
 /**
  * Wohin ein Treffer führt – dieselben Angaben, die auch im Hash stehen, damit
@@ -25,7 +30,8 @@ export type HitTarget =
   | { mode: 'compare'; compare: string }
   | { mode: 'gospel'; gospel: { act: string; station?: string; person?: string } }
   | { mode: 'history'; history: string }
-  | { mode: 'feasts'; feasts: string };
+  | { mode: 'feasts'; feasts: string }
+  | { mode: 'shelf'; shelf: ShelfSel };
 
 export interface SearchHit {
   key: string;
@@ -352,6 +358,56 @@ export function searchStories(query: string, lang: Lang, limit = 8): SearchHit[]
       subtitle: `${lang === 'de' ? 'Feste Israels' : 'Feasts of Israel'} · ${f.day}. ${lang === 'de' ? monat?.de : monat?.en} · ${f.hebrew}`,
       color: f.color,
       target: { mode: 'feasts', feasts: f.id },
+    });
+  }
+
+  /*
+   * Das Bücherregal. Drei Arten von Treffern, und alle drei fand die Suche
+   * vorher nicht: „Qumran" führte auf den Ort am Toten Meer, aber nicht auf
+   * den Fund; „Mischna" und „Codex Sinaiticus" auf gar nichts.
+   *
+   * Die Bücher bekommen einen Abzug. Wer „Jona" tippt, meint meistens den
+   * Propheten – aber wer „Bethlehem" tippt, meint den Ort, und ein Buchtitel,
+   * der zufällig so heißt wie eine Stadt, darf ihn nicht verdrängen.
+   */
+  for (const b of SHELF) {
+    const meta = BOOK_BY_OSIS[b.osis];
+    if (!meta) continue;
+    const name = (lang === 'de' ? meta.de : meta.en).replace(/\s*\(.*\)$/, '');
+    const voll = lang === 'de' ? meta.de : meta.en;
+    const s2 = Math.max(score(name, q), score(voll, q) - 5, score(b.osis, q) - 10) - 20;
+    add(s2, {
+      key: `sh:${b.osis}`,
+      title: name,
+      subtitle: `${lang === 'de' ? 'Das Bücherregal' : 'The bookshelf'} · ${formatSpan(b.from, b.to, lang)}`,
+      color: GROUP_BY_ID[b.group].color,
+      target: { mode: 'shelf', shelf: { kind: 'book', id: b.osis } },
+    });
+  }
+  for (const l of LAW_TEXTS) {
+    const name = lang === 'de' ? l.de : l.en;
+    const s2 = Math.max(score(name, q), score(l.translit, q) - 5, norm(lang === 'de' ? l.what.de : l.what.en).includes(q) ? 35 : 0);
+    add(s2, {
+      key: `sl:${l.id}`,
+      title: name,
+      subtitle: `${lang === 'de' ? 'Jüdische Gesetzestexte' : 'Jewish legal texts'} · ${lang === 'de' ? l.when.de : l.when.en}`,
+      color: '#7a5aa8',
+      target: { mode: 'shelf', shelf: { kind: 'law', id: l.id } },
+    });
+  }
+  for (const f of FINDS) {
+    const name = lang === 'de' ? f.de : f.en;
+    const s2 = Math.max(
+      score(name, q),
+      norm(lang === 'de' ? f.who.de : f.who.en).includes(q) ? 40 : 0,
+      norm(lang === 'de' ? f.text.de : f.text.en).includes(q) ? 30 : 0,
+    );
+    add(s2, {
+      key: `sf:${f.id}`,
+      title: name,
+      subtitle: `${lang === 'de' ? FIND_KIND[f.kind].de : FIND_KIND[f.kind].en} · ${lang === 'de' ? f.when.de : f.when.en}`,
+      color: FIND_KIND[f.kind].color,
+      target: { mode: 'shelf', shelf: { kind: 'find', id: f.id } },
     });
   }
 

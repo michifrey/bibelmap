@@ -3,7 +3,7 @@ import { useT } from '../i18n';
 import { ERAS, eraWeight } from '../data/eras';
 import LangToggle from './LangToggle';
 
-export type LandingTarget = 'map' | 'tree' | 'present' | 'media' | 'feasts' | 'support';
+export type LandingTarget = 'map' | 'tree' | 'present' | 'media' | 'feasts' | 'shelf' | 'support';
 
 interface Props {
   lang: Lang;
@@ -305,6 +305,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
     { label: t('genealogy'), target: 'tree' },
     { label: t('media'), target: 'media' },
     { label: t('feasts'), target: 'feasts' },
+    { label: t('shelf'), target: 'shelf' },
   ];
 
   return (

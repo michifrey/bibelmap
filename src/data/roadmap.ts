@@ -74,7 +74,7 @@ export const ROAD: RoadStop[] = [
       en: 'Load halved and pinned down with a budget; keyboard, headings and tap targets brought up to standard. Check scripts have watched over it since.',
     },
     status: 'done',
-    figure: { value: '22', label: { de: 'Prüfungen bei jedem Lauf', en: 'checks on every run' } },
+    figure: { value: '23', label: { de: 'Prüfungen bei jedem Lauf', en: 'checks on every run' } },
   },
   {
     id: 'feste',
@@ -86,6 +86,17 @@ export const ROAD: RoadStop[] = [
     },
     status: 'done',
     figure: { value: '12', label: { de: 'Feste, 53 Bibelstellen', en: 'feasts, 53 passages' } },
+  },
+  {
+    id: 'regal',
+    tag: { de: 'v0.11', en: 'v0.11' },
+    title: { de: 'Die Bibel als Regal', en: 'The Bible as a shelf' },
+    body: {
+      de: 'Die 66 Bücher nach der Zeit ihrer Entstehung aufgestellt statt nach dem Kanon – mit der vollen Spanne der strittigen Datierungen, Querverweisen, der ältesten erhaltenen Handschrift je Buch und denen, die sie gefunden haben. Darunter ein zweites Regal: die jüdischen Gesetzestexte, weil die Arbeit am Text mit dem Kanon nicht aufhörte.',
+      en: 'The 66 books shelved by when they were written rather than by canon – with the full span of the disputed datings, cross-references, the oldest surviving manuscript for each book, and the people who found them. Below it a second shelf: the Jewish legal texts, because work on the text did not stop with the canon.',
+    },
+    status: 'done',
+    figure: { value: '16', label: { de: 'Funde, 11 Gesetzestexte', en: 'discoveries, 11 legal texts' } },
   },
   {
     id: 'heute',

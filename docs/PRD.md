@@ -2757,6 +2757,73 @@ Fenstertitel, Tieflink `#feste=…`, globale Suche (auch über Umschrift und
 hebräischen Namen) und den Vorabruf für den Offline-Betrieb; nachgeprüft mit
 `check-offline.mjs`, `check-i18n.mjs` und `a11y-audit.mjs`.
 
+### 4.81 Das Bücherregal — P1 ✅
+
+Die Bibel wird fast immer in der Reihenfolge des Kanons gezeigt, und diese
+Reihenfolge ist **keine der Zeit**. Der älteste Text des Neuen Testaments steht
+darin als 52. Buch (1. Thessalonicher, um 50), das jüngste Evangelium als 43.
+Die App zeigte die 66 Bücher bisher an drei Stellen – Entdeckermodus,
+Schlüsselstellen, Verweis-Graph – und jedes Mal kanonisch. Was fehlte, war die
+Frage, wann sie geschrieben wurden, und die zweite, die daran hängt: wie das,
+was geschrieben wurde, bis heute gekommen ist.
+
+**Das Regal.** Ein Rücken je Buch: **breit wie das Buch lang ist**
+(Kapitelzahl, gewurzelt und ab 1 gerechnet), **eingefärbt nach Kanongruppe**,
+und die Höhe misst ausdrücklich nichts – sie kommt aus der Buchnummer und steht
+nur da, damit ein Regal nicht aussieht wie ein Balkendiagramm. Dass sie nichts
+misst, steht unter dem Regal: Eine Grafik, die drei Dinge zeigt und zwei
+erklärt, lädt zum Falschlesen ein. Jedes Brett scrollt seitlich statt
+umzubrechen – eine umgebrochene Reihe stünde in der Luft, weil das Brett unter
+ihr fehlt.
+
+**Drei Ordnungen, dieselben Rücken.** *Entstehung*, *Erzählte Zeit* (die neun
+Epochen aus `eras.ts`, nach denen auch die Karte einfärbt) und *Kanon*. Der
+Wechsel zwischen ihnen ist das Argument der Ansicht.
+
+**Die Datierung steht zweimal da.** `from`/`to` sind nicht ein Datum mit
+Unschärfe, sondern die **Spanne der ernsthaft vertretenen Vorschläge** – bei
+1. Mose fast tausend Jahre. `period` sagt daneben, auf welchem Brett der Rücken
+steht: eine Entscheidung, keine Rechnung. **38 der 66** tragen „Datierung
+umstritten", und der Vermerk heißt nicht „unsicher", sondern: Hier führen zwei
+Datierungen zu zwei verschiedenen Büchern.
+
+**Wer die Schriften gefunden hat.** Zwischen Abfassung und Überlieferung liegt
+bei den meisten Büchern über ein Jahrtausend. Jedes Buch nennt darum seine
+älteste erhaltene Handschrift, dahinter **16 Funde** mit Jahr, Finder, Fundort
+und Verbleib – von den Silberröllchen von Ketef Hinnom (um 600 v. Chr., der
+älteste bekannte Bibeltext) bis zu den Bodmer-Papyri. Zu jedem steht, **was er
+nicht zeigt**, und Strittiges steht als strittig da: die Umstände, unter denen
+Tischendorf den Codex Sinaiticus mitnahm, ebenso wie die angegriffene Datierung
+von P52 „um 125". Bilder und Artikeltexte kommen wie bei den Zeitdokumenten
+(§ 4.34) zur Laufzeit von Wikipedia; die drei Bausteine dafür stehen seither
+gemeinsam in `components/WikiFigure.tsx` statt zweimal.
+
+**Die Auslegung geht weiter.** Unter dem biblischen Regal ein zweites mit
+**elf jüdischen Gesetzestexten** – Gemeinderegel und Damaskusschrift, Mischna,
+Tosefta, die Auslegungsmidraschim, beide Talmude, Raschi, Mischne Tora, Arbaa
+Turim, Schulchan Aruch mit der Mappa, Responsen. Ein Regal, das beim letzten
+kanonischen Buch aufhört, behauptet, die Arbeit am Text sei mit dem Kanon
+fertig gewesen. Die Breite sagt dort nichts, und das steht darunter: Diese
+Texte sind nicht in Kapiteln zu messen.
+
+**Die Prüfung (`npm run check:shelf`, die dreiundzwanzigste).** Vier Angaben je Buch sind
+Verweise, die still scheitern: `group` färbt den Rücken, `period` stellt ihn
+auf ein Brett, `links` bauen die Querverweise, `oldest.find` verbindet ihn mit
+seinem Fund. Geprüft wird jedes davon – die Gruppe gegen eine **zweite,
+unabhängige Tabelle nach Buchnummern**, das Brett gegen die eigene
+Datierungsspanne, jedes Verweisziel gegen Buch- und Gesetzestext-IDs, jeder
+Fund auf Erreichbarkeit (oder die ausdrückliche Markierung `standalone`). Dazu
+die Geometrie: `spineWidth()` wächst monoton über die Kapitelzahl und fällt nie
+unter **24 Pixel** (§ 4.75). Mit Gegenprobe: vier eingebaute Fehler und ein
+entferntes Buch.
+
+**Angeschlossen** an Modi-Tafel, Startseiten-Zeile, Fenstertitel, Tieflink
+`#regal=buch,… | recht,… | fund,…`, globale Suche (Bücher mit Abzug, damit ein
+Buchtitel keinen gleichnamigen Ort verdrängt) und den Vorabruf für den
+Offline-Betrieb; nachgemessen mit `a11y-audit.mjs` (benannt, auf 390 Pixeln im
+Bild, alle Halte im Modus, Escape frei).
+
+
 
 ---
 
@@ -2821,6 +2888,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v0.8** | Medien-Index: Sendedaten und Umlaute (4.22) | ✅ erledigt |
 | **v0.9** | Gelände in 3D mit MapLibre (4.23) | ✅ erledigt |
 | **v0.10** | Feste Israels als Jahresrad (4.80) | ✅ erledigt |
+| **v0.11** | Das Bücherregal: Entstehung, Funde, Gesetzestexte (4.81) | ✅ erledigt |
 
 Diese Tabelle ist seit § 4.79 auch eine Ansicht: **`#fahrplan`** zeigt denselben
 Weg als Strasse, samt dem, was noch offen ist. Sie liest ihre Stationen aus

@@ -307,6 +307,78 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Ortsnamen gegen `places.json`, jeden Bibellink gegen Buch und Kapitel in
   **beiden** Labeln – und rechnet die Geometrie des Rades nach, die sonst
   niemand nachmisst.
+- **Das Bücherregal** – die 66 Bücher als **Regal** statt als Inhaltsverzeichnis
+  (`#regal=buch,Isa`). Ein Rücken je Buch: **breit wie das Buch lang ist**
+  (Kapitelzahl, gewurzelt – linear gerechnet wäre Obadja neben den 150 Psalmen
+  ein halber Pixel), **eingefärbt nach Kanongruppe**, und die Höhe misst
+  ausdrücklich nichts – sie steht nur da, damit ein Regal nicht aussieht wie ein
+  Balkendiagramm. Das steht auch so unter dem Regal: Eine Grafik, die drei Dinge
+  zeigt und zwei erklärt, lädt zum Falschlesen ein.
+
+  **Drei Ordnungen, dieselben Rücken.** *Entstehung* – wann geschrieben; *Erzählte
+  Zeit* – wovon das Buch handelt (dieselben neun Epochen, nach denen die Karte
+  ihre Marker einfärbt); *Kanon* – die gewohnte Reihenfolge. Der Wechsel ist das
+  eigentliche Argument der Ansicht: Die Kanonreihenfolge ist die einzige, in der
+  die meisten Menschen die Bibel je gesehen haben, und sie ist keine der Zeit.
+  Der älteste Text des Neuen Testaments steht dort als **52. Buch**
+  (1. Thessalonicher, um 50), das jüngste Evangelium als 43.
+
+  **Die Datierung ist der heikle Teil und steht darum zweimal da.** Zu jedem Buch
+  gehört nicht ein Datum mit Unschärfe, sondern die **Spanne der ernsthaft
+  vertretenen Vorschläge**: bei 1. Mose von der Zuschreibung an Mose (~1400 v. Chr.)
+  bis zur Endredaktion in der Perserzeit (~450) – fast tausend Jahre. Auf welches
+  Brett der Rücken gestellt wird, ist daneben eine **Entscheidung**, keine
+  Rechnung, und `npm run check:shelf` verlangt, dass dieses Brett innerhalb der
+  eigenen Spanne liegt: Ein Buch darf nicht dort stehen, wo seine eigenen Daten
+  es ausschließen. **38 der 66** tragen den Vermerk „Datierung umstritten", und der
+  heißt nicht „unsicher" – unsicher ist fast alles –, sondern: Hier führen zwei
+  Datierungen zu zwei verschiedenen Büchern. Daniel im 6. oder im 2. Jahrhundert
+  ist eine andere Frage als Nahum 663 oder 640.
+
+  Je Buch außerdem: **die Welt dahinter** (Amenemope hinter den Sprüchen, die
+  assyrischen Vasallenverträge hinter 5. Mose, die Lachisch-Ostraka neben
+  Jeremia), **121 Querverweise** auf andere Bücher und auf die Gesetzestexte –
+  jeder mit einem Satz, warum –, und der Weg in den Bibeltext und zum
+  BibleProject-Guide. Ein Verweis wird von beiden Seiten erzählt: Von 1. Mose aus
+  lautet er „Johannes beginnt mit denselben drei Wörtern", von Johannes aus „der
+  erste Satz der Bibel, neu angesetzt". Im Fenster steht jeweils der Satz, den
+  dieses Buch selbst geschrieben hat – derselbe Zusammenhang zweimal wäre keiner.
+- **Wer die Schriften gefunden hat** – zwischen dem, was geschrieben wurde, und
+  dem, was zu lesen ist, liegt bei den meisten Büchern über ein Jahrtausend. Jedes
+  Buch nennt deshalb seine **älteste erhaltene Handschrift**, und dahinter stehen
+  **16 Funde** mit Jahr, Ort und Namen (`#regal=fund,qumran`): ein Beduine, der
+  1947 einen Stein in eine Höhle wirft; zwei schottische Schwestern, die 1896 auf
+  einem Kairoer Markt einkaufen; ein Bibliothekar, der 1934 in einer Schublade in
+  Manchester ein Stück Papyrus wendet und Johannes 18 liest. Dazu die
+  Silberröllchen von Ketef Hinnom – der **älteste bekannte Bibeltext überhaupt**,
+  drei Verse aus 4. Mose 6, um 600 v. Chr. als Amulett um den Hals eines Toten.
+
+  Zu jedem Fund steht, **was er nicht zeigt**: Die große Jesajarolle belegt die
+  Überlieferung des Textes, nicht die Richtigkeit seiner Aussagen; die
+  Silberröllchen belegen drei Verse, kein Buch; P52 belegt, dass Johannes im
+  2. Jahrhundert in Ägypten gelesen wurde, und sonst nichts. Und was strittig
+  ist, steht als strittig da – die Umstände, unter denen Tischendorf den Codex
+  Sinaiticus aus dem Katharinenkloster mitnahm, ebenso wie die berühmte Datierung
+  von P52 „um 125", die seit den 2000er-Jahren angegriffen wird. **Ester** ist das
+  einzige Buch der hebräischen Bibel, von dem in Qumran keine Zeile gefunden
+  wurde; auch das steht an seinem Rücken.
+- **Jüdische Gesetzestexte** – unter dem biblischen Regal steht ein zweites
+  (`#regal=recht,bavli`). Ein Regal, das beim letzten kanonischen Buch aufhört,
+  behauptet, die Arbeit am Text sei mit dem Kanon fertig gewesen – sie war es für
+  niemanden. **Elf Texte** von der Gemeinderegel vom Toten Meer über Mischna,
+  Tosefta, die Auslegungsmidraschim und die beiden Talmude bis zu Raschi,
+  Maimonides' Mischne Tora, den Arbaa Turim und dem Schulchan Aruch mit der
+  „Tischdecke" des Mose Isserles daneben – je Text: hebräischer Name mit
+  Umschrift, Zeit, Verfasser (mit dem Vorbehalt, wo die Zuschreibung strittig
+  ist), Umfang in der Einheit, in der er gemessen wird, und vor allem: **was er
+  mit der Bibel macht**. Drei Ordnungen der Mischna legen 3. Mose aus; wer
+  3. Mose liest und nicht weiß, dass das existiert, liest ein Buch ohne seine
+  Wirkungsgeschichte.
+
+  Die **Breite** sagt auf diesem Regal nichts, und das steht darunter: Diese Texte
+  sind nicht in Kapiteln zu messen – der Babylonische Talmud hat 2711 Blätter, die
+  Mischna 63 Traktate, die Responsen keinen Umfang, sondern einen Zuwachs. Statt
+  eine vergleichbare Zahl zu erfinden, stehen alle gleich breit.
 - **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
   (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
   Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
@@ -601,11 +673,11 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die zweiundzwanzig Prüfungen, die von sich aus immer
+`npm run check` bündelt die dreiundzwanzig Prüfungen, die von sich aus immer
 dasselbe Ergebnis liefern – darunter Buchkürzel, Zeitdokumente, Stammesgrenzen,
 Farbkontraste, Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen,
-Quizfragen, Heilsgeschichte, **Feste Israels**, Reisen & Mission, Startzahlen
-und **Ortsdatei** – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
+Quizfragen, Heilsgeschichte, Feste Israels, **Bücherregal**, Reisen & Mission,
+Startzahlen und **Ortsdatei** – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
 
@@ -1047,6 +1119,58 @@ Christenheit sind Größenordnungen – verschiedene Zählweisen kommen zu
 unterschiedlichen Ergebnissen. Jedes Ereignis hat einen Nachschlage-Link in die
 Wikipedia der jeweiligen Sprache.
 
+### Das Bücherregal: Datierung, Funde, Gesetzestexte
+
+Drei Dateien, eine Ansicht:
+
+- `src/data/shelf.ts` – je biblisches Buch die **Entstehungsspanne** (`from`/`to`,
+  negativ = v. Chr.), das **Brett** (`period`), die **Kanongruppe** (`group`),
+  zwei Absätze Prosa (Datierung und geschichtlicher Hintergrund, zweisprachig),
+  die **Querverweise** und die **älteste erhaltene Handschrift** mit Verweis auf
+  ihren Fund. Dazu die Geometrie des Regals: `spineWidth()` und `spineHeight()`.
+- `src/data/finds.ts` – die **16 Handschriftenfunde**: Jahr, Finder, Fundort und
+  Verbleib, Alter der Handschrift, was darin steht – und `limits`, was der Fund
+  **nicht** zeigt. `standalone: true` markiert die fünf, an denen kein Buch hängt
+  (Vaticanus, Alexandrinus, Aleppo, Lachisch, Nag Hammadi); sie stehen in der
+  Liste, weil sie zur Geschichte gehören.
+- `src/data/lawTexts.ts` – die **elf jüdischen Gesetzestexte** samt der Notiz zu
+  den 613 Geboten, deren Zahl von Rabbi Simlai stammt (Talmud Bavli, Makkot 23b).
+
+Regeln für die Daten, dieselben wie bei `witnesses.ts`: Jeder Eintrag nennt seine
+Quelle so genau, dass man sie nachschlagen kann. Umstrittenes steht als
+umstritten da – die Herkunft des Codex Sinaiticus ebenso wie die Datierung von
+P52. Und wo etwas fehlt, steht das ausdrücklich: Nehemia ist in Qumran nicht
+nachgewiesen, Ester überhaupt nicht.
+
+Bilder und Artikeltexte werden **nicht** mitgeliefert. Zu jedem Fund und jedem
+Gesetzestext steht nur ein Suchbegriff, den `lib/wikipediaArticle.ts` zur Laufzeit
+bei Wikipedia auflöst – Einleitung und Bild von Wikimedia Commons, mit Urheber
+und Lizenz. Dieselbe Mechanik wie bei den Zeitdokumenten der Personen; die drei
+Bausteine dafür stehen seit dem Regal gemeinsam in `components/WikiFigure.tsx`,
+statt zweimal.
+
+`npm run check:shelf` prüft, was still falsch werden kann:
+
+- **Vollständigkeit und Reihenfolge** – alle 66 Bücher, keins doppelt, in
+  kanonischer Reihenfolge in der Datei.
+- **Die Gruppe gegen die Buchnummer** – die Kanongruppen stehen im Prüfskript ein
+  zweites Mal, nach Buchnummern. Stünde die Zuordnung nur in `shelf.ts`, prüfte
+  sich die Datei gegen sich selbst.
+- **Das Brett gegen die eigene Spanne** – ein Rücken auf einem Brett außerhalb
+  seiner Datierung wäre eine Behauptung, der die eigenen Daten widersprechen.
+- **Jeden Querverweis** – Ziel vorhanden (Buch oder Gesetzestext), kein Verweis
+  auf sich selbst, keiner doppelt, beide Sprachen gefüllt. Gegenseitige Verweise
+  sind erwünscht, **zwei gleichlautende Sätze** aber nicht: Dann wurde einer nur
+  herüberkopiert.
+- **Jeden Fund** – entweder ein Buch zeigt darauf **oder** er ist als
+  alleinstehend markiert; beides zugleich ist ein Befund, keins von beidem auch.
+- **Die Geometrie** – `spineWidth()` wächst monoton über die Kapitelzahl (sonst
+  wäre ein längeres Buch dünner) und fällt nie unter **24 Pixel**, die
+  Untergrenze, ab der WCAG 2.2 ein Ziel als treffbar ansieht.
+
+Dazu die Gegenprobe: Das Skript baut vier Fehler ins Regal ein und nimmt ein
+Buch heraus; findet es die nicht, bricht es ab, statt ein „bestanden" zu melden.
+
 ### Epochen & Zeitleiste
 
 Die Zuordnung von Büchern zu historischen Epochen (`src/data/books.ts`,
@@ -1056,7 +1180,7 @@ angaben folgen einer gängigen konservativen Chronologie.
 
 ### Barrierefreiheit prüfen
 
-`scripts/a11y-audit.mjs` geht mit einem Browser durch alle vierzehn Ansichten,
+`scripts/a11y-audit.mjs` geht mit einem Browser durch alle fünfundzwanzig Ansichten,
 dreimal:
 
 1. **Namen** – was keinen hat (Icon-Knöpfe, Regler, Grafiken, **Leinwände**)
