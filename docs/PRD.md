@@ -2715,8 +2715,9 @@ der Jesus-Sektion, Schawuot in der Mission. Was fehlte, war das, was sie
 zusammenhält – **der Kalender**. Und ein Kalender ist keine Liste, sondern ein
 Kreis: Er fängt wieder an.
 
-**Das Rad.** Von außen nach innen: die zwölf Monate mit ihren hebräischen
-Namen, der Monatsring (seine Stücke sind so breit, wie die Monate lang sind),
+**Das Rad.** Von außen nach innen: der gregorianische Kalender (Jan, Feb, März
+…), die zwölf hebräischen Monate mit ihren Namen, der Monatsring (seine Stücke
+sind so breit, wie die Monate lang sind),
 das Band der Feste an ihrem Tag, innen das schmale Band der Monatsanfänge, in
 der Mitte das Bild. Wer weiterblättert, dreht das Jahr: Das gewählte Fest kommt
 nach oben, **sein Kuchenstück fährt aus dem Rad und wird größer**, und über
@@ -2856,6 +2857,39 @@ jede andere – die Ausnahme ist geprüft, nicht behauptet.
 
 Der kritische Pfad bleibt unberührt: 334,7 kB von 360, der Vorabruf hängt am
 `requestIdleCallback` wie zuvor.
+
+### 4.83 Der äußere Ring: wann ist das bei uns? — P2 ✅
+
+Das Rad zeigte zwölf hebräische Monate, und die erste Frage jedes Betrachters
+blieb offen: *wann ist das bei uns?* „15. Tischri" sagt niemandem etwas.
+
+Ganz außen liegt darum jetzt der gregorianische Kalender. Der Monat, in dem das
+gewählte Fest liegt, ist hervorgehoben – das ist die Antwort, ohne einen Satz
+dafür zu brauchen.
+
+**Die Ausrichtung ist gerechnet, nicht gesetzt.** Die beiden Ringe sind
+gegeneinander verdreht, weil die Jahre nicht am selben Tag beginnen. Der Versatz
+kommt aus den Monatslängen: Die **Mitte des Nisan** liegt auf dem Wechsel
+März/April, womit die Angabe stimmt, die in den Daten seit jeher steht – „März
+/ April" – und mit ihr jede andere. Gemessen −73,51°. Ändert jemand die Länge
+eines Monats, wandert der Ring mit, statt still falsch zu stehen.
+
+**Und die Prüfung bindet beides aneinander.** `check:feasts` rechnet aus dem
+Ring zurück, welche gregorianischen Monate ein hebräischer überdeckt, und
+vergleicht das mit dem Satz daneben – zweisprachig, für alle zwölf. Zwei
+Darstellungen derselben Sache laufen sonst auseinander, sobald jemand eine
+davon anfasst, und niemand sieht es. Gegenprobe: Tischri auf „August /
+September" umgeschrieben meldet sie in beiden Sprachen.
+
+**Was der Ring nicht ist: ein Datum.** Das jüdische Jahr ist elf Tage kürzer als
+das gregorianische; die Feste wandern jedes Jahr nach vorn, bis in sieben von
+neunzehn Jahren ein Schaltmonat sie zurückholt. Pessach fällt zwischen Ende März
+und Ende April. Der Hinweis unter dem Rad sagt das; der Ring stimmt im Mittel,
+nicht am Tag.
+
+Das Innere musste dafür Platz machen: Alle Radien rücken ein Stück nach innen,
+die Bildscheibe von 56 auf 53. Der kritische Pfad wächst um 0,5 kB auf 335,1 kB
+von 360.
 
 
 ---
