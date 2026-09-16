@@ -2,12 +2,19 @@
  * Wer für diese Seite geradesteht.
  *
  * Die Angaben stehen hier und nicht in `i18n.ts`, weil sie in keiner Sprache
- * anders lauten: Ein Name ist ein Name, eine Adresse eine Adresse. Übersetzt
- * wird nur, was um sie herum steht.
+ * anders lauten: Ein Name ist ein Name, ein Ortsname ein Ortsname. Übersetzt
+ * wird nur, was um sie herum steht – und das eine Stück, das sich doch
+ * unterscheidet, siehe `ADDRESS`.
  */
 
-/** Verantwortlich im Sinne eines Impressums – eine Person, keine Firma. */
-export const OWNER = 'Michi Frey';
+/**
+ * Verantwortlich im Sinne eines Impressums – eine Person, keine Firma.
+ *
+ * Hier steht der volle Name, nicht die Kurzform: Diese Zeile ist die, auf die
+ * sich jemand berufen können soll. Im Absatz „Wer das gebaut hat" darf
+ * daneben „Michi" stehen – dort schreibt der Mensch, hier haftet er.
+ */
+export const OWNER = 'Michael Frey';
 
 /**
  * Die E-Mail steht ausgeschrieben da, nicht als `[at]`-Bastelei.
@@ -21,19 +28,26 @@ export const EMAIL = 'michael@freynet.ch';
 /**
  * Die Postanschrift, Zeile für Zeile – oder `null`, solange keine dasteht.
  *
- * Für eine private, nicht-kommerzielle Seite verlangt weder das schweizerische
- * UWG (Art. 3 Abs. 1 lit. s gilt dem elektronischen Geschäftsverkehr) noch das
- * deutsche DDG (§ 5 gilt geschäftsmässigen Angeboten) zwingend eine Anschrift;
- * Name und ein erreichbarer Kontakt genügen. Sobald hier Geld fliesst –
- * Spenden, Werbung, ein Verkauf –, ändert sich das: dann gehört die Anschrift
- * dazu, und dann trägt man sie hier ein.
+ * **Warum die hier zweisprachig ist und der Rest der Datei nicht.** Ein
+ * Ortsname bleibt einer: Aarau heisst auf Englisch Aarau. Das Land nicht –
+ * „Schweiz" in einer englischen Oberfläche sieht aus wie ein vergessener
+ * Rest, nicht wie eine Adresse. Darum dieselbe `{ de, en }`-Form, die im
+ * Rest der App jede zweisprachige Angabe trägt.
  *
- *     export const ADDRESS: readonly string[] | null = ['Musterweg 1', '8000 Zürich', 'Schweiz'];
+ * Ort und Land ohne Strasse und Hausnummer: Für eine private, nicht-
+ * kommerzielle Seite verlangt weder das schweizerische UWG (Art. 3 Abs. 1
+ * lit. s gilt dem elektronischen Geschäftsverkehr) noch das deutsche DDG
+ * (§ 5 gilt geschäftsmässigen Angeboten) eine ladungsfähige Anschrift; Name
+ * und ein erreichbarer Kontakt genügen. Sobald hier Geld fliesst – Spenden,
+ * Werbung, ein Verkauf –, ändert sich das: dann gehören Strasse und Nummer
+ * dazu, und dann stehen sie hier vorn.
  *
- * Die Seite blendet den Block aus, solange hier `null` steht – lieber keine
- * Zeile als eine erfundene.
+ * `null` blendet den Block aus – lieber keine Zeile als eine erfundene.
  */
-export const ADDRESS: readonly string[] | null = null;
+export const ADDRESS: { de: readonly string[]; en: readonly string[] } | null = {
+  de: ['Aarau', 'Schweiz'],
+  en: ['Aarau', 'Switzerland'],
+};
 
 /** Die Seite selbst – Anzeigename und Adresse getrennt, `www.` will niemand lesen. */
 export const SITE = { label: 'www.biblemap.ch', url: 'https://www.biblemap.ch' };
