@@ -74,7 +74,18 @@ export const ROAD: RoadStop[] = [
       en: 'Load halved and pinned down with a budget; keyboard, headings and tap targets brought up to standard. Check scripts have watched over it since.',
     },
     status: 'done',
-    figure: { value: '21', label: { de: 'Prüfungen bei jedem Lauf', en: 'checks on every run' } },
+    figure: { value: '22', label: { de: 'Prüfungen bei jedem Lauf', en: 'checks on every run' } },
+  },
+  {
+    id: 'feste',
+    tag: { de: 'v0.10', en: 'v0.10' },
+    title: { de: 'Das Jahr als Rad', en: 'The year as a wheel' },
+    body: {
+      de: 'Die Feste Israels im Kreis der zwölf Monate: wann eines liegt, wovon aus gezählt wird, was gefeiert wird – und was heute daraus geworden ist, jüdisch wie christlich. Der Neumond steht zwölfmal darin, an jedem Monatsanfang.',
+      en: 'The feasts of Israel in the circle of the twelve months: when one falls, what it is counted from, what it celebrates – and what has become of it today, in Jewish and in Christian practice. The new moon stands in it twelve times, at every month’s beginning.',
+    },
+    status: 'done',
+    figure: { value: '12', label: { de: 'Feste, 53 Bibelstellen', en: 'feasts, 53 passages' } },
   },
   {
     id: 'heute',

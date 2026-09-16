@@ -60,6 +60,7 @@ const ANSICHTEN = [
   '#hoeren',
   '#weg=a15257a,a112427',
   '#heilsgeschichte=exodus',
+  '#feste=pessach',
   '#gelaende',
   '#register',
   '#unterstuetzen',

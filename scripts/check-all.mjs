@@ -38,6 +38,7 @@ const CHECKS = [
   // TypeScript und den Auflöser aus scripts/lib.
   { name: 'Quizfragen', script: 'check-quiz.mjs', ts: true },
   { name: 'Heilsgeschichte', script: 'check-history.mjs', ts: true },
+  { name: 'Feste Israels', script: 'check-feasts.mjs', ts: true },
   { name: 'Reisen & Mission', script: 'check-journeys.mjs', ts: true },
   { name: 'Schlüsselstellen', script: 'check-passages.mjs', ts: true },
   { name: 'Religionsvergleich', script: 'check-compare.mjs', ts: true },

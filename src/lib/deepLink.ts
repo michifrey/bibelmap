@@ -40,6 +40,8 @@ export interface Route {
   gospel?: { act: string; station?: string; person?: string };
   /** Station der Heilsgeschichte: `#heilsgeschichte=exodus`. */
   history?: string;
+  /** Fest im Jahreskreis: `#feste=pessach`. */
+  feasts?: string;
   /** Ereignis der Israel-Karte: `#israel=okt2023`. */
   israel?: string;
   /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
@@ -156,6 +158,10 @@ export function parseHash(hash: string): Route | null {
       return args[0]
         ? { view: 'map', mode: 'history', history: args[0] }
         : { view: 'map', mode: 'history' };
+    case 'feste':
+      return args[0]
+        ? { view: 'map', mode: 'feasts', feasts: args[0] }
+        : { view: 'map', mode: 'feasts' };
     case 'weg':
       return args.length
         ? { view: 'map', mode: 'route', own: args.filter(Boolean) }
@@ -232,6 +238,9 @@ export function formatRoute(route: Route): string {
   }
   if (mode === 'history') {
     return route.history ? `#heilsgeschichte=${route.history}` : '#heilsgeschichte';
+  }
+  if (mode === 'feasts') {
+    return route.feasts ? `#feste=${route.feasts}` : '#feste';
   }
   if (mode === 'route') {
     return route.own?.length ? `#weg=${route.own.join(',')}` : '#weg';

@@ -3,7 +3,7 @@ import { useT } from '../i18n';
 import { ERAS, eraWeight } from '../data/eras';
 import LangToggle from './LangToggle';
 
-export type LandingTarget = 'map' | 'tree' | 'present' | 'media' | 'support';
+export type LandingTarget = 'map' | 'tree' | 'present' | 'media' | 'feasts' | 'support';
 
 interface Props {
   lang: Lang;
@@ -201,6 +201,47 @@ function CardArtMedia() {
 }
 
 /** Miniature of the genealogy tree — card 03. */
+/** Das Jahresrad: zwölf Monate, ein Stück heraus, der Mond in der Mitte. */
+function CardArtFeasts() {
+  return (
+    <svg viewBox="0 0 246 178" className="block w-full" aria-hidden="true">
+      <rect width="246" height="178" fill="#073f3c" />
+      <g transform="translate(123 89)">
+        {/* Der Monatsring, zwölfgeteilt */}
+        <circle r="62" fill="none" stroke="#0a5450" strokeWidth="26" />
+        <g stroke="#073f3c" strokeWidth="3">
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => {
+            const a = ((i * 30 - 90) * Math.PI) / 180;
+            return (
+              <path
+                key={i}
+                d={`M${(49 * Math.cos(a)).toFixed(1)} ${(49 * Math.sin(a)).toFixed(1)}L${(75 * Math.cos(a)).toFixed(1)} ${(75 * Math.sin(a)).toFixed(1)}`}
+              />
+            );
+          })}
+        </g>
+        {/* Die Feste an ihrem Tag */}
+        <g stroke="#7fe3d5" strokeOpacity=".8" strokeWidth="7" strokeLinecap="round">
+          {[52, 96, 140, 188, 232, 276, 312].map((deg) => {
+            const a = ((deg - 90) * Math.PI) / 180;
+            return (
+              <path
+                key={deg}
+                d={`M${(36 * Math.cos(a)).toFixed(1)} ${(36 * Math.sin(a)).toFixed(1)}L${(44 * Math.cos(a)).toFixed(1)} ${(44 * Math.sin(a)).toFixed(1)}`}
+              />
+            );
+          })}
+        </g>
+        {/* Das herausgezogene Stück */}
+        <path d="M-13 -52 13 -52 9 -85 -9 -85Z" fill="#e0a449" />
+        {/* Der Mond in der Mitte */}
+        <circle r="26" fill="#0a5450" stroke="#a9e4dc" strokeOpacity=".5" strokeWidth="2" />
+        <path d="M9 4a13 13 0 1 1-13-16 11 11 0 0 0 13 16z" fill="#e0a449" />
+      </g>
+    </svg>
+  );
+}
+
 function CardArtTree() {
   return (
     <svg viewBox="0 0 246 178" className="block w-full" aria-hidden="true">
@@ -241,6 +282,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
     { kicker: t('lCard2Kicker'), title: t('lCard2Title'), body: t('lCard2Body'), cta: t('lCard2Cta'), art: <CardArtRead />, target: 'present' as const },
     { kicker: t('lCard3Kicker'), title: t('lCard3Title'), body: t('lCard3Body'), cta: t('lCard3Cta'), art: <CardArtTree />, target: 'tree' as const },
     { kicker: t('lCard4Kicker'), title: t('lCard4Title'), body: t('lCard4Body'), cta: t('lCard4Cta'), art: <CardArtMedia />, target: 'media' as const },
+    { kicker: t('lCard5Kicker'), title: t('lCard5Title'), body: t('lCard5Body'), cta: t('lCard5Cta'), art: <CardArtFeasts />, target: 'feasts' as const },
   ];
 
   const stats = [
@@ -262,6 +304,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
     { label: t('presentation'), target: 'present' },
     { label: t('genealogy'), target: 'tree' },
     { label: t('media'), target: 'media' },
+    { label: t('feasts'), target: 'feasts' },
   ];
 
   return (
@@ -380,7 +423,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
           <span className="bm-eyebrow text-signal-deep">{t('lWaysIn')}</span>
           <span className="h-px flex-1 bg-[#d8d2c4]" />
         </div>
-        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {cards.map((c) => (
             <button
               key={c.kicker}
