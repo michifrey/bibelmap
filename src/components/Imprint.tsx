@@ -35,7 +35,7 @@ function ExternalIcon() {
  * Eine Zeile der Koordinaten: links wofür, rechts was.
  *
  * `dt`/`dd` statt zweier `div`s, weil genau das hier steht – ein Begriff und
- * seine Angabe. Ein Screenreader liest dann „E-Mail: michae@freynet.ch“ und
+ * seine Angabe. Ein Screenreader liest dann „E-Mail: michael@freynet.ch“ und
  * nicht zwei Textfetzen hintereinander.
  */
 function Zeile({ label, children }: { label: string; children: React.ReactNode }) {

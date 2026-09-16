@@ -16,7 +16,7 @@ export const OWNER = 'Michi Frey';
  * auf, der schreiben will, und macht die Adresse für Screenreader unlesbar.
  * Ein Impressum, das man erst entziffern muss, ist keines.
  */
-export const EMAIL = 'michae@freynet.ch';
+export const EMAIL = 'michael@freynet.ch';
 
 /**
  * Die Postanschrift, Zeile für Zeile – oder `null`, solange keine dasteht.
