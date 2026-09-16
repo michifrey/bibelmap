@@ -270,6 +270,38 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Islam (Abraham, Mose, Jona, Maria, Jesus …) mit den Schriftstellen in Tanach,
   Bibel und Koran, aus jüdisch-christlich-biblischer Sicht; jede Gestalt hat
   eine eigene Adresse (`#vergleich=abraham`).
+- **Feste Israels** – das Jahr als **Rad** statt als Liste (`#feste=pessach`).
+  Von außen nach innen: die zwölf Monate mit ihren hebräischen Namen, dann der
+  Monatsring – seine Stücke sind so breit, wie die Monate lang sind –, dann das
+  Band der **elf Feste** an ihrem Tag, in der Mitte das Bild. Wer weiterklickt,
+  dreht das Jahr: Das gewählte Fest kommt nach oben, **sein Kuchenstück fährt
+  aus dem Rad und wird größer**, und über Adar hinaus geht es weiter nach Nisan
+  – ein Jahr hat kein Ende, an dem man stehen bliebe. Bei `prefers-reduced-motion`
+  springt das Rad, statt zu drehen.
+
+  Je Fest: der **hebräische Name** mit Umschrift, der deutsche und englische,
+  **wann** es liegt (14. Nisan, 15.–21. Tischri …), **wovon aus gezählt wird**
+  – zehn Tage nach dem Posaunenfest, fünfzig nach der Erstlingsgarbe, vier Tage
+  nachdem das Lamm ausgesucht wurde –, **was gefeiert wird**, und was **heute**
+  daraus geworden ist, jüdisch wie christlich: Ostern folgt bis heute dem Mond
+  des Passa, Pfingsten *ist* Schawuot, die Hostie ist eine Mazze, und das Wort
+  „Sündenbock" stammt aus dem zweiten Ziegenbock von 3. Mose 16. Die
+  Bibelstellen stehen nach ihrem Verhältnis zum Fest getrennt: **wo es geboten
+  ist**, **wo es vorkommt**, **wo es im Neuen Testament wiederkehrt** – jede
+  zweisprachig beschriftet und verlinkt.
+
+  Was nicht ins Rad passt, steht darunter: **Sabbat**, **Neumond** und
+  **Sabbat- und Jobeljahr** – drei Rhythmen, die zum Kalender gehören, aber zu
+  keinem Jahreskreis. Und was am Kalender nicht stimmt, steht ebenfalls da: Das
+  Rad rechnet mit zwölf Monaten zu 354 Tagen, während zwei Monate zwischen 29
+  und 30 Tagen wechseln und in sieben von neunzehn Jahren ein ganzer Monat
+  eingeschoben wird. Die **Lage** eines Festes stimmt auf den Tag, seine
+  **Breite** im Rad nicht: Ein Fest von einem Tag misst 1,02° – zu wenig, um es
+  zu treffen –, darum ist alles unter fünf Grad um seine Mitte aufgeweitet.
+  `npm run check:feasts` prüft jeden Tag gegen die Länge seines Monats, jeden
+  Ortsnamen gegen `places.json`, jeden Bibellink gegen Buch und Kapitel in
+  **beiden** Labeln – und rechnet die Geometrie des Rades nach, die sonst
+  niemand nachmisst.
 - **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
   (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
   Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
@@ -550,11 +582,11 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die dreizehn Prüfungen, die von sich aus immer dasselbe
-Ergebnis liefern – Buchkürzel, Zeitdokumente, Stammesgrenzen, Farbkontraste,
-Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen, Quizfragen,
-Heilsgeschichte, Reisen & Mission, Startzahlen und **Ortsdatei** – und läuft in
-der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
+`npm run check` bündelt die zweiundzwanzig Prüfungen, die von sich aus immer
+dasselbe Ergebnis liefern – darunter Buchkürzel, Zeitdokumente, Stammesgrenzen,
+Farbkontraste, Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen,
+Quizfragen, Heilsgeschichte, **Feste Israels**, Reisen & Mission, Startzahlen
+und **Ortsdatei** – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
 

@@ -9,6 +9,7 @@ import { GENEALOGY, EPOCH_BY_ID, formatYear } from '../data/genealogy';
 import { FATHERS, COUNCILS, TRADITION_COLOR, TRADITION_LABEL } from '../data/church';
 import { COMPARE } from '../data/compare';
 import { HISTORY } from '../data/history';
+import { FEASTS, MONTH_BY_ID } from '../data/feasts';
 
 /**
  * Wohin ein Treffer führt – dieselben Angaben, die auch im Hash stehen, damit
@@ -23,7 +24,8 @@ export type HitTarget =
   | { mode: 'church'; church: { tab: 'fathers' | 'councils'; id: string } }
   | { mode: 'compare'; compare: string }
   | { mode: 'gospel'; gospel: { act: string; station?: string; person?: string } }
-  | { mode: 'history'; history: string };
+  | { mode: 'history'; history: string }
+  | { mode: 'feasts'; feasts: string };
 
 export interface SearchHit {
   key: string;
@@ -328,6 +330,28 @@ export function searchStories(query: string, lang: Lang, limit = 8): SearchHit[]
       subtitle: `${lang === 'de' ? 'Heilsgeschichte' : 'Salvation history'} · ${st.date} · ${st.ref.label}`,
       color: ERA_BY_ID[st.era]?.color ?? '#e0a449',
       target: { mode: 'history', history: st.id },
+    });
+  }
+
+  // ---- Feste Israels -------------------------------------------------------
+  for (const f of FEASTS) {
+    const txt = lang === 'de' ? f.de : f.en;
+    const monat = MONTH_BY_ID[f.month];
+    // Auch die hebräische Form und die Umschrift zählen: Wer „Sukkot" tippt,
+    // sucht das Laubhüttenfest, und der deutsche Name hilft ihm dabei nicht.
+    const s = Math.max(
+      score(txt.name, q),
+      score(f.translit, q) - 5,
+      txt.also ? score(txt.also, q) - 5 : 0,
+      norm(txt.what).includes(q) ? 35 : 0,
+      norm(txt.today).includes(q) ? 30 : 0,
+    );
+    add(s, {
+      key: `fe:${f.id}`,
+      title: txt.name,
+      subtitle: `${lang === 'de' ? 'Feste Israels' : 'Feasts of Israel'} · ${f.day}. ${lang === 'de' ? monat?.de : monat?.en} · ${f.hebrew}`,
+      color: f.color,
+      target: { mode: 'feasts', feasts: f.id },
     });
   }
 

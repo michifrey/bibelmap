@@ -75,6 +75,7 @@ const DATA = [
   'src/data/gospel.ts',
   'src/data/genealogy.ts',
   'src/data/personSources.ts',
+  'src/data/feasts.ts',
 ];
 let worst = Infinity;
 let geprueft = 0;

@@ -23,6 +23,7 @@ import YearSlider from './components/YearSlider';
 import SearchPanel from './components/SearchPanel';
 const Presentation = lazy(() => import('./components/Presentation'));
 const HistoryMode = lazy(() => import('./components/HistoryMode'));
+const FeastsMode = lazy(() => import('./components/FeastsMode'));
 const Mission = lazy(() => import('./components/Mission'));
 const JourneyMode = lazy(() => import('./components/JourneyMode'));
 const Gospel = lazy(() => import('./components/Gospel'));
@@ -185,6 +186,7 @@ export default function App() {
   const [compareNav, setCompareNav] = useState<string | null>(INITIAL_ROUTE?.compare ?? null);
   const [israelNav, setIsraelNav] = useState<string | null>(INITIAL_ROUTE?.israel ?? null);
   const [historyNav, setHistoryNav] = useState<string | null>(INITIAL_ROUTE?.history ?? null);
+  const [feastsNav, setFeastsNav] = useState<string | null>(INITIAL_ROUTE?.feasts ?? null);
   const [treeNav, setTreeNav] = useState(INITIAL_ROUTE?.tree ?? null);
   /*
    * Der eigene Weg. Er gehört niemandem außer dem, der ihn baut: gespeichert
@@ -357,6 +359,7 @@ export default function App() {
       void import('./components/PlaceDetail');
       void import('./components/Mission');
       void import('./components/HistoryMode');
+      void import('./components/FeastsMode');
       void import('./components/QuizMode');
       void import('./components/MediaMode');
       void import('./components/Genealogy');
@@ -408,6 +411,7 @@ export default function App() {
           compare: compareNav ?? undefined,
           israel: israelNav ?? undefined,
           history: historyNav ?? undefined,
+          feasts: feastsNav ?? undefined,
           own: mode === 'route' ? ownIds : undefined,
           tree: treeNav ?? undefined,
         });
@@ -427,6 +431,7 @@ export default function App() {
     churchNav,
     compareNav,
     historyNav,
+    feastsNav,
     ownIds,
     treeNav,
   ]);
@@ -472,6 +477,7 @@ export default function App() {
       setCompareNav(route.compare ?? null);
       setIsraelNav(route.israel ?? null);
       setHistoryNav(route.history ?? null);
+      setFeastsNav(route.feasts ?? null);
       if (route.own?.length) setOwnIds(route.own);
       setTreeNav(route.tree ?? null);
       pendingPlace.current = route.placeId ?? null;
@@ -622,6 +628,9 @@ export default function App() {
     } else if (hit.target.mode === 'history') {
       setHistoryNav(hit.target.history);
       setMode('history');
+    } else if (hit.target.mode === 'feasts') {
+      setFeastsNav(hit.target.feasts);
+      setMode('feasts');
     } else if (hit.target.mode === 'gospel') {
       setGospelNav(hit.target.gospel);
       setMode('gospel');
@@ -1044,6 +1053,19 @@ export default function App() {
                   lang={lang}
                   initial={historyNav}
                   onNavigate={setHistoryNav}
+                  onExit={() => setMode(null)}
+                />
+              </Suspense>
+            )}
+            {mode === 'feasts' && (
+              <Suspense fallback={<ModeFallback />}>
+                <FeastsMode
+                  key={`feasts-${navEpoch}`}
+                  places={places}
+                  lang={lang}
+                  initial={feastsNav}
+                  onNavigate={setFeastsNav}
+                  onShowPlace={showPlaceFromGenealogy}
                   onExit={() => setMode(null)}
                 />
               </Suspense>
