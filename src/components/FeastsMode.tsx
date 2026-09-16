@@ -16,6 +16,10 @@ import {
   feastOccurrences,
   monthStart,
   MONTH_BY_ID,
+  GREGORIAN_MONTHS,
+  GREGORIAN_YEAR_DAYS,
+  gregorianStart,
+  gregorianOffsetDeg,
   type Feast,
   type FeastRef,
 } from '../data/feasts';
@@ -41,25 +45,32 @@ import PlaceThumb from './PlaceThumb';
  */
 
 /**
- * Mitte der Monatsbeschriftung. Sie muss außerhalb von dem liegen, was das
- * herausgezogene Stück erreicht (R_MONTH_OUT + GROW + PULL = 140) – sonst
- * verdeckt der Kuchen ausgerechnet den Monatsnamen, auf den er zeigt.
+ * Ganz außen der gregorianische Kalender – Jan, Feb, … Er beantwortet die
+ * Frage, die jeder an diesen Kreis stellt: *Wann ist das bei uns?*
  */
-const R_TEXT = 156;
-const R_MONTH_OUT = 120;
-const R_MONTH_IN = 94;
-const R_FEAST_OUT = 90;
-const R_FEAST_IN = 70;
+const R_GREG_OUT = 188;
+const R_GREG_IN = 166;
+/**
+ * Mitte der hebräischen Monatsbeschriftung. Sie muss außerhalb von dem liegen,
+ * was das herausgezogene Stück erreicht (R_MONTH_OUT + GROW + PULL = 134) –
+ * sonst verdeckt der Kuchen ausgerechnet den Monatsnamen, auf den er zeigt –
+ * und innerhalb des äußeren Rings bleiben.
+ */
+const R_TEXT = 150;
+const R_MONTH_OUT = 114;
+const R_MONTH_IN = 90;
+const R_FEAST_OUT = 86;
+const R_FEAST_IN = 67;
 /**
  * Das schmale Band der Monatsanfänge, innen vor dem Festband. Der Neumond
  * gehört nicht neben die Jahresfeste, sondern unter sie: Er kommt zwölfmal,
  * und im siebten Monat fiele er sonst genau auf das Posaunenfest – zwei
  * Stücke auf demselben Strich, von denen man nur eines sähe.
  */
-const R_MOON_OUT = 68;
-const R_MOON_IN = 62;
+const R_MOON_OUT = 65;
+const R_MOON_IN = 59;
 /** Radius der Bildscheibe – das Prozentmaß darunter hängt daran. */
-const R_PHOTO = 56;
+const R_PHOTO = 53;
 /** Wie weit das ausgewählte Stück aus dem Rad fährt und wie viel es wächst. */
 const PULL = 10;
 const GROW = 10;
@@ -67,7 +78,7 @@ const MIN_GRAD = 5;
 /** Dasselbe für das herausgezogene Stück: es soll ein Kuchenstück sein, kein Strich. */
 const MIN_GRAD_AKTIV = 15;
 
-const VIEWBOX = 176;
+const VIEWBOX = 196;
 /** Durchmesser der Bildscheibe als Anteil des Quadrats – für das <img> darüber. */
 const PHOTO_PCT = `${((2 * R_PHOTO) / (2 * VIEWBOX)) * 100}%`;
 
@@ -176,6 +187,20 @@ export default function FeastsMode({ places, lang, initial, onNavigate, onShowPl
     return () => window.removeEventListener('keydown', onKey);
   }, []);
 
+  /** Um wie viel der äußere Ring gegen den inneren steht – siehe feasts.ts. */
+  const gregVersatz = gregorianOffsetDeg();
+  /**
+   * In welchem gregorianischen Monat das gewählte Fest liegt. Gerechnet über
+   * denselben Versatz, mit dem der Ring gezeichnet wird: Eine zweite Rechnung
+   * daneben liefe irgendwann auseinander, und niemand sähe es.
+   */
+  const gregMonatDesFestes = (() => {
+    const winkel = ((mitte(feast) - gregVersatz) % 360 + 360) % 360;
+    const tag = (winkel / 360) * GREGORIAN_YEAR_DAYS;
+    for (let i = 11; i >= 0; i--) if (tag >= gregorianStart(i)) return i;
+    return 0;
+  })();
+
   const text = lang === 'de' ? feast.de : feast.en;
   const license = licenseInfo(img?.license ?? null, lang);
   const grouped = REF_ORDER.map((kind) => ({
@@ -229,6 +254,49 @@ export default function FeastsMode({ places, lang, initial, onNavigate, onShowPl
               className="h-full w-full overflow-visible"
             >
               <g transform={`rotate(${rot.toFixed(2)})`}>
+                {/*
+                  Der gregorianische Ring, ganz außen. Er ist gegen den inneren
+                  verdreht, weil die beiden Jahre nicht am selben Tag anfangen –
+                  um wie viel, rechnet `gregorianOffsetDeg()` aus den Monats-
+                  längen aus. Hervorgehoben ist der Monat, in dem das gewählte
+                  Fest liegt: Das ist die Antwort auf „wann ist das bei uns".
+                */}
+                {GREGORIAN_MONTHS.map((g, n) => {
+                  const a0 = dayAngle(gregorianStart(n), GREGORIAN_YEAR_DAYS) + gregVersatz;
+                  const a1 = dayAngle(gregorianStart(n) + g.days, GREGORIAN_YEAR_DAYS) + gregVersatz;
+                  const on = n === gregMonatDesFestes;
+                  return (
+                    <path
+                      key={g.en}
+                      d={arcPath(a0, a1, R_GREG_IN, R_GREG_OUT)}
+                      fill={on ? '#e0a449' : '#ffffff'}
+                      fillOpacity={on ? 0.22 : n % 2 === 0 ? 0.07 : 0.035}
+                      stroke="#03302f"
+                      strokeWidth="1"
+                    />
+                  );
+                })}
+                {GREGORIAN_MONTHS.map((g, n) => {
+                  const a = dayAngle(gregorianStart(n) + g.days / 2, GREGORIAN_YEAR_DAYS) + gregVersatz;
+                  const on = n === gregMonatDesFestes;
+                  return (
+                    <g key={`gl-${g.en}`}>
+                      {aufrecht(a, (R_GREG_IN + R_GREG_OUT) / 2, (
+                        <text
+                          textAnchor="middle"
+                          y="3.5"
+                          fontSize="10"
+                          fontWeight={on ? 700 : 500}
+                          fill={on ? '#e0a449' : '#ffffff'}
+                          fillOpacity={on ? 1 : 0.5}
+                        >
+                          {lang === 'de' ? g.shortDe : g.shortEn}
+                        </text>
+                      ))}
+                    </g>
+                  );
+                })}
+
                 {/* Monatsring: die Stücke sind so breit wie die Monate lang */}
                 {MONTHS.map((m, n) => {
                   const a0 = dayAngle(monthStart(m.id), YEAR_DAYS);

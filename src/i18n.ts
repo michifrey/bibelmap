@@ -207,8 +207,8 @@ const STRINGS: Dict = {
     en: 'Two rhythms belong to the calendar but cannot be drawn into the wheel: one is shorter than any month, the other longer than any year.',
   },
   feastCalendarNote: {
-    de: 'Der Kreis rechnet mit zwölf Monaten zu 354 Tagen. So einfach ist der Kalender nicht: Zwei Monate wechseln zwischen 29 und 30 Tagen, und in sieben von neunzehn Jahren wird ein ganzer Monat eingeschoben. Die Lage eines Festes stimmt auf den Tag – seine Breite im Rad nicht: Was schmaler als fünf Grad wäre, ist um seine Mitte aufgeweitet.',
-    en: 'The circle reckons with twelve months of 354 days. The calendar is not that simple: two months alternate between 29 and 30 days, and in seven years of nineteen a whole month is inserted. A feast sits on its true day – but not at its true width: anything narrower than five degrees is widened about its centre.',
+    de: 'Der Kreis rechnet mit zwölf Monaten zu 354 Tagen. So einfach ist der Kalender nicht: Zwei Monate wechseln zwischen 29 und 30 Tagen, und in sieben von neunzehn Jahren wird ein ganzer Monat eingeschoben. Die Lage eines Festes stimmt auf den Tag – seine Breite im Rad nicht: Was schmaler als fünf Grad wäre, ist um seine Mitte aufgeweitet. Der äußere Ring ist eine Näherung im Mittel: Das jüdische Jahr ist elf Tage kürzer, darum wandern die Feste jedes Jahr nach vorn, bis der Schaltmonat sie zurückholt – Pessach zwischen Ende März und Ende April.',
+    en: 'The circle reckons with twelve months of 354 days. The calendar is not that simple: two months alternate between 29 and 30 days, and in seven years of nineteen a whole month is inserted. A feast sits on its true day – but not at its true width: anything narrower than five degrees is widened about its centre. The outer ring is an average, not a date: the Jewish year is eleven days shorter, so the feasts drift forward each year until the leap month pulls them back – Passover falls between late March and late April.',
   },
   compareMode: { de: 'Religionen im Vergleich', en: 'Faiths compared' },
   inIslam: { de: 'Im Islam', en: 'In Islam' },

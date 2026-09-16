@@ -271,7 +271,16 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Bibel und Koran, aus jüdisch-christlich-biblischer Sicht; jede Gestalt hat
   eine eigene Adresse (`#vergleich=abraham`).
 - **Feste Israels** – das Jahr als **Rad** statt als Liste (`#feste=pessach`).
-  Von außen nach innen: die zwölf Monate mit ihren hebräischen Namen, dann der
+  Ganz außen der gregorianische Kalender – **Jan, Feb, März …** –, damit die
+  erste Frage an so einen Kreis beantwortet ist: *wann ist das bei uns?* Der
+  Monat, in dem das gewählte Fest liegt, steht dort hervorgehoben. Die beiden
+  Ringe sind gegeneinander verdreht, weil die Jahre nicht am selben Tag
+  anfangen; um wie viel, rechnet der Code aus den Monatslängen aus, statt es
+  einzutragen. Und `npm run check:feasts` rechnet aus dem Ring zurück, welche
+  gregorianischen Monate jeder hebräische überdeckt, und vergleicht das mit der
+  Angabe, die in den Daten daneben steht – zwei Darstellungen derselben Sache
+  laufen sonst auseinander, sobald jemand eine davon anfasst.
+  Dann nach innen: die zwölf Monate mit ihren hebräischen Namen, dann der
   Monatsring – seine Stücke sind so breit, wie die Monate lang sind –, dann das
   Band der **zwölf Feste** an ihrem Tag, innen das schmale Band der
   Monatsanfänge, in der Mitte das Bild. Wer weiterklickt,
