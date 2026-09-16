@@ -634,6 +634,13 @@ const STRINGS: Dict = {
     de: 'Personenbezogene Daten werden hier weder erhoben noch gespeichert noch weitergegeben. Damit gibt es auch nichts, worüber Auskunft zu erteilen oder was zu löschen wäre. Wer trotzdem eine Frage dazu hat – zum Serverprotokoll, zu den fremden Servern, zu irgendetwas –, schreibt an die Adresse oben.',
     en: 'No personal data is collected, stored or passed on here. So there is nothing to disclose and nothing to delete. Anyone with a question all the same – about the server log, about the third-party servers, about anything – can write to the address above.',
   },
+  // Wenn eine Ansicht sich nicht laden lässt – siehe components/ChunkBoundary.tsx
+  chunkFailedTitle: { de: 'Diese Ansicht kam nicht an', en: 'This view did not arrive' },
+  chunkFailedBody: {
+    de: 'Sie liegt in einer eigenen Datei, und die kam nicht an – meist, weil die Seite erneuert wurde, während sie offen stand. Neu laden holt die aktuelle Fassung.',
+    en: 'It lives in a file of its own, and that file did not arrive – usually because the site was updated while this page sat open. Reloading fetches the current version.',
+  },
+  chunkFailedReload: { de: 'Neu laden', en: 'Reload' },
   imprintOutro: {
     de: 'Wer für etwas geradesteht, sagt seinen Namen.',
     en: 'Whoever answers for something says their name.',

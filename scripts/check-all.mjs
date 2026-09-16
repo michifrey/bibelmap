@@ -30,6 +30,7 @@ const CHECKS = [
   { name: 'Stammesgrenzen', script: 'check-tribes.mjs', ts: true },
   { name: 'Farbkontraste', script: 'check-contrast.mjs' },
   { name: 'Tastatur auf der Karte', script: 'check-map-keyboard.mjs' },
+  { name: 'Nachgeladene Pakete', script: 'check-chunks.mjs' },
   { name: 'Jesus-Sektion', script: 'check-gospel.mjs', ts: true },
   { name: 'Israel-Karte', script: 'check-israel.mjs', ts: true },
   { name: 'Kirchengeschichte', script: 'check-church.mjs', ts: true },

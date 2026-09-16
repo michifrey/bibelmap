@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Place } from './types';
 import { LangContext, type Lang, useT, t as tr } from './i18n';
 import {
@@ -14,6 +14,7 @@ import {
 } from './lib/places';
 import { ERAS, ERA_BY_ID } from './data/eras';
 import { DEFAULT_BASEMAP, fallbackFor, type BasemapId } from './lib/basemaps';
+import { lazyView, loadChunk, prefetch } from './lib/chunks';
 import Header, { type Mode, type View } from './components/Header';
 import SkipLinks from './components/SkipLinks';
 import type { TerrainRoute } from './lib/terrainRoute';
@@ -21,43 +22,44 @@ import { loadMedia } from './lib/media';
 import Timeline from './components/Timeline';
 import YearSlider from './components/YearSlider';
 import SearchPanel from './components/SearchPanel';
-const Presentation = lazy(() => import('./components/Presentation'));
-const HistoryMode = lazy(() => import('./components/HistoryMode'));
-const FeastsMode = lazy(() => import('./components/FeastsMode'));
-const Bookshelf = lazy(() => import('./components/Bookshelf'));
-const Mission = lazy(() => import('./components/Mission'));
-const JourneyMode = lazy(() => import('./components/JourneyMode'));
-const Gospel = lazy(() => import('./components/Gospel'));
-const QuizMode = lazy(() => import('./components/QuizMode'));
-const IsraelMode = lazy(() => import('./components/IsraelMode'));
-const MediaMode = lazy(() => import('./components/MediaMode'));
-const OwnRoute = lazy(() => import('./components/OwnRoute'));
-const PlaceIndex = lazy(() => import('./components/PlaceIndex'));
+const Presentation = lazyView(() => import('./components/Presentation'));
+const HistoryMode = lazyView(() => import('./components/HistoryMode'));
+const FeastsMode = lazyView(() => import('./components/FeastsMode'));
+const Bookshelf = lazyView(() => import('./components/Bookshelf'));
+const Mission = lazyView(() => import('./components/Mission'));
+const JourneyMode = lazyView(() => import('./components/JourneyMode'));
+const Gospel = lazyView(() => import('./components/Gospel'));
+const QuizMode = lazyView(() => import('./components/QuizMode'));
+const IsraelMode = lazyView(() => import('./components/IsraelMode'));
+const MediaMode = lazyView(() => import('./components/MediaMode'));
+const OwnRoute = lazyView(() => import('./components/OwnRoute'));
+const PlaceIndex = lazyView(() => import('./components/PlaceIndex'));
 // Die Karte wiegt am schwersten von allem, was jeder lädt: Leaflet mit seinen
 // Erweiterungen sind zusammen 187 kB. Die Startseite kehrt weiter oben früh
 // zurück und zeigt gar keine Karte – wer auf / landet, brauchte davon nichts
 // und bekam trotzdem alles.
-const MapView = lazy(() => import('./components/MapView'));
+const MapView = lazyView(() => import('./components/MapView'));
 // Das Ortsfenster erscheint erst, wenn jemand einen Ort anklickt – und es zieht
 // `tribes.ts` mit (28 kB Stammesgebiete für eine Zeile „liegt im Gebiet von").
-const PlaceDetail = lazy(() => import('./components/PlaceDetail'));
+const PlaceDetail = lazyView(() => import('./components/PlaceDetail'));
 // MapLibre wiegt schwer – die Geländeansicht kommt erst, wenn jemand sie öffnet.
-const TerrainMap = lazy(() => import('./components/TerrainMap'));
+const TerrainMap = lazyView(() => import('./components/TerrainMap'));
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
 import type { Sel as ShelfSel } from './components/Bookshelf';
 import type { SearchHit } from './lib/globalSearch';
 import { parseRef } from './lib/parseRef';
 import { bearing, compass, distanceKm, KM_PER_DAY } from './lib/route';
 import { baseTitle, needsHeading, pageTitle, viewLabel } from './lib/pageTitle';
-const CompareMode = lazy(() => import('./components/CompareMode'));
-const ChurchMode = lazy(() => import('./components/ChurchMode'));
-const GraphView = lazy(() => import('./components/GraphView'));
-const Genealogy = lazy(() => import('./components/Genealogy'));
+const CompareMode = lazyView(() => import('./components/CompareMode'));
+const ChurchMode = lazyView(() => import('./components/ChurchMode'));
+const GraphView = lazyView(() => import('./components/GraphView'));
+const Genealogy = lazyView(() => import('./components/Genealogy'));
+import ChunkBoundary from './components/ChunkBoundary';
 import Landing, { type LandingTarget } from './components/Landing';
-const Support = lazy(() => import('./components/Support'));
-const Credits = lazy(() => import('./components/Credits'));
-const Roadmap = lazy(() => import('./components/Roadmap'));
-const Imprint = lazy(() => import('./components/Imprint'));
+const Support = lazyView(() => import('./components/Support'));
+const Credits = lazyView(() => import('./components/Credits'));
+const Roadmap = lazyView(() => import('./components/Roadmap'));
+const Imprint = lazyView(() => import('./components/Imprint'));
 
 /** Name jedes Kartenstils – Schalterleiste und Ausfallhinweis lesen ihn hier. */
 const BASEMAP_LABEL: Record<BasemapId, 'basemapDark' | 'basemapLight' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'> = {
@@ -364,35 +366,35 @@ export default function App() {
    * Workers, und die App bleibt auch ohne Netz vollständig.
    */
   useEffect(() => {
-    const prefetch = () => {
-      void import('./components/Presentation');
-      void import('./components/JourneyMode');
-      void import('./components/Gospel');
-      void import('./components/MapView');
-      void import('./components/PlaceDetail');
-      void import('./components/Mission');
-      void import('./components/HistoryMode');
-      void import('./components/FeastsMode');
-      void import('./components/Bookshelf');
-      void import('./components/QuizMode');
-      void import('./components/MediaMode');
-      void import('./components/Genealogy');
-      void import('./components/ChurchMode');
-      void import('./components/CompareMode');
-      void import('./components/Roadmap');
+    const alleHolen = () => {
+      prefetch(() => import('./components/Presentation'));
+      prefetch(() => import('./components/JourneyMode'));
+      prefetch(() => import('./components/Gospel'));
+      prefetch(() => import('./components/MapView'));
+      prefetch(() => import('./components/PlaceDetail'));
+      prefetch(() => import('./components/Mission'));
+      prefetch(() => import('./components/HistoryMode'));
+      prefetch(() => import('./components/FeastsMode'));
+      prefetch(() => import('./components/Bookshelf'));
+      prefetch(() => import('./components/QuizMode'));
+      prefetch(() => import('./components/MediaMode'));
+      prefetch(() => import('./components/Genealogy'));
+      prefetch(() => import('./components/ChurchMode'));
+      prefetch(() => import('./components/CompareMode'));
+      prefetch(() => import('./components/Roadmap'));
       // Diese sechs fehlten und waren damit ohne Netz nicht da – nachgemessen
       // am Cache: 47 Dateien, keine davon eine von ihnen. Zusammen wiegen sie
       // 67 kB gzip, geholt im Leerlauf, lange nach dem ersten Bild.
-      void import('./components/IsraelMode');
-      void import('./components/GraphView');
-      void import('./components/Support');
-      void import('./components/Credits');
-      void import('./components/PlaceIndex');
-      void import('./components/OwnRoute');
+      prefetch(() => import('./components/IsraelMode'));
+      prefetch(() => import('./components/GraphView'));
+      prefetch(() => import('./components/Support'));
+      prefetch(() => import('./components/Credits'));
+      prefetch(() => import('./components/PlaceIndex'));
+      prefetch(() => import('./components/OwnRoute'));
       // Die siebte, und aus demselben Grund: Ein Impressum, das ohne Netz
       // fehlt, fehlt genau dann, wenn jemand nachschlagen will, wer diese
       // Seite betreibt.
-      void import('./components/Imprint');
+      prefetch(() => import('./components/Imprint'));
       /*
        * `TerrainMap` bleibt bewusst draußen. Das Paket wiegt mit MapLibre
        * 964 kB (243 kB gzip) – ein Viertel Megabyte im Hintergrund für jeden,
@@ -400,7 +402,7 @@ export default function App() {
        * selbst an, dass sie als eigenes Paket kommt (`terrainLoading`), und ist
        * danach im Cache wie alles andere. `check-offline.mjs` prüft genau das.
        */
-      void import('./lib/globalSearch');
+      prefetch(() => import('./lib/globalSearch'));
       // Nicht nur der Programmcode, auch der Medien-Index: sonst steht „Hören &
       // Sehen" ohne Netz leer da, während jede andere Ansicht vollständig ist.
       void loadMedia();
@@ -411,10 +413,10 @@ export default function App() {
     const start = () => {
       const idle = window.requestIdleCallback;
       if (idle) {
-        const id = idle(prefetch, { timeout: 8000 });
+        const id = idle(alleHolen, { timeout: 8000 });
         cancel = () => window.cancelIdleCallback?.(id);
       } else {
-        const t = window.setTimeout(prefetch, 3000);
+        const t = window.setTimeout(alleHolen, 3000);
         cancel = () => window.clearTimeout(t);
       }
     };
@@ -559,6 +561,9 @@ export default function App() {
       return;
     }
     let alive = true;
+    // chunk-ok: Der Fehlschlag ist hier schon beantwortet – die Liste bleibt
+    // leer, die Ortssuche läuft weiter. Neu laden wäre falsch: Es würde die
+    // getippte Anfrage wegwerfen, und die steht in keiner Adresse.
     import('./lib/globalSearch')
       .then((m) => alive && setStories(m.searchStories(query, lang)))
       .catch(() => alive && setStories([]));
@@ -713,7 +718,10 @@ export default function App() {
   useEffect(() => {
     if (view !== 'terrain' || terrainDaten) return;
     let aktuell = true;
-    void Promise.all([import('./data/journeys'), import('./data/mission')]).then(([j, m]) => {
+    void Promise.all([
+      loadChunk(() => import('./data/journeys')),
+      loadChunk(() => import('./data/mission')),
+    ]).then(([j, m]) => {
       if (aktuell) setTerrainDaten({ byId: j.JOURNEY_BY_ID, mission: m.JOURNEYS });
     });
     return () => {
@@ -747,7 +755,7 @@ export default function App() {
   useEffect(() => {
     if (view !== 'terrain' || !gospelNav || terrainGospel) return;
     let aktuell = true;
-    void import('./data/gospel').then((g) => {
+    void loadChunk(() => import('./data/gospel')).then((g) => {
       if (aktuell) setTerrainGospel(g);
     });
     return () => {
@@ -981,7 +989,13 @@ export default function App() {
             <GraphView places={places} lang={lang} />
           </Suspense>
         ) : (
-          <>
+          /*
+            Eine Auffangstelle um alle Vollbild-Modi: Scheitert das Paket
+            einer Ansicht auch nach dem Neuladen, steht hier ein Satz statt
+            einer weissen Seite. `key` auf dem Modus stellt sie zurück, wenn
+            jemand einen anderen öffnet.
+          */
+          <ChunkBoundary key={mode ?? 'karte'} lang={lang} onExit={() => setMode(null)}>
             {/*
               Was der Vollbild-Modus verdeckt, ist auch stillgelegt.
               Gemessen lagen sonst 117 der ersten 120 Tabulatorhalte hinter dem
@@ -1380,7 +1394,7 @@ export default function App() {
                 <Imprint lang={lang} onLang={setLang} onExit={() => setMode(null)} />
               </Suspense>
             )}
-          </>
+          </ChunkBoundary>
         )}
 
 
