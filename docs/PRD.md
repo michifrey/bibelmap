@@ -1343,7 +1343,8 @@ war zu klein.
 **Was das ausdrücklich *nicht* heißt.** Der erste Kommentar im Code behauptete
 „erst geladen, wenn jemand dorthin geht". Die Messung im Browser zeigte etwas
 anderes: beide Dateien werden auf der Startseite geholt – vom Vorabruf im
-Leerlauf, der alle Ansichten nachlädt, damit die App offline vollständig ist.
+Leerlauf, der die Ansichten nachlädt, damit die App offline vollständig ist.
+(Dass er sie *alle* nachlädt, stand hier bis § 4.81 – sieben fehlten.)
 Das ist Absicht und bleibt so. Gewonnen ist der **kritische Pfad**: 162 kB
 weniger, die vor dem ersten Bild geparst und ausgeführt werden. Der Kommentar
 sagt das jetzt.
@@ -2756,6 +2757,61 @@ ein Neumond, der nicht auf dem Ersten liegt.
 Fenstertitel, Tieflink `#feste=…`, globale Suche (auch über Umschrift und
 hebräischen Namen) und den Vorabruf für den Offline-Betrieb; nachgeprüft mit
 `check-offline.mjs`, `check-i18n.mjs` und `a11y-audit.mjs`.
+
+### 4.81 Sieben Ansichten waren offline nicht da — P1 ✅
+
+`check:offline` stand auf grün und hat trotzdem nichts bewiesen. Zwei Fehler,
+die sich gegenseitig gedeckt haben.
+
+**Erstens: Die Prüfung zählte Zeichen.** Unter 150 galt als kaputt. Ein
+Vollbild-Modus liegt aber über der Karte, und die Karte ist gesprächig – ihre
+Beschriftungen allein sind über 4.000 Zeichen. Lädt der Modus nicht, sieht man
+die Karte statt seiner, und die Zählung ist zufrieden. Gemessen an `#fahrplan`:
+**4.346 Zeichen**, „ohne Netz vollständig", kein Fahrplan.
+
+**Zweitens: `setOffline` schaltet die Seite ab, nicht den Service Worker.** Nach
+dem ersten Seitenaufruf im abgeschalteten Zustand wird der Worker neu gestartet,
+und der neue erbt die Abschaltung nicht. Ein `fetch` auf eine ungecachte Adresse
+lieferte danach eine **200**, und ein nie vorabgerufenes Paket landete
+*während* des Offline-Besuchs im Cache: Der Worker hatte es geholt.
+
+**Was das gekostet hat.** Am Cache nachgemessen statt an der Oberfläche: Nach
+dem Vorabruf lagen 47 Dateien im Cache – und von sieben Ansichten keine einzige.
+**Register, Graph, Israel, Eigener Weg, Unterstützen, Nachweise** und
+**Gelände** waren ohne Netz nicht da, seit es sie gibt. Die Prüfung hat sie alle
+sieben als „vollständig" gemeldet, weil der Worker sie sich still aus dem Netz
+holte, das es angeblich nicht gab. Der Satz „der Vorabruf lädt alle Ansichten
+nach" (§ 4.56) war entsprechend falsch.
+
+**Die Prüfung, dreifach nachgezogen.**
+
+1. Jede Ansicht nennt eine **Zeichenfolge, die nur sie zeigt**, und muss sie
+   vorweisen – `Hier stehen wir`, `Ortsregister`, `Feste Israels`. Die beiden
+   reinen Kartenansichten haben keine; dort bleibt die Zählung das Einzige, was
+   es zu prüfen gibt.
+2. Zusätzlich zu `setOffline` wird **jede Anfrage abgewiesen** (`context.route`).
+   Das erwischt auch die des Workers.
+3. **Jede Ansicht bekommt eine frische Seite.** Ohne das vergiftet die erste,
+   die ausfällt, den Rest: Gemessen bestanden nach einem Ausfall auf derselben
+   Seite auch `#quiz`, `#hoeren` und `#fahrplan` nicht mehr, obwohl ihre Pakete
+   im Cache lagen. Das ist der Unterschied zwischen einer Prüfung, die eine
+   Liste meldet, und einer, die einen Dominostein meldet.
+
+Gegen den Stand von vorher meldet sie jetzt genau die sechs, samt Paketnamen im
+JS-Fehler. Und die Gegenprobe benennt, was ein geleerter Cache überlebt – das
+kommt aus dem Cache des Browsers und ist kein Beleg.
+
+**Sechs nachgetragen, einer bleibt draußen.** Israel, Graph, Unterstützen,
+Nachweise, Register und Eigener Weg stehen jetzt im Vorabruf: zusammen 67 kB
+gzip, im Leerlauf geholt, lange nach dem ersten Bild. Der Cache wächst von 47
+auf 59 Dateien. **Gelände** bleibt draußen – das Paket wiegt mit MapLibre
+243 kB gzip, und wer nie ins Gelände geht, soll das nicht holen. Für diese eine
+Ansicht gilt eine andere Zusage: einmal geöffnet, danach ohne Netz da. Die
+Prüfung besucht sie darum vorher einmal **mit** Netz und misst sie danach wie
+jede andere – die Ausnahme ist geprüft, nicht behauptet.
+
+Der kritische Pfad bleibt unberührt: 334,7 kB von 360, der Vorabruf hängt am
+`requestIdleCallback` wie zuvor.
 
 
 ---

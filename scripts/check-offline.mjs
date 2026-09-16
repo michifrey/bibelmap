@@ -24,19 +24,31 @@
 // beiden reinen Kartenansichten haben keine; dort bleibt die Zählung das
 // Einzige, was es zu prüfen gibt.
 //
-// **Und was diese Datei nicht beweist.** `context.setOffline(true)` schaltet
-// die Seite ab, nicht den Service Worker. Nachgemessen: Im abgeschalteten
-// Zustand liefert ein `fetch` auf eine ungecachte Adresse trotzdem eine 200,
-// und ein Paket, das nie vorabgerufen wurde, landet **während** des
-// Offline-Besuchs im Cache – der Worker hat es geholt. Ein grüner Lauf heisst
-// also: „die Ansicht erscheint, wenn die Seite kein Netz hat" – nicht: „alles
-// dafür lag schon im Cache".
+// **Warum `setOffline` allein nicht reicht.** Es schaltet die Seite ab, nicht
+// den Service Worker. Nachgemessen: Nach dem ersten Seitenaufruf im
+// abgeschalteten Zustand wird der Worker neu gestartet – und der neue erbt die
+// Abschaltung nicht. Ein `fetch` auf eine ungecachte Adresse lieferte danach
+// eine **200**, und ein Paket, das nie vorabgerufen wurde, landete **während**
+// des Offline-Besuchs im Cache: Der Worker hatte es geholt. Ein grüner Lauf
+// hiess damit „die Ansicht erscheint", nicht „sie lag im Cache".
 //
-// Die Blockade dichtzumachen ist nicht damit getan, `context.route` alles
-// abweisen zu lassen: Der Worker beantwortet eigene Dateien aus dem Cache und
-// den Seitenaufruf erst aus dem Netz, und ein abgerissener Aufruf nimmt ihm
-// beides – gemessen fiel damit auch aus, was längst im Cache lag. Das gehört
-// sauber gelöst, nicht nebenbei; bis dahin steht hier, woran man ist.
+// Was es kostete: **sieben Ansichten** standen jahrelang auf grün, deren Paket
+// gar nicht im Cache lag – Register, Graph, Israel, Eigener Weg, Unterstützen,
+// Nachweise und Gelände. Der Worker holte sie sich still aus dem Netz, das es
+// angeblich nicht gab.
+//
+// Darum wird zusätzlich **jede Anfrage abgewiesen** (`context.route`). Das
+// erwischt auch die des Workers: Gemessen fällt damit genau das aus, was nicht
+// im Cache liegt, und genau das bleibt stehen, was drin liegt. `setOffline`
+// steht weiter dabei – es kostet nichts und sagt, was gemeint ist.
+//
+// **Und jede Ansicht bekommt eine frische Seite.** Sonst vergiftet die erste,
+// die ausfällt, den ganzen Rest: Gemessen bestanden nach einem Ausfall auf
+// derselben Seite auch `#quiz`, `#hoeren` und `#fahrplan` nicht mehr, obwohl
+// ihre Pakete im Cache lagen. Mit frischer Seite je Ansicht fallen genau die
+// beiden ungecachten aus und sonst nichts – das ist der Unterschied zwischen
+// einer Prüfung, die eine Liste meldet, und einer, die einen Dominostein
+// meldet.
 
 import { chromium } from 'playwright';
 
@@ -59,7 +71,16 @@ const ANSICHTEN = [
   { hash: '#quiz', zeigt: 'Bibelquiz' },
   { hash: '#hoeren', zeigt: 'Hören & Sehen' },
   { hash: '#weg=a15257a,a112427', zeigt: 'Eigener Weg' },
-  { hash: '#gelaende', zeigt: 'Höhen' },
+  {
+    hash: '#gelaende',
+    zeigt: 'Höhen',
+    // Als einzige Ansicht nicht vorabgerufen: Das Paket wiegt mit MapLibre
+    // 243 kB gzip, und wer nie ins Gelände geht, soll das nicht holen. Die
+    // Zusage ist hier eine andere – „einmal geöffnet, danach ohne Netz da" –,
+    // und genau die wird geprüft: Diese Ansicht wird vorher einmal **mit** Netz
+    // besucht, danach zählt sie wie jede andere.
+    aufAbruf: true,
+  },
   { hash: '#unterstuetzen', zeigt: 'von fremder Arbeit' },
   { hash: '#nachweise', zeigt: 'Lizenz' },
   { hash: '#fahrplan', zeigt: 'Hier stehen wir' },
@@ -72,8 +93,8 @@ const base = process.argv[2] ?? 'http://localhost:4173';
 const b = await chromium.launch({ executablePath: process.env.CHROME_PATH || undefined });
 
 async function lauf({ cacheLeeren = false } = {}) {
-  const ctx = await b.newContext({ viewport: { width: 1440, height: 950 }, locale: 'de-DE' });
-  const p = await ctx.newPage();
+  const ctx = await b.newContext({ viewport: { width: 1440, height: 950 }, locale: 'de-DE', serviceWorkers: 'allow' });
+  let p = await ctx.newPage();
   const js = [];
   p.on('pageerror', (e) => js.push(String(e).slice(0, 150)));
 
@@ -84,6 +105,14 @@ async function lauf({ cacheLeeren = false } = {}) {
     return r?.active ? 'aktiv' : r ? 'angemeldet' : null;
   });
   await p.waitForTimeout(WARTEN_MS);
+
+  // Was auf Abruf kommt, wird einmal geöffnet – das ist die Zusage, die für
+  // diese Ansichten gilt. Vor dem Leeren des Caches, damit die Gegenprobe auch
+  // sie wegräumt.
+  for (const { hash } of ANSICHTEN.filter((a) => a.aufAbruf)) {
+    await p.goto(base + '/' + hash, { waitUntil: 'domcontentloaded' }).catch(() => {});
+    await p.waitForTimeout(4000);
+  }
 
   /*
    * Für die Gegenprobe: Cache leeren und den Worker abmelden. Danach muss
@@ -104,9 +133,16 @@ async function lauf({ cacheLeeren = false } = {}) {
     return out;
   });
 
+  // Abweisen statt nur abschalten – siehe Kopf der Datei. Beides zusammen,
+  // damit auch `navigator.onLine` sagt, was gilt.
+  await ctx.route('**/*', (route) => route.abort());
   await ctx.setOffline(true);
   const kaputt = [];
   for (const { hash, zeigt } of ANSICHTEN) {
+    // Frische Seite – siehe Kopf der Datei.
+    await p.close();
+    p = await ctx.newPage();
+    p.on('pageerror', (e) => js.push(String(e).slice(0, 150)));
     await p.goto(base + '/' + hash, { waitUntil: 'domcontentloaded' }).catch(() => {});
     await p.waitForTimeout(2600);
     const r = await p.evaluate((suche) => {
@@ -150,6 +186,13 @@ if (echt.js.length) console.log('\nJS-Fehler:', echt.js.slice(0, 3));
  */
 const roh = await lauf({ cacheLeeren: true });
 console.log(`\nGegenprobe mit geleertem Cache: ${roh.kaputt.length} von ${ANSICHTEN.length} Ansichten fallen aus.`);
+// Was die Gegenprobe überlebt, gehört benannt: Es kommt dann nicht aus dem
+// Cache des Workers, sondern aus dem des Browsers – und ist damit kein Beleg
+// für irgendetwas.
+const steht = ANSICHTEN.map((a) => a.hash || '(Startseite)').filter(
+  (n) => !roh.kaputt.some((k) => k.startsWith(n)),
+);
+if (steht.length) console.log(`Steht trotzdem (Browser-Cache, nicht Worker): ${steht.join(', ')}`);
 await b.close();
 
 if (echt.kaputt.length) {

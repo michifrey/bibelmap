@@ -373,6 +373,22 @@ export default function App() {
       void import('./components/ChurchMode');
       void import('./components/CompareMode');
       void import('./components/Roadmap');
+      // Diese sechs fehlten und waren damit ohne Netz nicht da – nachgemessen
+      // am Cache: 47 Dateien, keine davon eine von ihnen. Zusammen wiegen sie
+      // 67 kB gzip, geholt im Leerlauf, lange nach dem ersten Bild.
+      void import('./components/IsraelMode');
+      void import('./components/GraphView');
+      void import('./components/Support');
+      void import('./components/Credits');
+      void import('./components/PlaceIndex');
+      void import('./components/OwnRoute');
+      /*
+       * `TerrainMap` bleibt bewusst draußen. Das Paket wiegt mit MapLibre
+       * 964 kB (243 kB gzip) – ein Viertel Megabyte im Hintergrund für jeden,
+       * der die Geländeansicht nie öffnet. Die Ansicht sagt beim ersten Mal
+       * selbst an, dass sie als eigenes Paket kommt (`terrainLoading`), und ist
+       * danach im Cache wie alles andere. `check-offline.mjs` prüft genau das.
+       */
       void import('./lib/globalSearch');
       // Nicht nur der Programmcode, auch der Medien-Index: sonst steht „Hören &
       // Sehen" ohne Netz leer da, während jede andere Ansicht vollständig ist.

@@ -1210,6 +1210,14 @@ dem Cache und werden im Hintergrund erneuert.
 Im Dev-Server wird nichts angemeldet – dort würde der Worker den Hot-Reload
 aushebeln.
 
+Damit „ohne Netz" nicht nur für das gilt, was man schon angesehen hat, holt die
+App im Leerlauf jede Ansicht nach. Jede bis auf eine: Das Gelände wiegt mit
+MapLibre 243 kB gzip und kommt erst, wenn jemand es öffnet – danach liegt es im
+Cache wie alles andere. `scripts/check-offline.mjs` prüft beides und weist dafür
+jede Anfrage ab, statt nur die Seite abzuschalten: Ein abgeschalteter Browser
+hindert den Service Worker nicht daran, sich still aus dem Netz zu bedienen, und
+genau daran hat die Prüfung jahrelang sieben Ansichten übersehen (PRD § 4.81).
+
 ## Technik
 
 Vite · React · TypeScript · Tailwind CSS · Leaflet (+ markercluster, heat) ·
