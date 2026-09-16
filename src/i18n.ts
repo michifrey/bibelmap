@@ -131,6 +131,25 @@ const STRINGS: Dict = {
     de: 'Gelände-Ansicht: Höhen überzeichnet, ohne Ballung, Wärmekarte und Reichsgrenzen.',
     en: 'Terrain view: heights exaggerated, without clustering, heatmap and empires.',
   },
+
+  // Unterwegs: die Kamera auf Augenhöhe.
+  walk: { de: 'Unterwegs', en: 'On foot' },
+  walkStart: {
+    de: 'Den Weg auf Augenhöhe gehen – 1,70 m über dem Boden, in Blickrichtung',
+    en: 'Walk the road at eye level – 1.70 m above the ground, facing the way',
+  },
+  walkExit: { de: 'Gehen beenden', en: 'Stop walking' },
+  walkOf: { de: 'von', en: 'of' },
+  walkMet: { de: 'Begegnungen', en: 'Encounters' },
+  walkMetSoFar: { de: 'Menschen bisher', en: 'people so far' },
+  walkTraveled: { de: 'Zurückgelegt', en: 'Covered' },
+  walkSpeed: { de: 'Tempo', en: 'Pace' },
+  walkLookLeft: { de: 'Blick nach links', en: 'Look left' },
+  walkLookRight: { de: 'Blick nach rechts', en: 'Look right' },
+  walkNote: {
+    de: 'Gemessen ist das Gelände: Höhen aus SRTM, Überhöhung 1×. Alles andere fehlt mit Absicht – wie Dörfer, Wege und Bewuchs damals aussahen, weiß niemand, und die Kachel von heute zeigt die Straßen von heute.',
+    en: 'What is measured here is the ground: SRTM elevations, no exaggeration. Everything else is left out on purpose – nobody knows what villages, roads and vegetation looked like then, and today’s imagery shows today’s roads.',
+  },
   mediaFilters: { de: 'Filter', en: 'Filters' },
   mediaSource: { de: 'Quelle', en: 'Source' },
   mediaBook: { de: 'Buch', en: 'Book' },

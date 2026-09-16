@@ -116,6 +116,13 @@ export function parseHash(hash: string): Route | null {
     case 'gelaende':
       // `#gelaende=reise,exodus` zeigt eine Route über dem Gelände, ein
       // einzelnes Kürzel bleibt der Ort.
+      // `#gelaende=jesus,galilee` ist ein Akt aus dem Leben Jesu als Weg –
+      // dieselben Stationen wie in der Sektion, samt den Menschen darin.
+      if (args[0] === 'jesus') {
+        return args[1]
+          ? { view: 'terrain', mode: null, gospel: { act: args[1] } }
+          : { view: 'terrain', mode: null };
+      }
       if (args[0] === 'reise') {
         return args[1]
           ? { view: 'terrain', mode: null, journey: { id: args[1], stop: 0 } }
@@ -263,6 +270,7 @@ export function formatRoute(route: Route): string {
   if (view === 'terrain') {
     if (route.mission?.journey) return `#gelaende=mission,${route.mission.journey}`;
     if (route.journey) return `#gelaende=reise,${route.journey.id}`;
+    if (route.gospel) return `#gelaende=jesus,${route.gospel.act}`;
     return route.placeId ? `#gelaende=${route.placeId}` : '#gelaende';
   }
   if (view === 'tree') {

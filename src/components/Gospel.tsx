@@ -41,6 +41,8 @@ interface Props {
   onNavigate?: (state: { act: string; station?: string; person?: string }) => void;
   /** Zu den Folgen, die dieses Kapitel behandeln – der eigene Medienindex. */
   onOpenMedia?: (osis: string, chapter: number) => void;
+  /** Den Akt im Gelände gehen – auf Augenhöhe, Station für Station. */
+  onOpenTerrain?: (act: string) => void;
   onExit: () => void;
 }
 
@@ -53,7 +55,16 @@ const GROUPS: { id: PersonGroup; de: string; en: string }[] = [
   { id: 'power', de: 'Macht: Rom, Hof und Hoherat', en: 'Power: Rome, court and council' },
 ];
 
-export default function Gospel({ places, lang, onShowPlace, initial, onNavigate, onOpenMedia, onExit }: Props) {
+export default function Gospel({
+  places,
+  lang,
+  onShowPlace,
+  initial,
+  onNavigate,
+  onOpenMedia,
+  onOpenTerrain,
+  onExit,
+}: Props) {
   const t = useT();
   // Eine verlinkte Station bestimmt den Akt selbst: `#jesus=galilee,cana`
   // meint die Station, auch wenn der Akt daneben steht.
@@ -192,6 +203,23 @@ export default function Gospel({ places, lang, onShowPlace, initial, onNavigate,
         </div>
         <div className="flex items-center gap-2">
           <ShareLink className="bm-btn hidden sm:inline-flex" />
+          {/*
+            Der Weg dieses Akts, auf Augenhöhe gegangen. Nicht bei einem
+            Menschen: Dessen Auftritte springen quer durch die Jahre, und ein
+            Weg wäre das nicht.
+          */}
+          {!person && onOpenTerrain && (
+            <button
+              onClick={() => onOpenTerrain(actId)}
+              className="bm-btn hidden sm:inline-flex"
+              title={t('walkStart')}
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="1.8">
+                <path d="M3 19h18M6 19l4-9 4 5 4-8" />
+              </svg>
+              {t('walk')}
+            </button>
+          )}
           {!person && (
             <button onClick={() => setPlaying((p) => !p)} className="bm-btn">
               {playing ? (

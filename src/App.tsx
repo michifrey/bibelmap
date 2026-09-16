@@ -16,7 +16,7 @@ import { ERAS, ERA_BY_ID } from './data/eras';
 import { DEFAULT_BASEMAP, fallbackFor, type BasemapId } from './lib/basemaps';
 import Header, { type Mode, type View } from './components/Header';
 import SkipLinks from './components/SkipLinks';
-import type { TerrainRoute } from './components/TerrainMap';
+import type { TerrainRoute } from './lib/terrainRoute';
 import { loadMedia } from './lib/media';
 import Timeline from './components/Timeline';
 import YearSlider from './components/YearSlider';
@@ -675,6 +675,40 @@ export default function App() {
     };
   }, [view, terrainDaten]);
 
+  /*
+   * Die Jesus-Sektion im Gelände. Sie kommt getrennt und nur auf Abruf:
+   * `gospel.ts` trägt hundert Stationen samt Personenverzeichnis, und wer die
+   * Geländekarte wegen des Exodus öffnet, braucht davon nichts.
+   */
+  const [terrainGospel, setTerrainGospel] = useState<typeof import('./data/gospel') | null>(null);
+  /** Wann zuletzt aus der Jesus-Sektion ins Gehen gesprungen wurde. */
+  const [autoWalk, setAutoWalk] = useState<number | null>(null);
+  /**
+   * Ob im Gelände gerade gegangen wird. Die Geländekarte weiß es zuerst; hier
+   * steht es, weil der Rand der Hauptkarte – Suchleiste, Kartenwahl,
+   * Zeitleiste – dann im Weg ist. Wer auf Augenhöhe durch das Land geht, will
+   * das Land sehen und nicht die Bedienung.
+   */
+  const [gehend, setGehend] = useState(false);
+
+  // Wer das Gelände verlässt, verlässt auch das Gehen: Ohne das stünde die
+  // Marke noch da, wenn die Ansicht das nächste Mal aufgebaut wird, und es
+  // ginge von selbst los.
+  useEffect(() => {
+    if (view !== 'terrain') setAutoWalk(null);
+  }, [view]);
+
+  useEffect(() => {
+    if (view !== 'terrain' || !gospelNav || terrainGospel) return;
+    let aktuell = true;
+    void import('./data/gospel').then((g) => {
+      if (aktuell) setTerrainGospel(g);
+    });
+    return () => {
+      aktuell = false;
+    };
+  }, [view, gospelNav, terrainGospel]);
+
   /**
    * Die Route, die im Gelände liegt – aus den Bibelreisen oder aus der Mission.
    * Nur in der Geländeansicht, sonst stört sie die flache Karte.
@@ -686,7 +720,35 @@ export default function App() {
       if (m) return { id: m.id, kind: 'mission', de: m.de, en: m.en, color: m.color, stops: m.stops };
     }
     const j = journeyNav ? terrainDaten.byId[journeyNav.id] : null;
-    if (!j) return null;
+    if (!j) {
+      /*
+       * Ein Akt aus dem Leben Jesu – die einzige Route, die ihre Menschen
+       * mitbringt. `gospel.ts` führt zu jeder Station, wer darin vorkommt;
+       * beim Gehen stehen sie im Feld, sobald man die Station erreicht.
+       */
+      if (!gospelNav || !terrainGospel) return null;
+      const akt = terrainGospel.ACT_BY_ID[gospelNav.act];
+      const stationen = akt ? terrainGospel.stationsInAct(akt.id) : [];
+      if (!akt || stationen.length < 2) return null;
+      return {
+        id: `jesus-${akt.id}`,
+        kind: 'gospel',
+        de: akt.de,
+        en: akt.en,
+        color: akt.color,
+        stops: stationen.map((st) => ({
+          de: st.de,
+          en: st.en,
+          lat: st.lat,
+          lon: st.lon,
+          ref: st.ref,
+          people: st.people
+            .map((id) => terrainGospel.PERSON_BY_ID[id])
+            .filter((pp) => !!pp)
+            .map((pp) => ({ id: pp.id, de: pp.de, en: pp.en, role: pp.role })),
+        })),
+      };
+    }
     // Die Bibelreisen tragen keine eigene Farbe – sie erben die ihrer Epoche.
     return {
       id: j.id,
@@ -696,7 +758,7 @@ export default function App() {
       color: ERA_BY_ID[j.era]?.color ?? '#e0a449',
       stops: j.stops,
     };
-  }, [view, journeyNav, missionNav, terrainDaten]);
+  }, [view, journeyNav, missionNav, gospelNav, terrainDaten, terrainGospel]);
 
   // Eine Route, die es nicht gibt, verschwindet auch aus der Adresse – ein
   // Hash, der auf nichts zeigt, ist schlechter als gar keiner.
@@ -709,12 +771,20 @@ export default function App() {
     if (missionNav?.journey && !terrainDaten.mission.some((j) => j.id === missionNav.journey)) {
       setMissionNav(null);
     }
-  }, [view, journeyNav, missionNav, terrainDaten]);
+    // Dasselbe für einen Akt, den es nicht gibt – aber erst, wenn die
+    // Jesus-Daten da sind; vorher ist jede Kennung unbekannt.
+    if (gospelNav && terrainGospel && !terrainGospel.ACT_BY_ID[gospelNav.act]) setGospelNav(null);
+  }, [view, journeyNav, missionNav, gospelNav, terrainDaten, terrainGospel]);
 
   /** Aus dem Gelände zurück dorthin, wo die Route herkommt. */
   function openRouteFromTerrain(r: TerrainRoute) {
     setView('map');
-    if (r.kind === 'mission') {
+    if (r.kind === 'gospel') {
+      // Die Kennung der Geländeroute ist `jesus-<akt>`; zurück geht es in den
+      // Akt, aus dem sie gebaut wurde.
+      setGospelNav({ act: r.id.replace(/^jesus-/, '') });
+      setMode('gospel');
+    } else if (r.kind === 'mission') {
       setMissionNav({ phase: 'journeys', journey: r.id });
       setMode('mission');
     } else {
@@ -730,6 +800,19 @@ export default function App() {
     setJourneyNav({ id, stop: 0 });
     setMode(null);
     setView('terrain');
+    setNavEpoch((n) => n + 1);
+  }
+
+  /** Aus der Jesus-Sektion ins Gelände – ein Akt als Weg, mit den Menschen darin. */
+  function openGospelInTerrain(act: string) {
+    setJourneyNav(null);
+    setMissionNav(null);
+    setGospelNav({ act });
+    setMode(null);
+    setView('terrain');
+    // Von hier aus wird gegangen, nicht von oben geschaut: Der Knopf in der
+    // Sektion heißt „Unterwegs", und das soll er auch tun.
+    setAutoWalk(Date.now());
     setNavEpoch((n) => n + 1);
   }
 
@@ -873,6 +956,8 @@ export default function App() {
                   flyTo={flyTo}
                   route={terrainRoute}
                   onOpenRoute={openRouteFromTerrain}
+                  autoWalk={autoWalk}
+                  onWalking={setGehend}
                 />
               </Suspense>
             ) : (
@@ -893,6 +978,13 @@ export default function App() {
               </Suspense>
             )}
 
+            {/*
+              Alles, was um die Karte herum steht, hängt an einer Hülle: Beim
+              Gehen wird sie ausgeblendet. `hidden` statt Abbauen, damit der
+              Zustand darin – aufgeschlagener Ort, offene Zeitleiste – noch da
+              ist, wenn das Gehen aufhört.
+            */}
+            <div className={gehend ? 'hidden' : 'contents'}>
             {/* Search / detail — left rail on desktop, bottom sheet on mobile */}
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[1110] flex flex-col p-2 sm:inset-y-0 sm:left-0 sm:right-auto sm:z-[1100] sm:w-full sm:max-w-[22rem] sm:p-4 sm:pt-24">
               <div className="pointer-events-auto flex min-h-0 flex-col overflow-hidden bg-deepest/95 ring-1 ring-white/10 backdrop-blur-xl sm:flex-1 sm:">
@@ -1036,6 +1128,7 @@ export default function App() {
                 />
               )
             )}
+            </div>
 
             </div>
             {mode === 'present' && (
@@ -1121,6 +1214,7 @@ export default function App() {
                 initial={gospelNav}
                 onNavigate={setGospelNav}
                 onOpenMedia={openMediaForRef}
+                onOpenTerrain={openGospelInTerrain}
                 onExit={() => setMode(null)}
               />
               </Suspense>

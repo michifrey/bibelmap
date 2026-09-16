@@ -40,6 +40,7 @@
     "check:compare": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-compare.mjs",
     "check:passages": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-passages.mjs",
     "check:journeys": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-journeys.mjs",
+    "check:walk": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-walk.mjs",
     "counts": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-counts.mjs",
     "data:compact": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-places-compact.mjs",
     "check:budget": "node scripts/check-budget.mjs",

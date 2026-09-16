@@ -444,7 +444,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
   (Jerusalem im Gelände), `#gelaende=reise,exodus` (der Auszug über dem
-  Gelände), `#gelaende=mission,second` (die zweite Missionsreise), `#weg=a15257a,a112427`
+  Gelände), `#gelaende=mission,second` (die zweite Missionsreise),
+  `#gelaende=jesus,galilee` (ein Akt aus dem Leben Jesu als Weg, zum Gehen),
+  `#weg=a15257a,a112427`
   (ein selbst gebauter Weg), `#register` (das Ortsregister),
   `#heilsgeschichte=exodus` (eine Station der
   Heilsgeschichte), `#stammbaum=zeit,bonhoeffer` (ein Mensch im Zeitbaum),
@@ -504,6 +506,25 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Karte: keine Ballung, keine Wärmekarte, keine Reichsgrenzen – das steht auch
   in der Ansicht. Höhen von den **Terrain Tiles** (AWS Open Data, aus SRTM u. a.),
   ohne Schlüssel und ohne Anmeldung.
+- **Unterwegs** – derselbe Weg, aber nicht von oben: die Kamera steht **1,70 m
+  über dem Boden** und geht ihn ab. Der Horizont liegt im oberen Drittel, die
+  Steigung von Jericho nach Jerusalem wird sichtbar, weil man sie vor sich hat.
+  Der Knopf steht bei jeder Route in der Geländeansicht; aus der Jesus-Sektion
+  führt er **direkt ins Gehen** (`#gelaende=jesus,galilee`).
+  **Wer unterwegs begegnet**, steht dabei: Die Stationen eines Akts bringen ihre
+  Menschen aus `gospel.ts` mit – wer neu dazukommt, ist hervorgehoben, wer
+  schon dabei war, bleibt blass stehen, und daneben läuft die Zahl derer mit,
+  denen man auf diesem Weg bisher begegnet ist. Dazu Strecke, Tagesmärsche und
+  die Bibelstelle der Station.
+  Anhalten, Station vor und zurück, den **Kopf nach links und rechts drehen**
+  (Pfeiltasten), Tempo in vier Stufen; **Escape** beendet das Gehen und lässt
+  die Geländekarte stehen. Bei *prefers-reduced-motion* läuft nichts von
+  selbst – dann ist es ein Schritt von Station zu Station.
+  Was dabei gezeigt wird, ist **nur das Gelände**: keine Kachel, keine Häuser,
+  keine Wege. Die Höhen sind gemessen (Überhöhung 1×), alles andere ist
+  unbekannt – wie ein Dorf in Galiläa im Jahr 30 aussah, weiß niemand, und die
+  Luftbilder von heute zeigen die Straßen von heute. Der Satz steht in der
+  Ansicht, nicht im Kleingedruckten.
 - **Offline & installierbar** – die App meldet einen Service Worker an: Einstieg,
   Programmdateien, die Ortsdaten **und der Medien-Index** liegen nach dem ersten
   Besuch im Cache, einmal angesehene Kartenkacheln ebenso. Ohne Netz startet
@@ -865,6 +886,69 @@ Fehler, keine Meldung.
 Deshalb legt `scripts/sync-maplibre-worker.mjs` die zwei Dateien unverändert
 nach `public/vendor/maplibre/` (als `predev` und `prebuild`, nicht im Git), und
 `TerrainMap.tsx` sagt MapLibre per `setWorkerUrl`, wo sie liegen.
+
+### Unterwegs: die Kamera auf Augenhöhe
+
+Dieselbe Geländeansicht, nur von unten. Die Rechnung dahinter steht in
+**`src/lib/walk.ts`**, die Schleife in `TerrainMap.tsx`, die Anzeige in
+`WalkPanel.tsx`.
+
+**Warum das eine Rechnung braucht.** MapLibre kennt keine frei gesetzte Kamera
+– die `FreeCameraOptions` von Mapbox sind nach dem Lizenzwechsel nie in
+MapLibre gelandet. Was es gibt, ist ein *Blickpunkt* mit eigener Höhe:
+`jumpTo({ center, elevation, zoom, pitch, bearing })`, seit
+`setCenterClampedToGround(false)` auch frei über dem Gelände. Daraus lässt sich
+eine Kamera auf Augenhöhe rückwärts rechnen:
+
+1. Der Blickpunkt kommt **1,2 km voraus** auf den Kurs zur nächsten Station.
+2. Die Neigung ist fest: **85°**, mehr lässt MapLibre nicht zu. Der Blick geht
+   also fünf Grad abwärts – wie bei jemandem, der auf den Weg vor sich sieht.
+3. Daraus folgt, wie tief der Blickpunkt unter dem Auge liegt (`lookAhead /
+   tan(pitch)`), und daraus die **Zoomstufe**: Der Abstand, den MapLibre aus
+   dem Zoom rechnet, muss genau der Abstand Auge → Blickpunkt sein. Sonst steht
+   die Kamera nicht auf 1,70 m, sondern irgendwo darüber.
+
+Weil das niemandem auffällt, wenn es schiefgeht – eine Kamera hundert Meter zu
+hoch sieht aus wie ein Blick vom Hügel –, gibt es **`npm run check:walk`**: Die
+Prüfung stellt aus dem Ergebnis wieder her, wo die Kamera steht
+(`cameraStandpoint`, dieselbe Geometrie wie MapLibre), und vergleicht mit dem
+Fußpunkt, mit dem die Rechnung begann. 90 Stände vom Toten Meer bis auf den
+Hermon, drei Fensterhöhen; erlaubt sind ein halber Meter in der Fläche und ein
+Zentimeter in der Höhe. Die Gegenprobe verstellt die Zoomstufe um 0,1 und
+verlangt, dass es auffällt.
+
+**Was gezeigt wird und was nicht.** Im Gehen wird die Kachel ausgeblendet, die
+Überhöhung steht auf 1×, die Schummerung trägt das Bild. Das ist eine
+Entscheidung, keine Sparmaßnahme: Gemessen ist nur das Gelände. Ein
+Satellitenbild aus 1,70 m Höhe wäre ein Farbteppich – und es wäre die
+Oberfläche von heute. Auch die **Routenlinie** verschwindet: Zwischen zwei
+Stationen ist sie eine Verbindung, kein Weg, und auf Augenhöhe läge plötzlich
+eine Straße im Bild, die so nie jemand gegangen ist. (Nebenbei löst das ein
+Darstellungsproblem: MapLibre zieht Linien in Bildschirmbreite, und eine Linie,
+die auf eine bodennahe Kamera zuläuft, wächst in der Perspektive zu einem
+hundert Pixel breiten Balken.)
+
+**Die Menschen.** Eine Route aus der Jesus-Sektion bringt sie mit: `gospel.ts`
+führt zu jeder Station, wer darin vorkommt, und `App.tsx` hängt sie als
+`people` an die Stationen der Geländeroute (`src/lib/terrainRoute.ts`). Die
+Bibelreisen und die Mission führen ihre Leute nicht Station für Station – dort
+bleibt die Zeile leer, und das ist ehrlicher, als Namen zu erfinden.
+
+**Zwei Eigenheiten**, die Zeit gekostet haben:
+
+- `map.jumpTo({ elevation: undefined })` ist **nicht** dasselbe wie `elevation`
+  wegzulassen: MapLibre prüft, ob das Feld da ist, und `setElevation(undefined)`
+  zerlegt die Kameramatrix. Beim Aufhören steht deshalb nur `center`, `zoom`
+  und `pitch` im Aufruf – die Höhe holt sich `setCenterClampedToGround(true)`
+  vom Boden.
+- Das `load`-Ereignis wartet auf die erste vollständige Darstellung, und die
+  kommt nicht, solange ein Kachelserver nicht antwortet. Gemessen (mit
+  gesperrtem Kachelserver) blieben Gelände, Ortspunkte und das Gehen aus,
+  obwohl die Höhen aus einer ganz anderen Quelle kommen und längst da waren.
+  Die Ansicht hört jetzt zusätzlich auf **`style.load`** – der Stil ist früher
+  fertig, und mehr braucht es nicht. (`isStyleLoaded()` hilft dabei nicht: Es
+  ist erst wahr, wenn auch die Quellen geladen sind, und wartet damit auf
+  denselben Server.)
 
 ### Kurzformen der Bibelbücher
 
