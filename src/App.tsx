@@ -372,6 +372,7 @@ export default function App() {
       void import('./components/Genealogy');
       void import('./components/ChurchMode');
       void import('./components/CompareMode');
+      void import('./components/Roadmap');
       void import('./lib/globalSearch');
       // Nicht nur der Programmcode, auch der Medien-Index: sonst steht „Hören &
       // Sehen" ohne Netz leer da, während jede andere Ansicht vollständig ist.
