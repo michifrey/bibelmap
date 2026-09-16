@@ -649,6 +649,21 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   abspielen lässt sich ohne Netz nichts, und die Geländeansicht braucht ihre
   Höhenkacheln ebenfalls aus dem Netz. Über das
   Browser-Menü lässt sie sich als App installieren (Manifest + Symbole).
+- **Veröffentlichung bei offener Seite** – jede Ansicht liegt in einer eigenen
+  Datei mit einem Hash im Namen (`Imprint-GQbhcazl.js`). Beim nächsten Build
+  heisst dieselbe Ansicht anders, und die alte Datei ist weg: GitHub Pages legt
+  den ganzen Ordner neu. Wer die Seite offen hatte, während das geschah, hielt
+  noch die alte `index.html` im Kopf, fragte beim Klick nach dem alten Namen und
+  bekam eine 404 – `TypeError: Failed to fetch dynamically imported module`, und
+  die Ansicht blieb leer. Jetzt lädt die Seite **einmal** neu; weil der Zustand
+  hier in der Adresse steht (`#impressum`, `#reise=exodus,5`), steht sie danach
+  wieder da, wo sie war. Genau einmal: Ist eine Veröffentlichung wirklich kaputt,
+  drehte sie sich sonst im Kreis – dann steht statt einer weissen Seite ein Satz,
+  was los ist, mit „Neu laden" und „Zurück zur Karte". Beides nachgestellt mit
+  zwei Builds und einem Ordner, der mitten in der Sitzung getauscht wird.
+  `npm run check:chunks` hält fest, dass jede Ansicht durch diese Rettung geht;
+  wer eine mit blankem `lazy(() => import(…))` einhängt, bekommt einen Befund
+  statt eines Fehlers bei der übernächsten Veröffentlichung.
 - **Zweisprachig** – Oberfläche, Buchnamen **und Ortsnamen** auf Deutsch/Englisch.
   Das galt für alles, was jemand bewusst übersetzt hat – und nicht für das, was
   nebenbei entstand: gemessen standen **28 deutsche Reste** in der englischen

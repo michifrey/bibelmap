@@ -48,7 +48,8 @@
     "data:compact": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/build-places-compact.mjs",
     "check:budget": "node scripts/check-budget.mjs",
     "postbuild": "node scripts/check-budget.mjs",
-    "check:offline": "node scripts/check-offline.mjs"
+    "check:offline": "node scripts/check-offline.mjs",
+    "check:chunks": "node scripts/check-chunks.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
