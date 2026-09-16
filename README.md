@@ -449,7 +449,7 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   (Jerusalem auf der Karte), `#reise=exodus,5` (Reise samt Station),
   `#mission=modern`, `#lesen=Acts,13`, `#stammbaum=gebiete,juda,722`
   (ein Stamm auf der Stammeskarte in einem bestimmten Jahr; `zeit` und `baum`
-  sind die beiden anderen Reiter), `#nachweise`, `#israel=okt2023`, `#hoeren=keller`
+  sind die beiden anderen Reiter), `#nachweise`, `#impressum`, `#israel=okt2023`, `#hoeren=keller`
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
   (Jerusalem im Gelände), `#gelaende=reise,exodus` (der Auszug über dem
@@ -599,6 +599,31 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   die Kurven rechnet die Ansicht daraus aus, eine eingefügte Station braucht
   keinen Strich Zeichnung. Die Mittellinie wandert – bei `prefers-reduced-motion`
   steht sie still, und die Seite verliert nichts, was sie erklärt.
+- **Impressum** – wer die Seite betreibt und wo man schreibt (Modi-Menü,
+  Fußzeile der Startseite, Direktlink `#impressum`). Die dritte Seite der
+  Gruppe *Über das Projekt*: „Nachweise & Lizenzen" sagt, woraus Bibelmap
+  besteht, der „Fahrplan", was daraus noch wird – hier steht, wer dafür
+  geradesteht. Vier Teile: die **Koordinaten** (Verantwortlicher, E-Mail,
+  optional die Anschrift, Domain, Quelltext mit Lizenz, Hoster) als
+  Begriffsliste, ein Absatz **über den Menschen dahinter**, die **Haftung** in
+  drei Karten (Inhalte, fremde Seiten, Rechte) und – im selben Aufwasch –
+  **was die Seite über ihre Besucher weiss**: kein Tracker, keine Cookies,
+  keine Konten, aber das Serverprotokoll von GitHub Pages, die fremden
+  Kachelserver, `youtube-nocookie.com` und die drei Einträge im lokalen
+  Browserspeicher. Die Datenschutzangaben bekommen keine eigene Seite, weil
+  die ehrliche Antwort in einen Bildschirm passt; wer „Impressum" sucht, sucht
+  ohnehin beides.
+
+  Die Angaben selbst stehen in `src/data/imprint.ts` – ein Name ist in keiner
+  Sprache ein anderer. Die **E-Mail steht ausgeschrieben** da, nicht als
+  `[at]`-Bastelei: die Verschleierung hält keinen Sammler mehr auf, nur den,
+  der schreiben will, und Screenreader lesen sie gar nicht. Die
+  **Postanschrift ist `null`** und der Block damit unsichtbar – eine private,
+  werbefreie Seite ohne Geldfluss braucht sie weder nach UWG Art. 3 lit. s
+  (gilt dem elektronischen Geschäftsverkehr) noch nach DDG § 5 (gilt
+  geschäftsmäßigen Angeboten), und eine erfundene Zeile wäre schlimmer als
+  keine. Sobald hier Geld fliesst, trägt man sie dort ein; die Seite zeigt sie
+  dann von selbst.
 
 ## Entwicklung
 
