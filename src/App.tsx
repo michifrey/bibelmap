@@ -24,6 +24,7 @@ import SearchPanel from './components/SearchPanel';
 const Presentation = lazy(() => import('./components/Presentation'));
 const HistoryMode = lazy(() => import('./components/HistoryMode'));
 const FeastsMode = lazy(() => import('./components/FeastsMode'));
+const Bookshelf = lazy(() => import('./components/Bookshelf'));
 const Mission = lazy(() => import('./components/Mission'));
 const JourneyMode = lazy(() => import('./components/JourneyMode'));
 const Gospel = lazy(() => import('./components/Gospel'));
@@ -43,6 +44,7 @@ const PlaceDetail = lazy(() => import('./components/PlaceDetail'));
 // MapLibre wiegt schwer – die Geländeansicht kommt erst, wenn jemand sie öffnet.
 const TerrainMap = lazy(() => import('./components/TerrainMap'));
 import { formatRoute, parseHash, type Route } from './lib/deepLink';
+import type { Sel as ShelfSel } from './components/Bookshelf';
 import type { SearchHit } from './lib/globalSearch';
 import { parseRef } from './lib/parseRef';
 import { bearing, compass, distanceKm, KM_PER_DAY } from './lib/route';
@@ -189,6 +191,7 @@ export default function App() {
   const [israelNav, setIsraelNav] = useState<string | null>(INITIAL_ROUTE?.israel ?? null);
   const [historyNav, setHistoryNav] = useState<string | null>(INITIAL_ROUTE?.history ?? null);
   const [feastsNav, setFeastsNav] = useState<string | null>(INITIAL_ROUTE?.feasts ?? null);
+  const [shelfNav, setShelfNav] = useState<ShelfSel | null>(INITIAL_ROUTE?.shelf ?? null);
   const [treeNav, setTreeNav] = useState(INITIAL_ROUTE?.tree ?? null);
   /*
    * Der eigene Weg. Er gehört niemandem außer dem, der ihn baut: gespeichert
@@ -270,10 +273,12 @@ export default function App() {
     setView(target === 'tree' ? 'tree' : 'map');
     if (target === 'media') setMediaNav(null);
     if (target === 'feasts') setFeastsNav(null);
+    if (target === 'shelf') setShelfNav(null);
     setMode(
       target === 'present' ? 'present'
       : target === 'media' ? 'media'
       : target === 'feasts' ? 'feasts'
+      : target === 'shelf' ? 'shelf'
       : null,
     );
   }
@@ -368,6 +373,7 @@ export default function App() {
       void import('./components/Mission');
       void import('./components/HistoryMode');
       void import('./components/FeastsMode');
+      void import('./components/Bookshelf');
       void import('./components/QuizMode');
       void import('./components/MediaMode');
       void import('./components/Genealogy');
@@ -437,6 +443,7 @@ export default function App() {
           israel: israelNav ?? undefined,
           history: historyNav ?? undefined,
           feasts: feastsNav ?? undefined,
+          shelf: shelfNav ?? undefined,
           own: mode === 'route' ? ownIds : undefined,
           tree: treeNav ?? undefined,
         });
@@ -457,6 +464,7 @@ export default function App() {
     compareNav,
     historyNav,
     feastsNav,
+    shelfNav,
     ownIds,
     treeNav,
   ]);
@@ -503,6 +511,7 @@ export default function App() {
       setIsraelNav(route.israel ?? null);
       setHistoryNav(route.history ?? null);
       setFeastsNav(route.feasts ?? null);
+      setShelfNav(route.shelf ?? null);
       if (route.own?.length) setOwnIds(route.own);
       setTreeNav(route.tree ?? null);
       pendingPlace.current = route.placeId ?? null;
@@ -659,6 +668,9 @@ export default function App() {
     } else if (hit.target.mode === 'gospel') {
       setGospelNav(hit.target.gospel);
       setMode('gospel');
+    } else if (hit.target.mode === 'shelf') {
+      setShelfNav(hit.target.shelf);
+      setMode('shelf');
     } else {
       setMissionNav(hit.target.mission);
       setMode('mission');
@@ -1091,6 +1103,17 @@ export default function App() {
                   initial={feastsNav}
                   onNavigate={setFeastsNav}
                   onShowPlace={showPlaceFromGenealogy}
+                  onExit={() => setMode(null)}
+                />
+              </Suspense>
+            )}
+            {mode === 'shelf' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Bookshelf
+                  key={`shelf-${navEpoch}`}
+                  lang={lang}
+                  initial={shelfNav}
+                  onNavigate={setShelfNav}
                   onExit={() => setMode(null)}
                 />
               </Suspense>

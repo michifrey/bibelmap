@@ -31,6 +31,7 @@
     "check:quiz": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-quiz.mjs",
     "check:history": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-history.mjs",
     "check:feasts": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-feasts.mjs",
+    "check:shelf": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-shelf.mjs",
     "check:i18n-keys": "node scripts/check-i18n-keys.mjs",
     "check:map-keyboard": "node scripts/check-map-keyboard.mjs",
     "check:books": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-books.mjs",

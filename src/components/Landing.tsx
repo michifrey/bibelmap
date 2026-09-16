@@ -3,7 +3,7 @@ import { useT } from '../i18n';
 import { ERAS, eraWeight } from '../data/eras';
 import LangToggle from './LangToggle';
 
-export type LandingTarget = 'map' | 'tree' | 'present' | 'media' | 'feasts' | 'support';
+export type LandingTarget = 'map' | 'tree' | 'present' | 'media' | 'feasts' | 'shelf' | 'support';
 
 interface Props {
   lang: Lang;
@@ -242,6 +242,57 @@ function CardArtFeasts() {
   );
 }
 
+/**
+ * Das Bücherregal: Rücken auf zwei Brettern, einer herausgezogen — Karte 06.
+ *
+ * Die Breite eines Rückens ist auch hier die Länge des Buches, und der
+ * herausgezogene ist der gewählte – dasselbe, was der Modus dahinter macht.
+ * Ein Kartenbild, das etwas anderes zeigt als die Ansicht, ist eine Zusage,
+ * die beim Klick gebrochen wird.
+ */
+function CardArtShelf() {
+  /** Breite und Höhe je Rücken – die Maße des Regals im Kleinen. */
+  const oben: [number, number][] = [
+    [14, 52], [20, 58], [12, 44], [26, 62], [16, 48], [11, 40], [22, 56], [15, 50], [19, 60], [13, 42],
+  ];
+  const unten: [number, number][] = [
+    [18, 46], [24, 56], [13, 38], [16, 50], [21, 44], [12, 34], [26, 52], [15, 42], [19, 48], [14, 36],
+  ];
+
+  /** Eine Reihe Rücken, von links aufgestellt; `aktiv` fährt einen heraus. */
+  const reihe = (spines: [number, number][], grund: number, aktiv: number) => {
+    let x = 20;
+    return spines.map(([w, h], i) => {
+      const links = x;
+      x += w + 2;
+      const raus = i === aktiv ? 9 : 0;
+      return (
+        <rect
+          key={i}
+          x={links}
+          y={grund - h - raus}
+          width={w}
+          height={h}
+          fill={i === aktiv ? '#e0a449' : '#0a5450'}
+          stroke={i === aktiv ? '#e0a449' : '#7fe3d5'}
+          strokeOpacity={i === aktiv ? 1 : 0.55}
+          strokeWidth="1.6"
+        />
+      );
+    });
+  };
+
+  return (
+    <svg viewBox="0 0 246 178" className="block w-full" aria-hidden="true">
+      <rect width="246" height="178" fill="#073f3c" />
+      {reihe(oben, 84, 3)}
+      <rect x="10" y="84" width="226" height="5" fill="#c2812a" />
+      {reihe(unten, 162, 6)}
+      <rect x="10" y="162" width="226" height="5" fill="#c2812a" />
+    </svg>
+  );
+}
+
 function CardArtTree() {
   return (
     <svg viewBox="0 0 246 178" className="block w-full" aria-hidden="true">
@@ -283,6 +334,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
     { kicker: t('lCard3Kicker'), title: t('lCard3Title'), body: t('lCard3Body'), cta: t('lCard3Cta'), art: <CardArtTree />, target: 'tree' as const },
     { kicker: t('lCard4Kicker'), title: t('lCard4Title'), body: t('lCard4Body'), cta: t('lCard4Cta'), art: <CardArtMedia />, target: 'media' as const },
     { kicker: t('lCard5Kicker'), title: t('lCard5Title'), body: t('lCard5Body'), cta: t('lCard5Cta'), art: <CardArtFeasts />, target: 'feasts' as const },
+    { kicker: t('lCard6Kicker'), title: t('lCard6Title'), body: t('lCard6Body'), cta: t('lCard6Cta'), art: <CardArtShelf />, target: 'shelf' as const },
   ];
 
   const stats = [
@@ -305,6 +357,7 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
     { label: t('genealogy'), target: 'tree' },
     { label: t('media'), target: 'media' },
     { label: t('feasts'), target: 'feasts' },
+    { label: t('shelf'), target: 'shelf' },
   ];
 
   return (
@@ -423,7 +476,15 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
           <span className="bm-eyebrow text-signal-deep">{t('lWaysIn')}</span>
           <span className="h-px flex-1 bg-[#d8d2c4]" />
         </div>
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        {/*
+          Sechs Karten, drei Spalten. Die Reihe endete bis zur sechsten auf
+          `xl:grid-cols-5` – fünf Karten, eine Zeile, nichts blieb übrig. Mit
+          der sechsten stünde dort eine allein in der zweiten Zeile, viermal so
+          breit wie hoch. Zwei Zeilen zu dritt füllen sich; und ab `lg` sind es
+          ohnehin schon drei, die Reihe wird also nur übernommen, statt eine
+          zweite Aufteilung danebenzustellen.
+        */}
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map((c) => (
             <button
               key={c.kicker}

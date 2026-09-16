@@ -53,7 +53,7 @@
 import { chromium } from 'playwright';
 
 const ANSICHTEN = [
-  { hash: '', zeigt: 'Fünf Wege hinein' },
+  { hash: '', zeigt: 'Sechs Wege hinein' },
   { hash: '#karte' },
   { hash: '#ort=a15257a', zeigt: 'Jerusalem' },
   { hash: '#register', zeigt: 'Ortsregister' },
@@ -68,6 +68,7 @@ const ANSICHTEN = [
   { hash: '#mission=modern', zeigt: 'Mission & Ausbreitung' },
   { hash: '#vergleich=abraham', zeigt: 'Religionen im Vergleich' },
   { hash: '#feste=sukkot', zeigt: 'Feste Israels' },
+  { hash: '#regal=buch,Dan', zeigt: 'Das Bücherregal' },
   { hash: '#quiz', zeigt: 'Bibelquiz' },
   { hash: '#hoeren', zeigt: 'Hören & Sehen' },
   { hash: '#weg=a15257a,a112427', zeigt: 'Eigener Weg' },

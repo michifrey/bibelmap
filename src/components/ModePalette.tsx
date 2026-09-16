@@ -72,6 +72,7 @@ export default function ModePalette({ onPick, onClose }: Props) {
           { id: 'israel', label: t('israel'), hint: t('israelHint'), icon: 'M12 2 4 7v10l8 5 8-5V7zM12 7l4 2.5v5L12 17l-4-2.5v-5z' },
           { id: 'compare', label: t('compareMode'), hint: t('compareIntro'), icon: 'M12 3v18M5 8l-3 5h6zM19 8l-3 5h6z' },
           { id: 'feasts', label: t('feasts'), hint: t('feastsHint'), icon: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM12 3v5M21 12h-5M12 21v-5M3 12h5' },
+          { id: 'shelf', label: t('shelf'), hint: t('shelfHint'), icon: 'M4 4h4v16H4zM10 4h4v16h-4zM16.5 4.8l3.4.9-4 14.6-3.4-1z' },
         ],
       },
       {

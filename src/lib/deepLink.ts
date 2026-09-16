@@ -1,4 +1,5 @@
 import type { Mode, View } from '../components/Header';
+import type { Sel as ShelfSel } from '../components/Bookshelf';
 
 /**
  * Zustand, den eine Adresse festhalten kann. Jede Ansicht bekommt einen
@@ -42,6 +43,12 @@ export interface Route {
   history?: string;
   /** Fest im Jahreskreis: `#feste=pessach`. */
   feasts?: string;
+  /**
+   * Auswahl im Bücherregal: `#regal=buch,Isa`, `#regal=recht,mischna`,
+   * `#regal=fund,qumran`. Drei Arten stehen dort nebeneinander, und ein Buch
+   * kann so heißen wie ein Fund – deshalb die Art davor und nicht bloß die ID.
+   */
+  shelf?: ShelfSel;
   /** Ereignis der Israel-Karte: `#israel=okt2023`. */
   israel?: string;
   /** Gestalt (Religionen im Vergleich): `#vergleich=abraham`. */
@@ -163,6 +170,13 @@ export function parseHash(hash: string): Route | null {
       return args[0]
         ? { view: 'map', mode: 'feasts', feasts: args[0] }
         : { view: 'map', mode: 'feasts' };
+    case 'regal': {
+      const kind = args[0] === 'recht' ? 'law' : args[0] === 'fund' ? 'find' : 'book';
+      // „buch" darf auch fehlen: `#regal=Isa` ist kürzer und eindeutig, weil
+      // kein OSIS-Kürzel „recht" oder „fund" heißt.
+      const id = args[0] === 'buch' || args[0] === 'recht' || args[0] === 'fund' ? args[1] : args[0];
+      return id ? { view: 'map', mode: 'shelf', shelf: { kind, id } } : { view: 'map', mode: 'shelf' };
+    }
     case 'weg':
       return args.length
         ? { view: 'map', mode: 'route', own: args.filter(Boolean) }
@@ -242,6 +256,12 @@ export function formatRoute(route: Route): string {
   }
   if (mode === 'feasts') {
     return route.feasts ? `#feste=${route.feasts}` : '#feste';
+  }
+  if (mode === 'shelf') {
+    const sh = route.shelf;
+    if (!sh) return '#regal';
+    const key = sh.kind === 'law' ? 'recht' : sh.kind === 'find' ? 'fund' : 'buch';
+    return `#regal=${key},${sh.id}`;
   }
   if (mode === 'route') {
     return route.own?.length ? `#weg=${route.own.join(',')}` : '#weg';

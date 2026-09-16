@@ -210,6 +210,76 @@ const STRINGS: Dict = {
     de: 'Der Kreis rechnet mit zwölf Monaten zu 354 Tagen. So einfach ist der Kalender nicht: Zwei Monate wechseln zwischen 29 und 30 Tagen, und in sieben von neunzehn Jahren wird ein ganzer Monat eingeschoben. Die Lage eines Festes stimmt auf den Tag – seine Breite im Rad nicht: Was schmaler als fünf Grad wäre, ist um seine Mitte aufgeweitet. Der äußere Ring ist eine Näherung im Mittel: Das jüdische Jahr ist elf Tage kürzer, darum wandern die Feste jedes Jahr nach vorn, bis der Schaltmonat sie zurückholt – Pessach zwischen Ende März und Ende April.',
     en: 'The circle reckons with twelve months of 354 days. The calendar is not that simple: two months alternate between 29 and 30 days, and in seven years of nineteen a whole month is inserted. A feast sits on its true day – but not at its true width: anything narrower than five degrees is widened about its centre. The outer ring is an average, not a date: the Jewish year is eleven days shorter, so the feasts drift forward each year until the leap month pulls them back – Passover falls between late March and late April.',
   },
+
+  // Das Bücherregal: die 66 Bücher nach Entstehungszeit, ihre Handschriften
+  // und das, was nach dem Kanon weitergeschrieben wurde.
+  shelf: { de: 'Das Bücherregal', en: 'The bookshelf' },
+  shelfHint: {
+    de: 'Die 66 Bücher als Regal – nach Entstehungszeit, mit Querverweisen, ihren ältesten Handschriften und den jüdischen Gesetzestexten.',
+    en: 'The 66 books as a shelf – by date of writing, with cross-references, their oldest manuscripts and the Jewish legal texts.',
+  },
+  shelfTabShelf: { de: 'Regal', en: 'Shelf' },
+  shelfTabFinds: { de: 'Funde', en: 'Discoveries' },
+  shelfOrderWritten: { de: 'Entstehung', en: 'When written' },
+  shelfOrderTold: { de: 'Erzählte Zeit', en: 'Time told' },
+  shelfOrderCanon: { de: 'Kanon', en: 'Canon' },
+  shelfSearch: { de: 'Buch suchen …', en: 'Search a book …' },
+  shelfDatingNote: {
+    de: 'Wann ein Buch geschrieben wurde, steht bei den wenigsten fest. Ein Rücken steht auf dem Brett, das die Forschung mehrheitlich vertritt – die volle Spanne der Vorschläge steht im Fenster daneben, bei 1. Mose sind das fast tausend Jahre. „Umstritten“ heißt nicht „unsicher“, sondern: Hier führen zwei Datierungen zu zwei verschiedenen Büchern.',
+    en: 'When a book was written is settled for very few of them. A spine stands on the shelf most scholarship argues for – the full span of proposals stands in the panel beside it, which for Genesis is almost a thousand years. "Disputed" does not mean "uncertain" but: here two datings produce two different books.',
+  },
+  shelfLegend: {
+    de: 'Die Breite eines Rückens ist die Kapitelzahl – gewurzelt, sonst wäre Obadja mit einem Kapitel neben den 150 Psalmen ein Strich, den keine Maus trifft. Die Farbe ist die Kanongruppe und bleibt in jeder Ordnung dieselbe. Die Höhe misst nichts: Sie kommt aus der Buchnummer und steht nur da, damit ein Regal nicht aussieht wie ein Balkendiagramm.',
+    en: 'The width of a spine is its chapter count – square-rooted, or Obadiah with one chapter beside the 150 psalms would be a hairline no mouse could hit. The colour is the canonical group and stays the same in every arrangement. The height measures nothing: it comes from the book number and is there only so that a shelf does not look like a bar chart.',
+  },
+  shelfPickHint: {
+    de: 'Einen Buchrücken wählen – oder mit den Pfeiltasten durch das Regal gehen.',
+    en: 'Pick a spine – or walk the shelf with the arrow keys.',
+  },
+  shelfChapters: { de: 'Kapitel', en: 'chapters' },
+  shelfBookNo: { de: 'Buch', en: 'Book' },
+  shelfDisputed: { de: 'Datierung umstritten', en: 'Dating disputed' },
+  shelfWritten: { de: 'Wann geschrieben', en: 'When written' },
+  shelfWorld: { de: 'Die Welt dahinter', en: 'The world behind it' },
+  shelfOldest: { de: 'Älteste erhaltene Handschrift', en: 'Oldest surviving manuscript' },
+  shelfTold: { de: 'Erzählte Zeit', en: 'Time told' },
+  shelfRead: { de: 'Text lesen', en: 'Read the text' },
+  shelfGuide: { de: 'BibleProject-Guide', en: 'BibleProject guide' },
+  shelfWikipedia: { de: 'Bei Wikipedia', en: 'On Wikipedia' },
+  shelfLinksOut: { de: 'Zeigt auf', en: 'Points to' },
+  shelfLinksIn: { de: 'Darauf zeigen', en: 'Pointed to by' },
+  // Zwei Beschriftungen je Verweis, eine je Leserichtung – siehe LINK_OUT und
+  // LINK_IN in Bookshelf.tsx. Die drei übrigen Arten gelten in beide
+  // Richtungen und brauchen deshalb nur ein Wort.
+  shelfLinkQuotedHere: { de: 'wird hier zitiert', en: 'quoted here' },
+  shelfLinkQuotesThis: { de: 'zitiert dieses Buch', en: 'quotes this book' },
+  shelfLinkParallel: { de: 'erzählt dasselbe', en: 'tells the same' },
+  shelfLinkContinues: { de: 'Fortsetzung', en: 'sequel' },
+  shelfLinkAnswers: { de: 'Gegenrede', en: 'objection' },
+  shelfLawKicker: { de: 'Nach dem letzten kanonischen Buch', en: 'After the last book of the canon' },
+  shelfLawTitle: { de: 'Die Auslegung geht weiter', en: 'The exposition continues' },
+  shelfLawWho: { de: 'Wer', en: 'Who' },
+  shelfLawExtent: { de: 'Umfang', en: 'Extent' },
+  shelfLawWhat: { de: 'Was darin steht', en: 'What is in it' },
+  shelfLawBible: { de: 'Was es mit der Bibel macht', en: 'What it does with the Bible' },
+  shelfLawBooks: { de: 'Legt aus', en: 'Expounds' },
+  shelfLawWidth: {
+    de: 'Auf diesem Regal sagt die Breite nichts. Diese Texte sind nicht in Kapiteln zu messen – der Babylonische Talmud hat 2711 Blätter, die Mischna 63 Traktate, die Responsen keinen Umfang, sondern einen Zuwachs. Statt eine vergleichbare Zahl zu erfinden, stehen alle gleich breit; der Umfang steht als Satz im Fenster daneben.',
+    en: 'On this shelf the width says nothing. These texts are not measured in chapters – the Babylonian Talmud has 2,711 folios, the Mishnah 63 tractates, and the responsa have no extent but a rate of growth. Rather than invent a comparable number, all stand equally wide; the extent is stated in the panel beside them.',
+  },
+  shelfFindsKicker: { de: 'Zwischen geschrieben und erhalten', en: 'Between written and surviving' },
+  shelfFindsTitle: { de: 'Wer die Schriften gefunden hat', en: 'Who found the writings' },
+  shelfFindsIntro: {
+    de: 'Zwischen dem, was geschrieben wurde, und dem, was zu lesen ist, liegt bei den meisten biblischen Büchern über ein Jahrtausend. Was diese Lücke füllt, sind Handschriften – und fast jede hat einen Fundtag, einen Fundort und einen Namen.',
+    en: 'Between what was written and what can be read lies, for most biblical books, more than a thousand years. What fills that gap are manuscripts – and almost every one of them has a day of discovery, a place and a name.',
+  },
+  shelfFindWho: { de: 'Gefunden von', en: 'Found by' },
+  shelfFindWhere: { de: 'Fundort und Verbleib', en: 'Found and kept' },
+  shelfFindAge: { de: 'Alter der Handschrift', en: 'Age of the manuscript' },
+  shelfFindText: { de: 'Was darin steht', en: 'What is in it' },
+  shelfFindLimits: { de: 'Was der Fund nicht zeigt', en: 'What the find does not show' },
+  shelfFindCarries: { de: 'Trägt den ältesten Text von', en: 'Carries the oldest text of' },
+
   compareMode: { de: 'Religionen im Vergleich', en: 'Faiths compared' },
   inIslam: { de: 'Im Islam', en: 'In Islam' },
   judaism: { de: 'Judentum · Tanach', en: 'Judaism · Tanakh' },
@@ -618,7 +688,13 @@ const STRINGS: Dict = {
   share: { de: 'Link', en: 'Link' },
   copyLink: { de: 'Link zu dieser Ansicht kopieren', en: 'Copy a link to this view' },
   copied: { de: 'Kopiert', en: 'Copied' },
-  storyResults: { de: 'In Reisen & Ausbreitung', en: 'In journeys & spread' },
+  // Die Überschrift über den Treffern, die keine Orte sind. Sie hieß „In Reisen
+  // & Ausbreitung", als die Suche genau das durchsuchte. Inzwischen findet sie
+  // auch Kirchenväter, Konzilien, Stämme, Gestalten des Zeitbaums, Feste, die
+  // Stationen der Heilsgeschichte und – seit dem Bücherregal – Bücher,
+  // Gesetzestexte und Handschriftenfunde. Was sie verbindet, ist nur eines:
+  // Sie liegen nicht als Marker auf der Karte.
+  storyResults: { de: 'Außerhalb der Karte', en: 'Away from the map' },
   noPlaceResults: { de: 'Kein Ort mit diesem Namen', en: 'No place by that name' },
   quiz: { de: 'Bibelquiz', en: 'Bible quiz' },
   quizSub: { de: 'Wo liegt Kapernaum? Auf die Karte tippen – dazu Fragen zu Reisen und Ausbreitung.', en: 'Where is Capernaum? Tap the map – plus questions on journeys and spread.' },
@@ -779,7 +855,7 @@ const STRINGS: Dict = {
   },
   lNoAccount: { de: 'Ohne Anmeldung · Ortsdaten unter CC-BY 4.0', en: 'No sign-up · place data under CC-BY 4.0' },
   lErasRail: { de: 'Epochen', en: 'eras' },
-  lWaysIn: { de: 'Fünf Wege hinein', en: 'Five ways in' },
+  lWaysIn: { de: 'Sechs Wege hinein', en: 'Six ways in' },
   lCard1Kicker: { de: '01 — Karte', en: '01 — Map' },
   lCard1Title: { de: 'Orte & Epochen', en: 'Places & eras' },
   lCard1Body: {
@@ -815,6 +891,13 @@ const STRINGS: Dict = {
     en: 'Twelve months as a wheel: Passover on the fourteenth of Nisan, the Day of Atonement ten days after the Feast of Trumpets, Tabernacles five days later. With what has become of them today.',
   },
   lCard5Cta: { de: 'Rad drehen', en: 'Turn the wheel' },
+  lCard6Kicker: { de: '06 — Die Bücher', en: '06 — The books' },
+  lCard6Title: { de: 'Das Bücherregal', en: 'The bookshelf' },
+  lCard6Body: {
+    de: 'Die 66 Bücher nach der Zeit ihrer Entstehung aufgestellt statt nach dem Kanon – mit der ältesten erhaltenen Handschrift je Buch und denen, die sie gefunden haben.',
+    en: 'The 66 books shelved by when they were written rather than by canon – with the oldest surviving manuscript for each and the people who found it.',
+  },
+  lCard6Cta: { de: 'Regal ansehen', en: 'See the shelf' },
   lStatPlaces: { de: 'Kartierte Orte', en: 'Places mapped' },
   lStatEras: { de: 'Epochen', en: 'Eras' },
   lStatBooks: { de: 'Bücher im Entdeckermodus', en: 'Books in explorer mode' },
