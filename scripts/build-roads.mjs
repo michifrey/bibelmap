@@ -188,24 +188,45 @@ function kante(a, b) {
 
 let segmente = 0;
 let netzKm = 0;
+
+/**
+ * Eine Punktkette in die Stücke zerlegen, die im Ausschnitt liegen.
+ *
+ * Nicht filtern, zerlegen – das ist der Unterschied zwischen einer Straße und
+ * einer Erfindung: Eine Linie, die den Ausschnitt verlässt und weiter nördlich
+ * zurückkommt, hätte nach dem Filtern zwei Punkte nebeneinander, die in
+ * Wahrheit hundert Kilometer auseinanderliegen. Daraus würde eine Kante, eine
+ * Abkürzung quer durchs Land, die es nie gab.
+ */
+function stuecke(linie) {
+  const out = [];
+  let lauf = [];
+  for (const p of linie) {
+    const punkt = [Number(p[1]), Number(p[0])];
+    if (Number.isFinite(punkt[0]) && Number.isFinite(punkt[1]) && imAusschnitt(punkt)) {
+      lauf.push(punkt);
+    } else if (lauf.length) {
+      out.push(lauf);
+      lauf = [];
+    }
+  }
+  if (lauf.length) out.push(lauf);
+  return out.filter((l) => l.length >= 2);
+}
+
 for (const ft of features) {
   for (const linie of linien(ft.geometry)) {
-    // Ein Segment zählt, sobald ein Punkt im Ausschnitt liegt; die Punkte
-    // draußen bleiben trotzdem draußen – ein Weg nach Rom braucht Rom, aber
-    // keine Straße in Britannien.
-    const punkte = linie
-      .map((p) => [Number(p[1]), Number(p[0])])
-      .filter((p) => Number.isFinite(p[0]) && Number.isFinite(p[1]) && imAusschnitt(p));
-    if (punkte.length < 2) continue;
-    segmente++;
-    let vor = knotenFuer(punkte[0][0], punkte[0][1]);
-    for (let i = 1; i < punkte.length; i++) {
-      const jetzt = knotenFuer(punkte[i][0], punkte[i][1]);
-      if (jetzt !== vor) {
-        netzKm += distanceKm(knoten[vor], knoten[jetzt]);
-        kante(vor, jetzt);
+    for (const punkte of stuecke(linie)) {
+      segmente++;
+      let vor = knotenFuer(punkte[0][0], punkte[0][1]);
+      for (let i = 1; i < punkte.length; i++) {
+        const jetzt = knotenFuer(punkte[i][0], punkte[i][1]);
+        if (jetzt !== vor) {
+          netzKm += distanceKm(knoten[vor], knoten[jetzt]);
+          kante(vor, jetzt);
+        }
+        vor = jetzt;
       }
-      vor = jetzt;
     }
   }
 }
@@ -360,22 +381,38 @@ function abstandM(p, a, b) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
-/** Douglas-Peucker: was die Linie nicht ändert, fällt weg. */
+/**
+ * Douglas-Peucker: was die Linie nicht ändert, fällt weg.
+ *
+ * Mit eigenem Stapel statt Rekursion. Der Algorithmus teilt im schlechtesten
+ * Fall bei jedem Schritt nur einen Punkt ab, und ein Weg quer durchs Reich hat
+ * zehntausende Punkte – rekursiv wäre das irgendwann ein übergelaufener
+ * Aufrufstapel, und zwar genau bei dem Datensatz, der zu groß zum Ausprobieren
+ * ist. Statt Punktketten zu kopieren, merkt sich eine Maske, was bleibt.
+ */
 function duenneAus(punkte, toleranzM) {
   if (punkte.length < 3) return punkte;
-  let maxAbstand = 0;
-  let maxI = 0;
-  for (let i = 1; i < punkte.length - 1; i++) {
-    const d = abstandM(punkte[i], punkte[0], punkte[punkte.length - 1]);
-    if (d > maxAbstand) {
-      maxAbstand = d;
-      maxI = i;
+  const behalten = new Uint8Array(punkte.length);
+  behalten[0] = 1;
+  behalten[punkte.length - 1] = 1;
+  const stapel = [[0, punkte.length - 1]];
+  while (stapel.length) {
+    const [von, bis] = stapel.pop();
+    let maxAbstand = 0;
+    let maxI = -1;
+    for (let i = von + 1; i < bis; i++) {
+      const d = abstandM(punkte[i], punkte[von], punkte[bis]);
+      if (d > maxAbstand) {
+        maxAbstand = d;
+        maxI = i;
+      }
+    }
+    if (maxI >= 0 && maxAbstand > toleranzM) {
+      behalten[maxI] = 1;
+      stapel.push([von, maxI], [maxI, bis]);
     }
   }
-  if (maxAbstand <= toleranzM) return [punkte[0], punkte[punkte.length - 1]];
-  const links = duenneAus(punkte.slice(0, maxI + 1), toleranzM);
-  const rechts = duenneAus(punkte.slice(maxI), toleranzM);
-  return links.slice(0, -1).concat(rechts);
+  return punkte.filter((_, i) => behalten[i]);
 }
 
 /* --- Und jetzt die Reisen ------------------------------------------------ */

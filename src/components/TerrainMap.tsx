@@ -350,12 +350,22 @@ export default function TerrainMap({
    * dem Fall `null` zurück.
    */
   const [roads, setRoads] = useState<RoadsData | null>(null);
+  /**
+   * Ob die Frage nach den Straßen beantwortet ist – mit oder ohne Datei. Das
+   * Gehen wartet darauf: Losgehen und hundert Millisekunden später den Weg
+   * unter den Füßen tauschen wäre ein Sprung im Bild.
+   */
+  const [roadsReady, setRoadsReady] = useState(false);
   useEffect(() => {
     if (!route) return;
     let aktuell = true;
-    void loadRoads().then((d) => {
-      if (aktuell && d) setRoads(d);
-    });
+    void loadRoads()
+      .then((d) => {
+        if (aktuell && d) setRoads(d);
+      })
+      .finally(() => {
+        if (aktuell) setRoadsReady(true);
+      });
     return () => {
       aktuell = false;
     };
@@ -384,6 +394,30 @@ export default function TerrainMap({
     setKm(value);
   }
 
+  /*
+   * Wechselt der Weg unter den Füßen – weil die Straßendatei später eintrifft
+   * als der erste Schritt –, dann zählen die Kilometer neu: Über die Straße
+   * sind es mehr als über die Luftlinie, und derselbe Kilometerstand läge auf
+   * einmal woanders. Angehalten wird an der Station, an der man stand.
+   */
+  const wegRef = useRef(weg);
+  useEffect(() => {
+    if (wegRef.current === weg) return;
+    const alt = wegRef.current;
+    const station = stopIndexAt(alt, tAtKm(alt.cum, kmRef.current));
+    wegRef.current = weg;
+    const ziel = weg.stopAt[Math.min(station, weg.stopAt.length - 1)] ?? 0;
+    const neuKm = kmAtT(weg.cum, ziel);
+    kmRef.current = neuKm;
+    setKm(neuKm);
+  }, [weg]);
+
+  /** Die Kilometer, an denen eine Station liegt. */
+  function kmAtStop(i: number) {
+    const clamped = Math.max(0, Math.min(weg.stopAt.length - 1, i));
+    return kmAtT(cum, weg.stopAt[clamped] ?? 0);
+  }
+
   function startWalk() {
     // Wer sich vorher durch die Stationen geklickt hat, geht dort weiter.
     goToKm(stop === null ? 0 : kmAtStop(stop));
@@ -392,12 +426,6 @@ export default function TerrainMap({
     // Gehen ein Schritt von Station zu Station, und den macht die Hand.
     setPlaying(!reduced);
     setWalking(true);
-  }
-
-  /** Die Kilometer, an denen eine Station liegt. */
-  function kmAtStop(i: number) {
-    const clamped = Math.max(0, Math.min(weg.stopAt.length - 1, i));
-    return kmAtT(cum, weg.stopAt[clamped]);
   }
 
   /** Eine Station weiter oder zurück – mitten auf der Etappe erst an ihren Anfang. */
@@ -890,13 +918,13 @@ export default function TerrainMap({
     // Nur einmal je Sprung: Wer das Gehen beendet und sich die Route von oben
     // ansieht, soll nicht beim nächsten Bild wieder losgehen.
     if (!autoWalk || autoWalkDone.current === autoWalk) return;
-    if (!ready || walking || points.length < 2) return;
+    if (!ready || !roadsReady || walking || points.length < 2) return;
     autoWalkDone.current = autoWalk;
     startWalk();
     // `startWalk` liest den Stand der Route; als Abhängigkeit stünde hier bei
     // jedem Bild eine neue Funktion.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [autoWalk, ready, points.length]);
+  }, [autoWalk, ready, roadsReady, points.length]);
 
   // Tastatur im Gehen: Blick drehen, anhalten, aufhören.
   useEffect(() => {

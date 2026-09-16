@@ -60,6 +60,12 @@ let cache: Promise<RoadsData | null> | null = null;
 /**
  * Die Wegdatei holen. Höchstens einmal je Sitzung, und ein Fehlschlag ist
  * keiner: Ohne Datei ist die Antwort `null` und die App zeigt Luftlinien.
+ *
+ * Beide Fehlerwege sind gemeint. Auf GitHub Pages fehlt die Datei mit einer
+ * 404, und `r.ok` ist falsch. Ein Entwicklungsserver dagegen antwortet auf
+ * alles, was er nicht kennt, mit der `index.html` – **Status 200** –, und erst
+ * `r.json()` stolpert über das `<`. Deshalb fängt `catch` hier nicht nur den
+ * Netzfehler, sondern auch den Parserfehler.
  */
 export function loadRoads(): Promise<RoadsData | null> {
   if (!cache) {
