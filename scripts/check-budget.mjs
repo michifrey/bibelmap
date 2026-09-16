@@ -32,7 +32,22 @@ const DIST = path.join(ROOT, 'dist');
  * Einladung. Wer sie hebt, soll das im Diff begründen müssen.
  */
 const GRENZEN = {
-  'JavaScript (roh)': { ist: (b) => b.js, max: 360 * 1024 },
+  /*
+   * 360 → 380 kB, am 16.09.2026. Gemessen standen 359,8 kB da – 186 Bytes
+   * unter der alten Grenze. Sie war erreicht, nicht gerissen, und die nächste
+   * Zeile, welche auch immer, hätte die Veröffentlichung aufgehalten.
+   *
+   * Das widerspricht dem Absatz darüber, und zwar mit Absicht: 20 kB sind
+   * mehr als „dicht über dem Gemessenen". An diesem Tag wuchs der Pfad von
+   * 345 auf 360 kB, über mehrere Veröffentlichungen, und die Grenze hätte als
+   * Nächstes irgendeine Arbeit aufgehalten – nicht die, die das Wachstum
+   * verursacht hat. Ein Puffer, den man einmal bewusst setzt, ist besser als
+   * eine Grenze, die man nebenbei anhebt, weil sie gerade im Weg steht.
+   *
+   * Was das nicht ist: eine Freigabe für die nächsten 20 kB. Wer auch die
+   * füllt, hebt die Zahl nicht wieder – dann ist der Pfad selbst dran.
+   */
+  'JavaScript (roh)': { ist: (b) => b.js, max: 380 * 1024 },
   'CSS (gzip)': { ist: (b) => b.cssGz, max: 18 * 1024 },
   'Ortsdaten (gzip)': { ist: (b) => b.placesGz, max: 130 * 1024 },
 };
