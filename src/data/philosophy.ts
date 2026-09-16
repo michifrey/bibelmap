@@ -13,7 +13,7 @@
 // **mit welchen Begriffen sie gelesen wurden** – und dass diese Begriffe eine
 // eigene Geschichte haben, die man kennen kann.
 //
-// **Die Auswahl.** Zweiundvierzig Werke sind eine Behauptung, und zwar eine
+// **Die Auswahl.** Fünfundvierzig Werke sind eine Behauptung, und zwar eine
 // angreifbare. Das Kriterium ist nicht der Rang in der Philosophiegeschichte,
 // sondern die Frage: Hat dieses Buch verändert, wie über Gott, Schrift, Mensch
 // oder Welt geredet wird? Deshalb steht Boethius hier und nicht Cicero,
@@ -62,6 +62,7 @@ export type PhilKind =
   | 'bekenntnis'
   | 'aphorismen'
   | 'kritik'
+  | 'kommentar'
   | 'essay';
 
 export const PHIL_KIND: Record<PhilKind, Bilingual> = {
@@ -72,6 +73,7 @@ export const PHIL_KIND: Record<PhilKind, Bilingual> = {
   bekenntnis: { de: 'Bekenntnisschrift', en: 'Confession' },
   aphorismen: { de: 'Aphorismen', en: 'Aphorisms' },
   kritik: { de: 'Kritik', en: 'Critique' },
+  kommentar: { de: 'Kommentar', en: 'Commentary' },
   essay: { de: 'Essay', en: 'Essay' },
 };
 
@@ -1389,6 +1391,40 @@ export const PHIL_WORKS: PhilWork[] = [
     wiki: 'Tractatus logico-philosophicus', wikiEn: 'Tractatus Logico-Philosophicus',
   },
   {
+    id: 'barth-roemerbrief', kind: 'kommentar',
+    author: { de: 'Karl Barth', en: 'Karl Barth' },
+    lived: { de: '1886–1968', en: '1886–1968' },
+    original: 'Der Römerbrief',
+    de: 'Der Römerbrief', en: 'The Epistle to the Romans',
+    shortDe: 'Der Römerbrief', shortEn: 'Epistle to Romans',
+    period: 'moderne', year: 1922, from: 1918, to: 1922,
+    when: { de: '1919, zweite Auflage 1922', en: '1919, second edition 1922' },
+    thesis: {
+      de: 'Gott ist Gott – und zwischen ihm und uns liegt kein Weg, den wir gehen könnten.',
+      en: 'God is God – and between him and us lies no road we could walk.',
+    },
+    who: {
+      de: 'Ein Dorfpfarrer in Safenwil im Aargau, der am Sonntag predigen muss und merkt, dass die liberale Theologie seiner Lehrer ihm dafür nichts gibt – vollends, seit dieselben Lehrer 1914 den Kriegsaufruf des Kaisers unterschrieben hatten. Er fängt an, den Römerbrief Vers für Vers zu lesen, und schreibt das Ergebnis auf. Die zweite Auflage ist neu geschrieben, kein Buchstabe blieb stehen. Ein katholischer Kollege nannte sie eine Bombe auf dem Spielplatz der Theologen.',
+      en: 'A village pastor in Safenwil in the Aargau who has to preach on Sunday and finds that the liberal theology of his teachers gives him nothing for it – the more so since those same teachers had signed the Kaiser’s call to war in 1914. He starts reading Romans verse by verse and writes down the result. The second edition is rewritten, not a letter left standing. A Catholic colleague called it a bomb on the playground of the theologians.',
+    },
+    what: {
+      de: 'Kein Kommentar im üblichen Sinn, sondern ein Angriff auf die Voraussetzung, dass zwischen Gott und Mensch ein stetiger Übergang bestehe – Religion, Erfahrung, Innerlichkeit, Fortschritt. Barth setzt dagegen Kierkegaards „unendlichen qualitativen Unterschied" und liest Paulus als Krisis: Gott ist der ganz Andere, der senkrecht von oben einbricht, und Religion ist die letzte und feinste Weise, ihm auszuweichen. Zwölf Jahre später schreibt derselbe Mann den Text der Barmer Erklärung.',
+      en: 'Not a commentary in the usual sense but an attack on the premise that there is a continuous passage between God and humanity – religion, experience, inwardness, progress. Barth sets against it Kierkegaard’s "infinite qualitative difference" and reads Paul as crisis: God is the wholly other who breaks in vertically from above, and religion is the last and finest way of evading him. Twelve years later the same man writes the text of the Barmen Declaration.',
+    },
+    bible: {
+      de: 'Das ist der Bruch, mit dem die Theologie des 20. Jahrhunderts anfängt, und er wird an einer Bibelauslegung vollzogen, nicht an einem System. Barth nimmt die historische Kritik nicht zurück – er hält sie für zu harmlos: Wer nur feststellt, was Paulus gemeint haben könnte, hat noch nicht gehört, was da steht. Dass ein solches Buch auf einem Philosophieregal steht, ist kein Versehen: Es ist die schärfste Absage an jede Philosophie als Zugang zu Gott, und sie musste in deren eigener Sprache formuliert werden.',
+      en: 'This is the break with which 20th-century theology begins, and it is carried out in a piece of biblical exegesis, not in a system. Barth does not withdraw historical criticism – he thinks it too harmless: whoever merely establishes what Paul might have meant has not yet heard what stands there. That such a book sits on a philosophy shelf is no accident: it is the sharpest refusal of any philosophy as access to God, and it had to be formulated in philosophy’s own language.',
+    },
+    books: ['Rom', 'Hab', '1Cor'],
+    links: [
+      { to: 'schleiermacher-reden', kind: 'against', de: 'Der Ausweg über das Gefühl wird zugeschlagen: Wer von Gott redet, indem er vom Menschen redet, redet nur lauter vom Menschen.', en: 'The exit through feeling is shut: whoever speaks of God by speaking of humanity is only speaking of humanity more loudly.' },
+      { to: 'kierkegaard-furcht', kind: 'builds', de: 'Der „unendliche qualitative Unterschied" ist Kierkegaards Wort – Barth macht daraus den Grundriss einer Dogmatik.', en: 'The "infinite qualitative difference" is Kierkegaard’s phrase – Barth turns it into the ground plan of a dogmatics.' },
+      { to: 'feuerbach-wesen', kind: 'builds', de: 'Barth gibt Feuerbach recht – über die Religion. Sie sei wirklich Menschenwerk, und genau deshalb nicht der Ort, an dem Gott zu finden ist.', en: 'Barth concedes Feuerbach’s case – about religion. It really is a human product, and that is exactly why it is not where God is found.' },
+    ],
+    event: 'barmen',
+    wiki: 'Der Römerbrief (Karl Barth)', wikiEn: 'The Epistle to the Romans (book)',
+  },
+  {
     id: 'buber-ich-du', kind: 'essay',
     author: { de: 'Martin Buber', en: 'Martin Buber' },
     lived: { de: '1878–1965', en: '1878–1965' },
@@ -1452,6 +1488,39 @@ export const PHIL_WORKS: PhilWork[] = [
     ],
     event: 'barmen',
     wiki: 'Sein und Zeit', wikiEn: 'Being and Time',
+  },
+  {
+    id: 'weil-schwerkraft', kind: 'aphorismen',
+    author: { de: 'Simone Weil', en: 'Simone Weil' },
+    lived: { de: '1909–1943', en: '1909–1943' },
+    original: 'La pesanteur et la grâce',
+    de: 'Schwerkraft und Gnade', en: 'Gravity and Grace',
+    shortDe: 'Schwerkraft', shortEn: 'Gravity and Grace',
+    period: 'moderne', year: 1947, from: 1940, to: 1947,
+    when: { de: 'Hefte 1940–1942, gedruckt 1947', en: 'notebooks 1940–1942, printed 1947' },
+    thesis: {
+      de: 'Alles Seelische fällt wie ein Stein; nur die Gnade fällt nach oben.',
+      en: 'Everything in the soul falls like a stone; only grace falls upward.',
+    },
+    who: {
+      de: 'Philosophielehrerin aus einer jüdischen Pariser Familie, die 1934 ihre Stelle aufgab und ein Jahr an Werkbänken bei Renault und Alsthom arbeitete, um zu wissen, wovon sie redete; 1936 nach Spanien in den Bürgerkrieg; 1938 in Solesmes, bei rasenden Kopfschmerzen, eine Erfahrung, die sie nie „Bekehrung" nannte. Sie blieb ungetauft, aus Solidarität mit denen draußen. 1943 stirbt sie mit vierunddreißig in England, geschwächt, weil sie nicht mehr essen wollte als die Menschen im besetzten Frankreich. Dieses Buch hat sie nie geschrieben: Gustave Thibon stellte es aus den Heften zusammen, die sie ihm 1942 dagelassen hatte.',
+      en: 'A philosophy teacher from a Jewish Parisian family, who gave up her post in 1934 and spent a year at the machines of Renault and Alsthom in order to know what she was talking about; in 1936 to the civil war in Spain; in 1938 at Solesmes, amid splitting headaches, an experience she never called a conversion. She stayed unbaptised, in solidarity with those outside. In 1943 she dies at thirty-four in England, weakened because she would not eat more than people in occupied France. She never wrote this book: Gustave Thibon assembled it from the notebooks she left with him in 1942.',
+    },
+    what: {
+      de: 'Kurze Stücke um einige wenige Begriffe. Die Schwerkraft ist das Gesetz, nach dem die Seele sich selbst sucht – auch im Mitleid, auch im Gebet. Die Gnade ist das Einzige, was ihm nicht folgt, und sie kommt nur in das Leere, das man nicht selbst füllt: Entschöpfung, das Gegenstück zur Schöpfung, das Zurücknehmen des eigenen Ich. Dazu zwei Sätze, die ihre Wirkung ausmachen: Aufmerksamkeit in ihrer höchsten Form sei dasselbe wie Gebet – und das Unglück, das *malheur*, sei nicht Schmerz, sondern das, was einen Menschen entwurzelt, bis er nichts mehr sagen kann.',
+      en: 'Short pieces around very few terms. Gravity is the law by which the soul seeks itself – in pity too, in prayer too. Grace is the only thing that does not follow it, and it enters only the emptiness one does not fill oneself: decreation, the counterpart of creation, the taking back of one’s own I. With it two sentences that account for her influence: attention in its highest form is the same thing as prayer – and affliction, malheur, is not pain but what uproots a person until they can no longer speak.',
+    },
+    bible: {
+      de: 'Weil liest die Bibel gegen den Strich und gerade dadurch genau: Das Buch Hiob ist ihr nicht die Frage nach Gottes Gerechtigkeit, sondern die Beschreibung dessen, was Unglück mit einem Menschen macht; Philipper 2, wo Christus sich selbst entleert, wird zum Muster jeder Liebe; Matthäus 25 – „ich war hungrig" – liest sie als Aufmerksamkeit, die im Unglücklichen niemanden übersieht. Ihr Verhältnis zum Alten Testament war schwierig bis abweisend, und sie hat das nie ausgeglichen; was bleibt, ist eine Sprache für das, wovon fromme Rede meist schweigt.',
+      en: 'Weil reads the Bible against the grain and for that very reason precisely: the book of Job is for her not the question of God’s justice but a description of what affliction does to a person; Philippians 2, where Christ empties himself, becomes the pattern of all love; Matthew 25 – "I was hungry" – she reads as attention that overlooks no one in their affliction. Her relation to the Old Testament was difficult to dismissive, and she never squared it; what remains is a language for what pious speech usually passes over.',
+    },
+    books: ['Job', 'Phil', 'Matt'],
+    links: [
+      { to: 'platon-politeia', kind: 'echoes', de: 'Weil liest die Höhle als geistliche Erfahrung – Platon sei ein Mystiker gewesen, und das Gute jenseits des Seins sei nichts anderes als Gott.', en: 'Weil reads the cave as spiritual experience – Plato was a mystic, she says, and the Good beyond being is nothing other than God.' },
+      { to: 'pascal-pensees', kind: 'echoes', de: 'Wieder Bruchstücke aus einem Nachlass, wieder ein Mensch, der sich selbst im Weg steht – und wieder kein System daraus geworden.', en: 'Fragments from a posthumous file again, again a person in their own way – and again no system made of it.' },
+      { to: 'marx-hegelkritik', kind: 'against', de: 'Sie kannte die Fabrik von innen und blieb dabei, dass Unterdrückung nicht nur den Besitz betrifft, sondern die Aufmerksamkeit: Wer erschöpft ist, kann nicht mehr denken.', en: 'She knew the factory from inside and held that oppression is not only about ownership but about attention: the exhausted can no longer think.' },
+    ],
+    wiki: 'Simone Weil', wikiEn: 'Simone Weil',
   },
   {
     id: 'arendt-vita-activa', kind: 'essay',
@@ -1552,6 +1621,39 @@ export const PHIL_WORKS: PhilWork[] = [
     wiki: 'Paul Ricœur', wikiEn: 'Paul Ricœur',
   },
   {
+    id: 'habermas-glauben', kind: 'essay',
+    author: { de: 'Jürgen Habermas', en: 'Jürgen Habermas' },
+    lived: { de: 'geboren 1929', en: 'born 1929' },
+    original: 'Glauben und Wissen',
+    de: 'Glauben und Wissen', en: 'Faith and Knowledge',
+    shortDe: 'Glauben u. Wissen', shortEn: 'Faith & Knowledge',
+    period: 'moderne', year: 2001, from: 2001, to: 2004,
+    when: { de: 'Friedenspreisrede, 14. Oktober 2001', en: 'Peace Prize address, 14 October 2001' },
+    thesis: {
+      de: 'Die säkulare Vernunft darf nicht wegwerfen, was sie nicht selbst hervorgebracht hat – sie muss es übersetzen.',
+      en: 'Secular reason must not discard what it did not itself produce – it has to translate it.',
+    },
+    who: {
+      de: 'Der bekannteste lebende Philosoph Deutschlands, sein Leben lang Vertreter einer strikt weltlichen Vernunft, spricht einen Monat nach dem 11. September in der Frankfurter Paulskirche – und sagt einen Satz, den von ihm niemand erwartet hatte: Die Gesellschaft sei „postsäkular". Drei Jahre später diskutiert er in München mit Kardinal Ratzinger über die vorpolitischen Grundlagen des Staates; 2019 legt er mit „Auch eine Geschichte der Philosophie" zweitausend Seiten darüber vor, wie Glaube und Wissen sich seit der Achsenzeit gegenseitig geformt haben.',
+      en: 'Germany’s best-known living philosopher, a lifelong advocate of strictly secular reason, speaks in the Paulskirche in Frankfurt a month after 11 September – and says something nobody expected from him: society is "post-secular". Three years later he debates the pre-political foundations of the state with Cardinal Ratzinger in Munich; in 2019 he publishes two thousand pages, Also a History of Philosophy, on how faith and knowledge have shaped each other since the axial age.',
+    },
+    what: {
+      de: 'Postsäkular heißt nicht, dass die Religion zurückkehrt, sondern dass eine Gesellschaft sich darauf einstellt, dass sie bleibt. Daraus folgen für Habermas Pflichten auf beiden Seiten: Die Gläubigen müssen ihre Gründe in eine allgemein zugängliche Sprache übersetzen, wenn sie im Parlament gelten sollen – und die säkulare Seite darf religiöse Gehalte nicht als bloßen Rest behandeln, den man abräumt. Sein Beispiel ist die Gottebenbildlichkeit aus 1. Mose 1: Aus ihr sei die Menschenwürde geworden, und diese Übersetzung sei eine „rettende", keine Enteignung.',
+      en: 'Post-secular does not mean religion is returning but that a society adjusts to its staying. From this Habermas derives duties on both sides: believers must translate their reasons into generally accessible language if those reasons are to count in parliament – and the secular side may not treat religious content as a leftover to be cleared away. His example is the image of God in Genesis 1: human dignity grew out of it, and that translation is a "saving" one, not an expropriation.',
+    },
+    bible: {
+      de: 'Für Gemeinden ist das die freundlichste und die anstrengendste Anfrage zugleich: Dein Satz gilt – aber sag ihn so, dass er auch dort gilt, wo niemand deinen Glauben teilt. Und für die Bibelauslegung ist es eine Aufgabe, die dieses Regal ernst nimmt: Woher kommen Menschenwürde, Gleichheit vor dem Gesetz, die Idee einer offenen Zukunft? Habermas antwortet mit einer Genealogie statt mit einem Bekenntnis – und beantwortet damit Lessings Frage in einer Währung, die Lessing nicht hatte.',
+      en: 'For congregations this is the friendliest and the most demanding question at once: your sentence counts – but say it so that it counts where nobody shares your faith. And for biblical interpretation it is a task this shelf takes seriously: where do human dignity, equality before the law, the idea of an open future come from? Habermas answers with a genealogy rather than a confession – and thereby answers Lessing’s question in a currency Lessing did not have.',
+    },
+    books: ['Gen', 'Isa', 'Rom'],
+    links: [
+      { to: 'kant-kritik', kind: 'builds', de: 'Kants Grenze bleibt – aber was jenseits von ihr gesagt wurde, ist damit nicht erledigt, sondern zu übersetzen.', en: 'Kant’s limit stands – but what was said beyond it is not thereby finished; it is to be translated.' },
+      { to: 'marx-hegelkritik', kind: 'against', de: 'Religionskritik als Voraussetzung aller Kritik: Habermas hält daran fest und nimmt ihr den letzten Schritt – aufgehoben wird sie nicht.', en: 'Criticism of religion as the premise of all criticism: Habermas keeps that and withdraws its last step – religion is not to be abolished.' },
+      { to: 'lessing-beweis', kind: 'echoes', de: 'Derselbe Graben, dritte Antwort: nicht überbrücken, nicht springen, sondern übersetzen.', en: 'The same ditch, a third answer: neither bridge it nor leap it, but translate.' },
+    ],
+    wiki: 'Jürgen Habermas', wikiEn: 'Jürgen Habermas',
+  },
+  {
     id: 'taylor-saekulares', kind: 'essay',
     author: { de: 'Charles Taylor', en: 'Charles Taylor' },
     lived: { de: 'geboren 1931', en: 'born 1931' },
@@ -1580,6 +1682,7 @@ export const PHIL_WORKS: PhilWork[] = [
     links: [
       { to: 'nietzsche-wissenschaft', kind: 'builds', de: 'Der tolle Mensch fragte, was wir getan haben; Taylor beschreibt, wie es geschah.', en: 'The madman asked what we have done; Taylor describes how it happened.' },
       { to: 'ockham-summa-logicae', kind: 'echoes', de: 'Taylor führt eine Spur bis hierher zurück: Wo nur Einzeldinge sind, wird die Welt zum Gegenstand.', en: 'Taylor traces a line back to here: where only individual things are, the world becomes an object.' },
+      { to: 'habermas-glauben', kind: 'echoes', de: 'Dieselbe Lage, sechs Jahre später und mit umgekehrter Frage: Habermas fragt, was die säkulare Vernunft der Religion schuldet, Taylor, wie es zu dieser Vernunft überhaupt kam.', en: 'The same situation six years later, with the question reversed: Habermas asks what secular reason owes religion, Taylor how that reason came about at all.' },
     ],
     event: 'sueden',
     wiki: 'Ein säkulares Zeitalter', wikiEn: 'A Secular Age',
@@ -1699,8 +1802,8 @@ export const PHIL_MARKEN: { year: number; de: string; en: string }[] = [
 
 /** Der Satz über dem Regal. */
 export const PHIL_INTRO: Bilingual = {
-  de: 'Kein Satz dieser Bibel wurde je ohne Vorverständnis gelesen. „Im Anfang war das Wort" steht auf Griechisch da, und „Logos" war ein besetzter Begriff; die Zwei-Naturen-Lehre redet in den Kategorien des Aristoteles, weil es andere nicht gab; und wer heute fragt, warum Glaube begründet werden muss, stellt eine Frage, die vor Kant so niemand gestellt hat. Zweiundvierzig Werke von Platon bis in die Gegenwart – ausgewählt nicht nach Rang, sondern nach der Frage: Hat dieses Buch verändert, wie über Gott, Schrift, Mensch und Welt geredet wird?',
-  en: 'No sentence of this Bible was ever read without a prior understanding. "In the beginning was the Word" stands there in Greek, and "logos" was a loaded term; the doctrine of the two natures speaks in Aristotle’s categories because no others existed; and anyone asking today why faith must be justified is asking a question nobody put that way before Kant. Forty-two works from Plato to the present – chosen not by rank but by one question: did this book change how God, scripture, humanity and world are talked about?',
+  de: 'Kein Satz dieser Bibel wurde je ohne Vorverständnis gelesen. „Im Anfang war das Wort" steht auf Griechisch da, und „Logos" war ein besetzter Begriff; die Zwei-Naturen-Lehre redet in den Kategorien des Aristoteles, weil es andere nicht gab; und wer heute fragt, warum Glaube begründet werden muss, stellt eine Frage, die vor Kant so niemand gestellt hat. Fünfundvierzig Werke von Platon bis in die Gegenwart – ausgewählt nicht nach Rang, sondern nach der Frage: Hat dieses Buch verändert, wie über Gott, Schrift, Mensch und Welt geredet wird?',
+  en: 'No sentence of this Bible was ever read without a prior understanding. "In the beginning was the Word" stands there in Greek, and "logos" was a loaded term; the doctrine of the two natures speaks in Aristotle’s categories because no others existed; and anyone asking today why faith must be justified is asking a question nobody put that way before Kant. Forty-five works from Plato to the present – chosen not by rank but by one question: did this book change how God, scripture, humanity and world are talked about?',
 };
 
 /** Was die Achse des Zeitstrahls zusagt – und was sie tut, wo zwei Werke sich decken. */
