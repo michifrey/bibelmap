@@ -130,7 +130,7 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   die Route mitwachsen und einen Punkt die Etappen abgehen, während links die
   Station mit Bibelstelle und kurzem Text mitläuft (← / → blättern, Leertaste
   startet). Jede Station verlinkt auf ihre Ortskarte.
-- **Jesus – Leben und Wege** – eine eigene Sektion für die Evangelien: **97
+- **Jesus – Leben und Wege** – eine eigene Sektion für die Evangelien: **101
   Stationen in sieben Akten**, von der Ankündigung an Maria über die Geburt in
   Bethlehem, das Jahr am See, den Weg nach Jerusalem und die Passionswoche **Tag
   für Tag** (Palmsonntag → Grabesruhe) bis zu Emmaus, dem See Tiberias und dem
@@ -1099,11 +1099,19 @@ umstritten gekennzeichnet (Testimonium Flavianum, Sueton, Jakobus-Ossuar), und
 zu jedem Fund steht, was er nicht belegt: Der Pilatus-Stein belegt Pilatus,
 nicht das Verhör.
 
-**The Chosen** (`src/data/chosen.ts`): Die Zuordnung Folge → Station wurde nach
-dem Inhalt der Folgen zusammengetragen, nicht von einer Schnittstelle geholt.
-Solange `VERIFIED` dort `false` ist, weist die Oberfläche die Angaben als
-unbestätigt aus. Verlinkt wird nur die Serienseite – für einzelne Folgen gibt es
-keine Adresse, die sich verlässlich bilden ließe.
+**The Chosen** (`src/data/chosen.ts`): alle **fünf Staffeln zu je acht Folgen**.
+Staffel, Folge und Titel stehen gegen mehrere unabhängige Verzeichnisse geprüft
+da (Fandom-Wiki der Serie, IMDb, TV Guide, BYUtv, Apple TV); die Zuordnung Folge
+→ Station stammt aus dem Inhalt der Folgen und ist eine Lesart, kein Datensatz.
+**Fünf der vierzig Folgen haben bewusst keine Station** – sie erzählen, was die
+Serie erfindet, und dafür eine Bibelstelle zu behaupten wäre falsch. Verlinkt
+wird die Staffelseite: Einzelfolgen tragen dort undurchsichtige Zahlenkennungen
+(`/video/184683596184`), die sich nicht aus Staffel und Folge bilden lassen.
+
+Vier Stationen sind über diese Zuordnung erst entstanden – Szenen, die die Serie
+spielt und der Sektion fehlten: der Aussätzige (Mk 1,40-45), die achtunddreißig
+Jahre am Teich Betesda (Joh 5), die Frage des Täufers aus dem Gefängnis
+(Mt 11,2-19) und das Tempelweihfest (Joh 10,22-39).
 
 ### Mission & Ausbreitung
 

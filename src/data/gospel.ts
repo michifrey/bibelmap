@@ -945,6 +945,18 @@ export const STATIONS: GospelStation[] = [
 
   /* ================= Akt 4: Das Jahr am See ============================ */
   {
+    id: 'leper', act: 'beginnings', book: 'Mark',
+    de: 'Der Aussätzige, der nicht schweigt', en: 'The leper who will not keep quiet',
+    where: { de: 'In einer Stadt Galiläas', en: 'In a town of Galilee' },
+    lat: 32.8811, lon: 35.575, placeId: 'af2161c',
+    ref: { de: 'Markus 1,40-45', en: 'Mark 1:40-45' },
+    text: {
+      de: 'Aussatz hieß Ausschluss: kein Haus, keine Synagoge, keine Berührung. Der Mann bittet nicht um Heilung, sondern um Willen – „wenn du willst“. Jesus fasst ihn an, bevor er ihn heilt, und schickt ihn zum Priester. Der erzählt es überall, und danach kann Jesus keine Stadt mehr offen betreten.',
+      en: 'Leprosy meant exclusion: no house, no synagogue, no touch. The man asks not for healing but for willingness – "if you will". Jesus touches him before he heals him, and sends him to the priest. The man tells everyone, and afterwards Jesus can no longer enter a town openly.',
+    },
+    people: [],
+  },
+  {
     id: 'call-fishermen', act: 'galilee', book: 'Luke',
     de: 'Ein Fang und vier Leute, die alles stehen lassen', en: 'A catch and four men who leave everything',
     where: { de: 'Am See Gennesaret', en: 'By the Sea of Galilee' },
@@ -1096,6 +1108,18 @@ export const STATIONS: GospelStation[] = [
     people: [],
   },
   {
+    id: 'bethesda', act: 'galilee', book: 'John',
+    de: 'Achtunddreißig Jahre am Teich', en: 'Thirty-eight years by the pool',
+    where: { de: 'Jerusalem, Teich Betesda am Schaftor', en: 'Jerusalem, the pool of Bethesda by the Sheep Gate' },
+    lat: 31.7814, lon: 35.2361, placeId: 'a15257a',
+    ref: { de: 'Johannes 5,1-15', en: 'John 5:1-15' },
+    text: {
+      de: 'Ein Kranker liegt seit achtunddreißig Jahren in einer Säulenhalle voller Wartender. Die Frage, die er bekommt, klingt überflüssig: Willst du gesund werden? Seine Antwort ist eine Ausrede. Geheilt wird er trotzdem – und der Streit dreht sich danach nicht um ihn, sondern darum, dass er an einem Sabbat seine Matte trägt.',
+      en: 'A sick man has lain for thirty-eight years in a colonnade full of people waiting. The question he is asked sounds pointless: do you want to be healed? His answer is an excuse. He is healed anyway – and the row afterwards is not about him but about his carrying his mat on a sabbath.',
+    },
+    people: [],
+  },
+  {
     id: 'storm', act: 'galilee', book: 'Mark',
     de: 'Der Sturm auf dem See', en: 'The storm on the lake',
     where: { de: 'Auf dem See Gennesaret', en: 'On the Sea of Galilee' },
@@ -1154,6 +1178,19 @@ export const STATIONS: GospelStation[] = [
       en: 'No bread, no money, no second tunic – they are to depend on the people they visit. Those who do not receive them get no threat, only the dust off their feet.',
     },
     people: ['petrus', 'andreas', 'jakobus-zebedaeus', 'johannes-zebedaeus', 'philippus', 'natanael', 'matthaeus', 'thomas', 'jakobus-alphaeus', 'thaddaeus', 'simon-zelot', 'judas'],
+  },
+  {
+    id: 'baptist-question', act: 'galilee', book: 'Matt',
+    de: 'Die Frage aus dem Gefängnis', en: 'The question from prison',
+    where: { de: 'Boten aus der Festung nach Galiläa', en: 'Messengers from the fortress to Galilee' },
+    lat: 32.8811, lon: 35.575, placeId: 'af2161c',
+    ref: { de: 'Matthäus 11,2-19', en: 'Matt 11:2-19' },
+    also: { de: 'Lukas 7,18-35', en: 'Luke 7:18-35' },
+    text: {
+      de: 'Der Mann, der ihn am Jordan angesagt hat, lässt aus der Haft fragen: „Bist du es, oder sollen wir auf einen anderen warten?“ Die Antwort ist kein Ja, sondern eine Aufzählung dessen, was geschieht. Und während der Täufer zweifelt, sagt Jesus über ihn den größten Satz, den er über einen Menschen sagt.',
+      en: 'The man who announced him at the Jordan sends from prison to ask: "Are you the one, or should we wait for another?" The answer is not a yes but a list of what is happening. And while the Baptist doubts, Jesus says of him the largest thing he says of any human being.',
+    },
+    people: ['johannes-taeufer'],
   },
   {
     id: 'baptist-killed', act: 'galilee', book: 'Mark',
@@ -1389,6 +1426,18 @@ export const STATIONS: GospelStation[] = [
     },
     quote: { de: '„Eines weiß ich: dass ich blind war und bin nun sehend.“', en: '"One thing I know, that though I was blind, now I see."' },
     people: ['blindgeborener'],
+  },
+  {
+    id: 'dedication-feast', act: 'road', book: 'John',
+    de: 'Tempelweihfest, im Winter', en: 'The Feast of Dedication, in winter',
+    where: { de: 'Jerusalem, in der Halle Salomos', en: 'Jerusalem, in the colonnade of Solomon' },
+    lat: 31.7784, lon: 35.2354, placeId: 'a15257a',
+    ref: { de: 'Johannes 10,22-39', en: 'John 10:22-39' },
+    text: {
+      de: 'Das Fest erinnert an die Wiedereinweihung des Tempels nach seiner Schändung – gefeiert wird ein Aufstand gegen eine Besatzungsmacht. In dieser Woche fordern sie eine klare Aussage: Wie lange hältst du uns hin? Was er antwortet, lässt sie zu den Steinen greifen; er geht zurück an den Jordan, wo der Täufer angefangen hatte.',
+      en: 'The feast recalls the rededication of the temple after its defilement – a revolt against an occupying power is what is celebrated. That week they demand a plain statement: how long will you keep us in suspense? What he answers makes them pick up stones; he goes back to the Jordan, where the Baptist had begun.',
+    },
+    people: [],
   },
   {
     id: 'children-blessed', act: 'road', book: 'Mark',
