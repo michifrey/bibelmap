@@ -1224,7 +1224,7 @@ MapLibre 243 kB gzip und kommt erst, wenn jemand es öffnet – danach liegt es 
 Cache wie alles andere. `scripts/check-offline.mjs` prüft beides und weist dafür
 jede Anfrage ab, statt nur die Seite abzuschalten: Ein abgeschalteter Browser
 hindert den Service Worker nicht daran, sich still aus dem Netz zu bedienen, und
-genau daran hat die Prüfung jahrelang sieben Ansichten übersehen (PRD § 4.81).
+genau daran hat die Prüfung jahrelang sieben Ansichten übersehen (PRD § 4.82).
 
 ## Technik
 
