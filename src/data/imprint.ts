@@ -10,9 +10,10 @@
 /**
  * Verantwortlich im Sinne eines Impressums – eine Person, keine Firma.
  *
- * Hier steht der volle Name, nicht die Kurzform: Diese Zeile ist die, auf die
- * sich jemand berufen können soll. Im Absatz „Wer das gebaut hat" darf
- * daneben „Michi" stehen – dort schreibt der Mensch, hier haftet er.
+ * Der volle Name, und derselbe auch im Absatz „Wer das gebaut hat". Zwei
+ * Schreibweisen auf einer Seite – oben „Michael", unten „Michi" – lesen sich
+ * nicht als Ton, sondern als Versehen: Wer ein Impressum liest, sucht darin
+ * eine Person, keine zwei.
  */
 export const OWNER = 'Michael Frey';
 
