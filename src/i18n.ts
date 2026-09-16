@@ -749,7 +749,7 @@ const STRINGS: Dict = {
   },
   lNoAccount: { de: 'Ohne Anmeldung · Ortsdaten unter CC-BY 4.0', en: 'No sign-up · place data under CC-BY 4.0' },
   lErasRail: { de: 'Epochen', en: 'eras' },
-  lWaysIn: { de: 'Fünf Wege hinein', en: 'Five ways in' },
+  lWaysIn: { de: 'Sechs Wege hinein', en: 'Six ways in' },
   lCard1Kicker: { de: '01 — Karte', en: '01 — Map' },
   lCard1Title: { de: 'Orte & Epochen', en: 'Places & eras' },
   lCard1Body: {
@@ -785,6 +785,13 @@ const STRINGS: Dict = {
     en: 'Twelve months as a wheel: Passover on the fourteenth of Nisan, the Day of Atonement ten days after the Feast of Trumpets, Tabernacles five days later. With what has become of them today.',
   },
   lCard5Cta: { de: 'Rad drehen', en: 'Turn the wheel' },
+  lCard6Kicker: { de: '06 — Die Bücher', en: '06 — The books' },
+  lCard6Title: { de: 'Das Bücherregal', en: 'The bookshelf' },
+  lCard6Body: {
+    de: 'Die 66 Bücher nach der Zeit ihrer Entstehung aufgestellt statt nach dem Kanon – mit der ältesten erhaltenen Handschrift je Buch und denen, die sie gefunden haben.',
+    en: 'The 66 books shelved by when they were written rather than by canon – with the oldest surviving manuscript for each and the people who found it.',
+  },
+  lCard6Cta: { de: 'Regal ansehen', en: 'See the shelf' },
   lStatPlaces: { de: 'Kartierte Orte', en: 'Places mapped' },
   lStatEras: { de: 'Epochen', en: 'Eras' },
   lStatBooks: { de: 'Bücher im Entdeckermodus', en: 'Books in explorer mode' },

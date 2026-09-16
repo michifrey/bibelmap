@@ -2817,7 +2817,8 @@ die Geometrie: `spineWidth()` wächst monoton über die Kapitelzahl und fällt n
 unter **24 Pixel** (§ 4.75). Mit Gegenprobe: vier eingebaute Fehler und ein
 entferntes Buch.
 
-**Angeschlossen** an Modi-Tafel, Startseiten-Zeile, Fenstertitel, Tieflink
+**Angeschlossen** an Modi-Tafel, Startseite (sechste Karte und Fußzeile,
+wofür das Kartenraster von fünf auf drei Spalten ging), Fenstertitel, Tieflink
 `#regal=buch,… | recht,… | fund,…`, globale Suche (Bücher mit Abzug, damit ein
 Buchtitel keinen gleichnamigen Ort verdrängt) und den Vorabruf für den
 Offline-Betrieb; nachgemessen mit `a11y-audit.mjs` (benannt, auf 390 Pixeln im
