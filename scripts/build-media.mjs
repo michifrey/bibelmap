@@ -349,10 +349,32 @@ if (DRY) {
   process.exit(0);
 }
 
+/*
+ * Nur Quellen, die auch etwas beigetragen haben.
+ *
+ * Der Modus baut seine Quellenauswahl aus dieser Liste. Eine Quelle ohne eine
+ * einzige Folge stünde dort als Filter, der zuverlässig „Keine Folge passt zu
+ * dieser Auswahl" antwortet – und das sieht nach einem Fehler aus, nicht nach
+ * einer Aussage. Vorkommen kann es leicht: ein Feed, der noch nicht geholt
+ * wurde, oder ein Podcast, der keine Bibelstellen nennt (eine Sachbuch- oder
+ * Philosophiesendung etwa). Beides ist in Ordnung – nur nicht als leerer
+ * Eintrag in der Oberfläche.
+ */
+const mitFolgen = new Set(episodes.map((e) => e.src));
+const leer = sources.filter((s) => !mitFolgen.has(s.id));
+if (leer.length) {
+  console.log(
+    `Ohne Folgen und deshalb nicht im Index: ${leer.map((s) => s.id).join(', ')} ` +
+      '(Feed noch nicht geholt, oder keine Folge nennt eine Bibelstelle).',
+  );
+}
+
 fs.writeFileSync(
   OUT,
   JSON.stringify({
-    sources: sources.map(({ id, title, author, homepage, lang, kind }) => ({ id, title, author, homepage, lang, kind })),
+    sources: sources
+      .filter((s) => mitFolgen.has(s.id))
+      .map(({ id, title, author, homepage, lang, kind }) => ({ id, title, author, homepage, lang, kind })),
     episodes,
     byPlace,
   }),

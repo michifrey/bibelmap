@@ -3033,6 +3033,43 @@ sonst würde der Reisende in Kurven langsamer.
 - [x] Der eigene Weg (`#weg=…`) bleibt ohne Straßen: zusammengestellte Orte
       sind keine überlieferte Reise.
 
+### 4.85 Mindmaps (RefLab) als Medienquelle — P2 ✅ *(Eintrag; Feed offen)*
+
+**Anlass:** Wunsch, den Philosophiepodcast **Mindmaps** des RefLab (Manuel
+Schmid und Heinzpeter Hempelmann) in „Hören & Sehen" zu verknüpfen und die
+beiden Seiten – die [RefLab-Übersicht](https://www.reflab.ch/category/podcasts/mindmaps/)
+und die [Seite bei Hempelmann](https://heinzpeter-hempelmann.de/podcast-mindmaps-der-philosophiepodcast-reflab/)
+– als Quellen aufzunehmen.
+
+**Eingetragen ist die Quelle**, in `data/media/sources.json`, auf der
+Nachweisseite (`attribution.ts`) und auf der Unterstützen-Seite
+(`support.ts`). **Nicht eingetragen ist die Feed-Adresse**: Beide Domains und
+der Hoster (Podigee) sind aus dieser Entwicklungsumgebung gesperrt, und die
+Regel der Datei ist eindeutig – eine ungeprüfte Adresse steht auf `null`, weil
+eine geratene still einen leeren Index erzeugt. Die `appleId` (1586515346)
+steht daneben; `npm run media -- --fetch` löst die Adresse auf und meldet sie
+zum Eintragen.
+
+**Die ehrliche Erwartung** gehört zum Eintrag: Der Podcast bespricht Sachbücher.
+Der Index kennt nur, was eine Bibelstelle nennt (`build-media.mjs` verwirft
+thematische Folgen bewusst) – es kann gut sein, dass am Ende sehr wenige oder
+keine Folgen zugeordnet werden. Das ist die Natur der Sendung, kein Fehler der
+Zuordnung, und beides steht so in den Notizen der Quelle.
+
+**Akzeptanzkriterien**
+- [x] Quelle in `data/media/sources.json` mit Apple-ID, Herkunft und den beiden
+      Seiten in der Notiz.
+- [x] Nachweisseite und Unterstützen-Seite nennen RefLab; kein Spendenlink,
+      weil RefLab von der Zürcher Landeskirche getragen wird und auf seinen
+      Seiten um nichts bittet.
+- [x] **Eine Quelle ohne zugeordnete Folge steht nicht mehr im Index.** Sonst
+      stünde in der Oberfläche ein Filter, der zuverlässig „Keine Folge passt
+      zu dieser Auswahl" antwortet. Der Baubericht nennt sie stattdessen.
+      Gegengeprüft: `media.json` ist nach der Änderung **byte-gleich** wie
+      vorher – alle vier bisherigen Quellen haben Folgen.
+- [ ] **Offen:** ein Lauf mit Netz (`npm run media -- --fetch`), der die
+      Feed-Adresse bestätigt und die Folgen einliest.
+
 `src/data/roadmap.ts` – wer hier eine Zeile ergänzt, ergänzt sie dort mit.
 
 ---

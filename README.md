@@ -877,6 +877,26 @@ Quellen stehen in `data/media/sources.json`, die Feeds werden als XML unter
 reproduzierbar läuft. **BibleProject** braucht keinen Feed: je Buch eine
 Übersichtsseite, deren URL sich aus dem Buchkürzel baut.
 
+**Eine Quelle ohne zugeordnete Folge steht nicht im Index.** Der Modus baut
+seine Quellenauswahl aus `media.json`; eine Quelle ohne Folgen stünde dort als
+Filter, der zuverlässig „Keine Folge passt zu dieser Auswahl" antwortet – das
+sieht nach einem Fehler aus, nicht nach einer Aussage. Vorkommen kann es
+leicht: ein Feed, der noch nicht geholt wurde, oder ein Podcast, der keine
+Bibelstellen nennt. Der Baubericht sagt dann, welche Quelle draußen blieb und
+warum.
+
+**Mindmaps (RefLab)** ist genau dieser Grenzfall und steht deshalb als Beispiel
+dafür da: der Philosophiepodcast von Manuel Schmid und Heinzpeter Hempelmann,
+herausgegeben vom [RefLab](https://www.reflab.ch/category/podcasts/mindmaps/),
+dem Digitalprojekt der Zürcher Landeskirche (Folgenübersicht auch
+[bei Hempelmann](https://heinzpeter-hempelmann.de/podcast-mindmaps-der-philosophiepodcast-reflab/)).
+Besprochen werden Sachbücher – Menschenbilder, Krisendiagnosen, politische
+Ideen –, und Folgen, die dabei eine Bibelstelle nennen, sind die Ausnahme. Die
+Quelle ist eingetragen, ihre Feed-Adresse steht nach der Regel oben auf `null`
+(Podigee hostet den Podcast, die Adresse ist aber nicht von Hand geprüft); die
+`appleId` liegt daneben, `npm run media -- --fetch` löst sie auf. Was danach im
+Index landet, entscheidet der Feed – und womöglich ist es wenig.
+
 `public/data/media.json` wird erst geladen, wenn jemand eine Ortskarte oder den
 Modus öffnet - der Index wächst mit jeder Staffel und gehört nicht in den
 Startpfad. Der Modus dreht ihn beim Öffnen einmal um (`placesByEpisode`), denn
