@@ -8,6 +8,9 @@ import { licenseInfo } from '../lib/imageCredit';
 import { BOOK_BY_OSIS, bibleProjectUrl } from '../data/books';
 import { ERA_BY_ID, ERAS } from '../data/eras';
 import { tribeAt, tribeSlug } from '../data/tribes';
+// Nur die Verknüpfungstabelle, nicht `finds.ts`: Die liegt im Regalbündel
+// (159 kB), und das gehört nicht an jeden Klick auf einen Ort.
+import { FINDS_AT_PLACE } from '../data/findPlaces';
 import PlaceThumb from './PlaceThumb';
 import PlaceMedia from './PlaceMedia';
 import ShareLink from './ShareLink';
@@ -17,6 +20,8 @@ interface Props {
   lang: Lang;
   /** Die Stammeskarte auf dem Gebiet öffnen, in dem dieser Ort liegt. */
   onOpenTribe?: (tribeSlug: string) => void;
+  /** Den Handschriftenfund öffnen, der an diesem Ort hängt. */
+  onOpenFind?: (findId: string) => void;
   /** Orte in Gehweite, schon sortiert – berechnet in App.tsx. */
   neighbours?: { place: Place; km: number; dir: string }[];
   onSelectPlace?: (p: Place) => void;
@@ -60,12 +65,19 @@ export default function PlaceDetail({
   neighbours = [],
   onSelectPlace,
   onOpenTribe,
+  onOpenFind,
   ownIndex = -1,
   onToggleOwn,
   onOpenOwnRoute,
   onClose,
 }: Props) {
   const tribe = useMemo(() => tribeAt(place.lat, place.lon), [place.lat, place.lon]);
+  /*
+   * Nachgeschlagen wird über den englischen Namen ohne die Ziffer, die
+   * gleichnamige Orte auseinanderhält („Bethlehem 2"). Dieselbe Regel wie
+   * in `findPlacesByNames` – sonst fände „Jerusalem 1" nichts.
+   */
+  const finds = FINDS_AT_PLACE[place.name.replace(/ \d+$/, '').toLowerCase()] ?? [];
   const inOwn = ownIndex >= 0;
   const t = useT();
   const [img, setImg] = useState<PlaceImage | null>(place.img);
@@ -258,6 +270,36 @@ export default function PlaceDetail({
               </span>
               <span className="text-[11px] font-semibold text-white/50">{tribe.lot}</span>
             </button>
+          </div>
+        )}
+
+        {/*
+          Die Gegenrichtung zum Bücherregal: Dort steht an jedem Fund, wo er
+          gemacht wurde; hier steht am Ort, was von ihm stammt. Ohne das wäre
+          die Verbindung einseitig – wer auf dem Hinnomtal steht, erführe nie,
+          dass dort der älteste bekannte Bibeltext lag.
+
+          Was der Ort mit dem Fund zu tun hat, steht dabei: Nicht jeder ist ein
+          Fundort (Alexandria ist Herkunft, nicht Fundstelle), und der Sinai
+          trägt eine überlieferte Zuordnung, keine gesicherte.
+        */}
+        {finds.length > 0 && onOpenFind && (
+          <div className="border-t border-white/10 px-4 py-3.5">
+            <div className="bm-eyebrow mb-2">{t('placeFinds')}</div>
+            {finds.map((f) => (
+              <button
+                key={f.find}
+                onClick={() => onOpenFind(f.find)}
+                className="mb-1.5 block w-full bg-white/8 px-2.5 py-2 text-left transition last:mb-0 hover:bg-gold/30"
+              >
+                <span className="block text-[12.5px] font-bold text-white">
+                  {lang === 'de' ? f.de : f.en}
+                </span>
+                <span className="mt-0.5 block text-[11.5px] leading-snug text-white/65">
+                  {lang === 'de' ? f.relation.de : f.relation.en}
+                </span>
+              </button>
+            ))}
           </div>
         )}
 

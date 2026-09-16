@@ -29,6 +29,7 @@
 // Und zuletzt die Funde selbst: Ein Fund, auf den niemand zeigt, steht in der
 // Liste, wird aber von keinem Buch aus erreicht.
 
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -40,6 +41,9 @@ const {
 const { FINDS, FIND_BY_ID, FIND_KIND } = await import(path.join(ROOT, 'src/data/finds.ts'));
 const { LAW_TEXTS, LAW_BY_ID, LAW_KIND, MIZWOT } = await import(path.join(ROOT, 'src/data/lawTexts.ts'));
 const { BOOKS, BOOK_BY_OSIS } = await import(path.join(ROOT, 'src/data/books.ts'));
+const { FIND_PLACES, FINDS_AT_PLACE } = await import(path.join(ROOT, 'src/data/findPlaces.ts'));
+const { expandPlaces, findPlacesByNames } = await import(path.join(ROOT, 'src/lib/places.ts'));
+const PLACES = expandPlaces(JSON.parse(fs.readFileSync(path.join(ROOT, 'public/data/places.json'), 'utf8')));
 
 const gegenprobe = process.argv.includes('--gegenprobe');
 
@@ -81,7 +85,7 @@ function zielName(id) {
   return null;
 }
 
-export function pruefe(regal, funde_ = FINDS, rechtstexte = LAW_TEXTS) {
+export function pruefe(regal, funde_ = FINDS, rechtstexte = LAW_TEXTS, verweise = FIND_PLACES) {
   const funde = [];
   const findIds = new Set(funde_.map((f) => f.id));
   const rechtIds = new Set(rechtstexte.map((l) => l.id));
@@ -275,6 +279,51 @@ export function pruefe(regal, funde_ = FINDS, rechtstexte = LAW_TEXTS) {
   const rechtVerlinkt = regal.some((b) => (b.links ?? []).some((l) => rechtIds.has(l.to)));
   if (!rechtVerlinkt) funde.push('Kein biblisches Buch verweist auf einen Gesetzestext');
 
+  /* --- Funde auf der Karte ---------------------------------------------- */
+  /*
+   * `findPlaces.ts` ist eine zweite, kleine Tabelle – sie muss es sein, weil
+   * die Ortskarte sie liest und dafür nicht das 159 kB schwere Regalbündel
+   * laden soll. Eine zweite Tabelle driftet, wenn niemand sie bindet: Der
+   * Titel steht dort noch einmal und muss **wörtlich** der aus `finds.ts`
+   * sein, sonst heißt derselbe Fund auf der Ortskarte anders als im Regal.
+   */
+  const verlinkt = new Set();
+  for (const l of verweise) {
+    const f = funde_.find((x) => x.id === l.find);
+    if (!f) {
+      funde.push(`findPlaces: Fund „${l.find}" gibt es nicht`);
+      continue;
+    }
+    if (verlinkt.has(l.find)) funde.push(`findPlaces: ${l.find} steht doppelt`);
+    verlinkt.add(l.find);
+    for (const sprache of ['de', 'en']) {
+      if (l[sprache] !== f[sprache]) {
+        funde.push(`findPlaces: ${l.find} heißt hier „${l[sprache]}", in finds.ts „${f[sprache]}" (${sprache})`);
+      }
+      if (!l.relation?.[sprache]?.trim()) funde.push(`findPlaces: ${l.find} ohne Bezug zum Ort (${sprache})`);
+    }
+    if (!l.places?.length) {
+      funde.push(`findPlaces: ${l.find} nennt keinen Ort`);
+      continue;
+    }
+    const gefunden = findPlacesByNames(PLACES, l.places);
+    if (gefunden.length !== l.places.length) {
+      const da = new Set(gefunden.map((p) => p.name.replace(/ \d+$/, '').toLowerCase()));
+      const weg = l.places.filter((n) => !da.has(n.toLowerCase()));
+      funde.push(`findPlaces: ${l.find} – Ort löst nicht auf: ${weg.join(', ')}`);
+    }
+    /*
+     * Und die Rückrichtung: Die Ortskarte schlägt über den kleingeschriebenen
+     * Namen ohne Ziffer nach. Steht der Eintrag unter einem anderen Schlüssel,
+     * bleibt der Abschnitt dort still leer – kein Fehler, nur nichts zu sehen.
+     */
+    for (const name of l.places) {
+      if (!(FINDS_AT_PLACE[name.toLowerCase()] ?? []).some((x) => x.find === l.find)) {
+        funde.push(`findPlaces: ${l.find} ist unter „${name}" nicht nachschlagbar`);
+      }
+    }
+  }
+
   return funde;
 }
 
@@ -357,6 +406,16 @@ if (pruefe(ohneBuch).length < 1) {
   console.error('✗ Die Gegenprobe merkt nicht, wenn ein Buch ganz fehlt.');
   process.exit(1);
 }
+/** Eine Kartenverknüpfung, die ins Leere zeigt, und eine mit falschem Titel. */
+const verweiseKaputt = [
+  { ...FIND_PLACES[0], places: ['Einen solchen Ort gibt es nicht'] },
+  { ...FIND_PLACES[1], de: 'Ein anderer Titel als in finds.ts' },
+];
+if (pruefe(SHELF, FINDS, LAW_TEXTS, verweiseKaputt).length < 2) {
+  console.error('✗ Die Gegenprobe merkt nicht, wenn eine Kartenverknüpfung ins Leere zeigt.');
+  process.exit(1);
+}
+
 if (gegenprobe) {
   console.log(`Gegenprobe: ${pruefe(kaputt).length} Befunde am absichtlich kaputten Regal, ${pruefe(ohneBuch).length} am unvollständigen.`);
 }
@@ -375,6 +434,8 @@ const rechtBretter = new Set(LAW_TEXTS.map((l) => l.period)).size;
 console.log(`Gesetzestexte: ${LAW_TEXTS.length} auf ${rechtBretter} Brettern unter eigener Überschrift`);
 console.log(`Datierung:     Ø ${Math.round(spanne)} Jahre zwischen frühestem und spätestem Vorschlag`);
 console.log(`Rücken:        ${spineWidth(1)}–${spineWidth(150)} Pixel breit (Obadja bis Psalmen)`);
+const orte = FIND_PLACES.reduce((n, l) => n + l.places.length, 0);
+console.log(`Auf der Karte: ${FIND_PLACES.length} Funde an ${orte} Orten, jeder gegen places.json aufgelöst`);
 
 const alle = [...funde, ...geo];
 if (alle.length) {

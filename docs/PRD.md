@@ -2958,6 +2958,46 @@ Buchtitel keinen gleichnamigen Ort verdrängt) und den Vorabruf für den
 Offline-Betrieb; nachgemessen mit `a11y-audit.mjs` (benannt, auf 390 Pixeln im
 Bild, alle Halte im Modus, Escape frei).
 
+### 4.85 Die Funde auf der Karte — P2 ✅
+
+Das Bücherregal nannte zu jedem Fund den Fundort – als Text. „Ketef Hinnom,
+Jerusalem" stand da, und die Karte, auf der Jerusalem liegt, wusste nichts
+davon. Das ist die eine Richtung, die in dieser App sonst überall in beide
+läuft: Jede Ortskarte sagt, in wessen Stammesgebiet ein Ort liegt, und die
+Stammeskarte führt zurück.
+
+**Vier von sechzehn.** Nur diese haben einen Ort, den `places.json` kennt: die
+Ostraka von Lachisch (Fundort), die Silberröllchen von Ketef Hinnom (Fundort,
+und über das Hinnomtal auch von Jerusalem aus zu finden), der Codex Sinaiticus
+(Katharinenkloster am überlieferten Sinai) und der Codex Alexandrinus
+(Herkunft, nicht Fundstelle). Qumran, Masada, Fustat, Oxyrhynchos, Dischna und
+die Fayyum-Papyri fehlen in einem Datensatz **biblischer** Orte – und eine
+Fahne neben die richtige Stelle zu stecken wäre schlechter als keine. Dass
+nicht jeder Ort ein Fundort ist, steht an jedem Eintrag, nicht in der
+Überschrift; die heißt darum „Eine Handschrift und dieser Ort" und nicht „Von
+hier stammt".
+
+**Warum eine eigene Datei (`src/data/findPlaces.ts`).** Die Ortskarte liest die
+Verknüpfung, und sie öffnet sich bei jedem Klick auf einen Ort. `finds.ts`
+liegt im selben Bündel wie Regal und Gesetzestexte – zusammen **159 kB**. Für
+vier Zeilen Verweis das ganze Regal nachzuladen wäre ein schlechter Tausch.
+Die eigene Datei hängt an nichts und wiegt gebaut **1,2 kB gzip**; gemessen
+bleibt `PlaceDetail` bei 10,9 kB. Beide Seiten lesen aus derselben Quelle, es
+wird nichts doppelt gepflegt – bis auf den Titel, den die Ortskarte braucht und
+den `check:shelf` darum **wörtlich** gegen `finds.ts` bindet.
+
+**Geprüft** mit `npm run check:shelf`: jede ID trifft einen Fund, jeder Titel
+steht wörtlich so in `finds.ts`, jeder Ortsname löst gegen `places.json` auf,
+und jeder Eintrag ist unter seinem Ortsnamen auch nachschlagbar – die
+Rückrichtung scheitert sonst still, mit einem leeren Abschnitt statt einer
+Meldung. Gegenprobe: ein Ort, den es nicht gibt, und ein abweichender Titel.
+
+**Nebenbefund.** Die Karte nennt Lachisch auf Deutsch „Lachis" (Luthers
+Schreibung, aus den Ortsdaten), der Fund „Ostraka von Lachisch" (die Schreibung
+der deutschen Archäologie). Beides bleibt: Der Knopf zeigt den Kartennamen,
+weil man danach auf der Karte sucht.
+
+
 ---
 
 ## 5. Nicht-funktionale Anforderungen

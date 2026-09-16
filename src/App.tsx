@@ -635,6 +635,18 @@ export default function App() {
     setNavEpoch((n) => n + 1);
   }
 
+  /**
+   * Von der Ortskarte in den Fund, der an diesem Ort hängt – die Gegenrichtung
+   * zu „Auf der Karte" im Bücherregal. Der Ort bleibt ausgewählt: Wer den Modus
+   * wieder schließt, steht dort, wo er losgegangen ist.
+   */
+  function openFind(findId: string) {
+    setShelfNav({ kind: 'find', id: findId });
+    setView('map');
+    setMode('shelf');
+    setNavEpoch((n) => n + 1);
+  }
+
   /** Ein Treffer aus Reisen, Ausbreitung oder Stammesgebieten: hin da. */
   function openStory(hit: SearchHit) {
     setAtStart(false);
@@ -955,6 +967,7 @@ export default function App() {
                       neighbours={neighbours}
                       onSelectPlace={select}
                       onOpenTribe={openTribe}
+                      onOpenFind={openFind}
                       ownIndex={ownIds.indexOf(selected.id)}
                       onToggleOwn={() => toggleOwn(selected.id)}
                       onOpenOwnRoute={() => setMode('route')}
@@ -1116,6 +1129,8 @@ export default function App() {
                 <Bookshelf
                   key={`shelf-${navEpoch}`}
                   lang={lang}
+                  places={places}
+                  onShowPlace={showPlaceFromGenealogy}
                   initial={shelfNav}
                   onNavigate={setShelfNav}
                   onExit={() => setMode(null)}
