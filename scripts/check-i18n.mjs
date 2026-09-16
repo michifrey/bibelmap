@@ -69,6 +69,7 @@ const ANSICHTEN = [
   '#register',
   '#unterstuetzen',
   '#nachweise',
+  '#impressum',
 ];
 
 /**

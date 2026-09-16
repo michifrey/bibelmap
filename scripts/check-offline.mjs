@@ -85,6 +85,7 @@ const ANSICHTEN = [
   { hash: '#unterstuetzen', zeigt: 'von fremder Arbeit' },
   { hash: '#nachweise', zeigt: 'Lizenz' },
   { hash: '#fahrplan', zeigt: 'Hier stehen wir' },
+  { hash: '#impressum', zeigt: 'kein Verlag' },
 ];
 
 /** So lange bekommt der Vorabruf im Leerlauf Zeit, alles zu holen. */
