@@ -2927,7 +2927,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 
 Diese Tabelle ist seit § 4.79 auch eine Ansicht: **`#fahrplan`** zeigt denselben
 Weg als Strasse, samt dem, was noch offen ist. Sie liest ihre Stationen aus
-### 4.82 Unterwegs: der Weg auf Augenhöhe — P1 ✅ *(Entwurf)*
+### 4.83 Unterwegs: der Weg auf Augenhöhe — P1 ✅ *(Entwurf)*
 
 **Anlass:** die Frage, ob sich die Wege Jesu immersiver zeigen lassen – „quasi
 Streetview der damaligen Zeit, welche Leute sind ihm begegnet, im Browser als
