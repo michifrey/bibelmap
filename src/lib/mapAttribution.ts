@@ -47,6 +47,25 @@ export const ROUTEN_ATTR: Zweisprachig = {
   en: `${OSM_ATTR.en} · Routes: schematic`,
 };
 
+/**
+ * Dieselbe Zeile, wenn die Route einem belegten Straßenverlauf folgt.
+ *
+ * „schematisch" ist dann nur noch die halbe Wahrheit – und die Lizenz des
+ * Straßendatensatzes (CC-BY) verlangt die Nennung **dort, wo das Material zu
+ * sehen ist**, nicht nur auf der Nachweisseite. Welcher Datensatz es ist,
+ * steht erst zur Laufzeit fest: Er kommt aus `roads.json`.
+ */
+export function routenAttr(
+  lang: Lang,
+  roads?: { name: string; url?: string; license: string } | null,
+): string {
+  if (!roads) return attr(ROUTEN_ATTR, lang);
+  const wer = roads.url ? `<a href="${roads.url}">${roads.name}</a>` : roads.name;
+  return lang === 'de'
+    ? `${OSM_ATTR.de} · Straßen: ${wer} (${roads.license}) · übrige Etappen: Luftlinie`
+    : `${OSM_ATTR.en} · Roads: ${wer} (${roads.license}) · other legs: straight lines`;
+}
+
 export const KIRCHE_ATTR: Zweisprachig = {
   de: `&copy; ${OSM}-Mitwirkende (ODbL) · Orte der Kirchenväter & Konzilien: schematisch`,
   en: `&copy; ${OSM} contributors (ODbL) · Places of the church fathers & councils: schematic`,

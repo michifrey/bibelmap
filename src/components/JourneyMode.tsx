@@ -6,6 +6,8 @@ import { JOURNEYS, JOURNEY_BY_ID, type BibleJourney } from '../data/journeys';
 import { ERAS, ERA_BY_ID } from '../data/eras';
 import { passageUrl } from '../data/mission';
 import { formatKm, isShortWalk, legDistances, walkingDays, type LatLon } from '../lib/route';
+import { useRoadLegs } from '../lib/roads';
+import { buildWeg, legKm, totalKm as summeKm } from '../lib/walk';
 import { readableOnDark } from '../lib/contrast';
 import RouteMap from './RouteMap';
 import AlongTheWay from './AlongTheWay';
@@ -61,11 +63,30 @@ export default function JourneyMode({
   const color = era?.color ?? '#e0a449';
   const placeById = useMemo(() => new Map(places.map((p) => [p.id, p])), [places]);
 
+  /*
+   * Der Weg über die Straßen, wenn es einen gibt. Er ändert hier zweierlei:
+   * die Linie auf der Karte und die Kilometer daneben. Ohne Straßendatei
+   * kommt aus `buildWeg` die Stationskette, und `legKm` liefert Zahl für Zahl
+   * dasselbe wie `legDistances` – die Ansicht merkt den Unterschied nicht.
+   */
+  const { legs: strassen, info: roadInfo, quelle: roadQuelle } = useRoadLegs(id ?? null);
+  const weg = useMemo(
+    () => buildWeg(journey ? journey.stops.map((s) => [s.lat, s.lon] as LatLon) : [], strassen ?? undefined),
+    [journey, strassen],
+  );
   const legs = useMemo(
-    () => (journey ? legDistances(journey.stops.map((s) => [s.lat, s.lon] as LatLon)) : []),
+    () => (journey ? journey.stops.slice(1).map((_, i) => legKm(weg, i)) : []),
+    [journey, weg],
+  );
+  const totalKm = summeKm(weg.cum);
+  /** Wie lang dieselbe Strecke als Luftlinie wäre – nur zum Vergleich. */
+  const luftKm = useMemo(
+    () =>
+      journey
+        ? legDistances(journey.stops.map((s) => [s.lat, s.lon] as LatLon)).reduce((a, b) => a + b, 0)
+        : 0,
     [journey],
   );
-  const totalKm = useMemo(() => legs.reduce((a, b) => a + b, 0), [legs]);
 
   const stops = useMemo(
     () => (journey ? journey.stops.map((s) => ({ lat: s.lat, lon: s.lon, label: lang === 'de' ? s.de : s.en })) : []),
@@ -223,8 +244,17 @@ export default function JourneyMode({
               >
                 {lang === 'de' ? journey.passage.de : journey.passage.en}
               </a>
-              <span className="text-[12px] text-white/55" title={t('distanceNote')}>
+              <span
+                className="text-[12px] text-white/55"
+                title={roadInfo ? t('roadsNote') : t('distanceNote')}
+              >
                 {t('totalDistance')} {formatKm(totalKm, lang)} · {walkingDays(totalKm)} {t('dayWalks')}
+                {roadInfo && (
+                  <span className="text-white/40">
+                    {' '}
+                    · {formatKm(luftKm, lang)} {t('walkAirline')}
+                  </span>
+                )}
               </span>
             </div>
           </div>
@@ -237,8 +267,12 @@ export default function JourneyMode({
                   <span className="absolute left-[11px] top-0 h-full w-px bg-white/12" aria-hidden />
                   {i > 0 && (
                     <>
-                      <div className="py-1 pl-3 text-[11px] text-white/40" title={t('distanceNote')}>
+                      <div
+                        className="py-1 pl-3 text-[11px] text-white/40"
+                        title={roadInfo ? t('roadsNote') : t('distanceNote')}
+                      >
                         ↓ {formatKm(legs[i - 1], lang)}
+                        {weg.onRoad[i - 1] && <span className="text-gold"> · {t('roadsOnRoad')}</span>}
                         {s.sea
                           ? ` · ${t('bySea')}`
                           : isShortWalk(legs[i - 1])
@@ -292,7 +326,9 @@ export default function JourneyMode({
               );
             })}
             <li className="pl-7 pt-2">
-              <p className="px-3 text-[11px] leading-relaxed text-white/40">{t('distanceNote')}</p>
+              <p className="px-3 text-[11px] leading-relaxed text-white/40">
+                {roadInfo ? t('roadsNote') : t('distanceNote')}
+              </p>
             </li>
           </ol>
 
@@ -333,6 +369,8 @@ export default function JourneyMode({
           <RouteMap
             stops={stops}
             color={color}
+            legs={strassen}
+            roadSource={roadQuelle}
             activeIndex={index}
             playing={playing}
             onArrive={setIndex}

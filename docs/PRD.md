@@ -3065,6 +3065,149 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 
 Diese Tabelle ist seit § 4.79 auch eine Ansicht: **`#fahrplan`** zeigt denselben
 Weg als Strasse, samt dem, was noch offen ist. Sie liest ihre Stationen aus
+### 4.83 Unterwegs: der Weg auf Augenhöhe — P1 ✅ *(Entwurf)*
+
+**Anlass:** die Frage, ob sich die Wege Jesu immersiver zeigen lassen – „quasi
+Streetview der damaligen Zeit, welche Leute sind ihm begegnet, im Browser als
+3D". Ein Streetview der Antike gibt es nicht und kann es nicht geben: Wie ein
+Dorf in Galiläa im Jahr 30 aussah, weiß niemand, und ein Modell davon wäre zu
+neun Zehnteln erfunden. Gemessen ist aber die **Form des Landes** – und die hat
+sich in zweitausend Jahren nicht geändert. Das ist der Teil, der sich zeigen
+lässt, ohne etwas zu behaupten.
+
+**Zwei Stufen, beide hier:**
+
+1. **Die Kamera geht.** 1,70 m über dem Boden, in Blickrichtung, entlang der
+   Route – dieselben Höhen wie in der Geländeansicht, nur von unten. Die
+   Rechnung steht in `src/lib/walk.ts`; MapLibre kennt keine frei gesetzte
+   Kamera, also wird sie aus Blickpunkt, Höhe, Neigung und Zoomstufe
+   zurückgerechnet.
+2. **Die Menschen laufen mit.** Die Stationen eines Akts aus der Jesus-Sektion
+   bringen ihr Personenverzeichnis mit: Wer an einer Station vorkommt, steht im
+   Feld, sobald man sie erreicht – neu Hinzugekommene hervorgehoben, dazu die
+   Zahl derer, denen man auf diesem Weg bisher begegnet ist.
+
+**Was bewusst fehlt:** Kachel, Häuser, Wege, Bewuchs – und die Routenlinie.
+Nichts davon ist bekannt, und die Linie zwischen zwei Stationen ist keine
+Straße. Die Überhöhung steht im Gehen auf 1×: Wer durch die Landschaft läuft,
+soll nicht durch ein Gebirge laufen, das es nicht gibt.
+
+**Akzeptanzkriterien**
+- [x] Knopf **Unterwegs** bei jeder Route der Geländeansicht; aus der
+      Jesus-Sektion führt er direkt ins Gehen. Adresse:
+      `#gelaende=jesus,<akt>`.
+- [x] `npm run check:walk` rechnet die Kamera zurück und vergleicht mit dem
+      Fußpunkt: 90 Stände, ein halber Meter in der Fläche, ein Zentimeter in
+      der Höhe. Gegenprobe mit verstellter Zoomstufe schlägt an.
+- [x] Tastatur: ← / → drehen den Kopf, Leertaste hält an, **Escape** beendet
+      das Gehen und lässt die Geländekarte stehen (und erst das zweite Escape
+      die Ansicht). Bei `prefers-reduced-motion` läuft nichts von selbst.
+- [x] Die Schleife setzt die Karte imperativ und meldet den Stand höchstens
+      sechsmal in der Sekunde; steht sie, wird nichts neu gezeichnet.
+- [x] Der Rand der Kartenansicht – Suchleiste, Kartenwahl, Zeitleiste – tritt
+      im Gehen ab und kommt mit seinem Zustand zurück.
+- [x] Kein neues Paket, kein Schlüssel, kein Gramm im Startpfad: alles liegt im
+      Bündel der Geländeansicht, das ohnehin erst auf Abruf kommt.
+
+**Offen (Entwurf):** Die Wege sind weiter Luftlinien zwischen den Stationen.
+Ein Datensatz römischer Straßen (DARE, AWMC, Itiner-e) würde daraus den Weg
+machen, den jemand wirklich gegangen ist – das ist die nächste Stufe und ein
+eigener Datenschritt.
+
+### 4.84 Römische Straßen statt Luftlinien — P2 ✅ *(Maschinerie; Datensatz offen)*
+
+**Anlass:** § 4.83 endete mit dem offenen Punkt – die Wege sind Luftlinien.
+„Die tatsächlichen Wege waren länger" steht seit v0.4 unter jeder Entfernung.
+Ein antikes Straßennetz macht daraus den Weg, den jemand wirklich ging.
+
+**Gebaut ist die Maschinerie, nicht der Datensatz.** `scripts/build-roads.mjs`
+liest ein Straßennetz als GeoJSON, verschweißt seine Knoten, schließt jede
+Station an, sucht mit A\* den Weg und legt je Etappe eine kodierte Punktkette
+in `public/data/roads.json`. Die App liest sie, wenn es sie gibt (`lib/roads.ts`),
+und zeigt sonst wie bisher Luftlinien – kein Sonderfall, kein Fehlerpfad.
+
+**Warum der Datensatz fehlt.** Frei lizenziert und passend ist **Itiner-e**
+(CC BY 4.0, de Soto u. a. 2025). Aus dieser Entwicklungsumgebung sind
+`itiner-e.org` und `zenodo.org` gesperrt; erreichbar war nur GitHub. Was dort
+liegt – DARMC, AWMC und ihre Ableger –, steht unter **CC BY-NC**, und ein
+nicht-kommerzieller Datensatz gehört nicht in ein GPL-Projekt. Also: die
+Maschinerie steht, der eine Lauf mit Netz fehlt. Derselbe Fall wie
+`check:bp` in § 10.
+
+**Akzeptanzkriterien**
+- [x] `npm run roads` erzeugt aus einem beliebigen Linien-GeoJSON die Wegdatei;
+      Herkunft und Lizenz werden mitgegeben und stehen in der Datei.
+- [x] Die Geländeroute und das Gehen folgen dem Weg; das Feld nennt „auf der
+      Straße" oder „Luftlinie" und die Strecke im Vergleich („331 km statt 282
+      km Luftlinie").
+- [x] Die Quelle steht **unter der Karte** – CC-BY verlangt die Nennung dort,
+      wo das Material zu sehen ist, nicht nur auf der Nachweisseite.
+- [x] Seewege, Etappen ohne Anschluss und Umwege über das Vierfache der
+      Luftlinie behalten ihre gerade Linie.
+- [x] Reisen vor römischer Zeit tragen den Hinweis, dass das Netz jünger ist
+      als ihre Geschichte – gezeigt wird die Trasse, nicht die Straße.
+- [x] `npm run check:roads` misst den Sucher an einem **erfundenen** Netz
+      (`data/roads/pruefnetz.geojson`): Anfang und Ende an den Stationen, dem
+      Bogen gefolgt statt die Gerade gezogen, keine Verbindung über die Insel
+      ohne Anschluss, Kodierung verlustfrei. Gegenprobe mit einer um einen
+      Kilometer verschobenen Etappe schlägt an.
+- [x] Zwei Sicherungen: Eine Wegdatei aus dem Prüfnetz darf nicht in
+      `public/data/` stehen, und eine Lizenz mit „NC" wird abgewiesen.
+- [ ] **Offen:** ein Lauf mit dem Itiner-e-Datensatz und die Zeile dazu auf der
+      Nachweisseite (`attribution.ts`), die `check:roads` dann einfordert.
+
+**Auch auf der flachen Karte**, nachgereicht: Die abgespielte Route in
+*Reisen*, *Mission* und der *Jesus-Sektion* folgt demselben Weg, die
+Entfernungen in den Listen sind an ihm gemessen, und die Zeile unter der Karte
+nennt den Datensatz. Nötig war dafür eine Umrechnung vom Stations- ins Wegmaß
+(`tForStation`), über die **Strecke** und nicht über die Zahl der Stützpunkte –
+sonst würde der Reisende in Kurven langsamer.
+
+- [x] `RouteMap` nimmt den Verlauf als Zusatz: ohne ihn zeichnet und rechnet
+      sie wie seit jeher.
+- [x] Entfernungen aus `legKm()`; ohne Straßendatei Zahl für Zahl dasselbe wie
+      aus `legDistances()`. Geprüft in `check:roads`.
+- [x] Die Nennung des Datensatzes steht unter **jeder** Karte, die ihn zeigt.
+- [x] Der eigene Weg (`#weg=…`) bleibt ohne Straßen: zusammengestellte Orte
+      sind keine überlieferte Reise.
+
+### 4.85 Mindmaps (RefLab) als Medienquelle — P2 ✅ *(Eintrag; Feed offen)*
+
+**Anlass:** Wunsch, den Philosophiepodcast **Mindmaps** des RefLab (Manuel
+Schmid und Heinzpeter Hempelmann) in „Hören & Sehen" zu verknüpfen und die
+beiden Seiten – die [RefLab-Übersicht](https://www.reflab.ch/category/podcasts/mindmaps/)
+und die [Seite bei Hempelmann](https://heinzpeter-hempelmann.de/podcast-mindmaps-der-philosophiepodcast-reflab/)
+– als Quellen aufzunehmen.
+
+**Eingetragen ist die Quelle**, in `data/media/sources.json`, auf der
+Nachweisseite (`attribution.ts`) und auf der Unterstützen-Seite
+(`support.ts`). **Nicht eingetragen ist die Feed-Adresse**: Beide Domains und
+der Hoster (Podigee) sind aus dieser Entwicklungsumgebung gesperrt, und die
+Regel der Datei ist eindeutig – eine ungeprüfte Adresse steht auf `null`, weil
+eine geratene still einen leeren Index erzeugt. Die `appleId` (1586515346)
+steht daneben; `npm run media -- --fetch` löst die Adresse auf und meldet sie
+zum Eintragen.
+
+**Die ehrliche Erwartung** gehört zum Eintrag: Der Podcast bespricht Sachbücher.
+Der Index kennt nur, was eine Bibelstelle nennt (`build-media.mjs` verwirft
+thematische Folgen bewusst) – es kann gut sein, dass am Ende sehr wenige oder
+keine Folgen zugeordnet werden. Das ist die Natur der Sendung, kein Fehler der
+Zuordnung, und beides steht so in den Notizen der Quelle.
+
+**Akzeptanzkriterien**
+- [x] Quelle in `data/media/sources.json` mit Apple-ID, Herkunft und den beiden
+      Seiten in der Notiz.
+- [x] Nachweisseite und Unterstützen-Seite nennen RefLab; kein Spendenlink,
+      weil RefLab von der Zürcher Landeskirche getragen wird und auf seinen
+      Seiten um nichts bittet.
+- [x] **Eine Quelle ohne zugeordnete Folge steht nicht mehr im Index.** Sonst
+      stünde in der Oberfläche ein Filter, der zuverlässig „Keine Folge passt
+      zu dieser Auswahl" antwortet. Der Baubericht nennt sie stattdessen.
+      Gegengeprüft: `media.json` ist nach der Änderung **byte-gleich** wie
+      vorher – alle vier bisherigen Quellen haben Folgen.
+- [ ] **Offen:** ein Lauf mit Netz (`npm run media -- --fetch`), der die
+      Feed-Adresse bestätigt und die Folgen einliest.
+
 `src/data/roadmap.ts` – wer hier eine Zeile ergänzt, ergänzt sie dort mit.
 
 ---

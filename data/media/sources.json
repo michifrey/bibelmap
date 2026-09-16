@@ -46,6 +46,17 @@
       "appleId": 1592847144
     },
     {
+      "id": "mindmaps",
+      "title": "Mindmaps: der Philosophiepodcast (RefLab)",
+      "author": "Manuel Schmid & Heinzpeter Hempelmann",
+      "homepage": "https://www.reflab.ch/category/podcasts/mindmaps/",
+      "feed": null,
+      "lang": "de",
+      "kind": "podcast",
+      "note": "Podcast des RefLab, des Digitalprojekts der Evangelisch-reformierten Landeskirche des Kantons Zuerich; Folgenuebersicht auch bei einem der beiden Gastgeber (https://heinzpeter-hempelmann.de/podcast-mindmaps-der-philosophiepodcast-reflab/). Gehostet bei Podigee (mindmaps.podigee.io) - die Feed-Adresse folgt dort dem ueblichen Muster, ist aber aus dieser Umgebung nicht abrufbar und steht deshalb auf null: `npm run media -- --fetch` loest sie ueber die Apple-ID auf und meldet sie zum Eintragen. Erwartung zur Ausbeute: Besprochen werden Sachbuecher (Menschenbilder, Krisendiagnosen, politische Ideen) - Folgen, die eine Bibelstelle nennen, duerften die Ausnahme sein, und ohne Bibelstelle gibt es keinen Ort. Eine Quelle ohne zugeordnete Folge steht nicht im Index.",
+      "appleId": 1586515346
+    },
+    {
       "id": "keller",
       "title": "Timothy Keller Sermons Podcast by Gospel in Life",
       "author": "Timothy Keller",

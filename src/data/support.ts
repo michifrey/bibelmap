@@ -94,6 +94,26 @@ export const SUPPORT_PROJECTS: SupportProject[] = [
     donate: 'https://gospelinlife.com/donate/',
   },
   {
+    id: 'reflab',
+    name: 'RefLab',
+    by: 'Manuel Schmid, Heinzpeter Hempelmann u. a. · Evangelisch-reformierte Landeskirche des Kantons Zürich',
+    kind: 'content',
+    role: {
+      de: 'Der Philosophiepodcast „Mindmaps“ – deutsche Folgen, die in „Hören & Sehen“ auftauchen, wenn eine Folge eine Bibelstelle nennt.',
+      en: 'The philosophy podcast “Mindmaps” – German episodes surfacing under “Listen & watch” whenever an episode names a passage.',
+    },
+    credit: {
+      de: 'RefLab ist das Digitalprojekt der Zürcher Landeskirche; die Folgen liegen und bleiben dort.',
+      en: 'RefLab is the digital project of the Zurich reformed church; the episodes live and stay there.',
+    },
+    home: 'https://www.reflab.ch/',
+    donate: null,
+    donateNote: {
+      de: 'RefLab wird von der Zürcher Landeskirche getragen und bittet auf seinen Seiten um kein Geld.',
+      en: 'RefLab is funded by the Zurich reformed church and asks for no money on its pages.',
+    },
+  },
+  {
     id: 'openbible',
     name: 'OpenBible.info – Bible Geocoding',
     by: 'Stephen Smith',

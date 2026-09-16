@@ -542,7 +542,9 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   (Folgen einer Quelle), `#hoeren=ort,a15257a` (Folgen zu einem Ort) und
   `#hoeren=stelle,Mark,6` (Folgen zu einem Kapitel), `#gelaende=a15257a`
   (Jerusalem im Gelände), `#gelaende=reise,exodus` (der Auszug über dem
-  Gelände), `#gelaende=mission,second` (die zweite Missionsreise), `#weg=a15257a,a112427`
+  Gelände), `#gelaende=mission,second` (die zweite Missionsreise),
+  `#gelaende=jesus,galilee` (ein Akt aus dem Leben Jesu als Weg, zum Gehen),
+  `#weg=a15257a,a112427`
   (ein selbst gebauter Weg), `#register` (das Ortsregister),
   `#heilsgeschichte=exodus` (eine Station der
   Heilsgeschichte), `#stammbaum=zeit,bonhoeffer` (ein Mensch im Zeitbaum),
@@ -602,6 +604,43 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Karte: keine Ballung, keine Wärmekarte, keine Reichsgrenzen – das steht auch
   in der Ansicht. Höhen von den **Terrain Tiles** (AWS Open Data, aus SRTM u. a.),
   ohne Schlüssel und ohne Anmeldung.
+- **Unterwegs** – derselbe Weg, aber nicht von oben: die Kamera steht **1,70 m
+  über dem Boden** und geht ihn ab. Der Horizont liegt im oberen Drittel, die
+  Steigung von Jericho nach Jerusalem wird sichtbar, weil man sie vor sich hat.
+  Der Knopf steht bei jeder Route in der Geländeansicht; aus der Jesus-Sektion
+  führt er **direkt ins Gehen** (`#gelaende=jesus,galilee`).
+  **Wer unterwegs begegnet**, steht dabei: Die Stationen eines Akts bringen ihre
+  Menschen aus `gospel.ts` mit – wer neu dazukommt, ist hervorgehoben, wer
+  schon dabei war, bleibt blass stehen, und daneben läuft die Zahl derer mit,
+  denen man auf diesem Weg bisher begegnet ist. Dazu Strecke, Tagesmärsche und
+  die Bibelstelle der Station.
+  Anhalten, Station vor und zurück, den **Kopf nach links und rechts drehen**
+  (Pfeiltasten), Tempo in vier Stufen; **Escape** beendet das Gehen und lässt
+  die Geländekarte stehen. Bei *prefers-reduced-motion* läuft nichts von
+  selbst – dann ist es ein Schritt von Station zu Station.
+  Was dabei gezeigt wird, ist **nur das Gelände**: keine Kachel, keine Häuser,
+  keine Wege. Die Höhen sind gemessen (Überhöhung 1×), alles andere ist
+  unbekannt – wie ein Dorf in Galiläa im Jahr 30 aussah, weiß niemand, und die
+  Luftbilder von heute zeigen die Straßen von heute. Der Satz steht in der
+  Ansicht, nicht im Kleingedruckten.
+- **Wege statt Luftlinien** – jede Etappe dieser App war bisher eine gerade
+  Linie zwischen zwei Stationen. Liegt ein antiker **Straßendatensatz** vor,
+  sucht `npm run roads` den Weg darüber, und zwar für **alle Karten**: Im
+  Gelände folgt die Route der Trasse und das Gehen folgt ihr; auf der flachen
+  Karte folgt ihr die abgespielte Reise – in *Reisen & Geschichten*, in
+  *Mission & Ausbreitung* und in der *Jesus-Sektion*. Gemessen wird an ihr:
+  „Gesamt 267 km · 11 Tagesmärsche · 240 km Luftlinie" steht über der
+  Stationsliste, und an jeder Etappe steht, ob sie **auf der Straße** verläuft.
+  Etappen ohne Anschluss ans Netz, Seewege und Umwege, die durch Datenlücken
+  irren, behalten ihre Luftlinie.
+  Zwei Dinge sagt die Ansicht dazu, weil sie wahr sind: Das Netz ist
+  **römisch** – für die Wege Jesu und die Mission die richtige Zeit, für
+  Abraham tausend Jahre daneben (dann steht „Straßen jünger als die
+  Geschichte" daneben), und die **Quelle steht unter der Karte**, wie ihre
+  Lizenz es verlangt.
+  Der Datensatz selbst liegt **nicht im Projekt** – siehe
+  [`data/roads/README.md`](data/roads/README.md). Ohne ihn bleibt alles beim
+  Alten: Luftlinien, unmarkiert.
 - **Offline & installierbar** – die App meldet einen Service Worker an: Einstieg,
   Programmdateien, die Ortsdaten **und der Medien-Index** liegen nach dem ersten
   Besuch im Cache, einmal angesehene Kartenkacheln ebenso. Ohne Netz startet
@@ -964,6 +1003,26 @@ Quellen stehen in `data/media/sources.json`, die Feeds werden als XML unter
 reproduzierbar läuft. **BibleProject** braucht keinen Feed: je Buch eine
 Übersichtsseite, deren URL sich aus dem Buchkürzel baut.
 
+**Eine Quelle ohne zugeordnete Folge steht nicht im Index.** Der Modus baut
+seine Quellenauswahl aus `media.json`; eine Quelle ohne Folgen stünde dort als
+Filter, der zuverlässig „Keine Folge passt zu dieser Auswahl" antwortet – das
+sieht nach einem Fehler aus, nicht nach einer Aussage. Vorkommen kann es
+leicht: ein Feed, der noch nicht geholt wurde, oder ein Podcast, der keine
+Bibelstellen nennt. Der Baubericht sagt dann, welche Quelle draußen blieb und
+warum.
+
+**Mindmaps (RefLab)** ist genau dieser Grenzfall und steht deshalb als Beispiel
+dafür da: der Philosophiepodcast von Manuel Schmid und Heinzpeter Hempelmann,
+herausgegeben vom [RefLab](https://www.reflab.ch/category/podcasts/mindmaps/),
+dem Digitalprojekt der Zürcher Landeskirche (Folgenübersicht auch
+[bei Hempelmann](https://heinzpeter-hempelmann.de/podcast-mindmaps-der-philosophiepodcast-reflab/)).
+Besprochen werden Sachbücher – Menschenbilder, Krisendiagnosen, politische
+Ideen –, und Folgen, die dabei eine Bibelstelle nennen, sind die Ausnahme. Die
+Quelle ist eingetragen, ihre Feed-Adresse steht nach der Regel oben auf `null`
+(Podigee hostet den Podcast, die Adresse ist aber nicht von Hand geprüft); die
+`appleId` liegt daneben, `npm run media -- --fetch` löst sie auf. Was danach im
+Index landet, entscheidet der Feed – und womöglich ist es wenig.
+
 `public/data/media.json` wird erst geladen, wenn jemand eine Ortskarte oder den
 Modus öffnet - der Index wächst mit jeder Staffel und gehört nicht in den
 Startpfad. Der Modus dreht ihn beim Öffnen einmal um (`placesByEpisode`), denn
@@ -991,6 +1050,141 @@ Fehler, keine Meldung.
 Deshalb legt `scripts/sync-maplibre-worker.mjs` die zwei Dateien unverändert
 nach `public/vendor/maplibre/` (als `predev` und `prebuild`, nicht im Git), und
 `TerrainMap.tsx` sagt MapLibre per `setWorkerUrl`, wo sie liegen.
+
+### Unterwegs: die Kamera auf Augenhöhe
+
+Dieselbe Geländeansicht, nur von unten. Die Rechnung dahinter steht in
+**`src/lib/walk.ts`**, die Schleife in `TerrainMap.tsx`, die Anzeige in
+`WalkPanel.tsx`.
+
+**Warum das eine Rechnung braucht.** MapLibre kennt keine frei gesetzte Kamera
+– die `FreeCameraOptions` von Mapbox sind nach dem Lizenzwechsel nie in
+MapLibre gelandet. Was es gibt, ist ein *Blickpunkt* mit eigener Höhe:
+`jumpTo({ center, elevation, zoom, pitch, bearing })`, seit
+`setCenterClampedToGround(false)` auch frei über dem Gelände. Daraus lässt sich
+eine Kamera auf Augenhöhe rückwärts rechnen:
+
+1. Der Blickpunkt kommt **1,2 km voraus** auf den Kurs zur nächsten Station.
+2. Die Neigung ist fest: **85°**, mehr lässt MapLibre nicht zu. Der Blick geht
+   also fünf Grad abwärts – wie bei jemandem, der auf den Weg vor sich sieht.
+3. Daraus folgt, wie tief der Blickpunkt unter dem Auge liegt (`lookAhead /
+   tan(pitch)`), und daraus die **Zoomstufe**: Der Abstand, den MapLibre aus
+   dem Zoom rechnet, muss genau der Abstand Auge → Blickpunkt sein. Sonst steht
+   die Kamera nicht auf 1,70 m, sondern irgendwo darüber.
+
+Weil das niemandem auffällt, wenn es schiefgeht – eine Kamera hundert Meter zu
+hoch sieht aus wie ein Blick vom Hügel –, gibt es **`npm run check:walk`**: Die
+Prüfung stellt aus dem Ergebnis wieder her, wo die Kamera steht
+(`cameraStandpoint`, dieselbe Geometrie wie MapLibre), und vergleicht mit dem
+Fußpunkt, mit dem die Rechnung begann. 90 Stände vom Toten Meer bis auf den
+Hermon, drei Fensterhöhen; erlaubt sind ein halber Meter in der Fläche und ein
+Zentimeter in der Höhe. Die Gegenprobe verstellt die Zoomstufe um 0,1 und
+verlangt, dass es auffällt.
+
+**Was gezeigt wird und was nicht.** Im Gehen wird die Kachel ausgeblendet, die
+Überhöhung steht auf 1×, die Schummerung trägt das Bild. Das ist eine
+Entscheidung, keine Sparmaßnahme: Gemessen ist nur das Gelände. Ein
+Satellitenbild aus 1,70 m Höhe wäre ein Farbteppich – und es wäre die
+Oberfläche von heute. Auch die **Routenlinie** verschwindet: Zwischen zwei
+Stationen ist sie eine Verbindung, kein Weg, und auf Augenhöhe läge plötzlich
+eine Straße im Bild, die so nie jemand gegangen ist. (Nebenbei löst das ein
+Darstellungsproblem: MapLibre zieht Linien in Bildschirmbreite, und eine Linie,
+die auf eine bodennahe Kamera zuläuft, wächst in der Perspektive zu einem
+hundert Pixel breiten Balken.)
+
+**Die Menschen.** Eine Route aus der Jesus-Sektion bringt sie mit: `gospel.ts`
+führt zu jeder Station, wer darin vorkommt, und `App.tsx` hängt sie als
+`people` an die Stationen der Geländeroute (`src/lib/terrainRoute.ts`). Die
+Bibelreisen und die Mission führen ihre Leute nicht Station für Station – dort
+bleibt die Zeile leer, und das ist ehrlicher, als Namen zu erfinden.
+
+**Zwei Eigenheiten**, die Zeit gekostet haben:
+
+- `map.jumpTo({ elevation: undefined })` ist **nicht** dasselbe wie `elevation`
+  wegzulassen: MapLibre prüft, ob das Feld da ist, und `setElevation(undefined)`
+  zerlegt die Kameramatrix. Beim Aufhören steht deshalb nur `center`, `zoom`
+  und `pitch` im Aufruf – die Höhe holt sich `setCenterClampedToGround(true)`
+  vom Boden.
+- Das `load`-Ereignis wartet auf die erste vollständige Darstellung, und die
+  kommt nicht, solange ein Kachelserver nicht antwortet. Gemessen (mit
+  gesperrtem Kachelserver) blieben Gelände, Ortspunkte und das Gehen aus,
+  obwohl die Höhen aus einer ganz anderen Quelle kommen und längst da waren.
+  Die Ansicht hört jetzt zusätzlich auf **`style.load`** – der Stil ist früher
+  fertig, und mehr braucht es nicht. (`isStyleLoaded()` hilft dabei nicht: Es
+  ist erst wahr, wenn auch die Quellen geladen sind, und wartet damit auf
+  denselben Server.)
+
+### Römische Straßen statt Luftlinien
+
+Der Weg-Sucher steht in **`scripts/build-roads.mjs`**, das Ergebnis in
+`public/data/roads.json`, der Leser in `src/lib/roads.ts`, und
+`data/roads/README.md` sagt, woher die Straßen kommen.
+
+**Warum die Daten nicht hier liegen.** Wie `places.json` aus dem
+OpenBible-Datensatz entsteht, entsteht `roads.json` aus einem Straßennetz, das
+das Projekt nicht mitliefert:
+
+```
+ROADS=/pfad/zu/itinere_roads.geojson npm run roads
+```
+
+Empfohlen ist **Itiner-e** (de Soto u. a. 2025, *Scientific Data*), rund 15.000
+Straßenabschnitte des römischen Reiches unter **CC BY 4.0**. Die bekanntere
+Alternative – das Netz aus dem Barrington-Atlas (DARMC/AWMC und die davon
+abgeleiteten Ablagen) – steht unter **CC BY-NC**, und ein nicht-kommerzieller
+Datensatz gehört nicht in ein Projekt unter GPL-3.0: Er nähme denen, die diese
+Seite weiterverwenden, Rechte, die die Lizenz ihnen zusagt. `npm run
+check:roads` weist eine Wegdatei mit „NC" in der Lizenz deshalb ab.
+
+**Das Verfahren**, in sechs Schritten: Netz lesen und auf den Ausschnitt der
+Reisen beschneiden · **Knoten verschweißen** (zwei Enden unter dreißig Metern
+sind derselbe Knoten – ohne das zerfällt jedes solche Netz in Inseln, die sich
+nur fast berühren) · Stationen ans Netz anschließen (weiter als 15 km heißt:
+nicht angeschlossen) · **A\*** mit der Luftlinie als Schätzung · verwerfen, was
+länger ist als das Vierfache der Luftlinie · ausdünnen (Douglas-Peucker, 25 m)
+und als Polylinie kodieren (`src/lib/polyline.ts`).
+
+Was dabei herauskommt, ist je Etappe eine Zeichenkette – das **Netz selbst
+bleibt draußen**. Kein Browser soll zehntausend Straßensegmente laden, um
+fünfzehn Reisen zu zeigen; die Wegsuche läuft einmal beim Bauen.
+
+**Geprüft wird an einem erfundenen Netz.** `npm run check:roads` lässt den
+Sucher über `data/roads/pruefnetz.geojson` laufen – drei Linienzüge, von Hand
+gesetzt, mit einem Bogen nach Süden und einer Insel ohne Anschluss. An echten
+Daten wäre nichts davon zu prüfen: Ein Sucher, der Geraden zieht, sähe aus wie
+ein Datensatz ohne Kurven, und einer, der irrt, wie eine Straße, die eben so
+verlief. Am gesetzten Netz steht fest, was herauskommen muss – dass jede
+Etappe an ihren Stationen beginnt und endet, dass sie dem Bogen folgt und
+deshalb länger ist als die Luftlinie, und dass über die Insel **kein** Weg
+führt. Zwei Sicherungen hängen mit dran: Eine Wegdatei aus dem Prüfnetz darf
+nie in `public/data/` landen, und die Quelle einer echten muss auf der
+Nachweisseite stehen.
+
+**Was das Ergebnis nicht behauptet.** Das Netz ist römisch. Für die Wege Jesu
+und für die Mission ist das die richtige Zeit; für Abraham, den Auszug und die
+Landnahme liegt es tausend Jahre daneben, und die Oberfläche schreibt es
+daneben: Gezeigt wird die Trasse, nicht die Straße – Wege folgen dem Gelände,
+und das Gelände ist dasselbe geblieben.
+
+**Auch die flache Karte folgt dem Weg.** Dort war eine Umrechnung nötig: Die
+abgespielte Route (`RouteMap.tsx`) zählt in **Stationen** – 2,5 heißt „auf
+halber Strecke zwischen der dritten und der vierten" –, der Weg zählt in
+Stützpunkten, und zwischen zwei Stationen können hundert liegen.
+`tForStation()` rechnet um, und zwar **über die Strecke**: Ginge es über die
+Zahl der Punkte, liefe der Reisende in den Kurven langsamer als auf der
+Geraden, weil dort mehr Punkte stehen. Die Entfernungen in den Listen kommen
+aus `legKm()` – ohne Straßendatei Zahl für Zahl dasselbe wie vorher aus
+`legDistances()`.
+
+Die **Zeile unter der Karte** wechselt mit: Aus „Routen: schematisch" wird der
+Name des Straßendatensatzes samt Lizenz und der Zusatz, dass die übrigen
+Etappen Luftlinien bleiben (`routenAttr()` in `src/lib/mapAttribution.ts`).
+CC-BY verlangt die Nennung dort, wo das Material zu sehen ist – das gilt für
+jede der Karten, nicht nur fürs Gelände.
+
+Der **eigene Weg** (`#weg=…`) bleibt außen vor: Was jemand aus beliebigen Orten
+zusammenstellt, ist keine überlieferte Reise, und eine Straße dazwischen wäre
+eine Behauptung über einen Weg, den es nie gab.
 
 ### Kurzformen der Bibelbücher
 

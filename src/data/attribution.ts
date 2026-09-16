@@ -358,6 +358,27 @@ export const CREDITS: CreditEntry[] = [
     home: 'https://gospelinlife.com/',
   },
   {
+    id: 'mindmaps',
+    name: 'Mindmaps: der Philosophiepodcast (RefLab)',
+    by: 'Manuel Schmid & Heinzpeter Hempelmann · RefLab',
+    group: 'medien',
+    license: null,
+    terms: {
+      de: 'Öffentlicher RSS-Feed',
+      en: 'Public RSS feed',
+      url: 'https://www.reflab.ch/category/podcasts/mindmaps/',
+    },
+    use: {
+      de: 'Deutsche Folgen unter „Hören & Sehen" – dort, wo eine Folge eine Bibelstelle nennt.',
+      en: 'German episodes under "Listen & watch" – wherever an episode names a passage.',
+    },
+    note: {
+      de: 'Übernommen werden nur Titel, Datum und Adresse aus dem öffentlichen Feed; die Folgen selbst liegen und bleiben beim RefLab. Weil der Podcast Sachbücher bespricht und selten eine Bibelstelle nennt, ist die Ausbeute klein – das ist die Natur der Sendung, kein Fehler der Zuordnung.',
+      en: 'Only title, date and address are taken from the public feed; the episodes themselves live and stay with RefLab. Because the show discusses non-fiction books and rarely names a passage, the yield is small – that is the nature of the programme, not a fault in the matching.',
+    },
+    home: 'https://www.reflab.ch/',
+  },
+  {
     id: 'bibleproject',
     name: 'BibleProject',
     by: 'Tim Mackie & Jon Collins',
