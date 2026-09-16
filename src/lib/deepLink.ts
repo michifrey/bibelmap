@@ -67,6 +67,7 @@ const MODE_KEYS: Record<string, Mode> = {
   unterstuetzen: 'support',
   nachweise: 'credits',
   fahrplan: 'roadmap',
+  impressum: 'imprint',
   quiz: 'quiz',
 };
 
