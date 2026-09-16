@@ -1343,7 +1343,8 @@ war zu klein.
 **Was das ausdrücklich *nicht* heißt.** Der erste Kommentar im Code behauptete
 „erst geladen, wenn jemand dorthin geht". Die Messung im Browser zeigte etwas
 anderes: beide Dateien werden auf der Startseite geholt – vom Vorabruf im
-Leerlauf, der alle Ansichten nachlädt, damit die App offline vollständig ist.
+Leerlauf, der die Ansichten nachlädt, damit die App offline vollständig ist.
+(Dass er sie *alle* nachlädt, stand hier bis § 4.82 – sieben fehlten.)
 Das ist Absicht und bleibt so. Gewonnen ist der **kritische Pfad**: 162 kB
 weniger, die vor dem ersten Bild geparst und ausgeführt werden. Der Kommentar
 sagt das jetzt.
@@ -2714,8 +2715,9 @@ der Jesus-Sektion, Schawuot in der Mission. Was fehlte, war das, was sie
 zusammenhält – **der Kalender**. Und ein Kalender ist keine Liste, sondern ein
 Kreis: Er fängt wieder an.
 
-**Das Rad.** Von außen nach innen: die zwölf Monate mit ihren hebräischen
-Namen, der Monatsring (seine Stücke sind so breit, wie die Monate lang sind),
+**Das Rad.** Von außen nach innen: der gregorianische Kalender (Jan, Feb, März
+…), die zwölf hebräischen Monate mit ihren Namen, der Monatsring (seine Stücke
+sind so breit, wie die Monate lang sind),
 das Band der Feste an ihrem Tag, innen das schmale Band der Monatsanfänge, in
 der Mitte das Bild. Wer weiterblättert, dreht das Jahr: Das gewählte Fest kommt
 nach oben, **sein Kuchenstück fährt aus dem Rad und wird größer**, und über
@@ -2757,7 +2759,139 @@ Fenstertitel, Tieflink `#feste=…`, globale Suche (auch über Umschrift und
 hebräischen Namen) und den Vorabruf für den Offline-Betrieb; nachgeprüft mit
 `check-offline.mjs`, `check-i18n.mjs` und `a11y-audit.mjs`.
 
-### 4.81 Das Bücherregal — P1 ✅
+### 4.81 Die Chosen-Zuordnung zu Ende gebracht — P2 ✅
+
+**Anlass:** § 4.49 hatte zwölf Folgen aus drei Staffeln zugeordnet und den
+Schalter `VERIFIED` auf `false` stehen lassen: Titel und Nummern waren aus dem
+Gedächtnis zusammengetragen, der Netzzugang ließ thechosen.tv nicht durch. Die
+Oberfläche wies die Angaben als unbestätigt aus – ein Dauerzustand, der so nicht
+bleiben sollte.
+
+**Nachgesehen (Websuche, 16.09.2026):** alle **fünf Staffeln zu je acht
+Folgen**, Titel gegen mehrere unabhängige Verzeichnisse gehalten. Dabei fiel
+auf, dass eine Angabe aus § 4.49 falsch war: Staffel 4, Folge 2 heißt nicht
+„Confessions“, sondern „The Rock or the Stumbling Block?“ – genau die Art
+Fehler, gegen die der Schalter dastand.
+
+**40 statt 12 Folgen**, davon **35 mit Station**. Die fünf ohne sind Absicht:
+„Shabbat“, „Jesus Loves the Little Children“, „Spirit“, „Sitting, Serving,
+Scheming“ und „Because of Me“ erzählen, was die Serie erfindet.
+
+**Vier neue Stationen** – Szenen, die die Serie spielt und der Sektion fehlten:
+der Aussätzige (Mk 1,40-45, S1F6), die achtunddreißig Jahre am Teich Betesda
+(Joh 5, S2F4), die Frage des Täufers aus dem Gefängnis (Mt 11,2-19, S3F6) und
+das Tempelweihfest im Winter (Joh 10,22-39, S4F6). 97 → **101 Stationen**.
+
+**Die Adresse führt jetzt auf die Staffel** (`watch.thechosen.tv/page/season-N`)
+statt auf die Startseite. Einzelne Folgen haben dort Zahlenkennungen
+(`/video/184683596184`), die sich nicht bilden lassen – eine geratene Adresse
+wäre schlechter als eine, die zur richtigen Staffel führt.
+
+**Akzeptanzkriterien**
+- [x] `VERIFIED` ist weg. An seiner Stelle steht, woher die Angaben kommen und
+      wann sie nachgesehen wurden – der Hinweis in der Oberfläche sagt jetzt,
+      was zutrifft (Zuordnung nach Inhalt, Verweis auf die Staffel,
+      Verfilmung), statt „unbestätigt“.
+- [x] `check:gospel` prüft: fünf Staffeln zu acht Folgen, lückenlos von 1 an,
+      keine doppelt, jede Stationskennung bekannt, jede Staffeladresse nach dem
+      Muster der Staffelseiten. Gegengetestet mit fehlender Folge, vertippter
+      Station und fremder Adresse – alle drei gemeldet.
+- [x] Eine Folge ohne Station ist kein Fehler mehr, sondern eine Aussage; die
+      Prüfung zählt beim Lauf mit, wie viele eine haben.
+- [x] `check:gospel-links` prüft nur noch, was sonst niemand prüft: die aus Buch
+      und Kapitel **gebauten** bibletunes-Adressen, als Stichprobe über die
+      Kapitel, zu denen es Stationen gibt. Die festen Adressen – auch die fünf
+      Staffelseiten – liest `check:urls` aus den Datendateien.
+
+### 4.82 Sieben Ansichten waren offline nicht da — P1 ✅
+
+`check:offline` stand auf grün und hat trotzdem nichts bewiesen. Zwei Fehler,
+die sich gegenseitig gedeckt haben.
+
+**Erstens: Die Prüfung zählte Zeichen.** Unter 150 galt als kaputt. Ein
+Vollbild-Modus liegt aber über der Karte, und die Karte ist gesprächig – ihre
+Beschriftungen allein sind über 4.000 Zeichen. Lädt der Modus nicht, sieht man
+die Karte statt seiner, und die Zählung ist zufrieden. Gemessen an `#fahrplan`:
+**4.346 Zeichen**, „ohne Netz vollständig", kein Fahrplan.
+
+**Zweitens: `setOffline` schaltet die Seite ab, nicht den Service Worker.** Nach
+dem ersten Seitenaufruf im abgeschalteten Zustand wird der Worker neu gestartet,
+und der neue erbt die Abschaltung nicht. Ein `fetch` auf eine ungecachte Adresse
+lieferte danach eine **200**, und ein nie vorabgerufenes Paket landete
+*während* des Offline-Besuchs im Cache: Der Worker hatte es geholt.
+
+**Was das gekostet hat.** Am Cache nachgemessen statt an der Oberfläche: Nach
+dem Vorabruf lagen 47 Dateien im Cache – und von sieben Ansichten keine einzige.
+**Register, Graph, Israel, Eigener Weg, Unterstützen, Nachweise** und
+**Gelände** waren ohne Netz nicht da, seit es sie gibt. Die Prüfung hat sie alle
+sieben als „vollständig" gemeldet, weil der Worker sie sich still aus dem Netz
+holte, das es angeblich nicht gab. Der Satz „der Vorabruf lädt alle Ansichten
+nach" (§ 4.56) war entsprechend falsch.
+
+**Die Prüfung, dreifach nachgezogen.**
+
+1. Jede Ansicht nennt eine **Zeichenfolge, die nur sie zeigt**, und muss sie
+   vorweisen – `Hier stehen wir`, `Ortsregister`, `Feste Israels`. Die beiden
+   reinen Kartenansichten haben keine; dort bleibt die Zählung das Einzige, was
+   es zu prüfen gibt.
+2. Zusätzlich zu `setOffline` wird **jede Anfrage abgewiesen** (`context.route`).
+   Das erwischt auch die des Workers.
+3. **Jede Ansicht bekommt eine frische Seite.** Ohne das vergiftet die erste,
+   die ausfällt, den Rest: Gemessen bestanden nach einem Ausfall auf derselben
+   Seite auch `#quiz`, `#hoeren` und `#fahrplan` nicht mehr, obwohl ihre Pakete
+   im Cache lagen. Das ist der Unterschied zwischen einer Prüfung, die eine
+   Liste meldet, und einer, die einen Dominostein meldet.
+
+Gegen den Stand von vorher meldet sie jetzt genau die sechs, samt Paketnamen im
+JS-Fehler. Und die Gegenprobe benennt, was ein geleerter Cache überlebt – das
+kommt aus dem Cache des Browsers und ist kein Beleg.
+
+**Sechs nachgetragen, einer bleibt draußen.** Israel, Graph, Unterstützen,
+Nachweise, Register und Eigener Weg stehen jetzt im Vorabruf: zusammen 67 kB
+gzip, im Leerlauf geholt, lange nach dem ersten Bild. Der Cache wächst von 47
+auf 59 Dateien. **Gelände** bleibt draußen – das Paket wiegt mit MapLibre
+243 kB gzip, und wer nie ins Gelände geht, soll das nicht holen. Für diese eine
+Ansicht gilt eine andere Zusage: einmal geöffnet, danach ohne Netz da. Die
+Prüfung besucht sie darum vorher einmal **mit** Netz und misst sie danach wie
+jede andere – die Ausnahme ist geprüft, nicht behauptet.
+
+Der kritische Pfad bleibt unberührt: 334,7 kB von 360, der Vorabruf hängt am
+`requestIdleCallback` wie zuvor.
+
+### 4.83 Der äußere Ring: wann ist das bei uns? — P2 ✅
+
+Das Rad zeigte zwölf hebräische Monate, und die erste Frage jedes Betrachters
+blieb offen: *wann ist das bei uns?* „15. Tischri" sagt niemandem etwas.
+
+Ganz außen liegt darum jetzt der gregorianische Kalender. Der Monat, in dem das
+gewählte Fest liegt, ist hervorgehoben – das ist die Antwort, ohne einen Satz
+dafür zu brauchen.
+
+**Die Ausrichtung ist gerechnet, nicht gesetzt.** Die beiden Ringe sind
+gegeneinander verdreht, weil die Jahre nicht am selben Tag beginnen. Der Versatz
+kommt aus den Monatslängen: Die **Mitte des Nisan** liegt auf dem Wechsel
+März/April, womit die Angabe stimmt, die in den Daten seit jeher steht – „März
+/ April" – und mit ihr jede andere. Gemessen −73,51°. Ändert jemand die Länge
+eines Monats, wandert der Ring mit, statt still falsch zu stehen.
+
+**Und die Prüfung bindet beides aneinander.** `check:feasts` rechnet aus dem
+Ring zurück, welche gregorianischen Monate ein hebräischer überdeckt, und
+vergleicht das mit dem Satz daneben – zweisprachig, für alle zwölf. Zwei
+Darstellungen derselben Sache laufen sonst auseinander, sobald jemand eine
+davon anfasst, und niemand sieht es. Gegenprobe: Tischri auf „August /
+September" umgeschrieben meldet sie in beiden Sprachen.
+
+**Was der Ring nicht ist: ein Datum.** Das jüdische Jahr ist elf Tage kürzer als
+das gregorianische; die Feste wandern jedes Jahr nach vorn, bis in sieben von
+neunzehn Jahren ein Schaltmonat sie zurückholt. Pessach fällt zwischen Ende März
+und Ende April. Der Hinweis unter dem Rad sagt das; der Ring stimmt im Mittel,
+nicht am Tag.
+
+Das Innere musste dafür Platz machen: Alle Radien rücken ein Stück nach innen,
+die Bildscheibe von 56 auf 53. Der kritische Pfad wächst um 0,5 kB auf 335,1 kB
+von 360.
+
+### 4.84 Das Bücherregal — P1 ✅
 
 Die Bibel wird fast immer in der Reihenfolge des Kanons gezeigt, und diese
 Reihenfolge ist **keine der Zeit**. Der älteste Text des Neuen Testaments steht
@@ -2824,53 +2958,7 @@ Buchtitel keinen gleichnamigen Ort verdrängt) und den Vorabruf für den
 Offline-Betrieb; nachgemessen mit `a11y-audit.mjs` (benannt, auf 390 Pixeln im
 Bild, alle Halte im Modus, Escape frei).
 
-
-
 ---
-
-### 4.81 Die Chosen-Zuordnung zu Ende gebracht — P2 ✅
-
-**Anlass:** § 4.49 hatte zwölf Folgen aus drei Staffeln zugeordnet und den
-Schalter `VERIFIED` auf `false` stehen lassen: Titel und Nummern waren aus dem
-Gedächtnis zusammengetragen, der Netzzugang ließ thechosen.tv nicht durch. Die
-Oberfläche wies die Angaben als unbestätigt aus – ein Dauerzustand, der so nicht
-bleiben sollte.
-
-**Nachgesehen (Websuche, 16.09.2026):** alle **fünf Staffeln zu je acht
-Folgen**, Titel gegen mehrere unabhängige Verzeichnisse gehalten. Dabei fiel
-auf, dass eine Angabe aus § 4.49 falsch war: Staffel 4, Folge 2 heißt nicht
-„Confessions“, sondern „The Rock or the Stumbling Block?“ – genau die Art
-Fehler, gegen die der Schalter dastand.
-
-**40 statt 12 Folgen**, davon **35 mit Station**. Die fünf ohne sind Absicht:
-„Shabbat“, „Jesus Loves the Little Children“, „Spirit“, „Sitting, Serving,
-Scheming“ und „Because of Me“ erzählen, was die Serie erfindet.
-
-**Vier neue Stationen** – Szenen, die die Serie spielt und der Sektion fehlten:
-der Aussätzige (Mk 1,40-45, S1F6), die achtunddreißig Jahre am Teich Betesda
-(Joh 5, S2F4), die Frage des Täufers aus dem Gefängnis (Mt 11,2-19, S3F6) und
-das Tempelweihfest im Winter (Joh 10,22-39, S4F6). 97 → **101 Stationen**.
-
-**Die Adresse führt jetzt auf die Staffel** (`watch.thechosen.tv/page/season-N`)
-statt auf die Startseite. Einzelne Folgen haben dort Zahlenkennungen
-(`/video/184683596184`), die sich nicht bilden lassen – eine geratene Adresse
-wäre schlechter als eine, die zur richtigen Staffel führt.
-
-**Akzeptanzkriterien**
-- [x] `VERIFIED` ist weg. An seiner Stelle steht, woher die Angaben kommen und
-      wann sie nachgesehen wurden – der Hinweis in der Oberfläche sagt jetzt,
-      was zutrifft (Zuordnung nach Inhalt, Verweis auf die Staffel,
-      Verfilmung), statt „unbestätigt“.
-- [x] `check:gospel` prüft: fünf Staffeln zu acht Folgen, lückenlos von 1 an,
-      keine doppelt, jede Stationskennung bekannt, jede Staffeladresse nach dem
-      Muster der Staffelseiten. Gegengetestet mit fehlender Folge, vertippter
-      Station und fremder Adresse – alle drei gemeldet.
-- [x] Eine Folge ohne Station ist kein Fehler mehr, sondern eine Aussage; die
-      Prüfung zählt beim Lauf mit, wie viele eine haben.
-- [x] `check:gospel-links` prüft nur noch, was sonst niemand prüft: die aus Buch
-      und Kapitel **gebauten** bibletunes-Adressen, als Stichprobe über die
-      Kapitel, zu denen es Stationen gibt. Die festen Adressen – auch die fünf
-      Staffelseiten – liest `check:urls` aus den Datendateien.
 
 ## 5. Nicht-funktionale Anforderungen
 
@@ -2933,7 +3021,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v0.8** | Medien-Index: Sendedaten und Umlaute (4.22) | ✅ erledigt |
 | **v0.9** | Gelände in 3D mit MapLibre (4.23) | ✅ erledigt |
 | **v0.10** | Feste Israels als Jahresrad (4.80) | ✅ erledigt |
-| **v0.11** | Das Bücherregal: Entstehung, Funde, Gesetzestexte (4.81) | ✅ erledigt |
+| **v0.11** | Das Bücherregal: Entstehung, Funde, Gesetzestexte (4.84) | ✅ erledigt |
 
 Diese Tabelle ist seit § 4.79 auch eine Ansicht: **`#fahrplan`** zeigt denselben
 Weg als Strasse, samt dem, was noch offen ist. Sie liest ihre Stationen aus

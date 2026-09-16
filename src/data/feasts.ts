@@ -142,6 +142,78 @@ export function monthStart(monthId: string): number {
 }
 
 /**
+ * Der gregorianische Kalender – der äußere Ring des Rades.
+ *
+ * Er ist dort kein Schmuck, sondern die Antwort auf die erste Frage, die jeder
+ * an diesen Kreis stellt: *Wann ist das bei uns?* Ohne ihn sagt „15. Tischri"
+ * niemandem etwas.
+ *
+ * Schaltjahre bleiben draußen: Ein Tag auf 365 ist ein Drittel Grad und gegen
+ * das, was gleich kommt, nichts.
+ */
+export interface GregorianMonth {
+  de: string;
+  en: string;
+  /** Kurzform für den Ring, wo kein Platz für „September" ist. */
+  shortDe: string;
+  shortEn: string;
+  days: number;
+}
+
+export const GREGORIAN_MONTHS: GregorianMonth[] = [
+  { de: 'Januar', en: 'January', shortDe: 'Jan', shortEn: 'Jan', days: 31 },
+  { de: 'Februar', en: 'February', shortDe: 'Feb', shortEn: 'Feb', days: 28 },
+  { de: 'März', en: 'March', shortDe: 'Mär', shortEn: 'Mar', days: 31 },
+  { de: 'April', en: 'April', shortDe: 'Apr', shortEn: 'Apr', days: 30 },
+  { de: 'Mai', en: 'May', shortDe: 'Mai', shortEn: 'May', days: 31 },
+  { de: 'Juni', en: 'June', shortDe: 'Jun', shortEn: 'Jun', days: 30 },
+  { de: 'Juli', en: 'July', shortDe: 'Jul', shortEn: 'Jul', days: 31 },
+  { de: 'August', en: 'August', shortDe: 'Aug', shortEn: 'Aug', days: 31 },
+  { de: 'September', en: 'September', shortDe: 'Sep', shortEn: 'Sep', days: 30 },
+  { de: 'Oktober', en: 'October', shortDe: 'Okt', shortEn: 'Oct', days: 31 },
+  { de: 'November', en: 'November', shortDe: 'Nov', shortEn: 'Nov', days: 30 },
+  { de: 'Dezember', en: 'December', shortDe: 'Dez', shortEn: 'Dec', days: 31 },
+];
+
+export const GREGORIAN_YEAR_DAYS = GREGORIAN_MONTHS.reduce((n, m) => n + m.days, 0);
+
+/** Tag, an dem ein gregorianischer Monat beginnt (0 = 1. Januar). */
+export function gregorianStart(index: number): number {
+  let n = 0;
+  for (let i = 0; i < index; i++) n += GREGORIAN_MONTHS[i].days;
+  return n;
+}
+
+/**
+ * Der Anker, an dem die beiden Ringe hängen: der 1. April.
+ *
+ * Nicht willkürlich gewählt. Die **Mitte des Nisan** wird auf den
+ * Monatswechsel März/April gelegt – damit stimmt die Angabe, die in
+ * `MONTHS[0].gregorian` ohnehin steht („März / April"), und mit ihr jede
+ * andere: Tischri landet auf September/Oktober, Kislew auf November/Dezember,
+ * Adar auf Februar/März. `npm run check:feasts` rechnet das für alle zwölf
+ * nach, statt es zu glauben.
+ */
+export const GREGORIAN_ANCHOR_DAY = gregorianStart(3);
+
+/**
+ * Um wie viel Grad der äußere Ring gegen den inneren verdreht ist – aus den
+ * Daten gerechnet, nicht eingetragen: Ändert jemand die Länge eines Monats,
+ * wandert der Ring mit, statt still falsch zu stehen.
+ *
+ * Und was der Ring **nicht** kann: Das jüdische Jahr ist elf Tage kürzer als
+ * das gregorianische. Die Feste wandern deshalb jedes Jahr nach vorn, bis in
+ * sieben von neunzehn Jahren ein Schaltmonat sie zurückholt. Eine Zuordnung
+ * auf den Tag gibt es nicht – nur diese, die im Mittel stimmt. Der Hinweis
+ * unter dem Rad sagt das auch dem, der nie in diese Datei sieht.
+ */
+export function gregorianOffsetDeg(): number {
+  const nisanMitte = (MONTHS[0].days / 2 / YEAR_DAYS) * 360;
+  const anker = (GREGORIAN_ANCHOR_DAY / GREGORIAN_YEAR_DAYS) * 360;
+  return nisanMitte - anker;
+}
+
+/**
  * Wo ein Bibelvers zu einem Fest steht – und in welchem Verhältnis.
  *
  *   `command` – wo das Fest geboten wird

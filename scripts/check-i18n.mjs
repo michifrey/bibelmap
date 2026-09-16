@@ -64,6 +64,7 @@ const ANSICHTEN = [
   '#regal=buch,Isa',
   '#regal=recht,mischna',
   '#regal=fund,qumran',
+  '#fahrplan',
   '#gelaende',
   '#register',
   '#unterstuetzen',

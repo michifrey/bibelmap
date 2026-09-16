@@ -26,8 +26,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const { FEASTS, MONTHS, RHYTHMS, YEAR_DAYS, MONTH_BY_ID, feastStart, feastOccurrences, monthStart } =
-  await import(path.join(ROOT, 'src/data/feasts.ts'));
+const {
+  FEASTS, MONTHS, RHYTHMS, YEAR_DAYS, MONTH_BY_ID, feastStart, feastOccurrences, monthStart,
+  GREGORIAN_MONTHS, GREGORIAN_YEAR_DAYS, gregorianStart, gregorianOffsetDeg,
+} = await import(path.join(ROOT, 'src/data/feasts.ts'));
 const { arcPath, dayAngle, easeInOut, feastSpan, polar, shortestTurn } = await import(
   path.join(ROOT, 'src/lib/feastWheel.ts')
 );
@@ -231,7 +233,55 @@ const geo = [];
     if (s.mid < 0 || s.mid >= 360) geo.push(`${f.id}: Winkel ${s.mid} liegt außerhalb des Kreises`);
   }
 
-  const pfad = arcPath(0, 30, 70, 90);
+    /*
+   * Der äußere Ring gegen die Prosa im Inneren.
+   *
+   * Jeder hebräische Monat trägt in den Daten eine Angabe wie „September /
+   * Oktober". Der Ring zeichnet dieselbe Aussage noch einmal, nur als Winkel –
+   * und zwei Darstellungen derselben Sache laufen auseinander, sobald jemand
+   * eine von beiden anfasst. Hier wird aus dem Ring zurückgerechnet, welche
+   * gregorianischen Monate ein hebräischer überdeckt, und mit dem Satz
+   * verglichen, der danebensteht. Weicht eines ab, stimmt entweder die Angabe
+   * nicht mehr oder das Rad zeigt woandershin.
+   */
+  const versatz = gregorianOffsetDeg();
+  const tagAusWinkel = (w) => ((((w - versatz) % 360) + 360) % 360 / 360) * GREGORIAN_YEAR_DAYS;
+  const monatAmTag = (tag) => {
+    const t = ((tag % GREGORIAN_YEAR_DAYS) + GREGORIAN_YEAR_DAYS) % GREGORIAN_YEAR_DAYS;
+    for (let i = 11; i >= 0; i--) if (t >= gregorianStart(i) - 1e-6) return i;
+    return 0;
+  };
+
+  if (GREGORIAN_YEAR_DAYS !== 365) geo.push(`Die gregorianischen Monate ergeben ${GREGORIAN_YEAR_DAYS} Tage, erwartet 365`);
+
+  for (const h of MONTHS) {
+    const a0 = dayAngle(monthStart(h.id), YEAR_DAYS);
+    const a1 = dayAngle(monthStart(h.id) + h.days, YEAR_DAYS);
+    const von = monatAmTag(tagAusWinkel(a0));
+    const bis = monatAmTag(tagAusWinkel(a1) - 1e-3);
+    const namen = { de: [], en: [] };
+    for (let i = von; ; i = (i + 1) % 12) {
+      namen.de.push(GREGORIAN_MONTHS[i].de);
+      namen.en.push(GREGORIAN_MONTHS[i].en);
+      if (i === bis) break;
+      if (namen.de.length > 3) break;
+    }
+    for (const sprache of ['de', 'en']) {
+      const soll = namen[sprache].join(' / ');
+      const ist = h.gregorian?.[sprache];
+      if (soll !== ist) {
+        geo.push(`${h.id}: der Ring zeigt „${soll}", die Daten sagen „${ist}" (${sprache})`);
+      }
+    }
+  }
+
+  // Der Anker selbst: die Mitte des Nisan liegt auf dem Wechsel März/April.
+  const nisanMitte = dayAngle(MONTHS[0].days / 2, YEAR_DAYS);
+  if (Math.abs(tagAusWinkel(nisanMitte) - gregorianStart(3)) > 1e-6) {
+    geo.push('Die Mitte des Nisan liegt nicht mehr auf dem 1. April – der Anker des äußeren Rings stimmt nicht.');
+  }
+
+const pfad = arcPath(0, 30, 70, 90);
   if (!pfad.startsWith('M') || !pfad.endsWith('Z') || (pfad.match(/A/g) ?? []).length !== 2) {
     geo.push('arcPath liefert kein geschlossenes Ringstück mit zwei Bögen');
   }

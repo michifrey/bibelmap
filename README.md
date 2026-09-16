@@ -271,7 +271,16 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Bibel und Koran, aus jüdisch-christlich-biblischer Sicht; jede Gestalt hat
   eine eigene Adresse (`#vergleich=abraham`).
 - **Feste Israels** – das Jahr als **Rad** statt als Liste (`#feste=pessach`).
-  Von außen nach innen: die zwölf Monate mit ihren hebräischen Namen, dann der
+  Ganz außen der gregorianische Kalender – **Jan, Feb, März …** –, damit die
+  erste Frage an so einen Kreis beantwortet ist: *wann ist das bei uns?* Der
+  Monat, in dem das gewählte Fest liegt, steht dort hervorgehoben. Die beiden
+  Ringe sind gegeneinander verdreht, weil die Jahre nicht am selben Tag
+  anfangen; um wie viel, rechnet der Code aus den Monatslängen aus, statt es
+  einzutragen. Und `npm run check:feasts` rechnet aus dem Ring zurück, welche
+  gregorianischen Monate jeder hebräische überdeckt, und vergleicht das mit der
+  Angabe, die in den Daten daneben steht – zwei Darstellungen derselben Sache
+  laufen sonst auseinander, sobald jemand eine davon anfasst.
+  Dann nach innen: die zwölf Monate mit ihren hebräischen Namen, dann der
   Monatsring – seine Stücke sind so breit, wie die Monate lang sind –, dann das
   Band der **zwölf Feste** an ihrem Tag, innen das schmale Band der
   Monatsanfänge, in der Mitte das Bild. Wer weiterklickt,
@@ -1246,7 +1255,7 @@ Gegenprobe: den Korridor in `quiz.ts` von 8 auf 30 km geweitet – die Prüfung
 meldet Verstöße und endet mit Exit 1. Zurückgestellt: Exit 0.
 
 `scripts/check-i18n.mjs` schaltet die Oberfläche auf Englisch und geht alle
-achtzehn Ansichten durch – Text wie Beschriftungen, die nur ein Screenreader
+neunundzwanzig Ansichten durch – Text wie Beschriftungen, die nur ein Screenreader
 liest. Gesucht wird nach deutschen Funktionswörtern; was ein eigenes `lang`
 trägt, bleibt außen vor.
 
@@ -1344,6 +1353,14 @@ dem Cache und werden im Hintergrund erneuert.
 
 Im Dev-Server wird nichts angemeldet – dort würde der Worker den Hot-Reload
 aushebeln.
+
+Damit „ohne Netz" nicht nur für das gilt, was man schon angesehen hat, holt die
+App im Leerlauf jede Ansicht nach. Jede bis auf eine: Das Gelände wiegt mit
+MapLibre 243 kB gzip und kommt erst, wenn jemand es öffnet – danach liegt es im
+Cache wie alles andere. `scripts/check-offline.mjs` prüft beides und weist dafür
+jede Anfrage ab, statt nur die Seite abzuschalten: Ein abgeschalteter Browser
+hindert den Service Worker nicht daran, sich still aus dem Netz zu bedienen, und
+genau daran hat die Prüfung jahrelang sieben Ansichten übersehen (PRD § 4.82).
 
 ## Technik
 
