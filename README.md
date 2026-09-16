@@ -525,6 +525,22 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   unbekannt – wie ein Dorf in Galiläa im Jahr 30 aussah, weiß niemand, und die
   Luftbilder von heute zeigen die Straßen von heute. Der Satz steht in der
   Ansicht, nicht im Kleingedruckten.
+- **Wege statt Luftlinien** – jede Etappe dieser App war bisher eine gerade
+  Linie zwischen zwei Stationen. Liegt ein antiker **Straßendatensatz** vor,
+  sucht `npm run roads` den Weg darüber: Die Route im Gelände folgt dann der
+  Trasse, das Gehen folgt ihr, und die Strecke wird an ihr gemessen – „331 km
+  statt 282 km Luftlinie" steht im Feld, und eine Marke sagt je Etappe, ob man
+  gerade **auf der Straße** geht oder weiter querfeldein. Etappen ohne
+  Anschluss ans Netz, Seewege und Umwege, die durch Datenlücken irren,
+  behalten ihre Luftlinie.
+  Zwei Dinge sagt die Ansicht dazu, weil sie wahr sind: Das Netz ist
+  **römisch** – für die Wege Jesu und die Mission die richtige Zeit, für
+  Abraham tausend Jahre daneben (dann steht „Straßen jünger als die
+  Geschichte" daneben), und die **Quelle steht unter der Karte**, wie ihre
+  Lizenz es verlangt.
+  Der Datensatz selbst liegt **nicht im Projekt** – siehe
+  [`data/roads/README.md`](data/roads/README.md). Ohne ihn bleibt alles beim
+  Alten: Luftlinien, unmarkiert.
 - **Offline & installierbar** – die App meldet einen Service Worker an: Einstieg,
   Programmdateien, die Ortsdaten **und der Medien-Index** liegen nach dem ersten
   Besuch im Cache, einmal angesehene Kartenkacheln ebenso. Ohne Netz startet
@@ -949,6 +965,63 @@ bleibt die Zeile leer, und das ist ehrlicher, als Namen zu erfinden.
   fertig, und mehr braucht es nicht. (`isStyleLoaded()` hilft dabei nicht: Es
   ist erst wahr, wenn auch die Quellen geladen sind, und wartet damit auf
   denselben Server.)
+
+### Römische Straßen statt Luftlinien
+
+Der Weg-Sucher steht in **`scripts/build-roads.mjs`**, das Ergebnis in
+`public/data/roads.json`, der Leser in `src/lib/roads.ts`, und
+`data/roads/README.md` sagt, woher die Straßen kommen.
+
+**Warum die Daten nicht hier liegen.** Wie `places.json` aus dem
+OpenBible-Datensatz entsteht, entsteht `roads.json` aus einem Straßennetz, das
+das Projekt nicht mitliefert:
+
+```
+ROADS=/pfad/zu/itinere_roads.geojson npm run roads
+```
+
+Empfohlen ist **Itiner-e** (de Soto u. a. 2025, *Scientific Data*), rund 15.000
+Straßenabschnitte des römischen Reiches unter **CC BY 4.0**. Die bekanntere
+Alternative – das Netz aus dem Barrington-Atlas (DARMC/AWMC und die davon
+abgeleiteten Ablagen) – steht unter **CC BY-NC**, und ein nicht-kommerzieller
+Datensatz gehört nicht in ein Projekt unter GPL-3.0: Er nähme denen, die diese
+Seite weiterverwenden, Rechte, die die Lizenz ihnen zusagt. `npm run
+check:roads` weist eine Wegdatei mit „NC" in der Lizenz deshalb ab.
+
+**Das Verfahren**, in sechs Schritten: Netz lesen und auf den Ausschnitt der
+Reisen beschneiden · **Knoten verschweißen** (zwei Enden unter dreißig Metern
+sind derselbe Knoten – ohne das zerfällt jedes solche Netz in Inseln, die sich
+nur fast berühren) · Stationen ans Netz anschließen (weiter als 15 km heißt:
+nicht angeschlossen) · **A\*** mit der Luftlinie als Schätzung · verwerfen, was
+länger ist als das Vierfache der Luftlinie · ausdünnen (Douglas-Peucker, 25 m)
+und als Polylinie kodieren (`src/lib/polyline.ts`).
+
+Was dabei herauskommt, ist je Etappe eine Zeichenkette – das **Netz selbst
+bleibt draußen**. Kein Browser soll zehntausend Straßensegmente laden, um
+fünfzehn Reisen zu zeigen; die Wegsuche läuft einmal beim Bauen.
+
+**Geprüft wird an einem erfundenen Netz.** `npm run check:roads` lässt den
+Sucher über `data/roads/pruefnetz.geojson` laufen – drei Linienzüge, von Hand
+gesetzt, mit einem Bogen nach Süden und einer Insel ohne Anschluss. An echten
+Daten wäre nichts davon zu prüfen: Ein Sucher, der Geraden zieht, sähe aus wie
+ein Datensatz ohne Kurven, und einer, der irrt, wie eine Straße, die eben so
+verlief. Am gesetzten Netz steht fest, was herauskommen muss – dass jede
+Etappe an ihren Stationen beginnt und endet, dass sie dem Bogen folgt und
+deshalb länger ist als die Luftlinie, und dass über die Insel **kein** Weg
+führt. Zwei Sicherungen hängen mit dran: Eine Wegdatei aus dem Prüfnetz darf
+nie in `public/data/` landen, und die Quelle einer echten muss auf der
+Nachweisseite stehen.
+
+**Was das Ergebnis nicht behauptet.** Das Netz ist römisch. Für die Wege Jesu
+und für die Mission ist das die richtige Zeit; für Abraham, den Auszug und die
+Landnahme liegt es tausend Jahre daneben, und die Oberfläche schreibt es
+daneben: Gezeigt wird die Trasse, nicht die Straße – Wege folgen dem Gelände,
+und das Gelände ist dasselbe geblieben.
+
+**Wo die Straßen (noch) nicht liegen:** auf der flachen Karte. Der Reisemodus
+und die Mission zeichnen weiter ihre Luftlinien, samt der Zeile, die das seit
+jeher sagt. Der Weg ist dort die Erzählung, nicht die Geographie; im Gelände
+ist es umgekehrt, und deshalb fängt es dort an.
 
 ### Kurzformen der Bibelbücher
 

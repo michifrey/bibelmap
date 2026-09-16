@@ -120,6 +120,17 @@ export const ROAD: RoadStop[] = [
     figure: { value: '2', label: { de: 'Sprachen vollständig', en: 'languages complete' } },
   },
   {
+    id: 'strassen',
+    tag: { de: 'offen · PRD § 4.84', en: 'open · PRD § 4.84' },
+    title: { de: 'Wege statt Luftlinien', en: 'Roads instead of straight lines' },
+    body: {
+      de: 'Die Wegsuche über ein antikes Straßennetz steht und ist geprüft; im Gelände folgt die Route dann der Trasse statt der Geraden. Was fehlt, ist ein Lauf mit dem Datensatz: Itiner-e (CC BY 4.0) ist aus der Entwicklungsumgebung gesperrt, und die leichter erreichbaren Netze stehen unter „nicht kommerziell" – die passen nicht in ein freies Projekt.',
+      en: 'The route-finder over an ancient road network is built and tested; in the terrain view a route then follows the old line instead of a straight one. What is missing is one run with the data: Itiner-e (CC BY 4.0) is blocked from the development environment, and the networks that are easier to reach are “non-commercial” – which does not fit a free project.',
+    },
+    status: 'planned',
+    figure: { value: '317', label: { de: 'Etappen warten darauf', en: 'legs waiting for it' } },
+  },
+  {
     id: 'bp',
     tag: { de: 'offen · PRD § 10', en: 'open · PRD § 10' },
     title: { de: 'Die letzten geratenen Adressen', en: 'The last guessed addresses' },

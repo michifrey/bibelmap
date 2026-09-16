@@ -29,7 +29,7 @@
 // ein verdrehtes Vorzeichen oder eine Konstante daneben fällt dort auf und
 // nicht erst als schiefer Horizont.
 
-import { type LatLon, bearing, distanceKm, pointAt } from './route';
+import { type LatLon, bearing, distanceKm, legDistances, pointAt } from './route';
 
 /** Umfang der Erde am Äquator in Metern – dieselbe Zahl, mit der Web Mercator rechnet. */
 export const EARTH_CIRCUMFERENCE_M = 40075016.686;
@@ -235,6 +235,77 @@ export function cumulativeKm(legs: number[]): number[] {
 /** Die Gesamtstrecke einer Route in Kilometern. */
 export function totalKm(cum: number[]): number {
   return cum[cum.length - 1] ?? 0;
+}
+
+/* --- Der Weg selbst ------------------------------------------------------ */
+
+/**
+ * Ein Weg, wie ihn das Gehen braucht: eine Punktkette, dazu die Stellen, an
+ * denen eine Station liegt.
+ *
+ * Bis hierher waren beide dasselbe – die Stationen *waren* der Weg, und
+ * zwischen zweien lag eine gerade Linie. Mit den römischen Straßen liegen
+ * zwischen zwei Stationen plötzlich hundert Stützpunkte, und die Station ist
+ * nur noch jeder hundertste davon. `stopAt` hält fest, welcher.
+ *
+ * Ohne Straßendaten ist `stopAt` genau `[0, 1, 2, …]`, und alles rechnet wie
+ * vorher. Das ist Absicht: Der Weg ohne Straßen ist kein Sonderfall, sondern
+ * derselbe Weg mit einem Stützpunkt je Station.
+ */
+export interface Weg {
+  /** Alle Stützpunkte, in der Reihenfolge des Gehens. */
+  points: LatLon[];
+  /** Wo in `points` die Stationen liegen – so lang wie die Stationsliste. */
+  stopAt: number[];
+  /** Je Etappe: folgt sie einer belegten Straße oder der Luftlinie? */
+  onRoad: boolean[];
+  /** Aufsummierte Kilometer über `points`. */
+  cum: number[];
+}
+
+/** Zwei Punkte gelten als derselbe, wenn sie keine zehn Meter trennen. */
+const SAME_M = 10;
+
+/**
+ * Stationen und – wo vorhanden – die Straße dazwischen zu einem Weg fügen.
+ *
+ * `legs[i]` ist der Verlauf von Station i zu Station i+1, einschließlich
+ * beider Enden; `null` heißt: für diese Etappe gibt es keinen Straßenverlauf,
+ * dort bleibt die Luftlinie.
+ */
+export function buildWeg(stops: LatLon[], legs?: (LatLon[] | null | undefined)[]): Weg {
+  const points: LatLon[] = [];
+  const stopAt: number[] = [];
+  const onRoad: boolean[] = [];
+  if (stops.length === 0) return { points, stopAt, onRoad, cum: [0] };
+
+  points.push(stops[0]);
+  stopAt.push(0);
+  for (let i = 1; i < stops.length; i++) {
+    const leg = legs?.[i - 1];
+    if (leg && leg.length > 1) {
+      // Der erste Punkt der Etappe ist die vorige Station – die steht schon da.
+      for (let k = 1; k < leg.length; k++) points.push(leg[k]);
+      // Der Weg muss an der Station enden, auch wenn der Verlauf kurz davor
+      // aufhört: Sonst läge die Station neben ihrem eigenen Weg.
+      if (distanceKm(points[points.length - 1], stops[i]) * 1000 > SAME_M) points.push(stops[i]);
+      onRoad.push(true);
+    } else {
+      points.push(stops[i]);
+      onRoad.push(false);
+    }
+    stopAt.push(points.length - 1);
+  }
+  return { points, stopAt, onRoad, cum: cumulativeKm(legDistances(points)) };
+}
+
+/** Die zuletzt erreichte Station an der Stelle `t` des Weges. */
+export function stopIndexAt(weg: Weg, t: number): number {
+  let i = 0;
+  // Ein Hauch Spielraum: `t` entsteht aus Kilometern, und die letzte Stelle
+  // hinter dem Komma soll nicht darüber entscheiden, ob man schon da ist.
+  while (i + 1 < weg.stopAt.length && weg.stopAt[i + 1] <= t + 1e-6) i++;
+  return i;
 }
 
 /**

@@ -2976,6 +2976,51 @@ Ein Datensatz römischer Straßen (DARE, AWMC, Itiner-e) würde daraus den Weg
 machen, den jemand wirklich gegangen ist – das ist die nächste Stufe und ein
 eigener Datenschritt.
 
+### 4.84 Römische Straßen statt Luftlinien — P2 ✅ *(Maschinerie; Datensatz offen)*
+
+**Anlass:** § 4.83 endete mit dem offenen Punkt – die Wege sind Luftlinien.
+„Die tatsächlichen Wege waren länger" steht seit v0.4 unter jeder Entfernung.
+Ein antikes Straßennetz macht daraus den Weg, den jemand wirklich ging.
+
+**Gebaut ist die Maschinerie, nicht der Datensatz.** `scripts/build-roads.mjs`
+liest ein Straßennetz als GeoJSON, verschweißt seine Knoten, schließt jede
+Station an, sucht mit A\* den Weg und legt je Etappe eine kodierte Punktkette
+in `public/data/roads.json`. Die App liest sie, wenn es sie gibt (`lib/roads.ts`),
+und zeigt sonst wie bisher Luftlinien – kein Sonderfall, kein Fehlerpfad.
+
+**Warum der Datensatz fehlt.** Frei lizenziert und passend ist **Itiner-e**
+(CC BY 4.0, de Soto u. a. 2025). Aus dieser Entwicklungsumgebung sind
+`itiner-e.org` und `zenodo.org` gesperrt; erreichbar war nur GitHub. Was dort
+liegt – DARMC, AWMC und ihre Ableger –, steht unter **CC BY-NC**, und ein
+nicht-kommerzieller Datensatz gehört nicht in ein GPL-Projekt. Also: die
+Maschinerie steht, der eine Lauf mit Netz fehlt. Derselbe Fall wie
+`check:bp` in § 10.
+
+**Akzeptanzkriterien**
+- [x] `npm run roads` erzeugt aus einem beliebigen Linien-GeoJSON die Wegdatei;
+      Herkunft und Lizenz werden mitgegeben und stehen in der Datei.
+- [x] Die Geländeroute und das Gehen folgen dem Weg; das Feld nennt „auf der
+      Straße" oder „Luftlinie" und die Strecke im Vergleich („331 km statt 282
+      km Luftlinie").
+- [x] Die Quelle steht **unter der Karte** – CC-BY verlangt die Nennung dort,
+      wo das Material zu sehen ist, nicht nur auf der Nachweisseite.
+- [x] Seewege, Etappen ohne Anschluss und Umwege über das Vierfache der
+      Luftlinie behalten ihre gerade Linie.
+- [x] Reisen vor römischer Zeit tragen den Hinweis, dass das Netz jünger ist
+      als ihre Geschichte – gezeigt wird die Trasse, nicht die Straße.
+- [x] `npm run check:roads` misst den Sucher an einem **erfundenen** Netz
+      (`data/roads/pruefnetz.geojson`): Anfang und Ende an den Stationen, dem
+      Bogen gefolgt statt die Gerade gezogen, keine Verbindung über die Insel
+      ohne Anschluss, Kodierung verlustfrei. Gegenprobe mit einer um einen
+      Kilometer verschobenen Etappe schlägt an.
+- [x] Zwei Sicherungen: Eine Wegdatei aus dem Prüfnetz darf nicht in
+      `public/data/` stehen, und eine Lizenz mit „NC" wird abgewiesen.
+- [ ] **Offen:** ein Lauf mit dem Itiner-e-Datensatz und die Zeile dazu auf der
+      Nachweisseite (`attribution.ts`), die `check:roads` dann einfordert.
+
+**Nicht dabei:** die flache Karte. Reisemodus und Mission zeichnen weiter
+Luftlinien – dort ist der Weg die Erzählung, im Gelände die Geographie.
+
 `src/data/roadmap.ts` – wer hier eine Zeile ergänzt, ergänzt sie dort mit.
 
 ---

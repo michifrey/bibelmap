@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import type { Lang } from '../i18n';
 import { useT } from '../i18n';
 import type { TerrainRoute } from '../lib/terrainRoute';
+import type { RoadsData } from '../lib/roads';
 import { compass, formatKm, isShortWalk, walkingDays } from '../lib/route';
 import { readableOnDark } from '../lib/contrast';
 
@@ -18,6 +19,10 @@ interface Props {
   /** Kopfdrehung gegenüber dem Kurs, in Grad. */
   look: number;
   playing: boolean;
+  /** Folgt die Etappe, auf der man steht, einer belegten Straße? */
+  onRoad: boolean;
+  /** Was die Straßendatei über diese Reise sagt – fehlt sie, fehlt auch das. */
+  roads: RoadsData['wege'][string] | null;
   /** Kilometer je Sekunde – das Tempo des Bildes, nicht das eines Menschen. */
   speed: number;
   onPlay: () => void;
@@ -53,6 +58,8 @@ export default function WalkPanel({
   heading,
   look,
   playing,
+  onRoad,
+  roads,
   speed,
   onPlay,
   onStep,
@@ -140,6 +147,30 @@ export default function WalkPanel({
           style={{ width: `${totalKm > 0 ? Math.min(100, (km / totalKm) * 100) : 0}%`, background: route.color }}
         />
       </div>
+
+      {/*
+        Woraus der Weg unter den Füßen besteht. Die Zeile steht nur da, wenn es
+        Straßendaten gibt – ohne sie ist alles Luftlinie, und das steht seit
+        jeher im Reisemodus.
+      */}
+      {roads && (
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px]">
+          <span
+            className={`px-1.5 py-0.5 font-bold ${onRoad ? 'bg-gold text-deep' : 'bg-white/10 text-white/55'}`}
+          >
+            {onRoad ? t('walkOnRoad') : t('walkAsCrow')}
+          </span>
+          <span className="text-white/55">
+            <span className="bm-num text-white/80">{formatKm(roads.km, lang)}</span> {t('walkInsteadOf')}{' '}
+            {formatKm(roads.luftKm, lang)} {t('walkAirline')}
+          </span>
+          {!roads.roemisch && (
+            <span className="text-white/45" title={t('walkRoadsLaterNote')}>
+              · {t('walkRoadsLater')}
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Begegnungen: die Menschen dieser Station. */}
       {people.length > 0 && (

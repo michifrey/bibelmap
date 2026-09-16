@@ -146,6 +146,15 @@ const STRINGS: Dict = {
   walkSpeed: { de: 'Tempo', en: 'Pace' },
   walkLookLeft: { de: 'Blick nach links', en: 'Look left' },
   walkLookRight: { de: 'Blick nach rechts', en: 'Look right' },
+  walkOnRoad: { de: 'Auf der Straße', en: 'On the road' },
+  walkAsCrow: { de: 'Luftlinie', en: 'As the crow flies' },
+  walkInsteadOf: { de: 'statt', en: 'instead of' },
+  walkAirline: { de: 'Luftlinie', en: 'straight line' },
+  walkRoadsLater: { de: 'Straßen jünger als die Geschichte', en: 'roads younger than the story' },
+  walkRoadsLaterNote: {
+    de: 'Das Straßennetz ist römisch und damit jünger als diese Reise – oft um tausend Jahre. Was es zeigt, ist die Trasse: Wege folgen dem Gelände, und das Gelände ist dasselbe geblieben. Als Beleg für den Weg, den hier jemand ging, taugt es nicht.',
+    en: 'The road network is Roman and so younger than this journey – often by a thousand years. What it shows is the line of the route: roads follow the terrain, and the terrain has not changed. As evidence for the road someone walked here, it is worth nothing.',
+  },
   walkNote: {
     de: 'Gemessen ist das Gelände: Höhen aus SRTM, Überhöhung 1×. Alles andere fehlt mit Absicht – wie Dörfer, Wege und Bewuchs damals aussahen, weiß niemand, und die Kachel von heute zeigt die Straßen von heute.',
     en: 'What is measured here is the ground: SRTM elevations, no exaggeration. Everything else is left out on purpose – nobody knows what villages, roads and vegetation looked like then, and today’s imagery shows today’s roads.',

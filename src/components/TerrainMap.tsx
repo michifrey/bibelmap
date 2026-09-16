@@ -7,16 +7,19 @@ import { useT } from '../i18n';
 import { useReducedMotion } from '../lib/motion';
 import { attr } from '../lib/mapAttribution';
 import type { TerrainRoute } from '../lib/terrainRoute';
-import { type LatLon, legDistances, pointAt } from '../lib/route';
+import { type LatLon, pointAt } from '../lib/route';
 import {
+  buildWeg,
   cameraToCenterPixels,
-  cumulativeKm,
   eyeCamera,
   headingAt,
   kmAtT,
+  stopIndexAt,
   tAtKm,
   totalKm as summeKm,
+  type Weg,
 } from '../lib/walk';
+import { type RoadSource, type RoadsData, legsFor, loadRoads, roadRoute } from '../lib/roads';
 import WalkPanel, { SPEEDS } from './WalkPanel';
 import {
   BASEMAPS,
@@ -152,11 +155,23 @@ const HANDLERS = [
  * verloren – die Grundkarte beim Kachelwechsel, die Höhen beim Sprachwechsel.
  * Eine Stelle, ein Aufruf, kein Auseinanderlaufen.
  */
-function nennungen(id: BasemapId, lang: Lang): string[] {
-  return [
+function nennungen(id: BasemapId, lang: Lang, roads?: RoadSource | null): string[] {
+  const zeilen = [
     attr(BASEMAPS[id]?.attribution ?? BASEMAPS[DEFAULT_BASEMAP].attribution, lang),
     attr(DEM_ATTR, lang),
   ];
+  /*
+   * Die Straßen sind die dritte fremde Quelle in diesem Bild, und die einzige,
+   * deren Name erst zur Laufzeit feststeht: Welcher Datensatz in `roads.json`
+   * steckt, entscheidet der, der ihn gebaut hat. CC-BY verlangt die Nennung an
+   * der Stelle, an der das Material zu sehen ist – also hier und nicht nur auf
+   * der Nachweisseite.
+   */
+  if (roads) {
+    const wer = roads.url ? `<a href="${roads.url}">${roads.name}</a>` : roads.name;
+    zeilen.push(`${lang === 'de' ? 'Straßen' : 'Roads'}: ${wer} (${roads.license})`);
+  }
+  return zeilen;
 }
 
 /** Was aus der hellen Kachel eine dunkle macht – oder nichts, bei allen anderen. */
@@ -194,8 +209,15 @@ function toGeoJSON(places: Place[], newIds: Set<string> | null | undefined) {
   };
 }
 
-/** Die Route als Linie, die Stationen als nummerierte Punkte. */
-function journeyGeoJSON(j: TerrainRoute | null | undefined) {
+/**
+ * Die Route als Linie, die Stationen als nummerierte Punkte.
+ *
+ * Die Linie folgt dem Weg, nicht der Stationskette: Liegen Straßendaten vor,
+ * sind das die Kurven der antiken Trasse, sonst wie bisher die Luftlinie
+ * zwischen den Stationen. `weg.points` ist im zweiten Fall genau diese Kette.
+ */
+function journeyGeoJSON(j: TerrainRoute | null | undefined, weg?: Weg) {
+  const punkte = weg?.points.length ? weg.points : (j?.stops ?? []).map((s) => [s.lat, s.lon] as LatLon);
   const line = {
     type: 'FeatureCollection' as const,
     features: j
@@ -204,7 +226,7 @@ function journeyGeoJSON(j: TerrainRoute | null | undefined) {
             type: 'Feature' as const,
             geometry: {
               type: 'LineString' as const,
-              coordinates: j.stops.map((s) => [s.lon, s.lat]),
+              coordinates: punkte.map(([lat, lon]) => [lon, lat]),
             },
             properties: {},
           },
@@ -321,13 +343,39 @@ export default function TerrainMap({
     return () => onWalkingRef.current?.(false);
   }, [walking]);
 
-  /** Die Route als reine Punktkette – Grundlage aller Rechnung zum Weg. */
-  const points = useMemo<LatLon[]>(() => (route?.stops ?? []).map((s) => [s.lat, s.lon]), [route]);
-  /** Aufsummierte Etappen; das Gehen zählt in Kilometern, nicht in Stationen. */
-  const cum = useMemo(() => cumulativeKm(legDistances(points)), [points]);
+  /*
+   * Die Straßen. Sie kommen als eigene Datei und nur, wenn es eine Route gibt –
+   * und sie dürfen fehlen: Ohne sie ist der Weg die Kette der Stationen, wie
+   * seit jeher. Deshalb steht hier auch kein Fehlerpfad; `loadRoads()` gibt in
+   * dem Fall `null` zurück.
+   */
+  const [roads, setRoads] = useState<RoadsData | null>(null);
+  useEffect(() => {
+    if (!route) return;
+    let aktuell = true;
+    void loadRoads().then((d) => {
+      if (aktuell && d) setRoads(d);
+    });
+    return () => {
+      aktuell = false;
+    };
+  }, [route]);
+
+  /** Der Weg: Stationen, dazwischen die Straße, wo es eine gibt. */
+  const weg = useMemo<Weg>(() => {
+    const stops = (route?.stops ?? []).map((s) => [s.lat, s.lon] as LatLon);
+    return buildWeg(stops, (route ? legsFor(roads, route.id) : null) ?? undefined);
+  }, [route, roads]);
+  /** Was die Datei über diese Reise sagt – Länge, Luftlinie, Zeit. */
+  const roadInfo = route ? roadRoute(roads, route.id) : null;
+
+  const points = weg.points;
+  const cum = weg.cum;
   const gesamt = summeKm(cum);
-  const stopIndex = Math.max(0, Math.min(points.length - 1, Math.floor(tAtKm(cum, km))));
+  const stopIndex = stopIndexAt(weg, tAtKm(cum, km));
   const heading = headingAt(points, tAtKm(cum, km));
+  /** Folgt die Etappe, auf der man gerade geht, einer Straße? */
+  const aufStrasse = weg.onRoad[Math.min(weg.onRoad.length - 1, stopIndex)] ?? false;
 
   /** Auf eine Stelle des Weges setzen – aus dem Feld heraus oder beim Start. */
   function goToKm(next: number) {
@@ -338,7 +386,7 @@ export default function TerrainMap({
 
   function startWalk() {
     // Wer sich vorher durch die Stationen geklickt hat, geht dort weiter.
-    goToKm(stop === null ? 0 : kmAtT(cum, stop));
+    goToKm(stop === null ? 0 : kmAtStop(stop));
     setLook(0);
     // Bei reduzierter Bewegung läuft nichts von selbst los: dann ist das
     // Gehen ein Schritt von Station zu Station, und den macht die Hand.
@@ -346,12 +394,18 @@ export default function TerrainMap({
     setWalking(true);
   }
 
+  /** Die Kilometer, an denen eine Station liegt. */
+  function kmAtStop(i: number) {
+    const clamped = Math.max(0, Math.min(weg.stopAt.length - 1, i));
+    return kmAtT(cum, weg.stopAt[clamped]);
+  }
+
   /** Eine Station weiter oder zurück – mitten auf der Etappe erst an ihren Anfang. */
   function walkStep(delta: number) {
-    if (delta < 0 && km > cum[stopIndex] + 0.05) {
-      goToKm(cum[stopIndex]);
+    if (delta < 0 && km > kmAtStop(stopIndex) + 0.05) {
+      goToKm(kmAtStop(stopIndex));
     } else {
-      goToKm(cum[Math.max(0, Math.min(points.length - 1, stopIndex + delta))]);
+      goToKm(kmAtStop(stopIndex + delta));
     }
     setLook(0);
   }
@@ -597,7 +651,7 @@ export default function TerrainMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !ready) return;
-    const { line, stops } = journeyGeoJSON(route);
+    const { line, stops } = journeyGeoJSON(route, weg);
     (map.getSource('route') as maplibregl.GeoJSONSource | undefined)?.setData(line);
     (map.getSource('routeStops') as maplibregl.GeoJSONSource | undefined)?.setData(stops);
     // Die Route trägt ihre eigene Farbe – die Epoche bei den Bibelreisen, die
@@ -621,7 +675,7 @@ export default function TerrainMap({
       maxZoom: 9,
       duration: reduced ? 0 : 1400,
     });
-  }, [route, ready, reduced]);
+  }, [route, weg, ready, reduced]);
 
   // Eine neue Route beginnt ohne gewählte Station – die alte Nummer gehörte
   // zu einem anderen Weg, und der zurückgelegte Weg ebenso.
@@ -674,7 +728,7 @@ export default function TerrainMap({
     if (nennungRef.current) map.removeControl(nennungRef.current);
     nennungRef.current = new maplibregl.AttributionControl({
       compact: true,
-      customAttribution: nennungen(basemap, lang),
+      customAttribution: nennungen(basemap, lang, roads?.quelle),
     });
     map.addControl(nennungRef.current, 'bottom-left');
     // Umkehren ist ein Regler, kein Zustand: ohne Zurückstellen zeigte der
@@ -683,7 +737,10 @@ export default function TerrainMap({
     for (const [k, v] of Object.entries(paint)) {
       map.setPaintProperty('base', k as 'raster-saturation', v);
     }
-  }, [basemap, lang, ready]);
+    // `roads` steht mit in der Liste: Die Datei kommt erst nach dem Aufbau,
+    // und ihre Nennung muss mit ihr kommen – CC-BY verlangt sie dort, wo das
+    // Material zu sehen ist.
+  }, [basemap, lang, ready, roads]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -902,6 +959,8 @@ export default function TerrainMap({
             heading={heading}
             look={look}
             playing={playing}
+            onRoad={aufStrasse}
+            roads={roadInfo}
             speed={speed}
             onPlay={() => setPlaying((p) => !p)}
             onStep={walkStep}
