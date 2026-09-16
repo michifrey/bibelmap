@@ -40,7 +40,7 @@ import { fileURLToPath } from 'node:url';
 import { routen } from './lib/routen.mjs';
 import { decodePolyline, encodePolyline } from '../src/lib/polyline.ts';
 import { distanceKm } from '../src/lib/route.ts';
-import { buildWeg, kmAtT, stopIndexAt, cumulativeKm } from '../src/lib/walk.ts';
+import { buildWeg, kmAtT, legKm, stopIndexAt, tForStation, cumulativeKm } from '../src/lib/walk.ts';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const gegenprobe = process.argv.includes('--gegenprobe');
@@ -236,6 +236,38 @@ for (const [id, weg] of Object.entries(daten.wege)) {
       fehler.push(`stopIndexAt: bei km ${km.toFixed(1)} steht das Gehen auf Station ${stopIndexAt(weg, t)} statt ${i}.`);
     }
   }
+  /*
+   * Das Stationsmaß der flachen Karte. Dort zählt die abgespielte Route in
+   * Stationen: 0,5 heißt „auf halber Strecke". Umgerechnet wird über die
+   * Strecke, nicht über die Zahl der Stützpunkte – sonst liefe der Reisende
+   * in den Kurven langsamer als auf der Geraden, und zwar sichtbar.
+   */
+  for (let i = 0; i < stops.length; i++) {
+    if (Math.abs(tForStation(weg, i) - weg.stopAt[i]) > 1e-6) {
+      fehler.push(`tForStation: Station ${i} liegt auf ${tForStation(weg, i)} statt auf ${weg.stopAt[i]}.`);
+    }
+  }
+  const halb = kmAtT(weg.cum, tForStation(weg, 0.5));
+  const erwartetHalb = (kmAtT(weg.cum, weg.stopAt[0]) + kmAtT(weg.cum, weg.stopAt[1])) / 2;
+  if (Math.abs(halb - erwartetHalb) > 0.01) {
+    fehler.push(`tForStation: die halbe erste Etappe liegt bei ${halb.toFixed(2)} km statt bei ${erwartetHalb.toFixed(2)} km.`);
+  }
+  let vorher = -1;
+  for (let s10 = 0; s10 <= 20; s10++) {
+    const t = tForStation(weg, s10 / 10);
+    if (t < vorher) fehler.push('tForStation: das Wegmaß läuft rückwärts.');
+    vorher = t;
+  }
+
+  // Die Etappe über die Straße ist länger als die Luftlinie, die ohne genau sie.
+  const luft0 = distanceKm(stops[0], stops[1]);
+  if (!(legKm(weg, 0) > luft0)) {
+    fehler.push(`legKm: die Etappe über die Straße misst ${legKm(weg, 0).toFixed(2)} km, die Luftlinie ${luft0.toFixed(2)} km.`);
+  }
+  if (Math.abs(legKm(weg, 1) - distanceKm(stops[1], stops[2])) > 1e-9) {
+    fehler.push('legKm: eine Etappe ohne Straße weicht von der Luftlinie ab.');
+  }
+
   // Ohne Straßen ist der Weg die Stationskette – und nichts anderes.
   const ohne = buildWeg(stops);
   if (JSON.stringify(ohne.stopAt) !== '[0,1,2]') {

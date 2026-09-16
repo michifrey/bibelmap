@@ -17,7 +17,9 @@ import {
 } from '../data/mission';
 import MissionMap, { type MissionMarker, type MissionRoute } from './MissionMap';
 import RouteMap from './RouteMap';
-import { formatKm, legDistances, type LatLon } from '../lib/route';
+import { formatKm, type LatLon } from '../lib/route';
+import { useRoadLegs } from '../lib/roads';
+import { buildWeg, legKm } from '../lib/walk';
 import ShareLink from './ShareLink';
 import { readableOnDark } from '../lib/contrast';
 
@@ -193,10 +195,17 @@ export default function Mission({
       })),
     [journeyId],
   );
-  const journeyLegs = useMemo(
-    () => legDistances(journey.stops.map((st) => [st.lat, st.lon] as LatLon)),
-    [journey],
+  /*
+   * Der Weg über die Straßen, wo einer belegt ist – dieselbe Rechnung wie im
+   * Reisemodus. Ohne Straßendatei ist der Weg die Stationskette, und `legKm`
+   * liefert Zahl für Zahl dasselbe wie vorher `legDistances`.
+   */
+  const { legs: strassen, quelle: roadQuelle } = useRoadLegs(isJourneys ? journeyId : null);
+  const weg = useMemo(
+    () => buildWeg(journey.stops.map((st) => [st.lat, st.lon] as LatLon), strassen ?? undefined),
+    [journey, strassen],
   );
+  const journeyLegs = useMemo(() => journey.stops.slice(1).map((_, i) => legKm(weg, i)), [journey, weg]);
 
   // Beim Wechsel von Phase oder Reise den Ausschnitt neu setzen
   // Die Auswahl fällt nur, wenn Phase oder Reise sich wirklich ändern – ein
@@ -383,6 +392,7 @@ export default function Mission({
               placeById={placeById}
               onShowPlace={onShowPlace}
               legs={journeyLegs}
+              onRoad={weg.onRoad}
             />
           ) : (
             <EventList
@@ -404,6 +414,8 @@ export default function Mission({
               key={journeyId}
               stops={journeyStops}
               color={journey.color}
+              legs={strassen}
+              roadSource={roadQuelle}
               context={otherJourneys}
               activeIndex={activeIndex}
               playing={playing}
@@ -482,6 +494,7 @@ function JourneyList({
   placeById,
   onShowPlace,
   legs,
+  onRoad,
 }: {
   journey: MissionJourney;
   journeyId: string;
@@ -491,6 +504,8 @@ function JourneyList({
   onSelect: (key: string) => void;
   placeById: Map<string, Place>;
   onShowPlace: (p: Place) => void;
+  /** Je Etappe: folgt die Strecke einer belegten Straße? Ohne Straßendatei leer. */
+  onRoad?: boolean[];
   legs: number[];
 }) {
   const t = useT();
@@ -539,7 +554,13 @@ function JourneyList({
           return (
             <li key={key} data-item={key}>
               {i > 0 && legs[i - 1] !== undefined && (
-                <div className="py-0.5 pl-10 text-[11px] text-white/35">↓ {formatKm(legs[i - 1], lang)}</div>
+                <div
+                  className="py-0.5 pl-10 text-[11px] text-white/35"
+                  title={onRoad ? t('roadsNote') : t('distanceNote')}
+                >
+                  ↓ {formatKm(legs[i - 1], lang)}
+                  {onRoad?.[i - 1] && <span className="text-gold"> · {t('roadsOnRoad')}</span>}
+                </div>
               )}
               <button
                 onClick={() => onSelect(key)}

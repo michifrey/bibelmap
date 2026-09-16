@@ -299,6 +299,41 @@ export function buildWeg(stops: LatLon[], legs?: (LatLon[] | null | undefined)[]
   return { points, stopAt, onRoad, cum: cumulativeKm(legDistances(points)) };
 }
 
+/**
+ * Kilometer einer Etappe: von Station `i` zur nächsten.
+ *
+ * Über die Straße sind das mehr als über die Luftlinie – und genau das ist die
+ * Aussage. Ohne Straßendaten kommt dieselbe Zahl heraus wie bisher aus
+ * `legDistances()`, weil der Weg dann die Stationskette ist.
+ */
+export function legKm(weg: Weg, i: number): number {
+  const a = weg.stopAt[i];
+  const b = weg.stopAt[i + 1];
+  if (a === undefined || b === undefined) return 0;
+  return kmAtT(weg.cum, b) - kmAtT(weg.cum, a);
+}
+
+/**
+ * Stationsmaß → Wegmaß.
+ *
+ * Die abgespielte Route auf der flachen Karte zählt in Stationen: 2,5 heißt
+ * „auf halber Strecke zwischen der dritten und der vierten". Der Weg zählt in
+ * Stützpunkten, und zwischen zwei Stationen können hundert liegen. Umgerechnet
+ * wird über die **Strecke**, nicht über die Zahl der Punkte – sonst liefe der
+ * Reisende dort schnell, wo die Straße gerade ist, und langsam in den Kurven.
+ */
+export function tForStation(weg: Weg, s: number): number {
+  const max = weg.stopAt.length - 1;
+  if (max < 0) return 0;
+  const clamped = Math.max(0, Math.min(max, s));
+  const i = Math.floor(clamped);
+  const f = clamped - i;
+  const vonKm = kmAtT(weg.cum, weg.stopAt[i]);
+  if (f <= 0 || i >= max) return tAtKm(weg.cum, vonKm);
+  const bisKm = kmAtT(weg.cum, weg.stopAt[i + 1]);
+  return tAtKm(weg.cum, vonKm + (bisKm - vonKm) * f);
+}
+
 /** Die zuletzt erreichte Station an der Stelle `t` des Weges. */
 export function stopIndexAt(weg: Weg, t: number): number {
   let i = 0;

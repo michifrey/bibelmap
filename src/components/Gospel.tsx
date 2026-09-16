@@ -30,6 +30,7 @@ import MissionMap, { type MissionMarker } from './MissionMap';
 import RouteMap from './RouteMap';
 import ShareLink from './ShareLink';
 import { readableOnDark } from '../lib/contrast';
+import { useRoadLegs } from '../lib/roads';
 
 interface Props {
   places: Place[];
@@ -110,6 +111,13 @@ export default function Gospel({
     () => items.map((s) => ({ lat: s.lat, lon: s.lon, label: lang === 'de' ? s.de : s.en })),
     [items, lang],
   );
+
+  /*
+   * Der Straßenverlauf des Akts – dieselbe Kennung wie im Gelände
+   * (`jesus-<akt>`). Nur für einen Akt: Die Auftritte eines Menschen springen
+   * quer durch die Jahre, und ein Weg wäre das nicht.
+   */
+  const { legs: strassen, quelle: roadQuelle } = useRoadLegs(person ? null : `jesus-${actId}`);
 
   /** Die übrigen Akte blass im Hintergrund – man sieht, wo man gerade ist. */
   const context = useMemo(
@@ -460,6 +468,8 @@ export default function Gospel({
               key={actId}
               stops={stops}
               color={act.color}
+              legs={strassen}
+              roadSource={roadQuelle}
               context={context}
               activeIndex={activeIndex}
               playing={playing}

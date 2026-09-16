@@ -1,14 +1,15 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import L from 'leaflet';
 import '../lib/mapStyles';
 import { localizeMap } from '../lib/mapLocale';
 import { watchTiles } from '../lib/tileNotice';
-import { attr, ROUTEN_ATTR } from '../lib/mapAttribution';
+import { routenAttr } from '../lib/mapAttribution';
 import { addBasemap } from '../lib/basemapLayer';
 import { useLang } from '../i18n';
 import { enableMarkerKeyboard, markVectorsDecorative } from '../lib/mapKeyboard';
 import { flyOptions, useReducedMotion } from '../lib/motion';
 import { pointAt, traveled, type LatLon } from '../lib/route';
+import { buildWeg, tForStation, type Weg } from '../lib/walk';
 
 export interface RouteStop {
   lat: number;
@@ -19,6 +20,13 @@ export interface RouteStop {
 interface Props {
   stops: RouteStop[];
   color: string;
+  /**
+   * Der Verlauf je Etappe, wo einer belegt ist – aus `useRoadLegs()`. Fehlt er,
+   * ist der Weg die Kette der Stationen, wie bisher: gerade Linien.
+   */
+  legs?: ((LatLon[] | null)[]) | null;
+  /** Woher die Straßen kommen – die Zeile unter der Karte nennt sie. */
+  roadSource?: { name: string; url?: string; license: string } | null;
   /** Weitere Routen, blass im Hintergrund – zeigt, wo diese Reise liegt. */
   context?: { points: LatLon[]; color: string }[];
   /** Station, auf der die Erzählung steht. */
@@ -59,6 +67,8 @@ function stopIcon(i: number, active: boolean, color: string): L.DivIcon {
 export default function RouteMap({
   stops,
   color,
+  legs,
+  roadSource,
   context,
   activeIndex,
   playing,
@@ -84,7 +94,18 @@ export default function RouteMap({
   const cb = useRef({ onArrive, onFinish, onSelect });
   cb.current = { onArrive, onFinish, onSelect };
 
-  const points: LatLon[] = stops.map((s) => [s.lat, s.lon]);
+  /**
+   * Der Weg, auf dem hier alles läuft: Stationen, und dazwischen die Straße,
+   * wo es eine gibt. Ohne Straßendaten ist `weg.points` genau die Kette der
+   * Stationen – dann rechnet und zeichnet diese Karte wie seit jeher.
+   */
+  const weg = useMemo<Weg>(
+    () => buildWeg(stops.map((s) => [s.lat, s.lon] as LatLon), legs ?? undefined),
+    [stops, legs],
+  );
+  const points = weg.points;
+  /** Die Stationen selbst – für Marker, Ausschnitt und das Stationsmaß. */
+  const stationen = useMemo<LatLon[]>(() => stops.map((s) => [s.lat, s.lon]), [stops]);
 
   useEffect(() => {
     if (!el.current || mapRef.current) return;
@@ -110,8 +131,11 @@ export default function RouteMap({
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
-    return localizeMap(map, lang, attr(ROUTEN_ATTR, lang));
-  }, [lang]);
+    // Die Zeile wechselt mit der Sprache – und mit der Frage, ob diese Route
+    // einem belegten Straßenverlauf folgt: Dann steht dort, wessen Daten das
+    // sind, und dass die übrigen Etappen Luftlinien bleiben.
+    return localizeMap(map, lang, routenAttr(lang, roadSource));
+  }, [lang, roadSource]);
 
   /** Strecke, Punkte und Reisender neu aufbauen (andere Reise gewählt). */
   useEffect(() => {
@@ -174,7 +198,7 @@ export default function RouteMap({
     markVectorsDecorative(map.getContainer());
     map.flyToBounds(L.latLngBounds(points).pad(0.25), flyOptions({ duration: 0.8, maxZoom: 9 }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stops, color, context]);
+  }, [stops, weg, color, context]);
 
   /** Stand der Erzählung zeichnen (Klick auf eine Station, Reise gewechselt). */
   useEffect(() => {
@@ -184,19 +208,27 @@ export default function RouteMap({
     // Den Überblick über die ganze Route stehen lassen und nur nachführen, wenn
     // die Station aus dem Bild läuft – sonst springt die Karte bei jedem Klick.
     const map = mapRef.current;
-    const p = points[activeIndex];
+    // Der Blick folgt der **Station**, nicht dem nächsten Stützpunkt des Weges.
+    const p = stationen[activeIndex];
     if (map && p && !map.getBounds().pad(-0.15).contains(p)) {
       map.panTo(p, flyOptions({ animate: true, duration: 0.7 }));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex, playing, stops]);
 
+  /**
+   * `t` zählt in **Stationen** – so kommt es aus der Erzählung und aus dem
+   * Abspielen. Gezeichnet wird auf dem Weg, und der hat zwischen zwei
+   * Stationen mehr Punkte als einen. `tForStation` rechnet um, und zwar über
+   * die Strecke: Der Reisende soll in den Kurven nicht langsamer werden.
+   */
   function draw(t: number) {
     const trail = trailRef.current;
     const traveller = travellerRef.current;
     if (!trail || !traveller || points.length === 0) return;
-    trail.setLatLngs(traveled(points, t));
-    traveller.setLatLng(pointAt(points, t));
+    const tWeg = tForStation(weg, t);
+    trail.setLatLngs(traveled(points, tWeg));
+    traveller.setLatLng(pointAt(points, tWeg));
     const at = Math.round(t);
     markersRef.current.forEach((m, i) => m.setIcon(stopIcon(i, i === at && Math.abs(t - at) < 0.02, color)));
   }
@@ -207,11 +239,11 @@ export default function RouteMap({
    * die Stationen wechseln im Takt der Lesepause.
    */
   useEffect(() => {
-    if (!playing || points.length < 2) return;
+    if (!playing || stationen.length < 2) return;
     if (reduced) {
       const id = window.setInterval(() => {
         const next = Math.floor(tRef.current) + 1;
-        if (next > points.length - 1) {
+        if (next > stationen.length - 1) {
           cb.current.onFinish();
           window.clearInterval(id);
           return;
@@ -227,7 +259,7 @@ export default function RouteMap({
     let last = performance.now();
     let dwellUntil = 0;
     let arrived = Math.floor(tRef.current);
-    if (tRef.current >= points.length - 1) {
+    if (tRef.current >= stationen.length - 1) {
       tRef.current = 0;
       arrived = 0;
       cb.current.onArrive(0);
@@ -237,7 +269,7 @@ export default function RouteMap({
       const dt = Math.min((ts - last) / 1000, 0.1);
       last = ts;
       if (ts >= dwellUntil) {
-        tRef.current = Math.min(points.length - 1, tRef.current + dt / legSeconds);
+        tRef.current = Math.min(stationen.length - 1, tRef.current + dt / legSeconds);
         const next = Math.floor(tRef.current + 0.0001);
         if (next > arrived) {
           arrived = next;
@@ -248,12 +280,12 @@ export default function RouteMap({
       }
       draw(tRef.current);
 
-      const p = pointAt(points, tRef.current);
+      const p = pointAt(points, tForStation(weg, tRef.current));
       if (map && !map.getBounds().pad(-0.2).contains(p)) {
         map.panTo(p, flyOptions({ animate: true, duration: 0.7 }));
       }
 
-      if (tRef.current >= points.length - 1 && ts >= dwellUntil) {
+      if (tRef.current >= stationen.length - 1 && ts >= dwellUntil) {
         cb.current.onFinish();
         return;
       }
@@ -262,7 +294,7 @@ export default function RouteMap({
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playing, stops, legSeconds, dwellMs, reduced]);
+  }, [playing, stops, weg, legSeconds, dwellMs, reduced]);
 
   return <div ref={el} className="absolute inset-0 h-full w-full" />;
 }

@@ -532,6 +532,11 @@ const STRINGS: Dict = {
     de: 'Entfernungen sind Luftlinien zwischen den Orten; die tatsächlichen Wege waren länger. Tagesmärsche gerechnet mit rund 25 km am Tag – eine Größenordnung, kein Fahrplan. Unter 8 km steht ein Gang, kein Tagesmarsch.',
     en: 'Distances are straight lines between places; the actual roads were longer. Days on foot reckoned at about 25 km a day – an order of magnitude, not a timetable. Under 8 km it says a walk, not a day on foot.',
   },
+  roadsNote: {
+    de: 'Wo ein antiker Straßenverlauf belegt ist, ist die Strecke an ihm gemessen und die Linie folgt ihm; sonst bleibt es die Luftlinie, und der tatsächliche Weg war länger. Das Netz ist römisch – bei älteren Reisen zeigt es die Trasse, nicht die Straße. Tagesmärsche gerechnet mit rund 25 km am Tag.',
+    en: 'Where an ancient road is attested, the distance is measured along it and the line follows it; otherwise it stays a straight line, and the actual way was longer. The network is Roman – for older journeys it shows the line of the route, not the road itself. Days on foot reckoned at about 25 km a day.',
+  },
+  roadsOnRoad: { de: 'auf der Straße', en: 'on the road' },
   dayWalk: { de: 'Tagesmarsch', en: 'day on foot' },
   shortWalk: { de: 'ein Gang zu Fuß', en: 'a short walk' },
   dayWalks: { de: 'Tagesmärsche', en: 'days on foot' },

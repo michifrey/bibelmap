@@ -3018,8 +3018,20 @@ Maschinerie steht, der eine Lauf mit Netz fehlt. Derselbe Fall wie
 - [ ] **Offen:** ein Lauf mit dem Itiner-e-Datensatz und die Zeile dazu auf der
       Nachweisseite (`attribution.ts`), die `check:roads` dann einfordert.
 
-**Nicht dabei:** die flache Karte. Reisemodus und Mission zeichnen weiter
-Luftlinien – dort ist der Weg die Erzählung, im Gelände die Geographie.
+**Auch auf der flachen Karte**, nachgereicht: Die abgespielte Route in
+*Reisen*, *Mission* und der *Jesus-Sektion* folgt demselben Weg, die
+Entfernungen in den Listen sind an ihm gemessen, und die Zeile unter der Karte
+nennt den Datensatz. Nötig war dafür eine Umrechnung vom Stations- ins Wegmaß
+(`tForStation`), über die **Strecke** und nicht über die Zahl der Stützpunkte –
+sonst würde der Reisende in Kurven langsamer.
+
+- [x] `RouteMap` nimmt den Verlauf als Zusatz: ohne ihn zeichnet und rechnet
+      sie wie seit jeher.
+- [x] Entfernungen aus `legKm()`; ohne Straßendatei Zahl für Zahl dasselbe wie
+      aus `legDistances()`. Geprüft in `check:roads`.
+- [x] Die Nennung des Datensatzes steht unter **jeder** Karte, die ihn zeigt.
+- [x] Der eigene Weg (`#weg=…`) bleibt ohne Straßen: zusammengestellte Orte
+      sind keine überlieferte Reise.
 
 `src/data/roadmap.ts` – wer hier eine Zeile ergänzt, ergänzt sie dort mit.
 

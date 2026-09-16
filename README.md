@@ -527,12 +527,14 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Ansicht, nicht im Kleingedruckten.
 - **Wege statt Luftlinien** – jede Etappe dieser App war bisher eine gerade
   Linie zwischen zwei Stationen. Liegt ein antiker **Straßendatensatz** vor,
-  sucht `npm run roads` den Weg darüber: Die Route im Gelände folgt dann der
-  Trasse, das Gehen folgt ihr, und die Strecke wird an ihr gemessen – „331 km
-  statt 282 km Luftlinie" steht im Feld, und eine Marke sagt je Etappe, ob man
-  gerade **auf der Straße** geht oder weiter querfeldein. Etappen ohne
-  Anschluss ans Netz, Seewege und Umwege, die durch Datenlücken irren,
-  behalten ihre Luftlinie.
+  sucht `npm run roads` den Weg darüber, und zwar für **alle Karten**: Im
+  Gelände folgt die Route der Trasse und das Gehen folgt ihr; auf der flachen
+  Karte folgt ihr die abgespielte Reise – in *Reisen & Geschichten*, in
+  *Mission & Ausbreitung* und in der *Jesus-Sektion*. Gemessen wird an ihr:
+  „Gesamt 267 km · 11 Tagesmärsche · 240 km Luftlinie" steht über der
+  Stationsliste, und an jeder Etappe steht, ob sie **auf der Straße** verläuft.
+  Etappen ohne Anschluss ans Netz, Seewege und Umwege, die durch Datenlücken
+  irren, behalten ihre Luftlinie.
   Zwei Dinge sagt die Ansicht dazu, weil sie wahr sind: Das Netz ist
   **römisch** – für die Wege Jesu und die Mission die richtige Zeit, für
   Abraham tausend Jahre daneben (dann steht „Straßen jünger als die
@@ -1018,10 +1020,25 @@ Landnahme liegt es tausend Jahre daneben, und die Oberfläche schreibt es
 daneben: Gezeigt wird die Trasse, nicht die Straße – Wege folgen dem Gelände,
 und das Gelände ist dasselbe geblieben.
 
-**Wo die Straßen (noch) nicht liegen:** auf der flachen Karte. Der Reisemodus
-und die Mission zeichnen weiter ihre Luftlinien, samt der Zeile, die das seit
-jeher sagt. Der Weg ist dort die Erzählung, nicht die Geographie; im Gelände
-ist es umgekehrt, und deshalb fängt es dort an.
+**Auch die flache Karte folgt dem Weg.** Dort war eine Umrechnung nötig: Die
+abgespielte Route (`RouteMap.tsx`) zählt in **Stationen** – 2,5 heißt „auf
+halber Strecke zwischen der dritten und der vierten" –, der Weg zählt in
+Stützpunkten, und zwischen zwei Stationen können hundert liegen.
+`tForStation()` rechnet um, und zwar **über die Strecke**: Ginge es über die
+Zahl der Punkte, liefe der Reisende in den Kurven langsamer als auf der
+Geraden, weil dort mehr Punkte stehen. Die Entfernungen in den Listen kommen
+aus `legKm()` – ohne Straßendatei Zahl für Zahl dasselbe wie vorher aus
+`legDistances()`.
+
+Die **Zeile unter der Karte** wechselt mit: Aus „Routen: schematisch" wird der
+Name des Straßendatensatzes samt Lizenz und der Zusatz, dass die übrigen
+Etappen Luftlinien bleiben (`routenAttr()` in `src/lib/mapAttribution.ts`).
+CC-BY verlangt die Nennung dort, wo das Material zu sehen ist – das gilt für
+jede der Karten, nicht nur fürs Gelände.
+
+Der **eigene Weg** (`#weg=…`) bleibt außen vor: Was jemand aus beliebigen Orten
+zusammenstellt, ist keine überlieferte Reise, und eine Straße dazwischen wäre
+eine Behauptung über einen Weg, den es nie gab.
 
 ### Kurzformen der Bibelbücher
 

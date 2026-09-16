@@ -16,6 +16,7 @@
 // sie, bleibt alles, wie es war: Luftlinien, unmarkiert, ohne Fehlermeldung.
 // Deshalb gibt jede Funktion hier `null` zurück und wirft nicht.
 
+import { useEffect, useMemo, useState } from 'react';
 import type { LatLon } from './route';
 import { decodePolyline } from './polyline';
 
@@ -89,4 +90,43 @@ export function legsFor(data: RoadsData | null, routeId: string): (LatLon[] | nu
   const weg = data?.wege[routeId];
   if (!weg) return null;
   return weg.legs.map((s) => (s ? decodePolyline(s) : null));
+}
+
+/**
+ * Die Etappen einer Route, für eine Ansicht, die sie zeichnen will.
+ *
+ * Drei Modi zeigen dieselben Wege auf der flachen Karte – Reisen, Mission und
+ * die Jesus-Sektion –, und alle drei brauchen dasselbe: die Datei einmal
+ * holen, die eigene Route heraussuchen, und ohne Datei nichts tun. Deshalb
+ * steht es hier und nicht dreimal dort.
+ *
+ * `routeId` darf `null` sein (keine Route offen); dann bleibt es bei `null`.
+ */
+export function useRoadLegs(routeId: string | null): {
+  legs: (LatLon[] | null)[] | null;
+  info: RoadsData['wege'][string] | null;
+  quelle: RoadSource | null;
+} {
+  const [data, setData] = useState<RoadsData | null>(null);
+  useEffect(() => {
+    if (!routeId) return;
+    let aktuell = true;
+    void loadRoads().then((d) => {
+      if (aktuell && d) setData(d);
+    });
+    return () => {
+      aktuell = false;
+    };
+  }, [routeId]);
+
+  // Das Entschlüsseln der Polylinien ist billig, aber nicht umsonst: Ohne
+  // `useMemo` liefe es bei jedem Bild der abgespielten Route neu.
+  return useMemo(
+    () => ({
+      legs: routeId ? legsFor(data, routeId) : null,
+      info: routeId ? roadRoute(data, routeId) : null,
+      quelle: data?.quelle ?? null,
+    }),
+    [data, routeId],
+  );
 }
