@@ -2651,6 +2651,62 @@ Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
 Völkertafel** samt Zeitbaum und Graph, **Reiche & Grenzen** auf der Karte,
 Startseite und Seite „Projekte unterstützen".
 
+### 4.79 Der Fahrplan war eine Tabelle, in der alles „erledigt" sagt — P1 ✅
+
+**Der Anlass.** Die Roadmap dieses Dokuments (§ 7) hat neun Zeilen, und alle
+neun sagen ✅. In der App stand sie überhaupt nicht. Wer fragt „was ist denn
+noch geplant?", fand also entweder nichts oder eine Liste von Erledigtem – und
+die offenen Punkte lagen verstreut: einer in § 10, die übrigen als Zahlen in
+den Daten, die niemand zusammenzählt.
+
+**Was gebaut wurde.** Eine eigene Ansicht `#fahrplan` („Fahrplan" / „Roadmap"),
+erreichbar über das Modi-Menü und die Fußzeile der Startseite. Sie zeigt neun
+Stationen an einer gezeichneten **Strasse**: vier erledigte, der goldene Punkt
+„hier stehen wir", drei geplante und das Ziel. Darunter die **Abzweigungen, die
+wir nicht nehmen** – § 1 (Nicht-Ziele) plus der Datenschutz-Punkt aus § 5 –,
+weil ein Fahrplan ohne sie die häufigste Frage offenlässt.
+
+**Die Regel für den Inhalt.** Eine geplante Station kommt nur auf die Strasse,
+wenn sie im Projekt nachzählbar ist. Die drei, die es gibt:
+
+| Station | Die Zahl dahinter | Gemessen an |
+|---|---|---|
+| Mehr Orte mit Bild | 291 von 1.335 | `places.json`, Felder mit `img.url` |
+| Eine dritte Sprache | 2 vollständig | `src/i18n.ts`, beide Seiten je Eintrag |
+| Die letzten geratenen Adressen | 63 ungeprüft | § 10, `npm run check:bp` ohne Netz |
+
+Wünsche ohne Beleg stehen nicht dort. Das ist der Grund, warum die Liste kurz
+ist – nicht ein Mangel an Ideen.
+
+**Die Zeichnung.** Jede Station bekommt ein eigenes Stück Strasse, 240
+Einheiten hoch, das abwechselnd nach links und rechts ausschert. Beide Enden
+liegen bei x = 50, die Kontrollpunkte genau darüber und darunter – deshalb
+stossen zwei Stücke ohne Knick aneinander, unabhängig von Zahl und
+Reihenfolge. `preserveAspectRatio="none"` lässt ein Stück auf die Höhe seiner
+Zeile wachsen: eine Karte mit langem Text zieht die Strasse mit, statt dass die
+Zeichnung neben dem Text abreisst. Der Preis ist eine verzerrte Kurve, und der
+ist hier keiner – der Verlauf ist ohnehin erfunden. Die Punkte auf der Strasse
+sind darum **nicht** Teil des SVG, sondern gewöhnliche Elemente darüber: einen
+Kreis, der in die Breite gezogen wird, sähe man sofort.
+
+Dadurch ist `src/data/roadmap.ts` eine reine Liste: Wer eine Station einfügt,
+streicht oder verschiebt, fasst an der Grafik nichts an.
+
+**Barrierefreiheit.** Die Strasse ist Beiwerk (`aria-hidden`); die Stationen
+sind eine nummerierte Liste mit Überschriften, und der Zustand steht **in
+Worten** auf jeder Karte („erledigt", „geplant"), nicht nur in der Farbe. Die
+wandernde Mittellinie hängt am globalen Schalter für reduzierte Bewegung – ohne
+sie bleibt eine gestrichelte Linie, und die Seite erklärt dasselbe.
+
+**Nachgeprüft.** `scripts/a11y-audit.mjs` und `scripts/a11y-contrast.mjs`
+kennen `#fahrplan` jetzt mit; beide Läufe meldeten zuerst etwas und sind
+seither sauber: fünf SVG ohne `aria-hidden` (die Häkchen und die Zielflagge in
+den Punkten) und drei zu schwache Stellen – `text-ink-soft` erreicht auf Weiss
+nur 3:1, und `text-deep/80` auf Gold 3,87:1. Ersetzt durch `#5c6b69` (5,58:1)
+und den vollen Ton (5,3:1). Übrig bleibt allein der Sprachschalter mit 4,27:1,
+den jede Seite hat. Alle 21 Prüfungen von `npm run check` sauber, `tsc` ohne
+Fehler, erster Aufruf 326,0 → 329,0 kB – die Ansicht selbst kommt auf Abruf.
+
 ---
 
 ## 5. Nicht-funktionale Anforderungen
@@ -2713,6 +2769,10 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v0.7** | Buchkürzel an einer Stelle (4.21) | ✅ erledigt |
 | **v0.8** | Medien-Index: Sendedaten und Umlaute (4.22) | ✅ erledigt |
 | **v0.9** | Gelände in 3D mit MapLibre (4.23) | ✅ erledigt |
+
+Diese Tabelle ist seit § 4.79 auch eine Ansicht: **`#fahrplan`** zeigt denselben
+Weg als Strasse, samt dem, was noch offen ist. Sie liest ihre Stationen aus
+`src/data/roadmap.ts` – wer hier eine Zeile ergänzt, ergänzt sie dort mit.
 
 ---
 

@@ -32,6 +32,7 @@ const MODUS: Record<Mode, string> = {
   index: 'placeIndex',
   support: 'support',
   credits: 'credits',
+  roadmap: 'roadmap',
 };
 
 const ANSICHT: Record<View, string> = {
@@ -97,6 +98,7 @@ const EIGENE_UEBERSCHRIFT: Record<Mode, boolean> = {
   israel: true,
   support: true,
   credits: true,
+  roadmap: true,
   present: false,
   history: false,
   journeys: false,
