@@ -571,8 +571,8 @@ const STRINGS: Dict = {
   },
   imprintAboutTitle: { de: 'Wer das gebaut hat', en: 'Who built this' },
   imprintAbout1: {
-    de: 'Michi Frey, aus Aarau in der Schweiz. Bibelmap ist aus der Frage entstanden, die beim Bibellesen am häufigsten auftaucht und am seltensten beantwortet wird: Wo liegt das eigentlich? Zwischen dem Kapitel und der Karte lag bisher jedes Mal eine Suchmaschine – und danach war man überall, nur nicht mehr im Text.',
-    en: 'Michi Frey, from Aarau in Switzerland. Bibelmap grew out of the question that comes up most often while reading the Bible and gets answered least: where is this place? Between the chapter and the map there always sat a search engine – and afterwards you were everywhere except back in the text.',
+    de: 'Michael Frey, aus Aarau in der Schweiz. Bibelmap ist aus der Frage entstanden, die beim Bibellesen am häufigsten auftaucht und am seltensten beantwortet wird: Wo liegt das eigentlich? Zwischen dem Kapitel und der Karte lag bisher jedes Mal eine Suchmaschine – und danach war man überall, nur nicht mehr im Text.',
+    en: 'Michael Frey, from Aarau in Switzerland. Bibelmap grew out of the question that comes up most often while reading the Bible and gets answered least: where is this place? Between the chapter and the map there always sat a search engine – and afterwards you were everywhere except back in the text.',
   },
   imprintAbout2: {
     de: 'Gebaut wird daran abends und an Wochenenden. Niemand wird dafür bezahlt, und niemand zahlt dafür, die Seite zu benutzen: keine Werbung, keine Konten, kein Tracker, keine Bezahlschranke. Was sie kostet, sind eine Domain und viel Zeit.',
