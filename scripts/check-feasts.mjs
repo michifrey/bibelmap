@@ -26,9 +26,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const { FEASTS, MONTHS, RHYTHMS, YEAR_DAYS, MONTH_BY_ID, feastStart, monthStart } = await import(
-  path.join(ROOT, 'src/data/feasts.ts')
-);
+const { FEASTS, MONTHS, RHYTHMS, YEAR_DAYS, MONTH_BY_ID, feastStart, feastOccurrences, monthStart } =
+  await import(path.join(ROOT, 'src/data/feasts.ts'));
 const { arcPath, dayAngle, easeInOut, feastSpan, polar, shortestTurn } = await import(
   path.join(ROOT, 'src/lib/feastWheel.ts')
 );
@@ -134,8 +133,28 @@ export function pruefe(feste, monate = MONTHS, rhythmen = RHYTHMS) {
 
     if (!/^#[0-9a-f]{6}$/i.test(f.color ?? '')) funde.push(`${f.id}: Farbe „${f.color}" ist kein Sechserhex`);
     if (!/^M/.test(f.symbol ?? '')) funde.push(`${f.id}: Zeichen ist kein Pfad`);
-    if (!['spring', 'autumn', 'later', 'fast'].includes(f.family)) {
+    if (!['spring', 'autumn', 'later', 'fast', 'monthly'].includes(f.family)) {
       funde.push(`${f.id}: unbekannte Familie „${f.family}"`);
+    }
+
+    /*
+     * Ein Fest, das jeden Monat kommt, muss auf dem ersten Tag liegen – sonst
+     * ergäbe „an jedem Monatsanfang" keinen Sinn –, und es muss zwölfmal im
+     * Rad stehen. Malte das Rad zwölf Striche, während die Daten einen Tag
+     * meinen, wäre das nicht falsch zu sehen, sondern falsch zu lesen.
+     */
+    const begehungen = feastOccurrences(f);
+    if (f.monthly) {
+      if (f.day !== 1) funde.push(`${f.id}: kommt jeden Monat, liegt aber auf Tag ${f.day}`);
+      if (begehungen.length !== monate.length) {
+        funde.push(`${f.id}: ${begehungen.length} Begehungen statt ${monate.length}`);
+      }
+      const erwartet = monate.map((mm) => monthStart(mm.id));
+      if (begehungen.some((tag, n) => tag !== erwartet[n])) {
+        funde.push(`${f.id}: trifft nicht jeden Monatsanfang`);
+      }
+    } else if (begehungen.length !== 1 || begehungen[0] !== start) {
+      funde.push(`${f.id}: mehr als eine Begehung, ohne monatlich zu sein`);
     }
 
     const gefunden = findPlacesByNames(PLACES, f.places);
@@ -233,6 +252,13 @@ const kaputt = FEASTS.map((f, n) =>
         ? { ...f, month: 'gibtesnicht' }
         : f,
 );
+// Und der Neumond, vom Monatsanfang weggeschoben: Das Rad zeichnete ihn
+// weiter an jeden Ersten, während die Daten etwas anderes sagen.
+const verschoben = FEASTS.map((f) => (f.monthly ? { ...f, day: 5 } : f));
+if (pruefe(verschoben).length < 1) {
+  console.error('✗ Die Gegenprobe merkt nicht, wenn ein monatliches Fest nicht auf dem Ersten liegt.');
+  process.exit(1);
+}
 if (pruefe(kaputt).length < 3) {
   console.error('✗ Die Gegenprobe findet die absichtlich eingebauten Fehler nicht.');
   process.exit(1);

@@ -13,6 +13,7 @@ import {
   RHYTHMS,
   YEAR_DAYS,
   feastStart,
+  feastOccurrences,
   monthStart,
   MONTH_BY_ID,
   type Feast,
@@ -49,8 +50,16 @@ const R_MONTH_OUT = 120;
 const R_MONTH_IN = 94;
 const R_FEAST_OUT = 90;
 const R_FEAST_IN = 70;
+/**
+ * Das schmale Band der Monatsanfänge, innen vor dem Festband. Der Neumond
+ * gehört nicht neben die Jahresfeste, sondern unter sie: Er kommt zwölfmal,
+ * und im siebten Monat fiele er sonst genau auf das Posaunenfest – zwei
+ * Stücke auf demselben Strich, von denen man nur eines sähe.
+ */
+const R_MOON_OUT = 68;
+const R_MOON_IN = 62;
 /** Radius der Bildscheibe – das Prozentmaß darunter hängt daran. */
-const R_PHOTO = 58;
+const R_PHOTO = 56;
 /** Wie weit das ausgewählte Stück aus dem Rad fährt und wie viel es wächst. */
 const PULL = 10;
 const GROW = 10;
@@ -67,6 +76,7 @@ const FAMILY_KEY: Record<Feast['family'], string> = {
   autumn: 'feastFamilyAutumn',
   later: 'feastFamilyLater',
   fast: 'feastFamilyFast',
+  monthly: 'feastFamilyMonthly',
 };
 
 const REF_KEY: Record<FeastRef['kind'], string> = {
@@ -236,9 +246,33 @@ export default function FeastsMode({ places, lang, initial, onNavigate, onShowPl
                   );
                 })}
 
+                {/*
+                  Band der Monatsanfänge: zwölf Striche, einer je Monat. Sie
+                  stehen auch dann da, wenn der Neumond nicht ausgewählt ist –
+                  der Takt, an dem alles andere hängt, ist Teil des Bildes.
+                */}
+                {FEASTS.filter((f) => f.monthly).map((f) => {
+                  const on = f.id === feast.id;
+                  return feastOccurrences(f).map((tag) => {
+                    const s = feastSpan(tag, f.days, YEAR_DAYS, MIN_GRAD);
+                    return (
+                      <path
+                        key={`${f.id}-${tag}`}
+                        d={arcPath(s.from, s.to, R_MOON_IN, R_MOON_OUT)}
+                        fill={f.color}
+                        fillOpacity={on ? 0.95 : 0.4}
+                        className="cursor-pointer transition-opacity hover:opacity-100"
+                        onClick={() => setI(FEASTS.indexOf(f))}
+                      >
+                        <title>{lang === 'de' ? f.de.name : f.en.name}</title>
+                      </path>
+                    );
+                  });
+                })}
+
                 {/* Festband: jedes Fest an seinem Tag */}
                 {FEASTS.map((f, n) => {
-                  if (n === i) return null;
+                  if (n === i || f.monthly) return null;
                   const s = feastSpan(feastStart(f), f.days, YEAR_DAYS, MIN_GRAD);
                   return (
                     <path
@@ -417,6 +451,12 @@ export default function FeastsMode({ places, lang, initial, onNavigate, onShowPl
                 <dt className="bm-eyebrow bm-eyebrow-dim">{t('feastWhen')}</dt>
                 <dd className="mt-1 text-[14px] leading-relaxed text-white/85">{text.when}</dd>
               </div>
+              {feast.monthly && (
+                <div>
+                  <dt className="bm-eyebrow bm-eyebrow-dim">{t('feastInWheel')}</dt>
+                  <dd className="mt-1 text-[14px] leading-relaxed text-white/85">{t('feastMonthlyNote')}</dd>
+                </div>
+              )}
               <div>
                 <dt className="bm-eyebrow bm-eyebrow-dim">{t('feastCounted')}</dt>
                 <dd className="mt-1 text-[14px] leading-relaxed text-white/85">{text.count}</dd>

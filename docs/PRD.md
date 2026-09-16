@@ -2644,6 +2644,56 @@ und die eine geänderte Stelle lag in einem Zweig, der gerade nicht gezeichnet
 wurde. Der Mechanismus liess sich direkt an der Funktion zeigen – das ist
 kürzer und beweist mehr.
 
+### 4.79 Die Feste Israels als Jahresrad — P1 ✅
+
+Die Feste standen bisher verstreut: Pessach in der Heilsgeschichte, Sukkot in
+der Jesus-Sektion, Schawuot in der Mission. Was fehlte, war das, was sie
+zusammenhält – **der Kalender**. Und ein Kalender ist keine Liste, sondern ein
+Kreis: Er fängt wieder an.
+
+**Das Rad.** Von außen nach innen: die zwölf Monate mit ihren hebräischen
+Namen, der Monatsring (seine Stücke sind so breit, wie die Monate lang sind),
+das Band der Feste an ihrem Tag, innen das schmale Band der Monatsanfänge, in
+der Mitte das Bild. Wer weiterblättert, dreht das Jahr: Das gewählte Fest kommt
+nach oben, **sein Kuchenstück fährt aus dem Rad und wird größer**, und über
+Adar hinaus geht es weiter nach Nisan. Die Drehung läuft über
+`requestAnimationFrame`; die Monatsnamen drehen gegen, damit sie nie auf dem
+Kopf stehen. Bei `prefers-reduced-motion` springt das Rad, statt zu drehen
+(§ 5, „Bewegung").
+
+**Zwölf Feste, zwei Rhythmen.** Im Rad stehen die drei Frühjahrsfeste, die drei
+Herbstfeste, der achte Tag, Tischa be-Aw als Fasttag, Chanukka und Purim – und
+der **Neumond**, der als einziger nicht einmal im Jahr kommt, sondern zwölfmal.
+Er steht darum zwölfmal im Rad, an jedem Monatsanfang, in einem eigenen inneren
+Band: Im siebten Monat fiele er sonst genau auf das Posaunenfest, zwei Stücke
+auf demselben Strich, von denen man nur eines sähe. Sabbat und Sabbatjahr
+bleiben außerhalb – der eine ist kürzer als jeder Monat, der andere länger als
+jedes Jahr.
+
+**Was dabeisteht, weil es sonst falsch gelesen würde.** Das Rad rechnet mit
+zwölf Monaten zu 354 Tagen, während zwei Monate zwischen 29 und 30 Tagen
+wechseln und in sieben von neunzehn Jahren ein ganzer Monat eingeschoben wird.
+Die **Lage** eines Festes stimmt auf den Tag, seine **Breite** nicht: Ein Fest
+von einem Tag misst 1,02° – zu wenig, um es zu treffen –, darum ist alles unter
+fünf Grad um seine Mitte aufgeweitet. Beides steht als Hinweis unter dem Rad,
+nicht in dieser Datei.
+
+**Die Prüfung (`npm run check:feasts`, Nr. 22).** Fünf Angaben je Fest sind
+Verweise auf etwas anderes, und alle fünf scheitern still: Monat und Tag setzen
+das Fest ins Rad, die Bibelstellen bauen **zweisprachig** beschriftete Links,
+die Ortsnamen werden zur Laufzeit gegen `places.json` aufgelöst, das Zeichen ist
+der Rückfall, wenn kein Foto auflöst, und die Reihenfolge trägt das Blättern.
+Geprüft wird jedes davon, dazu die Geometrie aus `src/lib/feastWheel.ts`, die
+sonst niemand nachmisst – ein vertauschtes Vorzeichen ließe das Rad rückwärts
+laufen, ohne es zu sagen. Mit Gegenprobe, wie die übrigen Prüfungen: ein Ort,
+den es nicht gibt, ein Link ins falsche Buch, ein Monat, den es nicht gibt, und
+ein Neumond, der nicht auf dem Ersten liegt.
+
+**Angeschlossen** an Startseite (fünfte Karte, Kopf- und Fußzeile), Modi-Tafel,
+Fenstertitel, Tieflink `#feste=…`, globale Suche (auch über Umschrift und
+hebräischen Namen) und den Vorabruf für den Offline-Betrieb; nachgeprüft mit
+`check-offline.mjs`, `check-i18n.mjs` und `a11y-audit.mjs`.
+
 ### 4.78 Weitere Ansichten (aus parallelen Arbeiten)
 
 Nicht in dieser PRD entstanden, aber Teil der App: **Kirchengeschichte**
@@ -2713,6 +2763,7 @@ Orte je Kapitel. Buch-/Epochen-Metadaten in `src/data/books.ts` & `eras.ts`.
 | **v0.7** | Buchkürzel an einer Stelle (4.21) | ✅ erledigt |
 | **v0.8** | Medien-Index: Sendedaten und Umlaute (4.22) | ✅ erledigt |
 | **v0.9** | Gelände in 3D mit MapLibre (4.23) | ✅ erledigt |
+| **v0.10** | Feste Israels als Jahresrad (4.79) | ✅ erledigt |
 
 ---
 

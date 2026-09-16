@@ -267,7 +267,13 @@ export default function App() {
     setAtStart(false);
     setView(target === 'tree' ? 'tree' : 'map');
     if (target === 'media') setMediaNav(null);
-    setMode(target === 'present' ? 'present' : target === 'media' ? 'media' : null);
+    if (target === 'feasts') setFeastsNav(null);
+    setMode(
+      target === 'present' ? 'present'
+      : target === 'media' ? 'media'
+      : target === 'feasts' ? 'feasts'
+      : null,
+    );
   }
 
   function openSupport() {

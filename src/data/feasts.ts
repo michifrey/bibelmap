@@ -180,10 +180,17 @@ export interface Feast {
   /**
    * Familie: die drei Frühjahrsfeste hängen an der Gerstenernte, die drei
    * Herbstfeste am siebten Monat, die späten sind nach dem Exil entstanden,
-   * und der Fasttag ist kein Fest.
+   * der Fasttag ist kein Fest – und der Neumond gehört in keine davon, weil er
+   * nicht einmal im Jahr kommt, sondern zwölfmal.
    */
-  family: 'spring' | 'autumn' | 'later' | 'fast';
+  family: 'spring' | 'autumn' | 'later' | 'fast' | 'monthly';
   color: string;
+  /**
+   * Fällt auf jeden Monatsanfang statt auf einen Tag im Jahr. `month` und
+   * `day` nennen dann die **erste** Begehung – im Rad steht das Fest trotzdem
+   * zwölfmal, denn ein Neumond, den man einmal hinmalt, ist kein Neumond.
+   */
+  monthly?: true;
   /** Eines der drei Wallfahrtsfeste (2. Mose 23,14–17)? */
   pilgrimage?: boolean;
   de: FeastText;
@@ -195,6 +202,34 @@ export interface Feast {
 }
 
 export const FEASTS: Feast[] = [
+  {
+    id: 'neumond', hebrew: 'רֹאשׁ חֹדֶשׁ', translit: 'Rosch Chodesch',
+    month: 'nisan', day: 1, days: 1, family: 'monthly', color: '#b9c4dc', monthly: true,
+    symbol: 'M20 14a8 8 0 1 1-8-10 7 7 0 0 0 8 10z',
+    de: {
+      name: 'Neumond', also: 'Monatsanfang',
+      when: 'Der erste Tag jedes Monats – zwölfmal im Jahr, und im Rad darum an jedem Monatsanfang.',
+      count: 'Nicht gezählt, sondern gesehen: Der Monat begann, wenn zwei Zeugen die erste Mondsichel bezeugten. Bis ins vierte Jahrhundert n. Chr. wurde das vor Gericht festgestellt und mit Feuersignalen über die Bergkuppen weitergegeben – wer zu weit weg wohnte, beging den Festtag sicherheitshalber zweimal.',
+      what: 'Der Anfang jedes Monats ist selbst ein Festtag: eigene Opfer, Hörnerschall über den Opfern, kein Handel. Die Tora gibt ihm keinen Namen und keine Begründung – er ist der Takt, an dem der ganze Kalender hängt. Wann Pessach ist, entscheidet sich am Neumond des ersten Monats; alles andere folgt daraus. Der Neumond des siebten Monats ist zugleich das Posaunenfest: Im Rad liegen die beiden auf demselben Strich. Und dass ein Fehlen auffiel, zeigt 1. Samuel 20 – Davids leerer Platz an Sauls Neumondstisch bringt die Sache ins Rollen.',
+      today: 'Rosch Chodesch ist ein kleiner Feiertag geblieben: Am Sabbat davor wird der neue Monat angesagt, im Gottesdienst kommt ein eigenes Gebet dazu. In vielen Gemeinden gilt er besonders den Frauen – eine alte Überlieferung dankt ihnen dafür, dass sie ihren Schmuck nicht für das goldene Kalb hergaben. Jesaja sieht am Ende alle Menschen „von einem Neumond zum andern" kommen, und Kolosser 2 nennt Fest, Neumond und Sabbat in einem Atemzug: Schatten von dem, was kommt.',
+    },
+    en: {
+      name: 'New moon', also: 'Rosh Chodesh',
+      when: 'The first day of every month – twelve times a year, and so twelve times in the wheel, at every month’s beginning.',
+      count: 'Not counted but seen: the month began when two witnesses testified to the first crescent. Until the fourth century AD this was established before a court and passed on by beacon fires from hilltop to hilltop – those too far away kept the festival day twice, to be safe.',
+      what: 'The beginning of every month is itself a festival day: its own offerings, horns sounded over them, no trading. The Torah gives it no name and no reason – it is the beat the whole calendar hangs on. When Passover falls is settled at the new moon of the first month; everything else follows. The new moon of the seventh month is also the Feast of Trumpets: in the wheel the two sit on the same mark. And that an absence was noticed is clear from 1 Samuel 20 – David’s empty place at Saul’s new-moon table is what sets everything off.',
+      today: 'Rosh Chodesh has remained a minor feast: the coming month is announced on the Sabbath before, and the service adds a prayer of its own. In many communities it belongs especially to women – an old tradition thanks them for not giving up their jewellery for the golden calf. Isaiah sees all people coming, at the end, "from new moon to new moon", and Colossians 2 names festival, new moon and Sabbath in one breath: a shadow of what is to come.',
+    },
+    refs: [
+      { osis: 'Num', chapter: 10, label: { de: '4. Mose 10,10', en: 'Numbers 10:10' }, kind: 'command' },
+      { osis: 'Num', chapter: 28, label: { de: '4. Mose 28,11–15', en: 'Numbers 28:11–15' }, kind: 'command' },
+      { osis: '1Sam', chapter: 20, label: { de: '1. Samuel 20,5', en: '1 Samuel 20:5' }, kind: 'story' },
+      { osis: 'Ps', chapter: 81, label: { de: 'Psalmen 81,4', en: 'Psalms 81:4' }, kind: 'story' },
+      { osis: 'Isa', chapter: 66, label: { de: 'Jesaja 66,23', en: 'Isaiah 66:23' }, kind: 'story' },
+      { osis: 'Col', chapter: 2, label: { de: 'Kolosser 2,16', en: 'Colossians 2:16' }, kind: 'nt' },
+    ],
+    places: ['Jerusalem', 'Gibeah'],
+  },
   {
     id: 'pessach', hebrew: 'פֶּסַח', translit: 'Pesach',
     month: 'nisan', day: 14, days: 1, family: 'spring', color: '#a83a3a', pilgrimage: true,
@@ -486,11 +521,24 @@ export function feastStart(f: Feast): number {
 }
 
 /**
+ * Alle Tage im Jahr, an denen ein Fest begangen wird – bei den meisten genau
+ * einer, beim Neumond zwölf. Rad und Prüfung lesen dieselbe Liste: Sonst malte
+ * das eine zwölf Striche, während das andere einen zählte.
+ */
+export function feastOccurrences(f: Feast): number[] {
+  if (!f.monthly) return [feastStart(f)];
+  return MONTHS.map((m) => monthStart(m.id) + f.day - 1);
+}
+
+/**
  * Was sich wiederholt und deshalb in keinem Jahreskreis steht.
  *
  * 3. Mose 23 zählt die Feste des Jahres auf – und stellt einen Tag voran, der
- * mit dem Jahr nichts zu tun hat. Diese drei Rhythmen gehören zum Kalender,
- * aber nicht ins Rad.
+ * mit dem Jahr nichts zu tun hat. Diese beiden Rhythmen gehören zum Kalender,
+ * aber nicht ins Rad: Der eine ist kürzer als jeder Monat, der andere länger
+ * als jedes Jahr. Der Neumond stand hier ebenfalls – er ist ins Rad gezogen,
+ * weil er sich anders als diese zwei überhaupt zeichnen lässt: zwölfmal, an
+ * jedem Monatsanfang.
  */
 export interface Rhythm {
   id: string;
@@ -519,24 +567,6 @@ export const RHYTHMS: Rhythm[] = [
       { osis: 'Exod', chapter: 20, label: { de: '2. Mose 20,8–11', en: 'Exodus 20:8–11' }, kind: 'command' },
       { osis: 'Lev', chapter: 23, label: { de: '3. Mose 23,3', en: 'Leviticus 23:3' }, kind: 'command' },
       { osis: 'Mark', chapter: 2, label: { de: 'Markus 2,27', en: 'Mark 2:27' }, kind: 'nt' },
-    ],
-  },
-  {
-    id: 'neumond', hebrew: 'רֹאשׁ חֹדֶשׁ', translit: 'Rosch Chodesch',
-    symbol: 'M20 14a8 8 0 1 1-8-10 7 7 0 0 0 8 10z',
-    de: {
-      name: 'Neumond', every: 'jeder Monatsanfang',
-      text: 'Jeder Monat beginnt mit der ersten sichtbaren Mondsichel – bis ins vierte Jahrhundert n. Chr. von Zeugen vor Gericht bestätigt und mit Feuersignalen über die Bergkuppen weitergegeben. Am Neumond wurde geopfert und geblasen; Kolosser 2 nennt Fest, Neumond und Sabbat in einem Atemzug.',
-    },
-    en: {
-      name: 'New moon', every: 'the start of every month',
-      text: 'Every month begins with the first visible crescent – confirmed by witnesses before a court until the fourth century AD, and passed on by beacon fires from hilltop to hilltop. At the new moon there was sacrifice and the sound of horns; Colossians 2 names festival, new moon and Sabbath in one breath.',
-    },
-    refs: [
-      { osis: 'Num', chapter: 10, label: { de: '4. Mose 10,10', en: 'Numbers 10:10' }, kind: 'command' },
-      { osis: 'Num', chapter: 28, label: { de: '4. Mose 28,11–15', en: 'Numbers 28:11–15' }, kind: 'command' },
-      { osis: 'Ps', chapter: 81, label: { de: 'Psalmen 81,4', en: 'Psalms 81:4' }, kind: 'story' },
-      { osis: 'Col', chapter: 2, label: { de: 'Kolosser 2,16', en: 'Colossians 2:16' }, kind: 'nt' },
     ],
   },
   {

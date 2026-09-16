@@ -273,7 +273,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 - **Feste Israels** – das Jahr als **Rad** statt als Liste (`#feste=pessach`).
   Von außen nach innen: die zwölf Monate mit ihren hebräischen Namen, dann der
   Monatsring – seine Stücke sind so breit, wie die Monate lang sind –, dann das
-  Band der **elf Feste** an ihrem Tag, in der Mitte das Bild. Wer weiterklickt,
+  Band der **zwölf Feste** an ihrem Tag, innen das schmale Band der
+  Monatsanfänge, in der Mitte das Bild. Wer weiterklickt,
   dreht das Jahr: Das gewählte Fest kommt nach oben, **sein Kuchenstück fährt
   aus dem Rad und wird größer**, und über Adar hinaus geht es weiter nach Nisan
   – ein Jahr hat kein Ende, an dem man stehen bliebe. Bei `prefers-reduced-motion`
@@ -290,9 +291,13 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   ist**, **wo es vorkommt**, **wo es im Neuen Testament wiederkehrt** – jede
   zweisprachig beschriftet und verlinkt.
 
-  Was nicht ins Rad passt, steht darunter: **Sabbat**, **Neumond** und
-  **Sabbat- und Jobeljahr** – drei Rhythmen, die zum Kalender gehören, aber zu
-  keinem Jahreskreis. Und was am Kalender nicht stimmt, steht ebenfalls da: Das
+  Ein Fest kommt nicht einmal im Jahr, sondern zwölfmal: der **Neumond**
+  (Rosch Chodesch). Er steht darum zwölfmal im Rad, an jedem Monatsanfang, in
+  einem eigenen inneren Band – im siebten Monat fiele er sonst genau auf das
+  Posaunenfest, zwei Stücke auf demselben Strich, von denen man nur eines sähe.
+  Was sich überhaupt nicht zeichnen lässt, steht darunter: **Sabbat** und
+  **Sabbat- und Jobeljahr** – der eine kürzer als jeder Monat, der andere
+  länger als jedes Jahr. Und was am Kalender nicht stimmt, steht ebenfalls da: Das
   Rad rechnet mit zwölf Monaten zu 354 Tagen, während zwei Monate zwischen 29
   und 30 Tagen wechseln und in sieben von neunzehn Jahren ein ganzer Monat
   eingeschoben wird. Die **Lage** eines Festes stimmt auf den Tag, seine
@@ -555,8 +560,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   die Lizenz auf ihren Text. Bilder, die erst zur Laufzeit über Wikidata
   gefunden werden, holen beides über die Commons-API nach – die Lizenzen
   verlangen die Nennung, ein „© Name" allein genügt ihnen nicht.
-- **Startseite** – vier Wege hinein: Karte, Entdeckermodus, Stammbäume und
-  Hören & Sehen, dazu die Kopfzeile mit denselben Zielen.
+- **Startseite** – fünf Wege hinein: Karte, Entdeckermodus, Stammbäume,
+  Hören & Sehen und die Feste Israels, dazu die Kopfzeile mit denselben Zielen.
 - **Projekte unterstützen** – eine eigene Seite (Startseite, Modi-Menü, Direktlink
   `#unterstuetzen`), die offenlegt, dass Bibelmap nichts verdient und für sich
   selbst kein Geld sammelt, und zu den **Spendenseiten** der Projekte verlinkt,

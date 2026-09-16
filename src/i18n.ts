@@ -195,10 +195,16 @@ const STRINGS: Dict = {
   feastFamilyAutumn: { de: 'Herbstfeste', en: 'Autumn feasts' },
   feastFamilyLater: { de: 'Später entstanden', en: 'Of later origin' },
   feastFamilyFast: { de: 'Fasttag', en: 'Fast day' },
+  feastFamilyMonthly: { de: 'Jeden Monat', en: 'Every month' },
+  feastInWheel: { de: 'Im Rad', en: 'In the wheel' },
+  feastMonthlyNote: {
+    de: 'Zwölf Striche im inneren Ring, einer je Monatsanfang – und im siebten Monat derselbe Tag wie das Posaunenfest.',
+    en: 'Twelve marks on the inner ring, one for each month’s beginning – and in the seventh month the same day as the Feast of Trumpets.',
+  },
   feastRhythms: { de: 'Was sich wiederholt', en: 'What recurs' },
   feastRhythmsHint: {
-    de: 'Drei Rhythmen gehören zum Kalender, aber in keinen Jahreskreis: der siebte Tag, der Neumond und das siebte Jahr.',
-    en: 'Three rhythms belong to the calendar but to no annual circle: the seventh day, the new moon and the seventh year.',
+    de: 'Zwei Rhythmen gehören zum Kalender, lassen sich aber nicht ins Rad zeichnen: Der eine ist kürzer als jeder Monat, der andere länger als jedes Jahr.',
+    en: 'Two rhythms belong to the calendar but cannot be drawn into the wheel: one is shorter than any month, the other longer than any year.',
   },
   feastCalendarNote: {
     de: 'Der Kreis rechnet mit zwölf Monaten zu 354 Tagen. So einfach ist der Kalender nicht: Zwei Monate wechseln zwischen 29 und 30 Tagen, und in sieben von neunzehn Jahren wird ein ganzer Monat eingeschoben. Die Lage eines Festes stimmt auf den Tag – seine Breite im Rad nicht: Was schmaler als fünf Grad wäre, ist um seine Mitte aufgeweitet.',
@@ -632,7 +638,7 @@ const STRINGS: Dict = {
   },
   lNoAccount: { de: 'Ohne Anmeldung · Ortsdaten unter CC-BY 4.0', en: 'No sign-up · place data under CC-BY 4.0' },
   lErasRail: { de: 'Epochen', en: 'eras' },
-  lWaysIn: { de: 'Drei Wege hinein', en: 'Three ways in' },
+  lWaysIn: { de: 'Fünf Wege hinein', en: 'Five ways in' },
   lCard1Kicker: { de: '01 — Karte', en: '01 — Map' },
   lCard1Title: { de: 'Orte & Epochen', en: 'Places & eras' },
   lCard1Body: {
@@ -661,6 +667,13 @@ const STRINGS: Dict = {
     en: '473 episodes from four sources, indexed by the passages they cite – and each one lists the places it touches.',
   },
   lCard4Cta: { de: 'Stöbern', en: 'Browse' },
+  lCard5Kicker: { de: '05 — Das Jahr', en: '05 — The year' },
+  lCard5Title: { de: 'Die Feste Israels', en: 'The feasts of Israel' },
+  lCard5Body: {
+    de: 'Zwölf Monate als Rad: Pessach am vierzehnten Nisan, der Versöhnungstag zehn Tage nach dem Posaunenfest, Sukkot fünf Tage später. Mit dem, was heute daraus geworden ist.',
+    en: 'Twelve months as a wheel: Passover on the fourteenth of Nisan, the Day of Atonement ten days after the Feast of Trumpets, Tabernacles five days later. With what has become of them today.',
+  },
+  lCard5Cta: { de: 'Rad drehen', en: 'Turn the wheel' },
   lStatPlaces: { de: 'Kartierte Orte', en: 'Places mapped' },
   lStatEras: { de: 'Epochen', en: 'Eras' },
   lStatBooks: { de: 'Bücher im Entdeckermodus', en: 'Books in explorer mode' },
