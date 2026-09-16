@@ -57,6 +57,7 @@ import Landing, { type LandingTarget } from './components/Landing';
 const Support = lazy(() => import('./components/Support'));
 const Credits = lazy(() => import('./components/Credits'));
 const Roadmap = lazy(() => import('./components/Roadmap'));
+const Imprint = lazy(() => import('./components/Imprint'));
 
 /** Name jedes Kartenstils – Schalterleiste und Ausfallhinweis lesen ihn hier. */
 const BASEMAP_LABEL: Record<BasemapId, 'basemapDark' | 'basemapLight' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'> = {
@@ -1259,6 +1260,11 @@ export default function App() {
             {mode === 'roadmap' && (
               <Suspense fallback={<ModeFallback />}>
                 <Roadmap lang={lang} onLang={setLang} onExit={() => setMode(null)} />
+              </Suspense>
+            )}
+            {mode === 'imprint' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Imprint lang={lang} onLang={setLang} onExit={() => setMode(null)} />
               </Suspense>
             )}
           </>

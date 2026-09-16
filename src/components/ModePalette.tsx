@@ -94,6 +94,8 @@ export default function ModePalette({ onPick, onClose }: Props) {
           // Die Strasse aus Roadmap.tsx, so klein wie ein Symbol sie zulässt:
           // eine Fahrbahn, die sich nach oben verjüngt, mit Mittellinie.
           { id: 'roadmap', label: t('roadmap'), hint: t('roadmapHint'), icon: 'M8 21 10.5 3h3L16 21M12 5v2M12 10v2M12 15v2' },
+          // Ein offener Brief – dasselbe Motiv wie im Kopf der Seite.
+          { id: 'imprint', label: t('imprint'), hint: t('imprintHint'), icon: 'M3 6h18v13H3zM3 6l9 7 9-7' },
         ],
       },
     ],

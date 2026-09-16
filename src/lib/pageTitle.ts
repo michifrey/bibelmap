@@ -35,6 +35,7 @@ const MODUS: Record<Mode, string> = {
   support: 'support',
   credits: 'credits',
   roadmap: 'roadmap',
+  imprint: 'imprint',
 };
 
 const ANSICHT: Record<View, string> = {
@@ -101,6 +102,7 @@ const EIGENE_UEBERSCHRIFT: Record<Mode, boolean> = {
   support: true,
   credits: true,
   roadmap: true,
+  imprint: true,
   present: false,
   history: false,
   journeys: false,

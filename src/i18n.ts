@@ -499,6 +499,112 @@ const STRINGS: Dict = {
     en: 'A plan you can read is a promise you have to keep.',
   },
   roadmapSuggest: { de: 'Station vorschlagen', en: 'Suggest a stop' },
+  // Impressum – wer die Seite betreibt, wo man schreibt, was sie über Besucher weiss
+  imprint: { de: 'Impressum', en: 'Legal notice' },
+  imprintHint: {
+    de: 'Wer diese Seite betreibt, wo man schreibt – und was sie über Besucher weiss.',
+    en: 'Who runs this site, where to write – and what it knows about its visitors.',
+  },
+  imprintSub: { de: 'Wer hinter dieser Karte steht – und wo man schreibt', en: 'Who stands behind this map – and where to write' },
+  imprintLead1: { de: 'Ein Mensch,', en: 'One person,' },
+  imprintLead2: { de: 'kein Verlag', en: 'not a publisher' },
+  imprintBody1: {
+    de: 'Bibelmap ist keine Firma, kein Verein und keine Redaktion. Dahinter stehen eine Person, ihre Abende und ein Quelltext, den jeder lesen kann. Diese Seite sagt, wer das ist – ohne Formular, ohne drei Klicks und ohne eine Adresse, die man erst entziffern muss.',
+    en: 'Bibelmap is not a company, not an association, not an editorial team. Behind it stand one person, their evenings and source code anyone can read. This page says who that is – no form, no three clicks, no address you have to decode first.',
+  },
+  imprintBody2: {
+    de: 'Woher die Orte, die Grenzen und die Bilder stammen, steht unter „Nachweise & Lizenzen“. Hier steht die andere Hälfte der Antwort: wer die Teile zusammengesetzt hat und wer für das Ergebnis geradesteht.',
+    en: 'Where the places, the borders and the pictures come from is set out under “Credits & licences”. Here stands the other half of the answer: who put the pieces together, and who answers for the result.',
+  },
+  imprintBody3: {
+    de: 'Wer einen Fehler findet, schreibt. Die Adresse steht gleich darunter, und sie wird gelesen.',
+    en: 'Found a mistake? Write. The address is right below, and it gets read.',
+  },
+  imprintStatPerson: { de: 'Mensch dahinter', en: 'person behind it' },
+  imprintStatAds: { de: 'Werbung & Tracker', en: 'ads & trackers' },
+  imprintStatAccounts: { de: 'Konten nötig', en: 'accounts needed' },
+  imprintStatLangs: { de: 'Sprachen', en: 'languages' },
+  imprintContactTitle: { de: 'Die Koordinaten', en: 'The coordinates' },
+  imprintResponsible: { de: 'Verantwortlich', en: 'Responsible' },
+  imprintMail: { de: 'E-Mail', en: 'Email' },
+  imprintPost: { de: 'Anschrift', en: 'Postal address' },
+  imprintWeb: { de: 'Im Netz', en: 'On the web' },
+  imprintSource: { de: 'Quelltext', en: 'Source code' },
+  imprintHost: { de: 'Ausgeliefert von', en: 'Served by' },
+  imprintWrite: { de: 'E-Mail schreiben', en: 'Write an email' },
+  imprintContactNote: {
+    de: 'Für alles, was diese Seite betrifft: Fehler in den Daten, ein falscher Nachweis, ein toter Link, Fragen zur Weiterverwendung. Eine Antwort kommt, wenn der Feierabend es zulässt – nicht postwendend.',
+    en: 'For anything concerning this site: errors in the data, a wrong credit, a dead link, questions about reuse. An answer comes when the evening allows – not by return of post.',
+  },
+  imprintAboutTitle: { de: 'Wer das gebaut hat', en: 'Who built this' },
+  imprintAbout1: {
+    de: 'Michi Frey, aus der Schweiz. Bibelmap ist aus der Frage entstanden, die beim Bibellesen am häufigsten auftaucht und am seltensten beantwortet wird: Wo liegt das eigentlich? Zwischen dem Kapitel und der Karte lag bisher jedes Mal eine Suchmaschine – und danach war man überall, nur nicht mehr im Text.',
+    en: 'Michi Frey, from Switzerland. Bibelmap grew out of the question that comes up most often while reading the Bible and gets answered least: where is this place? Between the chapter and the map there always sat a search engine – and afterwards you were everywhere except back in the text.',
+  },
+  imprintAbout2: {
+    de: 'Gebaut wird daran abends und an Wochenenden. Niemand wird dafür bezahlt, und niemand zahlt dafür, die Seite zu benutzen: keine Werbung, keine Konten, kein Tracker, keine Bezahlschranke. Was sie kostet, sind eine Domain und viel Zeit.',
+    en: 'It gets built in evenings and on weekends. Nobody is paid for it, and nobody pays to use it: no ads, no accounts, no trackers, no paywall. What it costs is a domain and a great deal of time.',
+  },
+  imprintAbout3: {
+    de: 'Der Quelltext liegt offen, unter der GPL-3.0 – wer nachsehen will, wie eine Zahl zustande kommt, sieht nach; wer etwas besser kann, baut mit. Und wer nur einen Tippfehler gefunden hat, schreibt eine Zeile. Das ist die liebste Post.',
+    en: 'The source is open, under the GPL-3.0 – anyone who wants to see how a number came about can look; anyone who can do it better is welcome to. And anyone who has merely found a typo can send a line. That is the most welcome mail of all.',
+  },
+  imprintLiabilityTitle: { de: 'Haftung, kurz', en: 'Liability, briefly' },
+  imprintContent: { de: 'Für die Inhalte', en: 'For the content' },
+  imprintContentBody: {
+    de: 'Die Daten sind sorgfältig zusammengetragen und maschinell geprüft, aber nicht unfehlbar. Die Lage vieler biblischer Orte ist in der Forschung umstritten, die Datierungen sind es erst recht, und die Epochen dieser Karte sind eine bewusste didaktische Vereinfachung. Bibelmap ist eine Landkarte – kein Kommentar und keine Lehrautorität.',
+    en: 'The data is gathered with care and checked by machine, but it is not infallible. The location of many biblical places is disputed in scholarship, their dating even more so, and the eras on this map are a deliberate teaching simplification. Bibelmap is a map – not a commentary, and no authority on doctrine.',
+  },
+  imprintLinks: { de: 'Für fremde Seiten', en: 'For other people’s sites' },
+  imprintLinksBody: {
+    de: 'Diese Seite verlinkt viel: Bibeltexte, Podcasts, Videos, Quellen, Projekte. Für deren Inhalte haftet, wer sie betreibt. Geprüft wurden sie beim Setzen des Links, und ein täglicher Lauf meldet tote Adressen – was hinter einer lebenden Adresse steht, kann sich trotzdem jederzeit ändern.',
+    en: 'This site links out a lot: Bible texts, podcasts, videos, sources, projects. Whoever runs those pages answers for what is on them. Each link was checked when it was set, and a daily run reports dead addresses – but what sits behind a living address can change at any time.',
+  },
+  imprintCopyright: { de: 'Für die Rechte', en: 'For the rights' },
+  imprintCopyrightBody: {
+    de: 'Fast nichts auf dieser Seite gehört ihr selbst. Orte, Grenzen, Kacheln, Bilder und Texte stammen aus fremder Arbeit und stehen unter ihren eigenen Lizenzen; jede einzelne ist mit Namen, Lizenz und Nachweiszeile aufgeführt. Wer sich falsch oder gar nicht genannt sieht, schreibt – das wird korrigiert.',
+    en: 'Almost nothing on this site belongs to it. Places, borders, tiles, pictures and texts come from other people’s work and carry their own licences; every one of them is listed by name, licence and required credit. Anyone named wrongly, or not at all, should write – it gets corrected.',
+  },
+  imprintToCredits: { de: 'Zu den Nachweisen', en: 'To the credits' },
+  imprintPrivacyTitle: { de: 'Was diese Seite über ihre Besucher weiss', en: 'What this site knows about its visitors' },
+  imprintPrivacyLead: {
+    de: 'So gut wie nichts – und das ist keine Beteuerung, sondern nachlesbar: Der Quelltext ist offen, und darin steht kein Analysewerkzeug. Vollständig ist die Antwort trotzdem erst mit dem, was drumherum passiert.',
+    en: 'Next to nothing – and that is not a promise but something you can check: the source is open, and there is no analytics tool in it. The full answer, though, only comes with what happens around the site.',
+  },
+  imprintPrivacyNone: { de: 'Keine Cookies, keine Konten, kein Tracking', en: 'No cookies, no accounts, no tracking' },
+  imprintPrivacyNoneBody: {
+    de: 'Bibelmap setzt keine Cookies, verlangt keine Anmeldung und bindet kein Analyse- oder Werbenetz ein. Es gibt nichts anzunehmen und nichts abzulehnen – deshalb steht hier auch kein Banner.',
+    en: 'Bibelmap sets no cookies, asks for no sign-in and embeds no analytics or advertising network. There is nothing to accept and nothing to refuse – which is why there is no banner.',
+  },
+  imprintPrivacyHost: { de: 'Das Serverprotokoll', en: 'The server log' },
+  imprintPrivacyHostBody: {
+    de: 'Die Seite liegt auf GitHub Pages (GitHub, Inc., USA). Wie jeder Webserver protokolliert auch dieser die Abrufe – mit IP-Adresse, Zeitpunkt und angefragter Datei. Von hier aus besteht darauf kein Zugriff, und ausgewertet wird nichts. Was GitHub damit tut, steht in dessen Datenschutzerklärung.',
+    en: 'The site is hosted on GitHub Pages (GitHub, Inc., USA). Like every web server, it logs requests – IP address, time and the file asked for. Nothing here reaches those logs, and nothing is evaluated. What GitHub does with them is set out in its privacy statement.',
+  },
+  imprintPrivacyHostLink: { de: 'Datenschutzerklärung von GitHub', en: 'GitHub’s privacy statement' },
+  imprintPrivacyTiles: { de: 'Kacheln und Bilder von Dritten', en: 'Tiles and pictures from third parties' },
+  imprintPrivacyTilesBody: {
+    de: 'Die Kartenkacheln kommen von OpenStreetMap und EOX, viele Ortsbilder von Wikimedia Commons. Der Browser holt sie direkt dort – diese Server sehen dabei die IP-Adresse, wie bei jedem Bild im Netz. Ohne fremde Kacheln gäbe es keine Karte; das ist der Preis, und er steht hier, statt verschwiegen zu werden.',
+    en: 'The map tiles come from OpenStreetMap and EOX, many of the place photographs from Wikimedia Commons. The browser fetches them directly – so those servers see the IP address, as with any image on the web. Without other people’s tiles there would be no map; that is the price, and it is named here rather than left out.',
+  },
+  imprintPrivacyVideo: { de: 'Videos', en: 'Videos' },
+  imprintPrivacyVideoBody: {
+    de: 'Videos laufen über youtube-nocookie.com und starten erst nach einem Klick. Bis dahin steht dort ein Vorschaubild, und YouTube erfährt nichts.',
+    en: 'Videos run through youtube-nocookie.com and only start after a click. Until then a thumbnail stands in their place, and YouTube learns nothing.',
+  },
+  imprintPrivacyLocal: { de: 'Was im Browser bleibt', en: 'What stays in the browser' },
+  imprintPrivacyLocalBody: {
+    de: 'Die gewählte Sprache, ein selbst zusammengestellter Weg und die Einstellungen des Präsentationsmodus merkt sich der Browser lokal. Nichts davon verlässt das Gerät; wer den Browserspeicher leert, löscht es.',
+    en: 'The chosen language, a self-assembled route and the presentation-mode settings are remembered locally by the browser. None of it leaves the device; clearing the browser’s storage deletes it.',
+  },
+  imprintPrivacyRights: {
+    de: 'Personenbezogene Daten werden hier weder erhoben noch gespeichert noch weitergegeben. Damit gibt es auch nichts, worüber Auskunft zu erteilen oder was zu löschen wäre. Wer trotzdem eine Frage dazu hat – zum Serverprotokoll, zu den fremden Servern, zu irgendetwas –, schreibt an die Adresse oben.',
+    en: 'No personal data is collected, stored or passed on here. So there is nothing to disclose and nothing to delete. Anyone with a question all the same – about the server log, about the third-party servers, about anything – can write to the address above.',
+  },
+  imprintOutro: {
+    de: 'Wer für etwas geradesteht, sagt seinen Namen.',
+    en: 'Whoever answers for something says their name.',
+  },
   timeDocs: { de: 'Zeitdokumente', en: 'Documents of the time' },
   timeDocsHint: {
     de: 'Was außerhalb der Bibel von dieser Person erhalten ist – Inschriften, Chroniken, Akten, Briefe.',
