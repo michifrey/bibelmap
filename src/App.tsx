@@ -383,6 +383,10 @@ export default function App() {
       void import('./components/Credits');
       void import('./components/PlaceIndex');
       void import('./components/OwnRoute');
+      // Die siebte, und aus demselben Grund: Ein Impressum, das ohne Netz
+      // fehlt, fehlt genau dann, wenn jemand nachschlagen will, wer diese
+      // Seite betreibt.
+      void import('./components/Imprint');
       /*
        * `TerrainMap` bleibt bewusst draußen. Das Paket wiegt mit MapLibre
        * 964 kB (243 kB gzip) – ein Viertel Megabyte im Hintergrund für jeden,
