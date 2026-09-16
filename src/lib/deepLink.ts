@@ -64,6 +64,7 @@ const MODE_KEYS: Record<string, Mode> = {
   register: 'index',
   unterstuetzen: 'support',
   nachweise: 'credits',
+  fahrplan: 'roadmap',
   quiz: 'quiz',
 };
 
