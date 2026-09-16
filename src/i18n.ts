@@ -279,6 +279,11 @@ const STRINGS: Dict = {
   shelfFindText: { de: 'Was darin steht', en: 'What is in it' },
   shelfFindLimits: { de: 'Was der Fund nicht zeigt', en: 'What the find does not show' },
   shelfFindCarries: { de: 'Trägt den ältesten Text von', en: 'Carries the oldest text of' },
+  shelfFindOnMap: { de: 'Auf der Karte', en: 'On the map' },
+  // Bewusst nicht „Von hier stammt": Alexandria ist die Herkunft des Codex
+  // Alexandrinus, nicht seine Fundstelle. Was der Ort mit dem Fund zu tun
+  // hat, sagt der Satz darunter, nicht die Überschrift.
+  placeFinds: { de: 'Eine Handschrift und dieser Ort', en: 'A manuscript and this place' },
 
   compareMode: { de: 'Religionen im Vergleich', en: 'Faiths compared' },
   inIslam: { de: 'Im Islam', en: 'In Islam' },

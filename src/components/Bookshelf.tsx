@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type { Place } from '../types';
 import type { Lang } from '../i18n';
 import { t as tr, useT } from '../i18n';
 import { BOOK_BY_OSIS, bibleGatewayUrl, bibleProjectUrl } from '../data/books';
@@ -18,10 +19,12 @@ import {
   type ShelfBook,
 } from '../data/shelf';
 import { FINDS, FIND_BY_ID, FIND_KIND, type Find } from '../data/finds';
+import { FIND_PLACES } from '../data/findPlaces';
 import { LAW_BY_ID, LAW_KIND, LAW_TEXTS, MIZWOT, type LawText } from '../data/lawTexts';
 import { readableOnDark } from '../lib/contrast';
 import { ExternalIcon, ImageCredit, useArticle } from './WikiFigure';
 import { wikiLink } from '../lib/wikipediaArticle';
+import { findPlacesByNames, placeName } from '../lib/places';
 
 /*
  * Die Bibel als Regal.
@@ -135,6 +138,10 @@ function targetName(id: string, lang: Lang): string {
 
 interface Props {
   lang: Lang;
+  /** Für den Weg vom Fund auf die Hauptkarte – sonst leer. */
+  places?: Place[];
+  /** Einen Ort auf der Hauptkarte zeigen; schließt den Modus. */
+  onShowPlace?: (p: Place) => void;
   /** Auswahl aus der Adresse (`#regal=buch,Isa`) oder aus der Suche. */
   initial?: Sel | null;
   /** Damit die Adresse mitläuft, wenn jemand weiterblättert. */
@@ -142,7 +149,7 @@ interface Props {
   onExit: () => void;
 }
 
-export default function Bookshelf({ lang, initial, onNavigate, onExit }: Props) {
+export default function Bookshelf({ lang, places, onShowPlace, initial, onNavigate, onExit }: Props) {
   const t = useT();
   const [tab, setTab] = useState<Tab>(initial?.kind === 'find' ? 'finds' : 'shelf');
   const [ordering, setOrdering] = useState<Ordering>('written');
@@ -326,7 +333,9 @@ export default function Bookshelf({ lang, initial, onNavigate, onExit }: Props) 
               <div ref={detailRef} className="scroll-soft min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5">
                 {sel.kind === 'book' && <BookDetail osis={sel.id} lang={lang} onPick={pick} />}
                 {sel.kind === 'law' && <LawDetail id={sel.id} lang={lang} onPick={pick} />}
-                {sel.kind === 'find' && <FindDetail id={sel.id} lang={lang} onPick={pick} />}
+                {sel.kind === 'find' && (
+                  <FindDetail id={sel.id} lang={lang} onPick={pick} places={places} onShowPlace={onShowPlace} />
+                )}
               </div>
             </>
           ) : (
@@ -779,11 +788,33 @@ function LawDetail({ id, lang, onPick }: { id: string; lang: Lang; onPick: (s: S
   );
 }
 
-function FindDetail({ id, lang, onPick }: { id: string; lang: Lang; onPick: (s: Sel) => void }) {
+function FindDetail({
+  id,
+  lang,
+  onPick,
+  places,
+  onShowPlace,
+}: {
+  id: string;
+  lang: Lang;
+  onPick: (s: Sel) => void;
+  places?: Place[];
+  onShowPlace?: (p: Place) => void;
+}) {
   const t = useT();
   const f: Find = FIND_BY_ID[id];
   const kind = FIND_KIND[f.kind];
   const carries = SHELF.filter((b) => b.oldest.find === id);
+  /*
+   * Vier der sechzehn Funde haben einen Ort, den die Hauptkarte kennt – die
+   * Zuordnung steht in `findPlaces.ts`, weil die Ortskarte sie ebenfalls liest
+   * und dafür nicht das ganze Regalbündel laden soll.
+   */
+  const link = FIND_PLACES.find((l) => l.find === id);
+  const onMap = useMemo(
+    () => (link && places ? findPlacesByNames(places, link.places) : []),
+    [link, places],
+  );
 
   return (
     <div>
@@ -812,6 +843,23 @@ function FindDetail({ id, lang, onPick }: { id: string; lang: Lang; onPick: (s: 
       <Section title={t('shelfFindLimits')}>
         <Prose>{lang === 'de' ? f.limits.de : f.limits.en}</Prose>
       </Section>
+
+      {/*
+        Ohne den Bezugssatz aus `findPlaces.ts`: Der ist für die Ortskarte
+        geschrieben, wo der Zusammenhang fehlt. Hier stünde er zwei Absätze
+        unter „Gefunden von" und sagte dasselbe noch einmal.
+      */}
+      {onMap.length > 0 && onShowPlace && (
+        <Section title={t('shelfFindOnMap')}>
+          <div className="flex flex-wrap gap-1.5">
+            {onMap.map((p) => (
+              <button key={p.id} onClick={() => onShowPlace(p)} className="bm-btn bm-btn-ghost">
+                {placeName(p, lang)} ›
+              </button>
+            ))}
+          </div>
+        </Section>
+      )}
 
       {carries.length > 0 && (
         <Section title={t('shelfFindCarries')}>

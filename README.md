@@ -42,6 +42,11 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Fuß** zu erreichen war: bis 25 km Luftlinie, mit Entfernung und
   Himmelsrichtung (von Jerusalem: Bethlehem 8 km S, Gibeon 9 km NW, Jericho
   23 km NO). Ein Klick wechselt zum Nachbarn.
+- **Eine Handschrift und dieser Ort** – fünf Ortskarten sagen, welcher
+  Handschriftenfund an ihnen hängt, und führen ins Bücherregal: Lachisch, das
+  Hinnomtal, Jerusalem, der Sinai und Alexandria. Die Verknüpfung liegt in
+  `src/data/findPlaces.ts` und wiegt 1,2 kB – `finds.ts` selbst liegt im
+  Regalbündel (159 kB), und das gehört nicht an jeden Klick auf einen Ort.
 - **In wessen Gebiet** – jede Ortskarte sagt, in welchem der zwölf
   Stammesgebiete der Ort liegt, und führt mit einem Klick dorthin: Hebron in
   Juda, Kapernaum in Naftali, Megiddo in Manasse. Wer außerhalb lag, bekommt
@@ -371,6 +376,18 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   von P52 „um 125", die seit den 2000er-Jahren angegriffen wird. **Ester** ist das
   einzige Buch der hebräischen Bibel, von dem in Qumran keine Zeile gefunden
   wurde; auch das steht an seinem Rücken.
+
+  **Vier davon hängen an der Karte, und zwar in beide Richtungen.** Die Ostraka
+  von Lachisch, die Silberröllchen von Ketef Hinnom, der Codex Sinaiticus und
+  der Codex Alexandrinus haben einen Ort, den `places.json` kennt: Vom Fund
+  führt ein Knopf dorthin, und die Ortskarte sagt umgekehrt, was von hier
+  stammt – wer auf dem **Hinnomtal** steht, erfährt, dass dort der älteste
+  bekannte Bibeltext lag. Die übrigen zwölf bleiben draußen: Qumran, Masada,
+  Fustat, Oxyrhynchos und die Fayyum-Papyri stehen in einem Datensatz
+  **biblischer** Orte nicht, und eine Fahne neben die richtige Stelle zu
+  stecken wäre schlechter als keine. Was der Ort mit dem Fund zu tun hat, steht
+  an jedem Eintrag: Alexandria ist Herkunft, nicht Fundstelle, und das
+  Katharinenkloster steht am *überlieferten* Sinai.
 - **Jüdische Gesetzestexte** – unter dem biblischen Regal steht ein zweites
   (`#regal=recht,bavli`). Ein Regal, das beim letzten kanonischen Buch aufhört,
   behauptet, die Arbeit am Text sei mit dem Kanon fertig gewesen – sie war es für
