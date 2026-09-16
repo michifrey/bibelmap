@@ -411,17 +411,21 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   *logos* war seit Heraklit ein besetzter Begriff; die Zwei-Naturen-Lehre von
   Chalcedon redet in den Kategorien des Aristoteles, weil es andere nicht gab;
   und wer heute fragt, warum Glaube begründet werden muss, stellt eine Frage,
-  die vor Kant so niemand gestellt hat. **45 Werke von Platon bis Charles
+  die vor Kant so niemand gestellt hat. **49 Werke von Platon bis Charles
   Taylor**, auf acht Brettern von Athen bis in die Gegenwart – je Werk: die
   eine These, wer in welcher Lage und wogegen schrieb, was darin steht und
   **was es mit dem Lesen der Bibel gemacht hat**. Ausgewählt nicht nach Rang in
   der Philosophiegeschichte, sondern nach dieser letzten Frage; deshalb steht
   Boethius hier und nicht Cicero, Feuerbach und nicht Schopenhauer. Und deshalb
-  stehen drei dort, die anderswo fehlen würden: Karl Barths Römerbrief, der die
+  stehen welche dort, die anderswo fehlen würden: Karl Barths Römerbrief, der die
   schärfste Absage an jede Philosophie als Zugang zu Gott in deren eigener
   Sprache formuliert; Simone Weils Hefte, die aus dem Unglück eine Kategorie
-  machen; und Habermas' Friedenspreisrede, die der säkularen Vernunft aufgibt,
-  religiöse Gehalte zu übersetzen statt abzuräumen.
+  machen; Habermas' Friedenspreisrede, die der säkularen Vernunft aufgibt,
+  religiöse Gehalte zu übersetzen statt abzuräumen; Rosenzweigs Stern, der
+  Judentum und Christentum nebeneinanderstellt, ohne eines im anderen
+  aufgehen zu lassen – und mit Schopenhauer, Sartre und Foucault die drei
+  schärfsten Gegenproben: das sinnlose Wollen, die Freiheit ohne Schöpfer und
+  die Beichte als Technik.
 
   **Der Zeitstrahl ist der Grund, warum dieses Regal einen bekommt.** Er rechnet
   linear in Jahren, ein Punkt je Werk: Zwischen Boethius und Anselm liegen **554
@@ -436,7 +440,7 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 
   **Verknüpft mit allem, was schon da ist.** Jedes Werk nennt die biblischen
   Bücher, mit denen es arbeitet, und führt auf deren Rücken im ersten Regal;
-  **77 Verweise** laufen zwischen den Werken selbst (Luther *widerspricht*
+  **91 Verweise** laufen zwischen den Werken selbst (Luther *widerspricht*
   Erasmus, Thomas *baut auf* Aristoteles, Levinas *widerspricht* Heidegger),
   jeder mit einem Satz, warum – und jeder zeigt zurück in die Zeit, was das
   Prüfskript erzwingt. **19 Werke** führen außerdem hinaus: Augustinus, Anselm,
@@ -1489,7 +1493,7 @@ Buch heraus; findet es die nicht, bricht es ab, statt ein „bestanden" zu melde
 
 ### Das Philosophieregal: Werke, Verweise, Zeitstrahl
 
-Eine Datei, ein Prüfskript: `src/data/philosophy.ts` führt die **45 Werke** und
+Eine Datei, ein Prüfskript: `src/data/philosophy.ts` führt die **49 Werke** und
 die **acht Bretter**, `scripts/check-philosophie.mjs` hält sie zusammen.
 
 Je Werk: Verfasser und Lebensdaten, der Titel im Original (griechisch, lateinisch,
@@ -1543,7 +1547,7 @@ schickt zusätzlich einen Verweis in die Zukunft und ein Ereignis aus der falsch
 Zeit durch und bricht ab, wenn es eines davon nicht findet.
 
 **Gewicht.** Die Prosa wiegt: Das Datenpaket der Regalansicht wächst von 61 auf
-**124 kB gzip**. Es liegt in einem eigenen Paket, kommt erst mit der Ansicht und
+**131 kB gzip**. Es liegt in einem eigenen Paket, kommt erst mit der Ansicht und
 zählt nicht zum Erstaufruf – der steht bei 355 kB JavaScript und damit dort, wo er
 vorher stand. Deshalb liegen auch die vier langen Sätze über und unter dem Regal
 in `philosophy.ts` und nicht in `i18n.ts`: Das Wörterbuch lädt beim ersten Aufruf

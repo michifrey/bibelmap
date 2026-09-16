@@ -13,7 +13,7 @@
 // **mit welchen Begriffen sie gelesen wurden** – und dass diese Begriffe eine
 // eigene Geschichte haben, die man kennen kann.
 //
-// **Die Auswahl.** Fünfundvierzig Werke sind eine Behauptung, und zwar eine
+// **Die Auswahl.** Neunundvierzig Werke sind eine Behauptung, und zwar eine
 // angreifbare. Das Kriterium ist nicht der Rang in der Philosophiegeschichte,
 // sondern die Frage: Hat dieses Buch verändert, wie über Gott, Schrift, Mensch
 // oder Welt geredet wird? Deshalb steht Boethius hier und nicht Cicero,
@@ -1196,6 +1196,39 @@ export const PHIL_WORKS: PhilWork[] = [
     wiki: 'Phänomenologie des Geistes', wikiEn: 'The Phenomenology of Spirit',
   },
   {
+    id: 'schopenhauer-welt', kind: 'traktat',
+    author: { de: 'Arthur Schopenhauer', en: 'Arthur Schopenhauer' },
+    lived: { de: '1788–1860', en: '1788–1860' },
+    original: 'Die Welt als Wille und Vorstellung',
+    de: 'Die Welt als Wille und Vorstellung', en: 'The World as Will and Representation',
+    shortDe: 'Welt als Wille', shortEn: 'Will and Idea',
+    period: 'neunzehn', year: 1819, from: 1814, to: 1844,
+    when: { de: '1819, zweite erweiterte Auflage 1844', en: '1819, second expanded edition 1844' },
+    thesis: {
+      de: 'Hinter allem, was ist, steht kein Sinn, sondern ein blinder Drang – und er will nichts als sich selbst.',
+      en: 'Behind everything there is no meaning but a blind urge – and it wants nothing but itself.',
+    },
+    who: {
+      de: 'Ein reicher Kaufmannssohn, der von seinem Erbe lebte und darum nie jemandem gefallen musste. Das Buch verkauft sich nicht; große Teile der Auflage werden eingestampft, und die Anerkennung kommt erst mit den „Parerga und Paralipomena" von 1851, drei Jahrzehnte später. Seine Berliner Vorlesung legte er trotzig auf dieselbe Stunde wie die Hegels und sprach vor leeren Bänken – die Verachtung, die daraus folgte, steht in fast jeder Seite.',
+      en: 'The rich son of a merchant who lived off his inheritance and therefore never had to please anyone. The book does not sell; much of the print run is pulped, and recognition comes only with the Parerga and Paralipomena of 1851, three decades later. He defiantly scheduled his Berlin lectures at the same hour as Hegel’s and spoke to empty benches – the contempt that followed is on almost every page.',
+    },
+    what: {
+      de: 'Kants Ding an sich bekommt einen Namen: Wille. Nicht der bewusste Wille eines Menschen, sondern ein sinnloses Drängen, das sich in allem objektiviert – im Stein, in der Pflanze, im Trieb. Daraus folgt der Pessimismus: Wollen heißt Mangel, Erfüllung heißt Langeweile, und das Pendel schlägt zwischen beiden. Zwei Auswege nennt er, und beide sind Verneinung: die Kunst, in der das Wollen für Augenblicke aussetzt, und das Mitleid, in dem die Grenze zwischen mir und dem anderen fällt. Er las die Upanischaden täglich und war der erste europäische Philosoph, der indisches Denken nicht als Vorstufe behandelte.',
+      en: 'Kant’s thing in itself gets a name: will. Not the conscious will of a person but a senseless urging that objectifies itself in everything – in stone, in plant, in drive. Pessimism follows: to will is to lack, fulfilment is boredom, and the pendulum swings between them. He names two ways out, both of them negation: art, in which willing stops for moments, and compassion, in which the border between me and the other falls. He read the Upanishads daily and was the first European philosopher not to treat Indian thought as a preliminary stage.',
+    },
+    bible: {
+      de: 'Ein erklärter Atheist, der dem Christentum trotzdem recht gab – in einem Punkt: Es wisse, dass mit dieser Welt etwas nicht stimmt. Erbsünde, Askese, das Kreuz las er als Ausdruck derselben Einsicht, die er selbst formulierte, und die Ethik aus Mitleid stellte er gegen Kants Pflicht. Was er dabei verwarf, gehört ebenso hierher: das Alte Testament, das er als „optimistisch" abtat, in Sätzen, die von der Judenfeindschaft seiner Zeit nicht zu trennen sind. Über ihn kamen Wagner, Nietzsche, Freud und Thomas Mann zu ihren Grundfragen – und die Theologie des 19. Jahrhunderts bekam zum ersten Mal einen Gegner, der nicht mehr über Gott stritt, sondern über das Leiden.',
+      en: 'A declared atheist who nonetheless granted Christianity one thing: it knows that something is wrong with this world. Original sin, asceticism and the cross he read as expressions of the same insight he was putting into words, and he set an ethics of compassion against Kant’s duty. What he rejected belongs here as much: the Old Testament, which he dismissed as "optimistic", in sentences inseparable from the antisemitism of his time. Through him Wagner, Nietzsche, Freud and Thomas Mann came to their basic questions – and 19th-century theology met, for the first time, an opponent who no longer argued about God but about suffering.',
+    },
+    books: ['Eccl', 'Gen', 'Rom'],
+    links: [
+      { to: 'kant-kritik', kind: 'builds', de: 'Das Ding an sich bleibt unerkennbar – außer an einer Stelle: im eigenen Leib, und dort heißt es Wille.', en: 'The thing in itself stays unknowable – except at one point: in one’s own body, and there it is called will.' },
+      { to: 'hegel-phaenomenologie', kind: 'against', de: 'Kein Gang der Vernunft durch die Geschichte: Was sich durchsetzt, ist kein Geist, sondern ein Drang ohne Ziel.', en: 'No march of reason through history: what prevails is not spirit but an urge without a goal.' },
+      { to: 'platon-timaios', kind: 'echoes', de: 'Die Ideen bleiben – aber sie sind nicht der Bauplan eines guten Schöpfers, sondern die Stufen, auf denen der Wille sichtbar wird.', en: 'The forms remain – but as the levels on which the will becomes visible, not as the plan of a good creator.' },
+    ],
+    wiki: 'Die Welt als Wille und Vorstellung', wikiEn: 'The World as Will and Representation',
+  },
+  {
     id: 'feuerbach-wesen', kind: 'kritik',
     author: { de: 'Ludwig Feuerbach', en: 'Ludwig Feuerbach' },
     lived: { de: '1804–1872', en: '1804–1872' },
@@ -1425,6 +1458,39 @@ export const PHIL_WORKS: PhilWork[] = [
     wiki: 'Der Römerbrief (Karl Barth)', wikiEn: 'The Epistle to the Romans (book)',
   },
   {
+    id: 'rosenzweig-stern', kind: 'traktat',
+    author: { de: 'Franz Rosenzweig', en: 'Franz Rosenzweig' },
+    lived: { de: '1886–1929', en: '1886–1929' },
+    original: 'Der Stern der Erlösung',
+    de: 'Der Stern der Erlösung', en: 'The Star of Redemption',
+    shortDe: 'Der Stern', shortEn: 'The Star',
+    period: 'moderne', year: 1921, from: 1918, to: 1921,
+    when: { de: 'geschrieben 1918/19, erschienen 1921', en: 'written 1918/19, published 1921' },
+    thesis: {
+      de: 'Das Denken fängt nicht beim Allgemeinen an, sondern bei diesem einen Menschen, der sterben muss.',
+      en: 'Thinking does not begin with the universal but with this one human being, who has to die.',
+    },
+    who: {
+      de: 'Ein Hegel-Forscher, der 1913 in einer Berliner Synagoge am Versöhnungstag entscheidet, Jude zu bleiben, statt sich taufen zu lassen – mit dem Satz, ein Umweg über das Christentum sei für ihn unnötig. Die ersten Seiten dieses Buches schreibt er als Soldat an der mazedonischen Front auf Feldpostkarten. 1922 erkrankt er an ALS und ist binnen zweier Jahre gelähmt; er diktiert weiter, zuletzt buchstabenweise über die Bewegung eines Augenlids, und übersetzt in diesem Zustand mit Martin Buber die Bibel.',
+      en: 'A Hegel scholar who decides, in a Berlin synagogue on the Day of Atonement in 1913, to remain a Jew rather than be baptised – saying that a detour through Christianity is unnecessary for him. He writes the first pages of this book as a soldier on the Macedonian front, on army postcards. In 1922 he falls ill with ALS and within two years is paralysed; he keeps dictating, at the end letter by letter through the movement of an eyelid, and in that condition translates the Bible with Martin Buber.',
+    },
+    what: {
+      de: 'Der erste Satz lautet „Vom Tode". Gegen Hegels All, in dem der Einzelne aufgeht, setzt Rosenzweig drei Größen, die sich nicht ineinander auflösen lassen: Gott, Welt, Mensch. Verbunden werden sie durch drei Ereignisse – Schöpfung, Offenbarung, Erlösung –, und aus beiden Dreiecken ergibt sich der Stern. Offenbarung ist dabei kein Lehrsatz, sondern Anrede: Ihr Text ist das Hohelied, und die Antwort darauf heißt „hier bin ich". Am Ende stehen Judentum und Christentum nebeneinander, als Feuer und als Strahlen – das eine schon am Ziel, das andere ewig unterwegs.',
+      en: 'The first words are "of death". Against Hegel’s All, in which the individual is absorbed, Rosenzweig sets three magnitudes that cannot be dissolved into one another: God, world, human being. Three events join them – creation, revelation, redemption – and out of the two triangles comes the star. Revelation here is not a doctrine but address: its text is the Song of Songs, and the answer to it is "here I am". At the end Judaism and Christianity stand side by side, as fire and as rays – the one already at the goal, the other eternally on the way.',
+    },
+    bible: {
+      de: 'Für das Lesen der Bibel folgt daraus etwas Ungewöhnliches: Das Hohelied ist keine Allegorie, die man erst entschlüsseln müsste, sondern die Sprache der Liebe selbst – und genau darum das Buch der Offenbarung. Aus diesem Ansatz entstand die Übersetzung mit Buber, die den hebräischen Klang bis in die Wortstellung hörbar machen will. Und für das Verhältnis der beiden Religionen ist Rosenzweig bis heute der stärkste Entwurf, der weder Ablösung noch Gleichgültigkeit behauptet – geschrieben zwanzig Jahre vor der Schoah, von einem, der ihre Vorzeichen nicht mehr erlebte.',
+      en: 'For reading the Bible something unusual follows: the Song of Songs is not an allegory to be decoded but the language of love itself – and precisely therefore the book of revelation. Out of this approach grew the translation with Buber, which wants to make the Hebrew sound audible down to the word order. And on the relation of the two religions Rosenzweig remains the strongest design that claims neither supersession nor indifference – written twenty years before the Shoah, by a man who did not live to see its signs.',
+    },
+    books: ['Song', 'Gen', 'Ps'],
+    links: [
+      { to: 'hegel-phaenomenologie', kind: 'against', de: 'Der Doktorand, der über Hegel promoviert hatte, fängt sein eigenes Buch mit dem an, was kein System verdauen kann: dem eigenen Tod.', en: 'The doctoral student who had written on Hegel begins his own book with what no system can digest: his own death.' },
+      { to: 'kierkegaard-furcht', kind: 'builds', de: 'Wieder der Einzelne gegen das Allgemeine – nun aber nicht schweigend, sondern angeredet und antwortend.', en: 'The single individual against the universal again – only now not silent but addressed, and answering.' },
+      { to: 'schleiermacher-reden', kind: 'echoes', de: 'Auch hier ist Religion nicht Lehre – aber sie ist auch kein Gefühl, sondern ein Gespräch zwischen zweien.', en: 'Here too religion is not doctrine – but neither is it feeling; it is a conversation between two.' },
+    ],
+    wiki: 'Der Stern der Erlösung', wikiEn: 'The Star of Redemption',
+  },
+  {
     id: 'buber-ich-du', kind: 'essay',
     author: { de: 'Martin Buber', en: 'Martin Buber' },
     lived: { de: '1878–1965', en: '1878–1965' },
@@ -1453,6 +1519,7 @@ export const PHIL_WORKS: PhilWork[] = [
     links: [
       { to: 'kierkegaard-furcht', kind: 'builds', de: 'Der Einzelne vor Gott – nun nicht im Schweigen, sondern in der Anrede.', en: 'The single individual before God – now not in silence but in address.' },
       { to: 'feuerbach-wesen', kind: 'against', de: 'Wenn Gott ein Du ist und kein Es, ist er nicht das Bild, das ein Ich sich macht.', en: 'If God is a Thou and not an It, he is not the image an I makes for itself.' },
+      { to: 'rosenzweig-stern', kind: 'builds', de: 'Zwei Jahre vorher und aus demselben Kreis: Offenbarung als Anrede. Danach übersetzen die beiden gemeinsam die Bibel.', en: 'Two years earlier and out of the same circle: revelation as address. Afterwards the two translate the Bible together.' },
     ],
     wiki: 'Ich und Du', wikiEn: 'I and Thou',
   },
@@ -1488,6 +1555,39 @@ export const PHIL_WORKS: PhilWork[] = [
     ],
     event: 'barmen',
     wiki: 'Sein und Zeit', wikiEn: 'Being and Time',
+  },
+  {
+    id: 'sartre-sein-nichts', kind: 'traktat',
+    author: { de: 'Jean-Paul Sartre', en: 'Jean-Paul Sartre' },
+    lived: { de: '1905–1980', en: '1905–1980' },
+    original: 'L’Être et le Néant',
+    de: 'Das Sein und das Nichts', en: 'Being and Nothingness',
+    shortDe: 'Sein und Nichts', shortEn: 'Being, Nothingness',
+    period: 'moderne', year: 1943, from: 1940, to: 1946,
+    when: { de: '1943, im besetzten Paris', en: '1943, in occupied Paris' },
+    thesis: {
+      de: 'Der Mensch ist zur Freiheit verurteilt: Er ist nichts, als was er aus sich macht – und kann sich auf niemanden herausreden.',
+      en: 'The human being is condemned to freedom: nothing but what they make of themselves – with nobody to blame.',
+    },
+    who: {
+      de: 'Geschrieben in den Cafés eines besetzten Paris, von einem, der 1940 neun Monate in deutscher Kriegsgefangenschaft war; erschienen mit Genehmigung der Zensur, was ihm später vorgehalten wurde. Drei Jahre danach fasst er die Sache in einem überfüllten Vortrag zusammen – „Der Existentialismus ist ein Humanismus" –, und dieser Vortrag macht die Formel bekannt, die im dicken Buch so gar nicht steht: Die Existenz geht der Essenz voraus. Heidegger, auf den er sich beruft, weist die Verwandtschaft ein Jahr später ausdrücklich zurück.',
+      en: 'Written in the cafés of an occupied Paris by a man who had spent nine months as a German prisoner of war in 1940; published with the censor’s permission, which was later held against him. Three years on he sums it up in a packed lecture – "Existentialism is a Humanism" – and that lecture makes famous the formula which does not appear in the thick book at all: existence precedes essence. Heidegger, on whom he draws, expressly repudiates the kinship a year later.',
+    },
+    what: {
+      de: 'Bewusstsein ist nicht ein Ding unter Dingen, sondern ein Loch im Sein: Es ist immer schon über das hinaus, was es gerade ist. Daraus folgt die Freiheit, und aus der Freiheit die Angst – und aus der Angst die Flucht in die Unaufrichtigkeit, die *mauvaise foi*: der Kellner, der den Kellner spielt, um kein Mensch sein zu müssen, der wählen kann. Berühmt ist die Analyse des Blicks: Unter den Augen eines anderen werde ich zum Gegenstand. Und am Ende der Satz, auf den das ganze Buch zuläuft – der Mensch sei das Projekt, Gott zu sein, und dieses Projekt sei aussichtslos: „eine nutzlose Leidenschaft".',
+      en: 'Consciousness is not a thing among things but a hole in being: it is always already beyond what it currently is. From this comes freedom, from freedom anxiety, and from anxiety the flight into bad faith – the waiter who plays the waiter so as not to be a person who must choose. Famous is the analysis of the look: under another’s eyes I become an object. And at the end the sentence the whole book runs toward – that the human being is the project of being God, and that the project is hopeless: "a useless passion".',
+    },
+    bible: {
+      de: 'Sartre ist die genaueste Gegenprobe zu diesem Regal: Er nimmt den Schöpfergott von 1. Mose als Handwerker beim Wort – der weiß, was ein Mensch ist, bevor er ihn macht – und zieht die Folge, dass ohne ihn auch keine Menschennatur bleibt, an der sich etwas ablesen ließe. Was in Römer 7 als geteilter Wille steht, liest er als Unaufrichtigkeit: nicht „ich kann nicht", sondern „ich will nicht wissen, dass ich wähle". Christliche Theologie hat darauf zweifach geantwortet – mit der Einsicht, dass Freiheit tatsächlich nicht an Gott vorbeigeht, und mit der Rückfrage, ob ein Mensch ohne jedes Angenommensein die Last, die Sartre ihm auflädt, überhaupt tragen kann.',
+      en: 'Sartre is this shelf’s sharpest control test: he takes the creator God of Genesis literally as a craftsman – one who knows what a human being is before making one – and draws the conclusion that without him no human nature remains from which anything could be read off. What Romans 7 calls a divided will he reads as bad faith: not "I cannot" but "I do not want to know that I am choosing". Christian theology has answered twice over – with the insight that freedom really does not go around God, and with the counter-question whether a person unaccepted by anyone can carry the load Sartre puts on them.',
+    },
+    books: ['Gen', 'Rom', 'Eccl'],
+    links: [
+      { to: 'heidegger-sein-zeit', kind: 'builds', de: 'Die Begriffe kommen von dort – Heidegger selbst bestritt 1946, dass Sartre ihn verstanden habe.', en: 'The concepts come from there – Heidegger himself denied in 1946 that Sartre had understood him.' },
+      { to: 'descartes-meditationes', kind: 'builds', de: 'Wieder beginnt alles beim Bewusstsein, das sich seiner selbst gewiss ist – nur findet es dort keinen Gott mehr vor, sondern eine Leere.', en: 'Everything begins again with a consciousness certain of itself – only now it finds no God there, but an emptiness.' },
+      { to: 'kierkegaard-furcht', kind: 'echoes', de: 'Angst, Wahl, kein Grund, auf den man sich berufen kann – dieselbe Lage, und diesmal ohne den Sprung.', en: 'Anxiety, choice, no ground to appeal to – the same situation, and this time without the leap.' },
+    ],
+    wiki: 'Das Sein und das Nichts', wikiEn: 'Being and Nothingness',
   },
   {
     id: 'weil-schwerkraft', kind: 'aphorismen',
@@ -1621,6 +1721,39 @@ export const PHIL_WORKS: PhilWork[] = [
     wiki: 'Paul Ricœur', wikiEn: 'Paul Ricœur',
   },
   {
+    id: 'foucault-ueberwachen', kind: 'traktat',
+    author: { de: 'Michel Foucault', en: 'Michel Foucault' },
+    lived: { de: '1926–1984', en: '1926–1984' },
+    original: 'Surveiller et punir',
+    de: 'Überwachen und Strafen', en: 'Discipline and Punish',
+    shortDe: 'Überwachen', shortEn: 'Discipline',
+    period: 'moderne', year: 1975, from: 1971, to: 1978,
+    when: { de: '1975', en: '1975' },
+    thesis: {
+      de: 'Macht sitzt nicht oben, sondern in den Handgriffen, mit denen Menschen vermessen, eingeteilt und zu sich selbst befragt werden.',
+      en: 'Power does not sit at the top but in the routines by which people are measured, sorted and questioned about themselves.',
+    },
+    who: {
+      de: 'Professor am Collège de France, der gleichzeitig in der Gefangenengruppe GIP arbeitete und Häftlinge selbst zu Wort kommen ließ; das Buch entsteht aus dieser Arbeit und aus Archiven. Seine Methode nennt er Genealogie und nimmt den Namen ausdrücklich von Nietzsche: nicht fragen, was etwas ist, sondern wie es geworden ist und wem es genützt hat. Der letzte, 2018 aus dem Nachlass erschienene Band seiner „Sexualität und Wahrheit" handelt von den Kirchenvätern.',
+      en: 'A professor at the Collège de France who at the same time worked in the prison group GIP and let prisoners speak for themselves; the book grows out of that work and out of archives. He calls his method genealogy and takes the name expressly from Nietzsche: do not ask what something is but how it came to be and whom it served. The final volume of his History of Sexuality, published from his papers in 2018, is about the church fathers.',
+    },
+    what: {
+      de: 'Das Buch beginnt mit einer Hinrichtung von 1757, in aller Grausamkeit, und daneben mit einem Stundenplan aus einem Jugendgefängnis achtzig Jahre später. Zwischen beiden liegt kein Fortschritt zur Milde, sondern ein Wechsel der Technik: vom Strafen am Körper zum Formen der Seele. Aufsicht, Prüfung, Akte, Zeitplan – dieselben Handgriffe in Schule, Kaserne, Fabrik, Klinik. Benthams Panoptikum, der Bau, in dem jeder gesehen werden könnte und deshalb selbst aufpasst, ist das Bild dafür. Später kommt der Begriff dazu, der hier am meisten zählt: Pastoralmacht – eine Regierungsweise, die nicht über Gebiete herrscht, sondern für jeden Einzelnen sorgt und jeden Einzelnen kennt.',
+      en: 'The book opens with an execution of 1757, in all its cruelty, and beside it a timetable from a juvenile prison eighty years later. Between them lies no progress toward mildness but a change of technique: from punishing the body to forming the soul. Supervision, examination, file, schedule – the same routines in school, barracks, factory, clinic. Bentham’s panopticon, the building in which anyone might be seen and therefore watches themselves, is the image for it. Later comes the term that matters most here: pastoral power – a way of governing that does not rule territories but cares for each single person and knows each single person.',
+    },
+    bible: {
+      de: 'Diese Pastoralmacht kommt nach Foucault aus der Kirche, und ihr Bild steht in Hesekiel 34 und Johannes 10: der Hirte, der die einzelne Verlorene sucht und für jedes Schaf Rechenschaft gibt. Aus dem Beichtstuhl, sagt er, sei die Technik entstanden, mit der wir bis heute über uns selbst reden – erzähl, was in dir vorgeht, dann wirst du frei. Das ist die härteste Anfrage an jede Seelsorge, und sie ist nicht mit dem Hinweis erledigt, er sei ungläubig gewesen: Wer die Beichte kennt, erkennt die Beschreibung. Eine Antwort, die trägt, müsste zeigen, worin sich ein Hirte, der sein Leben lässt, von einem unterscheidet, der alles über seine Schafe weiß.',
+      en: 'This pastoral power comes, on Foucault’s account, from the church, and its image stands in Ezekiel 34 and John 10: the shepherd who searches out the one lost sheep and accounts for each one. Out of the confessional, he says, grew the technique by which we still talk about ourselves – tell what is going on inside you and you will be free. That is the hardest question to any pastoral care, and it is not disposed of by noting that he was an unbeliever: anyone who knows confession recognises the description. An answer that holds would have to show how a shepherd who lays down his life differs from one who knows everything about his sheep.',
+    },
+    books: ['Ezek', 'John', '1John'],
+    links: [
+      { to: 'nietzsche-wissenschaft', kind: 'builds', de: 'Die Genealogie als Methode kommt von Nietzsche: nicht fragen, was wahr ist, sondern wie es wahr wurde.', en: 'Genealogy as a method comes from Nietzsche: do not ask what is true but how it became true.' },
+      { to: 'marx-hegelkritik', kind: 'against', de: 'Macht wird nicht besessen wie ein Betrieb, sondern ausgeübt – in Handgriffen, die auch der treibt, der sie erleidet.', en: 'Power is not owned like a factory but exercised – in routines driven even by those who suffer them.' },
+      { to: 'kant-kritik', kind: 'echoes', de: 'Foucault kommt am Ende auf Kants „Was ist Aufklärung?" zurück – und dreht die Frage um: Nicht was darf ich hoffen, sondern was bin ich gerade geworden?', en: 'At the end Foucault returns to Kant’s "What is Enlightenment?" – and turns the question round: not what may I hope, but what have I just become?' },
+    ],
+    wiki: 'Überwachen und Strafen', wikiEn: 'Discipline and Punish',
+  },
+  {
     id: 'habermas-glauben', kind: 'essay',
     author: { de: 'Jürgen Habermas', en: 'Jürgen Habermas' },
     lived: { de: 'geboren 1929', en: 'born 1929' },
@@ -1682,6 +1815,7 @@ export const PHIL_WORKS: PhilWork[] = [
     links: [
       { to: 'nietzsche-wissenschaft', kind: 'builds', de: 'Der tolle Mensch fragte, was wir getan haben; Taylor beschreibt, wie es geschah.', en: 'The madman asked what we have done; Taylor describes how it happened.' },
       { to: 'ockham-summa-logicae', kind: 'echoes', de: 'Taylor führt eine Spur bis hierher zurück: Wo nur Einzeldinge sind, wird die Welt zum Gegenstand.', en: 'Taylor traces a line back to here: where only individual things are, the world becomes an object.' },
+      { to: 'foucault-ueberwachen', kind: 'against', de: 'Auch bei Taylor ist das gepufferte Selbst gemacht – aber gemacht von Menschen, die etwas wollten, nicht von einem Apparat, der niemandem gehört.', en: 'In Taylor too the buffered self is made – but made by people who wanted something, not by an apparatus belonging to no one.' },
       { to: 'habermas-glauben', kind: 'echoes', de: 'Dieselbe Lage, sechs Jahre später und mit umgekehrter Frage: Habermas fragt, was die säkulare Vernunft der Religion schuldet, Taylor, wie es zu dieser Vernunft überhaupt kam.', en: 'The same situation six years later, with the question reversed: Habermas asks what secular reason owes religion, Taylor how that reason came about at all.' },
     ],
     event: 'sueden',
@@ -1802,8 +1936,8 @@ export const PHIL_MARKEN: { year: number; de: string; en: string }[] = [
 
 /** Der Satz über dem Regal. */
 export const PHIL_INTRO: Bilingual = {
-  de: 'Kein Satz dieser Bibel wurde je ohne Vorverständnis gelesen. „Im Anfang war das Wort" steht auf Griechisch da, und „Logos" war ein besetzter Begriff; die Zwei-Naturen-Lehre redet in den Kategorien des Aristoteles, weil es andere nicht gab; und wer heute fragt, warum Glaube begründet werden muss, stellt eine Frage, die vor Kant so niemand gestellt hat. Fünfundvierzig Werke von Platon bis in die Gegenwart – ausgewählt nicht nach Rang, sondern nach der Frage: Hat dieses Buch verändert, wie über Gott, Schrift, Mensch und Welt geredet wird?',
-  en: 'No sentence of this Bible was ever read without a prior understanding. "In the beginning was the Word" stands there in Greek, and "logos" was a loaded term; the doctrine of the two natures speaks in Aristotle’s categories because no others existed; and anyone asking today why faith must be justified is asking a question nobody put that way before Kant. Forty-five works from Plato to the present – chosen not by rank but by one question: did this book change how God, scripture, humanity and world are talked about?',
+  de: 'Kein Satz dieser Bibel wurde je ohne Vorverständnis gelesen. „Im Anfang war das Wort" steht auf Griechisch da, und „Logos" war ein besetzter Begriff; die Zwei-Naturen-Lehre redet in den Kategorien des Aristoteles, weil es andere nicht gab; und wer heute fragt, warum Glaube begründet werden muss, stellt eine Frage, die vor Kant so niemand gestellt hat. Neunundvierzig Werke von Platon bis in die Gegenwart – ausgewählt nicht nach Rang, sondern nach der Frage: Hat dieses Buch verändert, wie über Gott, Schrift, Mensch und Welt geredet wird?',
+  en: 'No sentence of this Bible was ever read without a prior understanding. "In the beginning was the Word" stands there in Greek, and "logos" was a loaded term; the doctrine of the two natures speaks in Aristotle’s categories because no others existed; and anyone asking today why faith must be justified is asking a question nobody put that way before Kant. Forty-nine works from Plato to the present – chosen not by rank but by one question: did this book change how God, scripture, humanity and world are talked about?',
 };
 
 /** Was die Achse des Zeitstrahls zusagt – und was sie tut, wo zwei Werke sich decken. */
