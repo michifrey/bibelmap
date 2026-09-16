@@ -405,6 +405,46 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   sind nicht in Kapiteln zu messen – der Babylonische Talmud hat 2711 Blätter, die
   Mischna 63 Traktate, die Responsen keinen Umfang, sondern einen Zuwachs. Statt
   eine vergleichbare Zahl zu erfinden, stehen alle gleich breit.
+- **Philosophische Werke** – und ein drittes Regal darunter
+  (`#regal=philosophie,kant-kritik`). Kein Satz dieser Bibel wurde je ohne
+  Vorverständnis gelesen: „Im Anfang war das Wort" steht auf Griechisch da, und
+  *logos* war seit Heraklit ein besetzter Begriff; die Zwei-Naturen-Lehre von
+  Chalcedon redet in den Kategorien des Aristoteles, weil es andere nicht gab;
+  und wer heute fragt, warum Glaube begründet werden muss, stellt eine Frage,
+  die vor Kant so niemand gestellt hat. **42 Werke von Platon bis Charles
+  Taylor**, auf acht Brettern von Athen bis in die Gegenwart – je Werk: die
+  eine These, wer in welcher Lage und wogegen schrieb, was darin steht und
+  **was es mit dem Lesen der Bibel gemacht hat**. Ausgewählt nicht nach Rang in
+  der Philosophiegeschichte, sondern nach dieser letzten Frage; deshalb steht
+  Boethius hier und nicht Cicero, Feuerbach und nicht Schopenhauer.
+
+  **Der Zeitstrahl ist der Grund, warum dieses Regal einen bekommt.** Er rechnet
+  linear in Jahren, ein Punkt je Werk: Zwischen Boethius und Anselm liegen **554
+  Jahre ohne einen einzigen Punkt**, zwischen Kant und Hegel 26. Die Leiste der
+  Kirchengeschichte setzt bewusst gleich breite Striche – dort zählt die
+  Reihenfolge –, hier ist der Abstand selbst die Aussage, und eine gestauchte
+  Achse verschöbe genau das. Wo zwei Werke im selben Jahr erschienen – Pascal
+  und Spinoza 1670 –, rückt der zweite Punkt eine **Spur tiefer statt zur
+  Seite**: Der Abstand bleibt wahr, und das Gedränge der letzten zweihundert
+  Jahre wird sichtbar, statt weggerechnet zu werden. `npm run check:philosophie`
+  rechnet die Achse nach.
+
+  **Verknüpft mit allem, was schon da ist.** Jedes Werk nennt die biblischen
+  Bücher, mit denen es arbeitet, und führt auf deren Rücken im ersten Regal;
+  **67 Verweise** laufen zwischen den Werken selbst (Luther *widerspricht*
+  Erasmus, Thomas *baut auf* Aristoteles, Levinas *widerspricht* Heidegger),
+  jeder mit einem Satz, warum – und jeder zeigt zurück in die Zeit, was das
+  Prüfskript erzwingt. **18 Werke** führen außerdem hinaus: Augustinus, Anselm,
+  Maimonides und Luther auf ihre Person im **Zeitbaum**, andere auf das
+  Ereignis der **Kirchengeschichte**, das in ihrer Nähe liegt – und ein
+  Ereignis, das mehr als 110 Jahre neben dem Werk liegt, gilt dem Prüfskript
+  als Tippfehler, nicht als Zusammenhang.
+
+  Der Anstoß kam vom Philosophiepodcast [Mindmaps](https://www.reflab.ch/category/podcasts/mindmaps/)
+  von Manuel Schmid und Heinzpeter Hempelmann (RefLab), der seit 2021 genau das
+  tut: philosophische Entwürfe lesen und ausdrücklich auch theologisch
+  befragen. Übernommen ist von dort nichts – kein Text, keine Gliederung, keine
+  Folgenliste –, nur die Überzeugung, dass diese beiden Gespräche zusammengehören.
 - **Zeitbaum** – ein aufklappbarer Stammbaum von **Adam & Eva bis Jesus Christus**
   (1. Mose 5/11, Rut 4, 1. Chronik, Matthäus 1) und darüber hinaus als
   Glaubenszeugen-Strang der **Kirchengeschichte** (Kirchenväter, Luther, Zwingli,
@@ -727,10 +767,10 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die dreiundzwanzig Prüfungen, die von sich aus immer
+`npm run check` bündelt die vierundzwanzig Prüfungen, die von sich aus immer
 dasselbe Ergebnis liefern – darunter Buchkürzel, Zeitdokumente, Stammesgrenzen,
 Farbkontraste, Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen,
-Quizfragen, Heilsgeschichte, Feste Israels, **Bücherregal**, Reisen & Mission,
+Quizfragen, Heilsgeschichte, Feste Israels, **Bücherregal**, **Philosophieregal**, Reisen & Mission,
 Startzahlen und **Ortsdatei** – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
@@ -1232,6 +1272,70 @@ statt zweimal.
 
 Dazu die Gegenprobe: Das Skript baut vier Fehler ins Regal ein und nimmt ein
 Buch heraus; findet es die nicht, bricht es ab, statt ein „bestanden" zu melden.
+
+### Das Philosophieregal: Werke, Verweise, Zeitstrahl
+
+Eine Datei, ein Prüfskript: `src/data/philosophy.ts` führt die **42 Werke** und
+die **acht Bretter**, `scripts/check-philosophie.mjs` hält sie zusammen.
+
+Je Werk: Verfasser und Lebensdaten, der Titel im Original (griechisch, lateinisch,
+dänisch, französisch) mit Umschrift, die **Art** (Dialog, Vorlesung, Traktat,
+Summe, Aphorismen …), das **Brett**, das **Jahr** als Punkt auf dem Zeitstrahl und
+daneben die **Spanne** `from`/`to` – bei der Metaphysik des Aristoteles reicht sie
+über zweihundert Jahre, weil zwischen der Vorlesung und der Ausgabe des
+Andronikos genau so viel liegt. Dazu vier Texte, alle zweisprachig: die eine
+**These**, das **Wer und wogegen**, das **Was darin steht** und – der Grund, warum
+das Regal in einem Bibelatlas steht – **was es mit dem Lesen der Bibel gemacht
+hat**.
+
+Die Auswahl ist eine Behauptung und als solche angreifbar. Das Kriterium steht im
+Kopf der Datei: nicht der Rang in der Philosophiegeschichte, sondern die Frage, ob
+dieses Buch verändert hat, wie über Gott, Schrift, Mensch und Welt geredet wird.
+
+**Keine Importe aus Zeitbaum und Kirchengeschichte.** `person` und `event` stehen
+als bloße Zeichenketten in der Datei – der Zeitbaum wiegt 60 kB, und dieses Regal
+soll sie nicht mitladen, um einen Knopf zu beschriften. Dass die Kennungen
+stimmen, prüft das Skript gegen die echten Dateien, und zwar auch auf die
+Jahreszahl.
+
+`npm run check:philosophie` prüft, was still falsch werden kann:
+
+- **Das Brett gegen das eigene Jahr** – ein Werk auf einem Brett, das sein
+  Erscheinungsjahr nicht enthält, wäre eine Überschrift, der das Datum daneben
+  widerspricht. Dasselbe für die Spanne: `year` muss zwischen `from` und `to`
+  liegen.
+- **Jeden Verweis** – Ziel vorhanden, kein Verweis auf sich selbst, keiner
+  doppelt, beide Sprachen gefüllt. Und: **jeder Verweis zeigt zurück in die
+  Zeit**. Ein Werk, das auf ein späteres antwortet, stünde in der Liste
+  „Antwortet auf" mit einem Buch, das es beim Erscheinen noch nicht gab.
+- **Jedes biblische Buch** gegen `books.ts`, jede **Person** gegen den Zeitbaum,
+  jedes **Ereignis** gegen die Kirchengeschichte – und dessen Jahr gegen das des
+  Werkes: mehr als 110 Jahre Abstand gelten als Tippfehler, nicht als
+  Zusammenhang.
+- **Die Geometrie des Zeitstrahls**, und die ist der eigentliche Anlass für ein
+  eigenes Skript: Die x-Werte stehen in der Reihenfolge der Jahre, keine Marke
+  liegt außerhalb, keine zwei Marken derselben Spur liegen näher als 16 Pixel –
+  und **keine Marke ist gegenüber ihrem Jahr verschoben**. Eine Achse, die
+  schweigend verschiebt, wäre eine falsche Achse; geprüft wird jede Marke gegen
+  die Rechnung aus ihrem Jahr.
+- **Die Bretter** – keines leer, alle in der Reihenfolge, jede Farbe ein
+  Sechserhex (die Kontraste selbst prüft `check:contrast`, das die Datei in
+  seiner Liste führt).
+
+Dazu die Gegenprobe: Das Skript baut sechs Fehler ein – ein Brett, das es nicht
+gibt, ein erfundenes Bibelbuch, ein um 900 Jahre verschobenes Jahr, ein
+Verweisziel ins Leere, eine unbekannte Person, einen zu langen Rückentitel –,
+schickt zusätzlich einen Verweis in die Zukunft und ein Ereignis aus der falschen
+Zeit durch und bricht ab, wenn es eines davon nicht findet.
+
+**Gewicht.** Die Prosa wiegt: Das Datenpaket der Regalansicht wächst von 61 auf
+**118 kB gzip**. Es liegt in einem eigenen Paket, kommt erst mit der Ansicht und
+zählt nicht zum Erstaufruf – der steht bei 355 kB JavaScript und damit dort, wo er
+vorher stand. Deshalb liegen auch die vier langen Sätze über und unter dem Regal
+in `philosophy.ts` und nicht in `i18n.ts`: Das Wörterbuch lädt beim ersten Aufruf
+mit, die Ansicht nicht. Im Leerlauf wird das Paket wie alle Ansichten in den Cache
+des Service Workers geholt, damit die App ohne Netz vollständig bleibt – das ist
+der Preis dieser Entscheidung, und er steht hier, damit die nächste ihn kennt.
 
 ### Epochen & Zeitleiste
 

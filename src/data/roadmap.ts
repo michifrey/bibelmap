@@ -92,11 +92,11 @@ export const ROAD: RoadStop[] = [
     tag: { de: 'v0.11', en: 'v0.11' },
     title: { de: 'Die Bibel als Regal', en: 'The Bible as a shelf' },
     body: {
-      de: 'Die 66 Bücher nach der Zeit ihrer Entstehung aufgestellt statt nach dem Kanon – mit der vollen Spanne der strittigen Datierungen, Querverweisen, der ältesten erhaltenen Handschrift je Buch und denen, die sie gefunden haben. Darunter ein zweites Regal: die jüdischen Gesetzestexte, weil die Arbeit am Text mit dem Kanon nicht aufhörte.',
-      en: 'The 66 books shelved by when they were written rather than by canon – with the full span of the disputed datings, cross-references, the oldest surviving manuscript for each book, and the people who found them. Below it a second shelf: the Jewish legal texts, because work on the text did not stop with the canon.',
+      de: 'Die 66 Bücher nach der Zeit ihrer Entstehung aufgestellt statt nach dem Kanon – mit der vollen Spanne der strittigen Datierungen, Querverweisen, der ältesten erhaltenen Handschrift je Buch und denen, die sie gefunden haben. Darunter ein zweites Regal: die jüdischen Gesetzestexte, weil die Arbeit am Text mit dem Kanon nicht aufhörte – und ein drittes mit 42 philosophischen Werken von Platon bis in die Gegenwart, auf einem maßstabsgetreuen Zeitstrahl, weil kein Satz dieser Bibel je ohne Vorverständnis gelesen wurde.',
+      en: 'The 66 books shelved by when they were written rather than by canon – with the full span of the disputed datings, cross-references, the oldest surviving manuscript for each book, and the people who found them. Below it a second shelf: the Jewish legal texts, because work on the text did not stop with the canon – and a third with 42 philosophical works from Plato to the present on a to-scale timeline, because no sentence of this Bible was ever read without a prior understanding.',
     },
     status: 'done',
-    figure: { value: '16', label: { de: 'Funde, 11 Gesetzestexte', en: 'discoveries, 11 legal texts' } },
+    figure: { value: '16', label: { de: 'Funde, 11 Gesetzestexte, 42 philosophische Werke', en: 'discoveries, 11 legal texts, 42 philosophical works' } },
   },
   {
     id: 'heute',

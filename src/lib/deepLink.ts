@@ -45,8 +45,9 @@ export interface Route {
   feasts?: string;
   /**
    * Auswahl im Bücherregal: `#regal=buch,Isa`, `#regal=recht,mischna`,
-   * `#regal=fund,qumran`. Drei Arten stehen dort nebeneinander, und ein Buch
-   * kann so heißen wie ein Fund – deshalb die Art davor und nicht bloß die ID.
+   * `#regal=fund,qumran`, `#regal=philosophie,kant-kritik`. Vier Arten stehen
+   * dort nebeneinander, und ein Buch kann so heißen wie ein Fund – deshalb die
+   * Art davor und nicht bloß die ID.
    */
   shelf?: ShelfSel;
   /** Ereignis der Israel-Karte: `#israel=okt2023`. */
@@ -171,10 +172,17 @@ export function parseHash(hash: string): Route | null {
         ? { view: 'map', mode: 'feasts', feasts: args[0] }
         : { view: 'map', mode: 'feasts' };
     case 'regal': {
-      const kind = args[0] === 'recht' ? 'law' : args[0] === 'fund' ? 'find' : 'book';
+      const kind =
+        args[0] === 'recht' ? 'law'
+        : args[0] === 'fund' ? 'find'
+        : args[0] === 'philosophie' ? 'phil'
+        : 'book';
       // „buch" darf auch fehlen: `#regal=Isa` ist kürzer und eindeutig, weil
-      // kein OSIS-Kürzel „recht" oder „fund" heißt.
-      const id = args[0] === 'buch' || args[0] === 'recht' || args[0] === 'fund' ? args[1] : args[0];
+      // kein OSIS-Kürzel „recht", „fund" oder „philosophie" heißt.
+      const id =
+        args[0] === 'buch' || args[0] === 'recht' || args[0] === 'fund' || args[0] === 'philosophie'
+          ? args[1]
+          : args[0];
       return id ? { view: 'map', mode: 'shelf', shelf: { kind, id } } : { view: 'map', mode: 'shelf' };
     }
     case 'weg':
@@ -260,7 +268,11 @@ export function formatRoute(route: Route): string {
   if (mode === 'shelf') {
     const sh = route.shelf;
     if (!sh) return '#regal';
-    const key = sh.kind === 'law' ? 'recht' : sh.kind === 'find' ? 'fund' : 'buch';
+    const key =
+      sh.kind === 'law' ? 'recht'
+      : sh.kind === 'find' ? 'fund'
+      : sh.kind === 'phil' ? 'philosophie'
+      : 'buch';
     return `#regal=${key},${sh.id}`;
   }
   if (mode === 'route') {

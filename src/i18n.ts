@@ -211,12 +211,13 @@ const STRINGS: Dict = {
     en: 'The circle reckons with twelve months of 354 days. The calendar is not that simple: two months alternate between 29 and 30 days, and in seven years of nineteen a whole month is inserted. A feast sits on its true day – but not at its true width: anything narrower than five degrees is widened about its centre. The outer ring is an average, not a date: the Jewish year is eleven days shorter, so the feasts drift forward each year until the leap month pulls them back – Passover falls between late March and late April.',
   },
 
-  // Das Bücherregal: die 66 Bücher nach Entstehungszeit, ihre Handschriften
-  // und das, was nach dem Kanon weitergeschrieben wurde.
+  // Das Bücherregal: die 66 Bücher nach Entstehungszeit, ihre Handschriften,
+  // das, was nach dem Kanon weitergeschrieben wurde – und die philosophischen
+  // Werke, mit deren Begriffen die Bibel gelesen wurde.
   shelf: { de: 'Das Bücherregal', en: 'The bookshelf' },
   shelfHint: {
-    de: 'Die 66 Bücher als Regal – nach Entstehungszeit, mit Querverweisen, ihren ältesten Handschriften und den jüdischen Gesetzestexten.',
-    en: 'The 66 books as a shelf – by date of writing, with cross-references, their oldest manuscripts and the Jewish legal texts.',
+    de: 'Die 66 Bücher als Regal – nach Entstehungszeit, mit Querverweisen, ihren ältesten Handschriften, den jüdischen Gesetzestexten und den philosophischen Werken von Platon bis heute.',
+    en: 'The 66 books as a shelf – by date of writing, with cross-references, their oldest manuscripts, the Jewish legal texts and the philosophical works from Plato to the present.',
   },
   shelfTabShelf: { de: 'Regal', en: 'Shelf' },
   shelfTabFinds: { de: 'Funde', en: 'Discoveries' },
@@ -273,6 +274,23 @@ const STRINGS: Dict = {
     de: 'Zwischen dem, was geschrieben wurde, und dem, was zu lesen ist, liegt bei den meisten biblischen Büchern über ein Jahrtausend. Was diese Lücke füllt, sind Handschriften – und fast jede hat einen Fundtag, einen Fundort und einen Namen.',
     en: 'Between what was written and what can be read lies, for most biblical books, more than a thousand years. What fills that gap are manuscripts – and almost every one of them has a day of discovery, a place and a name.',
   },
+  // Das dritte Regal: die philosophischen Werke und ihr Zeitstrahl.
+  shelfPhilKicker: { de: 'Mit welchen Begriffen gelesen wurde', en: 'The terms it was read with' },
+  shelfPhilTitle: { de: 'Philosophische Werke', en: 'Philosophical works' },
+  shelfPhilWho: { de: 'Wer, und wogegen', en: 'Who, and against what' },
+  shelfPhilWhat: { de: 'Was darin steht', en: 'What is in it' },
+  shelfPhilBible: { de: 'Was es mit dem Lesen der Bibel gemacht hat', en: 'What it did to reading the Bible' },
+  shelfPhilBooks: { de: 'Arbeitet mit', en: 'Works with' },
+  shelfPhilLinksOut: { de: 'Antwortet auf', en: 'Answers to' },
+  shelfPhilLinksIn: { de: 'Darauf antworten', en: 'Answered by' },
+  shelfPhilLinkBuilds: { de: 'baut darauf auf', en: 'builds on this' },
+  shelfPhilLinkAgainst: { de: 'widerspricht dem', en: 'contradicts this' },
+  shelfPhilLinkEchoes: { de: 'nimmt es wieder auf', en: 'takes it up again' },
+  shelfPhilLinkBuiltOn: { de: 'baut hierauf auf', en: 'builds on this one' },
+  shelfPhilLinkOpposed: { de: 'widerspricht diesem', en: 'contradicts this one' },
+  shelfPhilLinkEchoed: { de: 'nimmt dieses auf', en: 'takes this one up' },
+  shelfPhilOnTimeline: { de: 'Auf der Zeitschiene der Kirche', en: 'On the church timeline' },
+  shelfPhilInTree: { de: 'Im Zeitbaum', en: 'In the time tree' },
   shelfFindWho: { de: 'Gefunden von', en: 'Found by' },
   shelfFindWhere: { de: 'Fundort und Verbleib', en: 'Found and kept' },
   shelfFindAge: { de: 'Alter der Handschrift', en: 'Age of the manuscript' },
@@ -899,8 +917,8 @@ const STRINGS: Dict = {
   lCard6Kicker: { de: '06 — Die Bücher', en: '06 — The books' },
   lCard6Title: { de: 'Das Bücherregal', en: 'The bookshelf' },
   lCard6Body: {
-    de: 'Die 66 Bücher nach der Zeit ihrer Entstehung aufgestellt statt nach dem Kanon – mit der ältesten erhaltenen Handschrift je Buch und denen, die sie gefunden haben.',
-    en: 'The 66 books shelved by when they were written rather than by canon – with the oldest surviving manuscript for each and the people who found it.',
+    de: 'Die 66 Bücher nach der Zeit ihrer Entstehung aufgestellt statt nach dem Kanon – mit der ältesten erhaltenen Handschrift je Buch, denen, die sie gefunden haben, und den philosophischen Werken, mit deren Begriffen gelesen wurde.',
+    en: 'The 66 books shelved by when they were written rather than by canon – with the oldest surviving manuscript for each, the people who found it, and the philosophical works whose terms it was read with.',
   },
   lCard6Cta: { de: 'Regal ansehen', en: 'See the shelf' },
   lStatPlaces: { de: 'Kartierte Orte', en: 'Places mapped' },
