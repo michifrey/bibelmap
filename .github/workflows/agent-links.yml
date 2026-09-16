@@ -128,8 +128,8 @@ jobs:
             `src/data/gospelMedia.ts`, `src/data/chosen.ts`, oder die Datei
             hinter der Adresse in der `check:urls`-Liste).
 
-            Ein Sonderfall bei `check:gospel-links`: Ein Teil der geprüften
-            Adressen ist nicht eingetragen, sondern gebaut – die Folgenadressen
+            Ein Sonderfall bei `check:gospel-links`: Die dort geprüften
+            Adressen stehen nirgends, sie werden gebaut – die Folgenadressen
             von bibletunes.de entstehen aus Buch und Kapitel. Fällt eine davon
             aus, ist nicht die Adresse falsch, sondern die Regel, die sie baut
             (`bibleTunesEpisodeUrl`). Dann sag das im Bericht, statt eine

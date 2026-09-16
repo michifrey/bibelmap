@@ -15,7 +15,7 @@ import {
   type GospelStation,
   type PersonGroup,
 } from '../data/gospel';
-import { CHOSEN_BY_STATION, CHOSEN_URL, VERIFIED as CHOSEN_VERIFIED, episodeLabel } from '../data/chosen';
+import { CHOSEN_BY_STATION, episodeLabel, episodeUrl } from '../data/chosen';
 import {
   BP_THEMES,
   BP_VIDEO_BY_ID,
@@ -382,7 +382,7 @@ export default function Gospel({ places, lang, onShowPlace, initial, onNavigate,
                           {scenes.map((e) => (
                             <a
                               key={`${e.season}-${e.episode}`}
-                              href={CHOSEN_URL}
+                              href={episodeUrl(e)}
                               target="_blank"
                               rel="noreferrer"
                               className="block text-[12px] text-white/70 underline decoration-white/25 underline-offset-2 transition hover:text-white"
@@ -391,7 +391,7 @@ export default function Gospel({ places, lang, onShowPlace, initial, onNavigate,
                               {lang === 'de' ? `„${e.title}“` : `“${e.title}”`}
                             </a>
                           ))}
-                          {!CHOSEN_VERIFIED && scenes.length > 0 && (
+                          {scenes.length > 0 && (
                             <p className="text-[10.5px] leading-snug text-white/40">{t('gospelChosenNote')}</p>
                           )}
                         </div>
