@@ -47,7 +47,7 @@ const VIEWS = [
   '#quiz', '#lesen=Acts,13', '#stammbaum', '#stammbaum=baum', '#stammbaum=gebiete',
   '#graph', '#kirche', '#kirche=konzil,chalcedon', '#vergleich', '#hoeren',
   '#gelaende', '#heilsgeschichte', '#israel=okt2023', '#israel=un181',
-  '#unterstuetzen', '#nachweise',
+  '#unterstuetzen', '#nachweise', '#fahrplan',
 ];
 
 const measure = () => {

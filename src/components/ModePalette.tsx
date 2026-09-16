@@ -90,6 +90,9 @@ export default function ModePalette({ onPick, onClose }: Props) {
         items: [
           { id: 'support', label: t('support'), hint: t('supportSub'), icon: 'M12 20.3 4.6 13a4.7 4.7 0 0 1 0-6.7 4.7 4.7 0 0 1 6.7 0l.7.7.7-.7a4.7 4.7 0 0 1 6.7 0 4.7 4.7 0 0 1 0 6.7z', solid: true },
           { id: 'credits', label: t('credits'), hint: t('creditsSub'), icon: 'M7 3h7l5 5v13H7zM14 3v5h5M10 12h7M10 16h7' },
+          // Die Strasse aus Roadmap.tsx, so klein wie ein Symbol sie zulässt:
+          // eine Fahrbahn, die sich nach oben verjüngt, mit Mittellinie.
+          { id: 'roadmap', label: t('roadmap'), hint: t('roadmapHint'), icon: 'M8 21 10.5 3h3L16 21M12 5v2M12 10v2M12 15v2' },
         ],
       },
     ],

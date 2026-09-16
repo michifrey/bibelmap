@@ -394,6 +394,41 @@ const STRINGS: Dict = {
     de: 'Eine Karte ist nur so ehrlich wie ihre Quellenangabe.',
     en: 'A map is only as honest as the sources it names.',
   },
+  // Fahrplan – die Roadmap als Strasse
+  roadmap: { de: 'Fahrplan', en: 'Roadmap' },
+  roadmapHint: {
+    de: 'Woher diese Karte kommt und wohin sie noch fährt – als Strasse.',
+    en: 'Where this map comes from and where it is still headed – as a road.',
+  },
+  roadmapSub: { de: 'Was gebaut ist, was noch kommt – und was nie kommt', en: 'What is built, what is still ahead – and what never comes' },
+  roadmapLead1: { de: 'Die Strasse', en: 'The road' },
+  roadmapLead2: { de: 'hört nicht auf', en: 'does not end' },
+  roadmapBody1: {
+    de: 'Bibelmap ist in neun Releases gewachsen, und fast alles, was hier steht, ist gebaut und geprüft. Diese Seite zeigt denselben Weg als Strasse: hinter dem goldenen Punkt liegt, was fertig ist, davor, was noch offen ist.',
+    en: 'Bibelmap has grown across nine releases, and almost everything here is built and checked. This page shows that same way as a road: behind the gold marker lies what is done, ahead of it what is still open.',
+  },
+  roadmapBody2: {
+    de: 'Jede geplante Station nennt ihre Zahl – 291 von 1.335 Orten mit Bild, 63 ungeprüfte Adressen. Was sich nicht nachzählen lässt, steht nicht auf der Strasse.',
+    en: 'Every planned stop names its number – 291 of 1,335 places with a picture, 63 unverified addresses. What cannot be counted does not go on the road.',
+  },
+  roadmapStatDone: { de: 'Stationen hinter uns', en: 'stops behind us' },
+  roadmapStatAhead: { de: 'Stationen vor uns', en: 'stops ahead' },
+  roadmapStatGoal: { de: 'das Ziel', en: 'the destination' },
+  roadmapStatNever: { de: 'Abzweigungen ausgeschlagen', en: 'turns not taken' },
+  roadDone: { de: 'erledigt', en: 'done' },
+  roadHere: { de: 'hier stehen wir', en: 'you are here' },
+  roadPlanned: { de: 'geplant', en: 'planned' },
+  roadGoal: { de: 'Ziel', en: 'destination' },
+  roadmapNeverTitle: { de: 'Abzweigungen, die wir nicht nehmen', en: 'Turns we are not taking' },
+  roadmapNeverBody: {
+    de: 'Ein Fahrplan ohne diese Liste lässt die häufigste Frage offen – „kommt das noch?“. Hier ist die Antwort nein, und sie bleibt es.',
+    en: 'A roadmap without this list leaves the most common question open – “is that still coming?”. Here the answer is no, and it stays no.',
+  },
+  roadmapOutro: {
+    de: 'Ein Plan, den man lesen kann, ist ein Versprechen, das man halten muss.',
+    en: 'A plan you can read is a promise you have to keep.',
+  },
+  roadmapSuggest: { de: 'Station vorschlagen', en: 'Suggest a stop' },
   timeDocs: { de: 'Zeitdokumente', en: 'Documents of the time' },
   timeDocsHint: {
     de: 'Was außerhalb der Bibel von dieser Person erhalten ist – Inschriften, Chroniken, Akten, Briefe.',

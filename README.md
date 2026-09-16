@@ -576,6 +576,20 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Podcast-Feeds, die verlinkten Lesedienste) ist als solches gekennzeichnet und
   verlinkt auf die Bedingungen des Anbieters. Zum Schluss die Seite selbst: GPL-3.0, warum,
   und wohin ein falscher Nachweis gemeldet wird.
+- **Fahrplan** – wohin die Seite noch fährt, als **Strasse** gezeichnet
+  (Modi-Menü, Fußzeile der Startseite, Direktlink `#fahrplan`). Die Roadmap
+  stand bisher nur in der PRD, als Tabelle, in der alle neun Zeilen „erledigt"
+  sagen; wer fragt „was kommt noch?", las daraus nichts. Jetzt liegen neun
+  Stationen an einer Fahrbahn: hinter dem goldenen Punkt („hier stehen wir")
+  das Gebaute, davor das Offene. **Jede geplante Station nennt ihre Zahl** –
+  291 von 1.335 Orten mit Bild, 63 ungeprüfte BibleProject-Adressen –, denn was
+  sich nicht nachzählen lässt, gehört nicht auf einen Fahrplan. Am Ende die
+  **Abzweigungen, die wir nicht nehmen** (keine Konten, kein Tracking, keine
+  eigene Übersetzung, kein Kommentar), weil ein Plan ohne sie die häufigste
+  Frage offenlässt. Die Stationen stehen in `src/data/roadmap.ts` als Liste;
+  die Kurven rechnet die Ansicht daraus aus, eine eingefügte Station braucht
+  keinen Strich Zeichnung. Die Mittellinie wandert – bei `prefers-reduced-motion`
+  steht sie still, und die Seite verliert nichts, was sie erklärt.
 
 ## Entwicklung
 

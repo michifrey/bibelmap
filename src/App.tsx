@@ -54,6 +54,7 @@ const Genealogy = lazy(() => import('./components/Genealogy'));
 import Landing, { type LandingTarget } from './components/Landing';
 const Support = lazy(() => import('./components/Support'));
 const Credits = lazy(() => import('./components/Credits'));
+const Roadmap = lazy(() => import('./components/Roadmap'));
 
 /** Name jedes Kartenstils – Schalterleiste und Ausfallhinweis lesen ihn hier. */
 const BASEMAP_LABEL: Record<BasemapId, 'basemapDark' | 'basemapLight' | 'basemapSatellite' | 'basemapRelief' | 'basemapAntique'> = {
@@ -1213,6 +1214,11 @@ export default function App() {
             {mode === 'credits' && (
               <Suspense fallback={<ModeFallback />}>
                 <Credits lang={lang} onLang={setLang} onExit={() => setMode(null)} />
+              </Suspense>
+            )}
+            {mode === 'roadmap' && (
+              <Suspense fallback={<ModeFallback />}>
+                <Roadmap lang={lang} onLang={setLang} onExit={() => setMode(null)} />
               </Suspense>
             )}
           </>

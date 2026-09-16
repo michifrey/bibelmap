@@ -664,6 +664,9 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
           >
             {t('lSupportCta')}
           </button>
+          <a href="#fahrplan" className="text-[12.5px] font-medium text-white/60 transition hover:text-white">
+            {t('roadmap')}
+          </a>
           <a href="#nachweise" className="text-[12.5px] font-medium text-white/60 transition hover:text-white">
             {t('credits')}
           </a>

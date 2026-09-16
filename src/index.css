@@ -1160,3 +1160,28 @@ body {
 .animate-fade-in {
   animation: bm-fade-in 0.25s ease both;
 }
+
+/* ------------------------------------------------------------------ */
+/* Der Fahrplan als Strasse (src/components/Roadmap.tsx)               */
+/*                                                                     */
+/* Die Mittellinie wandert. Nicht als Zierde: eine gestrichelte Linie  */
+/* steht still und sieht aus wie eine Naht; erst die Bewegung macht    */
+/* daraus eine Fahrbahn, auf der man unterwegs ist. Der globale        */
+/* Schalter für reduzierte Bewegung weiter oben stellt sie ab –        */
+/* dann bleibt sie eine gestrichelte Linie, und die Seite verliert     */
+/* nichts, was sie erklärt.                                            */
+/* ------------------------------------------------------------------ */
+.bm-road-line {
+  animation: bm-road-run 3s linear infinite;
+}
+
+@keyframes bm-road-run {
+  from { stroke-dashoffset: 44; }
+  to { stroke-dashoffset: 0; }
+}
+
+/* „Hier stehen wir" – der einzige Punkt auf der Strasse, der atmet. */
+.bm-road-here {
+  box-shadow: 0 0 0 0 rgba(224, 164, 73, 0.55), 0 4px 14px rgba(2, 31, 30, 0.6);
+  animation: bm-pulse 2.4s ease-out infinite;
+}
