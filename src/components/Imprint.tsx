@@ -165,7 +165,7 @@ export default function Imprint({ lang, onLang, onExit }: Props) {
               {/* Nur wenn eine dasteht – siehe `ADDRESS` in src/data/imprint.ts. */}
               {ADDRESS && (
                 <Zeile label={t('imprintPost')}>
-                  {ADDRESS.map((line) => (
+                  {(lang === 'de' ? ADDRESS.de : ADDRESS.en).map((line) => (
                     <span key={line} className="block">
                       {line}
                     </span>
