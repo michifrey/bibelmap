@@ -488,8 +488,8 @@ const STRINGS: Dict = {
   gospelBackToActs: { de: 'Zurück zu den Akten', en: 'Back to the acts' },
   gospelOnScreen: { de: 'Verfilmt', en: 'On screen' },
   gospelChosenNote: {
-    de: 'Staffel und Folge sind nach dem Inhalt zugeordnet und noch nicht beim Anbieter gegengeprüft. „The Chosen“ ist eine Verfilmung: Sie erfindet Figuren und Dialoge, die so nicht in den Evangelien stehen.',
-    en: 'Season and episode are matched by content and not yet checked against the provider. "The Chosen" is a dramatisation: it invents characters and dialogue that are not in the gospels.',
+    de: 'Die Folge ist nach ihrem Inhalt zugeordnet; der Verweis führt auf die Staffel. „The Chosen“ ist eine Verfilmung: Sie erfindet Figuren und Dialoge, die so nicht in den Evangelien stehen.',
+    en: 'The episode is matched by its content; the link goes to the season. "The Chosen" is a dramatisation: it invents characters and dialogue that are not in the gospels.',
   },
   journeys: { de: 'Reisen & Geschichten', en: 'Journeys & stories' },
   journeysHint: {

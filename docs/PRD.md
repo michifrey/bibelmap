@@ -2816,6 +2816,50 @@ Der kritische Pfad bleibt unberührt: 334,7 kB von 360, der Vorabruf hängt am
 
 ---
 
+### 4.81 Die Chosen-Zuordnung zu Ende gebracht — P2 ✅
+
+**Anlass:** § 4.49 hatte zwölf Folgen aus drei Staffeln zugeordnet und den
+Schalter `VERIFIED` auf `false` stehen lassen: Titel und Nummern waren aus dem
+Gedächtnis zusammengetragen, der Netzzugang ließ thechosen.tv nicht durch. Die
+Oberfläche wies die Angaben als unbestätigt aus – ein Dauerzustand, der so nicht
+bleiben sollte.
+
+**Nachgesehen (Websuche, 16.09.2026):** alle **fünf Staffeln zu je acht
+Folgen**, Titel gegen mehrere unabhängige Verzeichnisse gehalten. Dabei fiel
+auf, dass eine Angabe aus § 4.49 falsch war: Staffel 4, Folge 2 heißt nicht
+„Confessions“, sondern „The Rock or the Stumbling Block?“ – genau die Art
+Fehler, gegen die der Schalter dastand.
+
+**40 statt 12 Folgen**, davon **35 mit Station**. Die fünf ohne sind Absicht:
+„Shabbat“, „Jesus Loves the Little Children“, „Spirit“, „Sitting, Serving,
+Scheming“ und „Because of Me“ erzählen, was die Serie erfindet.
+
+**Vier neue Stationen** – Szenen, die die Serie spielt und der Sektion fehlten:
+der Aussätzige (Mk 1,40-45, S1F6), die achtunddreißig Jahre am Teich Betesda
+(Joh 5, S2F4), die Frage des Täufers aus dem Gefängnis (Mt 11,2-19, S3F6) und
+das Tempelweihfest im Winter (Joh 10,22-39, S4F6). 97 → **101 Stationen**.
+
+**Die Adresse führt jetzt auf die Staffel** (`watch.thechosen.tv/page/season-N`)
+statt auf die Startseite. Einzelne Folgen haben dort Zahlenkennungen
+(`/video/184683596184`), die sich nicht bilden lassen – eine geratene Adresse
+wäre schlechter als eine, die zur richtigen Staffel führt.
+
+**Akzeptanzkriterien**
+- [x] `VERIFIED` ist weg. An seiner Stelle steht, woher die Angaben kommen und
+      wann sie nachgesehen wurden – der Hinweis in der Oberfläche sagt jetzt,
+      was zutrifft (Zuordnung nach Inhalt, Verweis auf die Staffel,
+      Verfilmung), statt „unbestätigt“.
+- [x] `check:gospel` prüft: fünf Staffeln zu acht Folgen, lückenlos von 1 an,
+      keine doppelt, jede Stationskennung bekannt, jede Staffeladresse nach dem
+      Muster der Staffelseiten. Gegengetestet mit fehlender Folge, vertippter
+      Station und fremder Adresse – alle drei gemeldet.
+- [x] Eine Folge ohne Station ist kein Fehler mehr, sondern eine Aussage; die
+      Prüfung zählt beim Lauf mit, wie viele eine haben.
+- [x] `check:gospel-links` prüft nur noch, was sonst niemand prüft: die aus Buch
+      und Kapitel **gebauten** bibletunes-Adressen, als Stichprobe über die
+      Kapitel, zu denen es Stationen gibt. Die festen Adressen – auch die fünf
+      Staffelseiten – liest `check:urls` aus den Datendateien.
+
 ## 5. Nicht-funktionale Anforderungen
 
 - **Performance:** Beim ersten Aufruf von `/` referenziert das HTML **325 kB**
