@@ -333,6 +333,32 @@ const STRINGS: Dict = {
   },
   bpDeep: { de: 'Vertiefung', en: 'Background' },
   bpSource: { de: 'Quelle', en: 'Source' },
+  // --------------------------------------------------- Diese Seite verbessern
+  improveTitle: { de: 'Diese Seite verbessern', en: 'Improve this page' },
+  improveNote: {
+    de: 'Jede Seite hier ist aus einer Datei gebaut, und die steht offen. Wer etwas ändert, bekommt von GitHub eine eigene Kopie und daraus einen Änderungsvorschlag – ohne Git auf dem eigenen Rechner.',
+    en: 'Every page here is built from a file, and that file is open. Change something and GitHub gives you your own copy and turns it into a pull request – no Git on your own machine needed.',
+  },
+  improveEdit: { de: 'Bearbeiten', en: 'Edit' },
+  improveEditTitle: {
+    de: 'Die Datei im Editor von GitHub öffnen – beim Speichern wird daraus ein Pull Request',
+    en: 'Open the file in GitHub\'s editor – saving turns it into a pull request',
+  },
+  improveReport: { de: 'Fehler melden', en: 'Report an error' },
+  improveReportTitle: {
+    de: 'Ein Issue anlegen; Adresse dieser Seite und Abschnitt stehen schon drin',
+    en: 'Open an issue; this page\'s address and section are already filled in',
+  },
+  improveHistory: { de: 'Verlauf', en: 'History' },
+  improveHistoryTitle: {
+    de: 'Wer wann was an dieser Datei geändert hat',
+    en: 'Who changed what in this file, and when',
+  },
+  improveBlame: { de: 'Zeilenweise', en: 'Line by line' },
+  improveBlameTitle: {
+    de: 'Welche Änderung welche Zeile zuletzt angefasst hat',
+    en: 'Which change last touched which line',
+  },
   bpPlan: { de: 'Leseplan', en: 'Reading plan' },
   bpPlanNote: {
     de: 'Ein Buch liest sich leichter mit einem Ende in Sicht. Der Plan nach den Zügen schneidet dort, wo das Buch selbst schneidet – ein Tag ist dann eine ganze Geschichte und keine Kapitelspanne. Die gleichmäßigen Pläne beantworten die andere Frage: bis wann bin ich durch?',

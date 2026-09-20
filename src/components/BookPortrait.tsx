@@ -27,6 +27,7 @@ import {
 } from '../data/bookPortraits';
 import { arcPath, chapterX, fieldsOf, layout, ticks } from '../lib/bookScroll';
 import YouTubeEmbed from './YouTubeEmbed';
+import ImproveLink from './ImproveLink';
 
 /*
  * Das Buchporträt – ein Buch der Bibel auf einer Seite.
@@ -652,6 +653,10 @@ export default function BookPortrait({
             )}
 
             <p className="text-[11px] leading-snug text-white/40">{t('bpAxisNote')}</p>
+
+            {/* Der Weg zur Quelle. Er steht hier unten und nicht im Impressum:
+                Ein Fehler wird gesehen, wo er steht. */}
+            <ImproveLink source="portraits" what={`${t('bookPortrait')} · ${name}`} lang={lang} />
           </div>
 
           {/* ---------------------------------------------- rechts: die Tafeln */}
@@ -1137,6 +1142,10 @@ function PlanPanel({
           {t('bpPlanMore')}
         </a>
       </section>
+
+      {/* Die Liste der Pläne steht in einer eigenen Datei – wer einen kennt,
+          der fehlt, trägt ihn dort ein. */}
+      <ImproveLink source="readingPlans" what={t('bpPlanWhole')} lang={lang} />
     </div>
   );
 }

@@ -577,6 +577,12 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Tageszahl nach, dass jedes Kapitel genau einmal vorkommt und kein Tag mehr
   als ein Kapitel über dem Schnitt liegt – 207 Pläne bei jedem Lauf.
 
+  **Und ganz unten der Weg zur Quelle** – wie bei Wikipedia: *Bearbeiten*
+  öffnet die Datendatei in GitHubs Editor, und wer dort etwas ändert, bekommt
+  automatisch einen Änderungsvorschlag (Pull Request), ohne Git auf dem
+  eigenen Rechner. Daneben *Fehler melden* (ein Issue, in dem Seitenadresse
+  und Abschnitt schon stehen), *Verlauf* und *Zeilenweise*.
+
   Darunter die **Pläne für die ganze Bibel**, und die sind verlinkt statt
   nachgebaut: BibleProjects Jahresplan „Die Bücher der Bibel" (mit denselben
   Videos, die in den Porträts stecken), „Wie man die Bibel liest",
@@ -907,11 +913,11 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die neunundzwanzig Prüfungen, die von sich aus immer
+`npm run check` bündelt die dreißig Prüfungen, die von sich aus immer
 dasselbe Ergebnis liefern – darunter Buchkürzel, Zeitdokumente, Stammesgrenzen,
 Farbkontraste, Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen,
 Quizfragen, Heilsgeschichte, Feste Israels, **Bücherregal**, **Buchporträts**,
-**Leseplläne**, **Philosophieregal**, Reisen & Mission,
+**Leseplläne**, **Weg zur Quelle**, **Philosophieregal**, Reisen & Mission,
 Startzahlen und **Ortsdatei** – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
@@ -1638,6 +1644,41 @@ gibt – auch im Entdeckermodus –, und sagt am Player, welche es ist. Ob eine
 Kennung noch auf ein Video zeigt, prüft `npm run check:bp` täglich über die
 oEmbed-Auskunft von YouTube: Eine Kennung ist kein Link, den man ansieht, und
 ein zurückgezogenes Video bemerkt man sonst erst als leeren Player.
+
+### Diese Seite verbessern: der Weg von der Seite zur Datei
+
+Unter jeder Porträtseite steht, was bei Wikipedia neben jedem Artikel steht –
+nur führt es hier nicht in ein Wiki, sondern an die Datei, aus der die Seite
+gebaut ist:
+
+| Knopf | führt nach | wofür |
+| --- | --- | --- |
+| **Bearbeiten** | `…/edit/main/src/data/bookPortraits.ts` | GitHubs Editor. Wer keine Schreibrechte hat – also fast jeder – bekommt beim Speichern automatisch eine eigene Kopie (Fork) und daraus einen **Pull Request**. Ohne Git auf dem eigenen Rechner, ohne Kommandozeile. |
+| **Fehler melden** | `…/issues/new?title=…&body=…` | Ein Issue, in dem die **Adresse dieser Seite**, der Abschnitt und zwei Fragen schon stehen: Was stimmt nicht, und was wäre richtig – und woher weißt du das? |
+| **Verlauf** | `…/commits/main/…` | Wikipedias Versionsgeschichte: Stand das schon immer so da? |
+| **Zeilenweise** | `…/blame/main/…` | Welche Änderung welche Zeile zuletzt angefasst hat. |
+
+**Warum unter der Seite und nicht im Impressum.** Ein Fehler wird gesehen, wo
+er steht. Wer ihn bemerkt, hat in diesem Moment alles im Kopf, was zur
+Korrektur nötig ist – die Stelle, die Quelle, den richtigen Satz – und fünf
+Minuten später nichts mehr davon. Ein Weg, der erst über das Impressum und ein
+Mailprogramm führt, ist länger als dieses Zeitfenster.
+
+**Warum die Datei und nicht die Zeile.** GitHub kann auf eine Zeile zeigen,
+und das wäre schöner. Nur verschiebt sich die Zeilennummer bei der nächsten
+Änderung, und ein Link auf die falsche Zeile ist schlechter als einer auf die
+Datei: Er führt jemanden an eine Stelle und behauptet dabei, sie sei die
+richtige.
+
+Die Pfade stehen **einmal** in `src/lib/improve.ts` (`SOURCES`) und nicht als
+Zeichenkette am Aufrufort – eine Zeichenkette überlebt keine Umbenennung.
+`npm run check:improve` schlägt jeden Eintrag auf der Festplatte nach und
+prüft dazu: dass jeder Eintrag auch von einer Seite benutzt wird, dass keine
+Seite einen Schlüssel verlangt, den es nicht gibt, dass der Zweig derselbe ist,
+den `deploy.yml` veröffentlicht, und dass die Projektadresse mit den übrigen im
+Quelltext übereinstimmt. Sonst zeigt der Knopf, mit dem man gerade jemanden
+eingeladen hat, einen Fehler zu beheben, auf eine 404 – und zwar lautlos, denn
+beim Entwickeln klickt ihn niemand.
 
 ### Leseplläne: gerechnet, nicht abgetippt
 
