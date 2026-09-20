@@ -47,8 +47,11 @@
 // Hier steht, was im Buch passiert.
 //
 // Angefangen mit **1. Mose**, dazu **2. Mose**, weil ein Muster sich erst am
-// zweiten Fall zeigt. Die übrigen 64 Bücher haben (noch) kein Porträt; die
-// Oberfläche sagt das, statt eine leere Seite zu zeigen.
+// zweiten Fall zeigt – und **3. Mose**, weil sich dort erst zeigt, ob die Form
+// auch trägt, wo nichts passiert: ein Buch fast ohne Erzählung, ohne
+// Ortswechsel und mit vier Ortsnamen in 27 Kapiteln. Die übrigen 63 Bücher
+// haben (noch) kein Porträt; die Oberfläche sagt das, statt eine leere Seite
+// zu zeigen.
 
 import { BOOK_BY_OSIS, type BookMeta } from './books';
 
@@ -1541,7 +1544,613 @@ const EXODUS: Portrait = {
   ],
 };
 
-export const PORTRAITS: Portrait[] = [GENESIS, EXODUS];
+/* ------------------------------------------------------------------ 3. Mose */
+
+const LEVITICUS: Portrait = {
+  osis: 'Lev',
+  hebrew: {
+    word: 'וַיִּקְרָא',
+    translit: 'Wajikra',
+    means: { de: '„Und er rief" – das erste Wort des Buches ist sein Name.', en: '"And he called" – the book\'s first word is its name.' },
+  },
+  subtitle: {
+    de: 'Wie man einem heiligen Gott nahekommt, ohne zu verbrennen',
+    en: 'How to come near a holy God without being consumed',
+  },
+  summary: {
+    de: 'Am Ende von 2. Mose zieht Gott in ein Zelt mitten im Lager – und damit steht ein Problem im Raum: Wie lebt man neben ihm? 3. Mose ist die Antwort, und sie besteht fast ganz aus Rede: dreiunddreißigmal redet der HERR aus dem Zelt. Opfer, Priester, rein und unrein, ein Tag der Versöhnung im Jahr, und dann ein Satz, der alles umdreht: Heilig sein heißt, den Nachbarn zu lieben wie sich selbst.',
+    en: 'At the end of Exodus God moves into a tent in the middle of the camp – and with that a problem is in the room: how do you live next door to him? Leviticus is the answer, and it consists almost entirely of speech: thirty-three times Yahweh speaks from the tent. Offerings, priests, clean and unclean, one day of atonement in the year – and then a sentence that turns it all around: to be holy means to love your neighbour as yourself.',
+  },
+  heart: {
+    de: 'Das unbeliebteste Buch der Bibel beantwortet eine Frage, die sich sonst niemand stellt: Was macht man, wenn Gott tatsächlich einzieht? Die Antwort ist keine Frömmigkeit, sondern eine Ordnung – wie man näher kommt (Opfer), wer das darf (Priester), was dazwischenkommt (rein und unrein) und was einmal im Jahr alles zurücksetzt (der Versöhnungstag). In der zweiten Hälfte kippt das Buch: Dieselbe Heiligkeit, die am Altar mit Blut und Maßen umgeht, verlangt in Kapitel 19 ehrliche Waagen, ungeerntete Feldränder für die Armen, pünktlichen Lohn und die Liebe zum Fremden. Heilig ist hier nichts, was im Tempel bleibt.',
+    en: 'The Bible\'s least loved book answers a question nobody else asks: what do you do when God actually moves in? The answer is not piety but an order – how to come near (offerings), who may (priests), what gets in the way (clean and unclean) and what resets everything once a year (the Day of Atonement). In the second half the book tips over: the same holiness that deals in blood and measurements at the altar demands, in chapter 19, honest scales, unharvested field edges for the poor, wages paid on time and love for the foreigner. Holiness here is nothing that stays in the temple.',
+  },
+  verse: {
+    ref: '3. Mose 19:2',
+    refEn: 'Lev 19:2',
+    de: 'Ihr sollt heilig sein; denn ich bin heilig, der HERR, euer Gott.',
+    en: 'You shall be holy; for I, Yahweh your God, am holy.',
+  },
+  facts: {
+    chapters: 27,
+    verses: 859,
+    places: 4,
+    genre: {
+      de: 'Fast durchgehend Gottesrede – Anweisungen, Rechtssätze, Kalender. Erzählt wird nur zweimal, und beide Male geht es schlecht aus.',
+      en: 'Almost entirely divine speech – instructions, legal clauses, a calendar. There are only two narratives, and both end badly.',
+    },
+    scene: {
+      de: 'Ein einziger Ort: der Fuß des Sinai, genauer die Tür der Stiftshütte. Dieses Buch bewegt sich nicht – es nennt in 27 Kapiteln nur vier Orte.',
+      en: 'One single place: the foot of Sinai, or rather the door of the Tent of Meeting. This book does not move – in 27 chapters it names just four places.',
+    },
+    keyword: {
+      de: '„Heilig" – 140-mal. Dicht dahinter das Gegenteil: „unrein" steht 141-mal da, „rein" nur 59-mal.',
+      en: '"Holy" – 140 times. Close behind, its opposite: "unclean" appears 141 times, "clean" only 59.',
+    },
+  },
+  movements: [
+    {
+      id: 'opfer',
+      from: 1,
+      to: 7,
+      title: { de: 'Fünf Wege, näher zu kommen', en: 'Five ways of coming near' },
+      text: {
+        de: 'Brandopfer, Speisopfer, Dankopfer, Sündopfer, Schuldopfer – fünf Formen für fünf Anlässe, und keine davon kauft Gott etwas ab. Das hebräische Wort für Opfer heißt „das Herangebrachte": Es geht um Nähe, nicht um Bezahlung. Wer bringt, legt die Hand auf den Kopf des Tieres – eine Geste, die sagt: Das hier steht für mich.',
+        en: 'Burnt offering, grain offering, peace offering, sin offering, guilt offering – five forms for five occasions, and none of them buys God off. The Hebrew word for offering means "that which is brought near": this is about nearness, not payment. Whoever brings one lays a hand on the animal\'s head – a gesture that says: this stands for me.',
+      },
+      turn: {
+        de: '„und lege seine Hand auf des Brandopfers Haupt, so wird es angenehm sein und ihn versöhnen."',
+        en: '"He shall lay his hand on the head of the burnt offering, and it shall be accepted for him to make atonement for him."',
+      },
+      color: '#a83a3a',
+      symbol: 'M4 20h16M6 20v-6h12v6M8 14c0-3 4-3 4-7 0 4 4 4 4 7',
+      places: ['Mount Sinai'],
+    },
+    {
+      id: 'priester',
+      from: 8,
+      to: 10,
+      title: { de: 'Die Einsetzung – und das fremde Feuer', en: 'The ordination – and the strange fire' },
+      text: {
+        de: 'Sieben Tage Einsetzung, am achten steigt Feuer vom HERRN herab und verzehrt das Opfer; das Volk jubelt und fällt auf sein Angesicht. Im selben Kapitelbogen nehmen zwei von Aarons Söhnen ihre Pfannen und bringen „fremdes Feuer", das ihnen nicht geboten war – und dasselbe Feuer verzehrt sie. Der Text erklärt nicht, was daran fremd war. Aaron schweigt.',
+        en: 'Seven days of ordination; on the eighth, fire comes down from Yahweh and consumes the offering – the people shout and fall on their faces. In the same span two of Aaron\'s sons take their censers and bring "strange fire", which had not been commanded – and the same fire consumes them. The text never explains what was strange about it. Aaron says nothing.',
+      },
+      turn: {
+        de: '„Ich erzeige mich heilig an denen, die mir nahe sind" – und Aaron schweigt still.',
+        en: '"I will show myself holy to those who come near me" – and Aaron held his peace.',
+      },
+      color: '#c98a2b',
+      symbol: 'M12 3v4M9 7h6l-1 4H10zM8 11h8l-1 9H9zM6 20h12',
+      places: ['Mount Sinai'],
+    },
+    {
+      id: 'reinunrein',
+      from: 11,
+      to: 15,
+      title: { de: 'Rein und unrein', en: 'Clean and unclean' },
+      text: {
+        de: 'Essen, Geburt, Hautkrankheit, Ausfluss, Schimmel im Haus. Es geht nicht um Hygiene und nicht um Moral: Unrein ist ein Zustand, kein Vergehen – man wird es durch Dinge, die zum Leben gehören, und man wird es wieder los. Was daran hängt, ist der Zugang zum Heiligtum, nicht der Wert eines Menschen. Wer aussätzig ist, muss selbst rufen: „Unrein, unrein!" – und Kapitel 14 beschreibt in aller Ausführlichkeit, wie er zurückkommt.',
+        en: 'Food, childbirth, skin disease, discharge, mould in a house. This is not about hygiene and not about morals: unclean is a condition, not an offence – you contract it through things that belong to life, and you get rid of it again. What hangs on it is access to the sanctuary, not a person\'s worth. The leper must cry out "Unclean! Unclean!" – and chapter 14 describes at length how he comes back.',
+      },
+      turn: {
+        de: '„auf daß ihr könnt unterscheiden, was heilig und unheilig, was rein und unrein ist" – die Aufgabe der Priester in einem Satz.',
+        en: '"You are to make a distinction between the holy and the common, and between the unclean and the clean" – the priests\' task in one sentence.',
+      },
+      color: '#3a6ea8',
+      symbol: 'M12 3c-3 4-6 7-6 10a6 6 0 0 0 12 0c0-3-3-6-6-10zM8 16c0 2 1.8 3.5 4 3.5',
+      places: ['Mount Sinai'],
+    },
+    {
+      id: 'versoehnung',
+      from: 16,
+      to: 16,
+      title: { de: 'Ein Tag im Jahr', en: 'One day in the year' },
+      text: {
+        de: 'Ein einziges Kapitel, und alles läuft darauf zu: der große Versöhnungstag. Zwei Böcke, das Los entscheidet; einer wird geopfert, dem anderen legt der Hohepriester die Hände auf, bekennt über ihm die Schuld des ganzen Volkes und lässt ihn in die Wüste laufen. Einmal im Jahr, an einem einzigen Tag, geht ein einziger Mensch hinter den Vorhang. Das ist der Mittelpunkt des Buches – nicht in der Mitte der Verse, sondern in der Sache.',
+        en: 'A single chapter, and everything runs towards it: the Day of Atonement. Two goats, the lot decides; one is sacrificed, on the other the high priest lays his hands, confesses over it the guilt of the whole people, and sends it off into the wilderness. Once a year, on one single day, one single person goes behind the curtain. This is the book\'s centre – not the middle of its verses, but of its case.',
+      },
+      turn: {
+        de: '„Denn an diesem Tage geschieht eure Versöhnung, daß ihr gereinigt werdet."',
+        en: '"for on this day shall atonement be made for you, to cleanse you."',
+      },
+      color: '#e0a449',
+      symbol: 'M5 20V9l7-5 7 5v11M9 20v-7h6v7M3 20h18',
+      places: ['Mount Sinai'],
+    },
+    {
+      id: 'heiligkeit',
+      from: 17,
+      to: 20,
+      title: { de: 'Heilig sein heißt: den Nachbarn lieben', en: 'To be holy means loving your neighbour' },
+      text: {
+        de: 'Hier kippt das Buch. Dieselbe Heiligkeit, die am Altar mit Blut und Maßen umgeht, verlangt jetzt ehrliche Waagen, ungeerntete Feldränder für die Armen, Lohn am selben Tag, Rücksicht auf Taube und Blinde – und mitten in dieser Liste von Alltagsregeln steht der Satz, den Jesus später neben das erste Gebot stellt. Vierzehn Verse weiter gilt er auch dem Fremden.',
+        en: 'Here the book tips. The same holiness that deals in blood and measures at the altar now demands honest scales, unharvested field edges for the poor, wages paid the same day, regard for the deaf and the blind – and in the middle of this list of everyday rules stands the sentence Jesus later sets beside the first commandment. Fourteen verses on, it covers the foreigner too.',
+      },
+      turn: {
+        de: '„Du sollst deinen Nächsten lieben wie dich selbst" – Vers 18 einer Liste über Feldränder, Waagen und Tagelöhner.',
+        en: '"You shall love your neighbor as yourself" – verse 18 of a list about field edges, scales and day labourers.',
+      },
+      color: '#2f8f7f',
+      symbol: 'M12 20.3 4.6 13a4.7 4.7 0 0 1 6.7-6.7l.7.7.7-.7a4.7 4.7 0 0 1 6.7 6.7z',
+      places: ['Canaan', 'Egypt'],
+    },
+    {
+      id: 'feste',
+      from: 21,
+      to: 24,
+      title: { de: 'Das Jahr bekommt seinen Takt', en: 'The year gets its beat' },
+      text: {
+        de: 'Wer am Heiligtum dient, was dorthin gebracht werden darf – und dann der Kalender: Sabbat, Passa, Wochenfest, Posaunen, Versöhnungstag, Laubhütten. Das Jahr ist damit nicht mehr eine Folge von Ernten, sondern eine Folge von Erinnerungen. Dazwischen die zweite und letzte Erzählung des Buches: ein Mann lästert den Namen, und die Gemeinde weiß nicht, was zu tun ist.',
+        en: 'Who serves at the sanctuary, what may be brought there – and then the calendar: Sabbath, Passover, Weeks, Trumpets, Atonement, Booths. The year is no longer a sequence of harvests but a sequence of rememberings. In between stands the book\'s second and last narrative: a man blasphemes the Name, and the congregation does not know what to do.',
+      },
+      turn: {
+        de: '„Sechs Tage sollst du arbeiten; der siebente Tag aber ist der große, heilige Sabbat" – der Takt steht vor allen Festen.',
+        en: '"Six days shall work be done, but on the seventh day is a Sabbath of solemn rest" – the beat comes before all the feasts.',
+      },
+      color: '#9a4ba0',
+      symbol: 'M12 4v16M6 8v8M18 8v8M4 20h16M9 6h6',
+      places: ['Mount Sinai'],
+    },
+    {
+      id: 'land',
+      from: 25,
+      to: 27,
+      title: { de: 'Das Land gehört nicht euch', en: 'The land is not yours' },
+      text: {
+        de: 'Alle sieben Jahre ruht der Acker, alle fünfzig wird das Horn geblasen: Schulden verfallen, Sklaven gehen frei, jedes verkaufte Stück Land kommt an die Familie zurück. Die Begründung steht in einem Halbsatz und hebelt den ganzen Bodenmarkt aus – das Land ist nicht Eigentum, sondern Lehen. Danach Segen und Fluch, und ein letztes Kapitel über Gelübde: was man verspricht, und was es kostet.',
+        en: 'Every seventh year the field rests; every fiftieth the horn is blown: debts lapse, slaves go free, every plot of sold land returns to its family. The reason stands in half a sentence and unhinges the whole land market – the land is not property but a tenancy. Then blessing and curse, and a last chapter on vows: what you promise, and what it costs.',
+      },
+      turn: {
+        de: '„denn das Land ist mein, und ihr seid Fremdlinge und Gäste vor mir."',
+        en: '"for the land is mine; for you are strangers and live as foreigners with me."',
+      },
+      color: '#5c8a3a',
+      symbol: 'M3 18h18M5 18V9l4-3 4 3v9M15 18v-5l4-2v7M7 12h2',
+      places: ['Canaan'],
+    },
+  ],
+  patterns: [
+    {
+      id: 'mitte',
+      title: { de: 'Alles läuft auf einen Tag zu', en: 'Everything runs towards one day' },
+      text: {
+        de: 'Opfer, Priester, rein und unrein – drei Züge lang baut das Buch ein System auf, und dann kommt ein einziges Kapitel, das alles auf einmal zurücksetzt. Danach fängt es nicht wieder von vorn an: Was folgt, ist kein System mehr, sondern ein Leben. Die Mitte ist keine Rechnung – 456 Verse stehen davor, 369 danach –, sondern eine Sache.',
+        en: 'Offerings, priests, clean and unclean – for three movements the book builds a system, and then comes a single chapter that resets all of it at once. Afterwards it does not start over: what follows is no longer a system but a life. The centre is not arithmetic – 456 verses come before it, 369 after – but substance.',
+      },
+      movements: ['opfer', 'priester', 'reinunrein', 'versoehnung'],
+      refs: ['3. Mose 16:8', '3. Mose 16:22', '3. Mose 16:30'],
+      color: '#e0a449',
+    },
+    {
+      id: 'heilig',
+      title: { de: 'Heilig heißt ausgesondert, nicht besser', en: 'Holy means set apart, not better' },
+      text: {
+        de: 'Das Wort steht 140-mal im Buch, und sein Gegenteil ist nicht „böse", sondern „gewöhnlich": Die Priester sollen unterscheiden zwischen heilig und unheilig, rein und unrein – vier Begriffe, zwei Paare, und sie liegen quer zueinander. Was am Altar gilt, gilt am Feldrand: Von Kapitel 19 an ist dasselbe Wort die Überschrift über ehrlichen Waagen und pünktlichem Lohn.',
+        en: 'The word stands 140 times in the book, and its opposite is not "evil" but "common": the priests are to distinguish between holy and common, unclean and clean – four terms, two pairs, and they cut across each other. What holds at the altar holds at the edge of the field: from chapter 19 on, the same word is the heading over honest scales and wages paid on time.',
+      },
+      movements: ['priester', 'reinunrein', 'heiligkeit', 'feste'],
+      refs: ['3. Mose 10:10', '3. Mose 11:45', '3. Mose 19:2'],
+      color: '#7fe3d5',
+    },
+    {
+      id: 'blut',
+      title: { de: 'Blut ist Leben, nicht Bezahlung', en: 'Blood is life, not payment' },
+      text: {
+        de: 'Das Wort „Blut" steht 92-mal da, und ein einziger Vers sagt, warum: Im Blut ist das Leben, und deshalb ist es nicht zum Essen, sondern zum Versöhnen gegeben. Das ist der Grund, aus dem das ganze System besteht – und zugleich die Absage an die Vorstellung, man könne einen Gott bestechen. Was auf den Altar kommt, ist Leben, und es gehört ihm ohnehin.',
+        en: 'The word "blood" appears 92 times, and one single verse says why: the life is in the blood, and therefore it is given not for eating but for atoning. That is the reason the whole system exists – and at the same time a refusal of the idea that a god can be bribed. What goes on the altar is life, and it belongs to him anyway.',
+      },
+      movements: ['opfer', 'versoehnung', 'heiligkeit'],
+      refs: ['3. Mose 1:4', '3. Mose 16:30', '3. Mose 17:11'],
+      color: '#a83a3a',
+    },
+  ],
+  figures: [
+    {
+      id: 'mose',
+      de: 'Mose',
+      en: 'Moses',
+      meaning: { de: 'Hier nicht der Anführer, sondern der Zuhörer: 33-mal steht „der HERR redete mit Mose".', en: 'Here not the leader but the listener: thirty-three times the text says "Yahweh spoke to Moses".' },
+      who: {
+        de: 'In diesem Buch tut Mose fast nichts. Er hört zu, gibt weiter, setzt Aaron ein – und einmal, nach dem Tod von Nadab und Abihu, gerät er mit Aaron aneinander und gibt nach.',
+        en: 'In this book Moses does almost nothing. He listens, passes on, ordains Aaron – and once, after the death of Nadab and Abihu, he quarrels with Aaron and gives way.',
+      },
+      turn: {
+        de: 'Das Buch beginnt damit, dass Gott ihn ruft – aus dem Zelt, das er selbst nicht betreten kann (2. Mose 40,35). Wer 3. Mose liest, liest, was Mose an der Tür gehört hat.',
+        en: 'The book begins with God calling him – out of the tent he himself cannot enter (Exodus 40:35). To read Leviticus is to read what Moses heard at the door.',
+      },
+      ref: '3. Mose 1',
+      from: 1,
+      to: 27,
+      person: 'mose',
+      place: 'Mount Sinai',
+    },
+    {
+      id: 'aaron',
+      de: 'Aaron',
+      en: 'Aaron',
+      meaning: { de: 'Der erste Hohepriester – und der Vater der beiden, die am Einweihungstag sterben.', en: 'The first high priest – and the father of the two who die on the day of dedication.' },
+      who: {
+        de: 'Sieben Tage wird er eingesetzt, am achten steigt Feuer herab und das Volk jubelt. In derselben Stunde verliert er zwei Söhne.',
+        en: 'For seven days he is ordained; on the eighth, fire comes down and the people shout. In the same hour he loses two sons.',
+      },
+      turn: {
+        de: 'Auf die Erklärung, die Mose ihm gibt, antwortet er nicht. „Und Aaron schwieg still" – der Text lässt das stehen, ohne es zu deuten.',
+        en: 'To the explanation Moses gives him he makes no answer. "Aaron held his peace" – the text lets that stand without interpreting it.',
+      },
+      ref: '3. Mose 8-10',
+      from: 8,
+      to: 16,
+      person: 'aaron',
+    },
+    {
+      id: 'nadab',
+      de: 'Nadab und Abihu',
+      en: 'Nadab and Abihu',
+      meaning: { de: '„Freigebig" und „er ist mein Vater" – zwei Namen, die nach dem zehnten Kapitel nicht mehr vorkommen.', en: '"Generous" and "he is my father" – two names that do not appear again after chapter ten.' },
+      who: {
+        de: 'Die beiden ältesten Söhne Aarons, eben erst zu Priestern geweiht. Sie bringen Räucherwerk mit Feuer, „das er ihnen nicht geboten hatte".',
+        en: 'Aaron\'s two eldest sons, only just consecrated as priests. They bring incense with fire "which he had not commanded them".',
+      },
+      turn: {
+        de: 'Was an dem Feuer fremd war, sagt der Text nicht – und genau das ist der Punkt: Die Nähe, die dieses Buch regelt, ist keine Sache, über die man selbst verfügt.',
+        en: 'What was strange about the fire the text does not say – and that is exactly the point: the nearness this book regulates is not something you have at your own disposal.',
+      },
+      ref: '3. Mose 10:1-3',
+      from: 10,
+      to: 10,
+      person: 'nadab',
+    },
+    {
+      id: 'eleasar',
+      de: 'Eleasar und Itamar',
+      en: 'Eleazar and Ithamar',
+      meaning: { de: '„Gott hat geholfen" – die beiden jüngeren Brüder, die den Dienst weiterführen.', en: '"God has helped" – the two younger brothers who carry the service on.' },
+      who: {
+        de: 'Sie stehen am Tag der Katastrophe daneben und müssen weitermachen: Ihnen wird verboten, das Haar zu lösen und die Kleider zu zerreißen – die üblichen Zeichen der Trauer.',
+        en: 'They stand by on the day of the disaster and have to carry on: they are forbidden to let their hair down or tear their clothes – the customary signs of mourning.',
+      },
+      turn: {
+        de: 'Mose findet später heraus, dass sie das Sündopfer nicht gegessen haben, und wird zornig; Aaron widerspricht ihm – und Mose gibt ihm recht. Eine der wenigen Stellen, an denen in diesem Buch verhandelt wird.',
+        en: 'Moses later finds they have not eaten the sin offering and is angry; Aaron contradicts him – and Moses concedes. One of the few places in this book where anything is negotiated.',
+      },
+      ref: '3. Mose 10:6-20',
+      from: 10,
+      to: 10,
+      person: 'eleasar_p',
+    },
+    {
+      id: 'laesterer',
+      de: 'Der Sohn der Israelitin',
+      en: 'The Israelite woman\'s son',
+      meaning: { de: 'Ohne Namen; der Text nennt nur seine Mutter Schelomit und ihren Vater – und dass sein Vater Ägypter war.', en: 'Unnamed; the text names only his mother Shelomith and her father – and that his father was an Egyptian.' },
+      who: {
+        de: 'Die zweite und letzte Erzählung des Buches: Ein Mann gerät im Lager in Streit und lästert dabei den Namen. Man setzt ihn fest, „bis ihnen klare Antwort würde durch den Mund des HERRN".',
+        en: 'The book\'s second and last narrative: a man gets into a fight in the camp and in the middle of it blasphemes the Name. They put him in custody "until Yahweh\'s will should be declared to them".',
+      },
+      turn: {
+        de: 'Die Antwort schließt einen Satz ein, der in die andere Richtung zielt als das Urteil: „Wie der Fremdling, so soll auch der Einheimische sein." Gleiches Recht, auch wo es hart ist.',
+        en: 'The answer includes a sentence that points the other way from the verdict: "The foreigner as well as the native-born." The same law, even where it is hard.',
+      },
+      ref: '3. Mose 24:10-16',
+      from: 24,
+      to: 24,
+    },
+  ],
+  beats: [
+    {
+      id: 'ruf',
+      chapter: 1,
+      label: { de: 'Der Ruf aus dem Zelt', en: 'The call from the tent' },
+      when: { de: 'Unmittelbar nach dem letzten Satz von 2. Mose', en: 'Immediately after the last sentence of Exodus' },
+      note: {
+        de: '2. Mose endet damit, dass die Wolke die Hütte bedeckt und Mose nicht hineingehen kann. 3. Mose beginnt im nächsten Atemzug: „Und der HERR rief Mose und redete mit ihm aus der Hütte des Stifts." Die beiden Bücher hängen an dieser Naht zusammen.',
+        en: 'Exodus ends with the cloud covering the tent so that Moses cannot go in. Leviticus begins in the next breath: "Yahweh called to Moses, and spoke to him from the Tent of Meeting." The two books hang together at this seam.',
+      },
+    },
+    {
+      id: 'achter',
+      chapter: 9,
+      label: { de: 'Der achte Tag', en: 'The eighth day' },
+      when: { de: 'Nach sieben Tagen Einsetzung', en: 'After seven days of ordination' },
+      note: {
+        de: 'Feuer vom HERRN verzehrt das Opfer, das Volk frohlockt – und im selben Kapitelbogen sterben zwei Priester. Der Tag der größten Nähe ist der Tag des Unglücks.',
+        en: 'Fire from Yahweh consumes the offering, the people shout – and in the same span two priests die. The day of the greatest nearness is the day of the disaster.',
+      },
+    },
+    {
+      id: 'jom',
+      chapter: 16,
+      label: { de: 'Der zehnte Tag des siebten Monats', en: 'The tenth day of the seventh month' },
+      when: { de: 'Einmal im Jahr, bis heute', en: 'Once a year, to this day' },
+      note: {
+        de: 'Der einzige Tag, an dem ein Mensch hinter den Vorhang geht. Als Jom Kippur ist er der höchste Feiertag des Judentums geblieben – ohne Tempel, ohne Opfer, mit Fasten und Gebet.',
+        en: 'The only day on which a human being goes behind the curtain. As Yom Kippur it has remained the highest holy day of Judaism – without temple, without sacrifice, with fasting and prayer.',
+      },
+    },
+    {
+      id: 'kalender',
+      chapter: 23,
+      label: { de: 'Das Jahr bekommt seine Feste', en: 'The year gets its feasts' },
+      when: { de: 'Der Kalender, aus dem das Festrad dieser App gebaut ist', en: 'The calendar this app\'s wheel of feasts is built from' },
+      note: {
+        de: 'Sabbat, Passa, Wochenfest, Posaunen, Versöhnungstag, Laubhütten – in dieser Reihenfolge und mit diesen Tagen. Wer wissen will, wann eines davon liegt, findet es im Modus „Feste Israels" als Rad.',
+        en: 'Sabbath, Passover, Weeks, Trumpets, Atonement, Booths – in this order and on these days. Anyone wanting to know when one of them falls will find it as a wheel in the "Feasts of Israel" mode.',
+      },
+    },
+    {
+      id: 'halljahr',
+      chapter: 25,
+      label: { de: 'Alle sieben und alle fünfzig Jahre', en: 'Every seventh and every fiftieth year' },
+      when: { de: 'Eine Zeitrechnung, die über ein Leben hinausgeht', en: 'A reckoning of time that outlasts a lifetime' },
+      note: {
+        de: 'Das Halljahr kommt einmal in fünfzig Jahren – höchstens zweimal im Leben eines Menschen. Ob es je gehalten wurde, sagt die Bibel nirgends; 2. Chronik 36,21 deutet das Exil als die Sabbatjahre, die das Land nachholt.',
+        en: 'The jubilee comes once in fifty years – at most twice in a person\'s lifetime. Whether it was ever kept, the Bible nowhere says; 2 Chronicles 36:21 reads the exile as the sabbath years the land is catching up on.',
+      },
+    },
+    {
+      id: 'ende',
+      chapter: 27,
+      label: { de: 'Noch immer am Sinai', en: 'Still at Sinai' },
+      when: { de: 'Etwa ein Monat zwischen dem ersten und dem letzten Satz', en: 'About one month between the first sentence and the last' },
+      note: {
+        de: 'Die Wohnung steht am ersten Tag des ersten Monats im zweiten Jahr (2. Mose 40,17), und 4. Mose beginnt am ersten Tag des zweiten Monats desselben Jahres (4. Mose 1,1). Dazwischen liegt dieses ganze Buch: 27 Kapitel, und die Lagerplätze haben sich nicht verändert.',
+        en: 'The dwelling is raised on the first day of the first month of the second year (Exodus 40:17), and Numbers begins on the first day of the second month of that same year (Numbers 1:1). This entire book lies in between: 27 chapters, and the camp has not moved.',
+      },
+    },
+  ],
+  traces: [
+    {
+      id: 'heilig',
+      title: { de: 'Derselbe Satz an die Gemeinde', en: 'The same sentence to the church' },
+      seed: {
+        ref: '3. Mose 19:2',
+        refEn: 'Lev 19:2',
+        de: 'Ihr sollt heilig sein; denn ich bin heilig, der HERR, euer Gott.',
+        en: 'You shall be holy; for I, Yahweh your God, am holy.',
+      },
+      echo: {
+        ref: '1. Petrus 1:16',
+        refEn: '1Pet 1:16',
+        de: 'Denn es steht geschrieben: "Ihr sollt heilig sein, denn ich bin heilig."',
+        en: 'because it is written, "You shall be holy; for I am holy."',
+      },
+      text: {
+        de: 'Petrus schreibt an Gemeinden in Kleinasien, die mit dem Opferdienst nichts zu tun haben – und zitiert ihnen wörtlich den Satz aus dem Buch, das am weitesten von ihnen entfernt scheint.',
+        en: 'Peter writes to congregations in Asia Minor who have nothing to do with the sacrificial service – and quotes them, word for word, the sentence from the book that seems furthest from them.',
+      },
+    },
+    {
+      id: 'blut',
+      title: { de: 'Ohne Blut keine Vergebung', en: 'Without blood no forgiveness' },
+      seed: {
+        ref: '3. Mose 17:11',
+        refEn: 'Lev 17:11',
+        de: 'Denn des Leibes Leben ist im Blut, und ich habe es euch auf den Altar gegeben, daß eure Seelen damit versöhnt werden.',
+        en: 'For the life of the flesh is in the blood; and I have given it to you on the altar to make atonement for your souls',
+      },
+      echo: {
+        ref: 'Hebräer 9:22',
+        refEn: 'Heb 9:22',
+        de: 'Und es wird fast alles mit Blut gereinigt nach dem Gesetz; und ohne Blut vergießen geschieht keine Vergebung.',
+        en: 'According to the law, nearly everything is cleansed with blood, and apart from shedding of blood there is no remission.',
+      },
+      text: {
+        de: 'Der Hebräerbrief setzt diesen Vers als Regel voraus und zieht daraus seinen ganzen Vergleich. Das „fast" ist dabei kein Versehen: 3. Mose kennt auch ein Sündopfer aus Mehl, für die, die sich kein Tier leisten können.',
+        en: 'Hebrews takes this verse as the rule and builds its whole comparison on it. The "nearly" is not a slip: Leviticus also knows a sin offering of flour, for those who cannot afford an animal.',
+      },
+    },
+    {
+      id: 'draussen',
+      title: { de: 'Draußen vor dem Tor', en: 'Outside the gate' },
+      seed: {
+        ref: '3. Mose 16:22',
+        refEn: 'Lev 16:22',
+        de: 'daß also der Bock alle ihre Missetat auf sich in eine Wildnis trage; und er lasse ihn in die Wüste.',
+        en: 'The goat shall carry all their iniquities on himself to a solitary land, and he shall release the goat in the wilderness.',
+      },
+      echo: {
+        ref: 'Hebräer 13:12',
+        refEn: 'Heb 13:12',
+        de: 'Darum hat auch Jesus, auf daß er heiligte das Volk durch sein eigen Blut, gelitten draußen vor dem Tor.',
+        en: 'Therefore Jesus also, that he might sanctify the people through his own blood, suffered outside of the gate.',
+      },
+      text: {
+        de: 'Der Versöhnungstag braucht zwei Böcke: einen, dessen Blut hineingetragen wird, und einen, der hinausgeht. Der Hebräerbrief liest die Hinrichtung vor der Stadtmauer als beides zugleich.',
+        en: 'The Day of Atonement needs two goats: one whose blood is carried in, and one that goes out. Hebrews reads the execution outside the city wall as both at once.',
+      },
+    },
+    {
+      id: 'naechster',
+      title: { de: 'Das zweite Gebot', en: 'The second commandment' },
+      seed: {
+        ref: '3. Mose 19:18',
+        refEn: 'Lev 19:18',
+        de: 'Du sollst deinen Nächsten lieben wie dich selbst; denn ich bin der HERR.',
+        en: 'you shall love your neighbor as yourself. I am Yahweh.',
+      },
+      echo: {
+        ref: 'Markus 12:31',
+        refEn: 'Mark 12:31',
+        de: 'Und das andere ist ihm gleich: "Du sollst deinen Nächsten lieben wie dich selbst." Es ist kein anderes Gebot größer denn diese.',
+        en: 'The second is like this, \'You shall love your neighbor as yourself.\' There is no other commandment greater than these.',
+      },
+      text: {
+        de: 'Gefragt nach dem höchsten Gebot, nennt Jesus zwei – und das zweite holt er aus der Mitte einer Liste über Feldränder, Waagen und Tagelöhner. Er erfindet es nicht, er hebt es heraus.',
+        en: 'Asked for the greatest commandment, Jesus names two – and the second he takes from the middle of a list about field edges, scales and day labourers. He does not invent it, he lifts it out.',
+      },
+    },
+    {
+      id: 'priester',
+      title: { de: '„Zeige dich dem Priester"', en: '"Show yourself to the priest"' },
+      seed: {
+        ref: '3. Mose 14:2',
+        refEn: 'Lev 14:2',
+        de: 'Das ist das Gesetz über den Aussätzigen, wenn er soll gereinigt werden. Er soll zum Priester kommen.',
+        en: 'This shall be the law of the leper in the day of his cleansing. He shall be brought to the priest,',
+      },
+      echo: {
+        ref: 'Markus 1:44',
+        refEn: 'Mark 1:44',
+        de: 'gehe hin und zeige dich dem Priester und opfere für deine Reinigung, was Mose geboten hat, zum Zeugnis über sie.',
+        en: 'go show yourself to the priest, and offer for your cleansing the things which Moses commanded, for a testimony to them.',
+      },
+      text: {
+        de: 'Jesus rührt einen Aussätzigen an – und schickt ihn danach genau den Weg, den 3. Mose 14 beschreibt. Die Heilung hebt die Ordnung nicht auf; sie füllt das Verfahren, das für diesen Fall seit Langem bereitliegt.',
+        en: 'Jesus touches a leper – and then sends him down exactly the path Leviticus 14 lays out. The healing does not abolish the order; it fills the procedure that has long stood ready for this case.',
+      },
+    },
+    {
+      id: 'schatten',
+      title: { de: 'Schatten und Körper', en: 'Shadow and body' },
+      seed: {
+        ref: '3. Mose 23:3',
+        refEn: 'Lev 23:3',
+        de: 'Sechs Tage sollst du arbeiten; der siebente Tag aber ist der große, heilige Sabbat, da ihr zusammenkommt.',
+        en: 'Six days shall work be done, but on the seventh day is a Sabbath of solemn rest, a holy convocation;',
+      },
+      echo: {
+        ref: 'Kolosser 2:17',
+        refEn: 'Col 2:17',
+        de: 'welches ist der Schatten von dem, das zukünftig war; aber der Körper selbst ist in Christo.',
+        en: 'which are a shadow of the things to come; but the body is Christ\'s.',
+      },
+      text: {
+        de: 'Paulus nennt Sabbat, Neumond und Speiseregeln einen Schatten – und ein Schatten ist kein Nichts, sondern der Umriss von etwas, das wirklich kommt. Wer die Feste aus 3. Mose 23 kennt, sieht den Umriss genauer.',
+        en: 'Paul calls sabbath, new moon and food rules a shadow – and a shadow is not nothing but the outline of something that really comes. Whoever knows the feasts of Leviticus 23 sees the outline more clearly.',
+      },
+    },
+    {
+      id: 'wandeln',
+      title: { de: '„Ich will unter euch wandeln"', en: '"I will walk among you"' },
+      seed: {
+        ref: '3. Mose 26:12',
+        refEn: 'Lev 26:12',
+        de: 'Und will unter euch wandeln und will euer Gott sein; so sollt ihr mein Volk sein.',
+        en: 'I will walk among you, and will be your God, and you will be my people.',
+      },
+      echo: {
+        ref: '2. Korinther 6:16',
+        refEn: '2Cor 6:16',
+        de: 'Ich will unter ihnen wohnen und unter ihnen wandeln und will ihr Gott sein, und sie sollen mein Volk sein.',
+        en: 'I will dwell in them, and walk in them; and I will be their God, and they will be my people.',
+      },
+      text: {
+        de: 'Paulus zitiert den Vers fast wörtlich und verschiebt eine einzige Präposition: aus „unter euch" wird „in ihnen". Der Ort, an dem Gott wohnt, ist in diesem Satz kein Zelt mehr.',
+        en: 'Paul quotes the verse almost word for word and shifts a single preposition: "among you" becomes "in them". In that sentence the place where God dwells is no longer a tent.',
+      },
+    },
+    {
+      id: 'halljahr',
+      title: { de: 'Das angenehme Jahr', en: 'The acceptable year' },
+      seed: {
+        ref: '3. Mose 25:10',
+        refEn: 'Lev 25:10',
+        de: 'Und ihr sollt das fünfzigste Jahr heiligen und sollt ein Freijahr ausrufen im Lande allen, die darin wohnen;',
+        en: 'You shall make the fiftieth year holy, and proclaim liberty throughout the land to all its inhabitants.',
+      },
+      echo: {
+        ref: 'Lukas 4:19',
+        refEn: 'Luke 4:19',
+        de: 'und zu verkündigen das angenehme Jahr des HERRN."',
+        en: 'and to proclaim the acceptable year of the Lord.',
+      },
+      text: {
+        de: 'In der Synagoge von Nazareth liest Jesus aus Jesaja 61 – und dessen letzter Satz nimmt das Halljahr auf: Schulden fallen, Gefangene gehen frei. Der Weg führt also über Jesaja, nicht direkt; und genau deshalb steht er hier, statt kürzer zu wirken, als er ist.',
+        en: 'In the synagogue at Nazareth Jesus reads from Isaiah 61 – and its last line takes up the jubilee: debts fall, prisoners go free. So the path runs through Isaiah, not directly; and that is exactly why it is spelled out here rather than made to look shorter than it is.',
+      },
+    },
+  ],
+  deepen: [
+    {
+      id: 'rede',
+      title: { de: 'Ein Buch, das fast nur redet', en: 'A book that almost only speaks' },
+      text: {
+        de: 'Dreiunddreißigmal steht in diesen 27 Kapiteln „der HERR redete mit Mose". Erzählt wird zweimal – der Tod von Nadab und Abihu und der Fall des Lästerers –, und beide Erzählungen sind kurz und enden mit einem Todesfall. Wer das Buch langweilig findet, hat recht in der Form und unrecht in der Sache: Es ist kein schlechtes Drehbuch, sondern gar keins.',
+        en: 'Thirty-three times in these 27 chapters the text says "Yahweh spoke to Moses". There are two narratives – the death of Nadab and Abihu, and the case of the blasphemer – and both are short and end in a death. Whoever finds the book boring is right about its form and wrong about its substance: it is not a bad screenplay, it is none at all.',
+      },
+      source: {
+        de: 'Gezählt im Text dieser App (Luther 1912): 33 Vorkommen von „redete mit Mose" in 3. Mose 1–27.',
+        en: 'Counted in this app\'s text (Luther 1912): 33 occurrences of "spoke to Moses" in Leviticus 1–27.',
+      },
+    },
+    {
+      id: 'woerter',
+      title: { de: 'Was ein Buch beschäftigt, steht in seinen Zahlen', en: 'What a book is occupied with shows in its numbers' },
+      text: {
+        de: '„Heilig" steht 140-mal da, „unrein" 141-mal – und „rein" nur 59-mal. Das Verhältnis ist die Aussage: Unreinheit ist der Normalfall, mit dem zu rechnen ist, nicht die Ausnahme, über die man sich empört. Fast alles, was unrein macht, gehört zum Leben: Essen, Geburt, Krankheit, Tod.',
+        en: '"Holy" appears 140 times, "unclean" 141 – and "clean" only 59. The ratio is the point: uncleanness is the normal case to be reckoned with, not the exception to be scandalised by. Almost everything that makes unclean belongs to life: food, birth, illness, death.',
+      },
+      source: {
+        de: 'Gezählt im Text dieser App (Luther 1912), 3. Mose 1–27.',
+        en: 'Counted in this app\'s text (Luther 1912), Leviticus 1–27.',
+      },
+    },
+    {
+      id: 'qadosch',
+      title: { de: 'Das Gegenteil von heilig ist gewöhnlich', en: 'The opposite of holy is common' },
+      text: {
+        de: 'Das hebräische qadosch heißt „ausgesondert", nicht „gut". Der Auftrag an die Priester nennt beide Paare nebeneinander: heilig und unheilig, rein und unrein – vier Begriffe, die sich kreuzen. Etwas kann rein und trotzdem gewöhnlich sein; das ist der Normalzustand. Wer „heilig" mit „moralisch einwandfrei" übersetzt, liest ab Kapitel 11 an allem vorbei.',
+        en: 'The Hebrew qadosh means "set apart", not "good". The priests\' commission names both pairs side by side: holy and common, unclean and clean – four terms that cross. Something can be clean and still common; that is the normal state. Translate "holy" as "morally impeccable" and from chapter 11 on you read past everything.',
+      },
+      source: {
+        de: '3. Mose 10,10; dieselbe Unterscheidung wieder in Hesekiel 22,26 und 44,23.',
+        en: 'Leviticus 10:10; the same distinction again in Ezekiel 22:26 and 44:23.',
+      },
+    },
+    {
+      id: 'nachbarn',
+      title: { de: 'Opfer bei den Nachbarn – und der Unterschied', en: 'Sacrifice among the neighbours – and the difference' },
+      text: {
+        de: 'Opfer gibt es im ganzen Alten Orient, und die Form ähnelt sich bis in Einzelheiten: Tierarten, Blutriten, Anteile für die Priester. Der Unterschied liegt in der Begründung. In Mesopotamien speisen die Opfer die Götter, die ohne sie hungern; hier steht ausdrücklich das Gegenteil, und ein Psalm sagt es später rundheraus: „Wenn mich hungerte, wollte ich dir nicht davon sagen; denn der Erdboden ist mein und alles, was darinnen ist."',
+        en: 'Sacrifice exists across the ancient Near East, and the form is similar down to details: species, blood rites, portions for the priests. The difference lies in the reasoning. In Mesopotamia offerings feed gods who would otherwise go hungry; here the opposite is stated expressly, and a psalm later says it outright: "If I were hungry, I would not tell you, for the world is mine, and all that is in it."',
+      },
+      source: {
+        de: 'Psalm 50,12; zum Vergleich das Atrahasis-Epos und Gilgamesch XI, wo sich die Götter nach der Flut „wie Fliegen" um das Opfer sammeln.',
+        en: 'Psalm 50:12; compare the Atrahasis epic and Gilgamesh XI, where after the flood the gods gather around the offering "like flies".',
+      },
+    },
+    {
+      id: 'boden',
+      title: { de: 'Ein Bodenmarkt mit eingebautem Ende', en: 'A land market with a built-in end' },
+      text: {
+        de: 'Im Halljahr fällt jedes verkaufte Grundstück an die Familie zurück. Das heißt: Verkauft wird nie das Land, sondern nur die Zahl der Ernten bis zum nächsten fünfzigsten Jahr – und Kapitel 25 sagt ausdrücklich, dass der Preis danach zu berechnen ist. Eine Wirtschaftsordnung, in der niemand dauerhaft alles verlieren kann, weil der Boden am Ende nicht handelbar ist.',
+        en: 'In the jubilee every plot sold returns to its family. Which means: what is sold is never the land but only the number of harvests until the next fiftieth year – and chapter 25 says expressly that the price is to be calculated accordingly. An economic order in which nobody can permanently lose everything, because in the end the ground is not tradable.',
+      },
+      source: {
+        de: '3. Mose 25,13-16 (der Preis nach der Zahl der Erntejahre) und 25,23 („das Land ist mein").',
+        en: 'Leviticus 25:13-16 (price by the number of harvest years) and 25:23 ("the land is mine").',
+      },
+    },
+    {
+      id: 'neunzehn',
+      title: { de: 'Wo die Nächstenliebe steht', en: 'Where "love your neighbour" stands' },
+      text: {
+        de: 'Der berühmteste Satz des Buches steht nicht an einer betonten Stelle, sondern mitten in einer Aufzählung: Feldränder stehen lassen, nicht stehlen, den Lohn des Tagelöhners nicht über Nacht behalten, dem Tauben nicht fluchen, dem Blinden nichts in den Weg legen, vor Gericht die Person nicht ansehen – und dann, als Abschluss derselben Reihe, „du sollst deinen Nächsten lieben wie dich selbst". Sechzehn Verse später gilt er dem Fremden mit derselben Formel.',
+        en: 'The book\'s most famous sentence does not stand in an emphatic place but in the middle of a list: leave the edges of the field, do not steal, do not keep a day labourer\'s wages overnight, do not curse the deaf, do not put a stumbling block before the blind, do not show partiality in court – and then, closing the same series, "you shall love your neighbor as yourself". Sixteen verses later it covers the foreigner in the same words.',
+      },
+      source: {
+        de: '3. Mose 19,9-18, der Satz in Vers 18; auf den Fremden ausgedehnt in 19,34.',
+        en: 'Leviticus 19:9-18, the sentence in verse 18; extended to the foreigner in 19:34.',
+      },
+    },
+  ],
+  questions: [
+    {
+      de: 'Das Buch regelt die Nähe zu Gott bis ins Detail – und erklärt beim fremden Feuer nicht, was falsch war. Was sagt diese Leerstelle?',
+      en: 'The book regulates nearness to God down to the detail – and at the strange fire it does not explain what was wrong. What does that gap say?',
+    },
+    {
+      de: 'Dieselbe Heiligkeit gilt am Altar und am Feldrand. Warum stehen Opfervorschriften und ehrliche Waagen in einem Buch?',
+      en: 'The same holiness holds at the altar and at the edge of the field. Why do sacrificial rules and honest scales stand in one book?',
+    },
+    {
+      de: 'Unrein ist ein Zustand, kein Vergehen – und fast alles, was unrein macht, gehört zum Leben. Was ändert das an der Art, wie man diese Kapitel liest?',
+      en: 'Unclean is a condition, not an offence – and almost everything that makes unclean belongs to life. What does that change about how these chapters are read?',
+    },
+  ],
+};
+
+export const PORTRAITS: Portrait[] = [GENESIS, EXODUS, LEVITICUS];
 
 export const PORTRAIT_BY_OSIS: Record<string, Portrait> = Object.fromEntries(
   PORTRAITS.map((p) => [p.osis, p]),

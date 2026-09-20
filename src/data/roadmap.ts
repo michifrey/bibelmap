@@ -74,7 +74,7 @@ export const ROAD: RoadStop[] = [
       en: 'Load halved and pinned down with a budget; keyboard, headings and tap targets brought up to standard. Check scripts have watched over it since.',
     },
     status: 'done',
-    figure: { value: '23', label: { de: 'Prüfungen bei jedem Lauf', en: 'checks on every run' } },
+    figure: { value: '31', label: { de: 'Prüfungen bei jedem Lauf', en: 'checks on every run' } },
   },
   {
     id: 'feste',
@@ -99,6 +99,28 @@ export const ROAD: RoadStop[] = [
     figure: { value: '16', label: { de: 'Funde, 11 Gesetzestexte, 49 philosophische Werke', en: 'discoveries, 11 legal texts, 49 philosophical works' } },
   },
   {
+    id: 'portraets',
+    tag: { de: 'v0.12', en: 'v0.12' },
+    title: { de: 'Die Bücher einzeln', en: 'The books one by one' },
+    body: {
+      de: 'Ein Buch der Bibel auf einer Seite – und der Aufbau baut sich auf, statt dazustehen: die Züge des Buches als Schriftrolle, Zug um Zug, und zuletzt die Bögen darüber, die zeigen, was sich wiederholt hat. Dazu Kernbotschaft, Figuren mit ihrem Wendepunkt, eine kleine Zeitschiene, die Hinweise auf Jesus – jedes Zitat im Bibeltext nachgeschlagen – und ein Leseplan, der nach den Zügen schneidet statt nach Kapitelzahlen.',
+      en: 'One book of the Bible on a single page – and its structure builds itself up instead of just standing there: the movements of the book as a scroll, one by one, and at the end the arcs above that show what has repeated. With the core message, the people and their turning points, a small timeline, the pointers to Jesus – every quotation looked up in the Bible text – and a reading plan that cuts by the movements rather than by chapter counts.',
+    },
+    status: 'done',
+    figure: { value: '3/66', label: { de: 'Bücher mit Porträt', en: 'books with a portrait' } },
+  },
+  {
+    id: 'quelle',
+    tag: { de: 'v0.13', en: 'v0.13' },
+    title: { de: 'Mitschreiben, nicht nur melden', en: 'Write along, not just report' },
+    body: {
+      de: 'Unter der Porträtseite steht, was bei Wikipedia neben jedem Artikel steht – nur führt es an die Datei, aus der die Seite gebaut ist. „Bearbeiten" öffnet sie im Editor von GitHub; wer dort etwas ändert, bekommt eine eigene Kopie und daraus einen Änderungsvorschlag, ohne Git auf dem eigenen Rechner. Daneben eine Meldung, in der Seitenadresse und Abschnitt schon stehen, und die Versionsgeschichte für die Frage vor jeder Korrektur: Stand das schon immer so da?',
+      en: 'Under the portrait page stands what Wikipedia puts beside every article – except that it leads to the file the page is built from. "Edit" opens it in GitHub\'s editor; change something there and you get your own copy and a pull request out of it, with no Git on your own machine. Beside it a report with the page address and section already filled in, and the history for the question that precedes every correction: has it always said that?',
+    },
+    status: 'done',
+    figure: { value: '4', label: { de: 'Wege zur Quelle je Seite', en: 'ways to the source per page' } },
+  },
+  {
     id: 'heute',
     tag: { de: 'heute', en: 'today' },
     title: { de: 'Hier stehen wir', en: 'This is where we are' },
@@ -107,6 +129,28 @@ export const ROAD: RoadStop[] = [
       en: 'Everything up to here is built and checked. What follows is open – and each of the stations below can be counted in the project itself.',
     },
     status: 'here',
+  },
+  {
+    id: 'mehrportraets',
+    tag: { de: 'als Nächstes', en: 'next up' },
+    title: { de: 'Die übrigen Bücher', en: 'The remaining books' },
+    body: {
+      de: 'Drei von 66 Büchern haben ein Porträt: 1., 2. und 3. Mose. Die Form trägt auch, wo nichts passiert – 3. Mose nennt in 27 Kapiteln vier Orte und wechselt keinen einzigen Mal den Ort –, und sie ist gegen den Bibeltext im Haus geprüft. Was fehlt, ist kein Bau, sondern Arbeit an den Texten: je Buch die Züge, die Figuren, die Zeitschiene und die Zitate, und jedes Zitat wird nachgeschlagen.',
+      en: 'Three of 66 books have a portrait: Genesis, Exodus and Leviticus. The form carries even where nothing happens – Leviticus names four places in 27 chapters and never changes location – and it is checked against the Bible text in the house. What is missing is not machinery but work on the texts: for each book the movements, the people, the timeline and the quotations, and every quotation gets looked up.',
+    },
+    status: 'planned',
+    figure: { value: '3/66', label: { de: 'Bücher mit Porträt', en: 'books with a portrait' } },
+  },
+  {
+    id: 'quelleueberall',
+    tag: { de: 'danach', en: 'after that' },
+    title: { de: 'Der Weg zur Quelle unter jeder Ansicht', en: 'The way to the source under every view' },
+    body: {
+      de: 'Bisher steht er nur unter dem Buchporträt. Dieselbe Fußzeile gehört unter das Bücherregal, die Feste, die Heilsgeschichte und die Jesus-Sektion – überall dort, wo diese Seite etwas behauptet, das jemand besser wissen kann. Die Mechanik trägt das: Es braucht je Ansicht einen Eintrag in `SOURCES` und eine Zeile, und `check:improve` schlägt jeden Pfad nach.',
+      en: 'So far it stands only under the book portrait. The same footer belongs under the bookshelf, the feasts, the story of salvation and the Jesus section – everywhere this site claims something somebody might know better. The machinery carries it: each view needs one entry in `SOURCES` and one line, and `check:improve` looks up every path.',
+    },
+    status: 'planned',
+    figure: { value: '1/20', label: { de: 'Ansichten mit Weg zur Quelle', en: 'views with a way to the source' } },
   },
   {
     id: 'bilder',
