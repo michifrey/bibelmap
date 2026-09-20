@@ -49,9 +49,11 @@
 // Angefangen mit **1. Mose**, dazu **2. Mose**, weil ein Muster sich erst am
 // zweiten Fall zeigt – und **3. Mose**, weil sich dort erst zeigt, ob die Form
 // auch trägt, wo nichts passiert: ein Buch fast ohne Erzählung, ohne
-// Ortswechsel und mit vier Ortsnamen in 27 Kapiteln. Die übrigen 63 Bücher
-// haben (noch) kein Porträt; die Oberfläche sagt das, statt eine leere Seite
-// zu zeigen.
+// Ortswechsel und mit vier Ortsnamen in 27 Kapiteln. **4. Mose** ist die
+// Gegenprobe dazu: 138 Ortsnamen in 36 Kapiteln, fast vierzig Jahre, ein Buch,
+// das sich kaum stillhalten kann – und dessen Mitte trotzdem nicht in der
+// Mitte liegt, sondern in Kapitel 14. Die übrigen 62 Bücher haben (noch) kein
+// Porträt; die Oberfläche sagt das, statt eine leere Seite zu zeigen.
 
 import { BOOK_BY_OSIS, type BookMeta } from './books';
 
@@ -2150,7 +2152,714 @@ const LEVITICUS: Portrait = {
   ],
 };
 
-export const PORTRAITS: Portrait[] = [GENESIS, EXODUS, LEVITICUS];
+/* ------------------------------------------------------------------ 4. Mose */
+
+const NUMBERS: Portrait = {
+  osis: 'Num',
+  hebrew: {
+    word: 'בְּמִדְבַּר',
+    translit: 'Bemidbar',
+    means: {
+      de: '„In der Wüste" – das fünfte Wort des ersten Satzes. Der deutsche Name kommt über die griechische Bibel: „Arithmoi", die Zahlen, nach den beiden Volkszählungen.',
+      en: '"In the wilderness" – the fifth word of the first sentence. The English name comes via the Greek Bible: "Arithmoi", numbers, after the two censuses.',
+    },
+  },
+  subtitle: {
+    de: 'Elf Tagereisen, für die man vierzig Jahre braucht',
+    en: 'Eleven days’ journey that takes forty years',
+  },
+  summary: {
+    de: 'Am Sinai steht das Lager in vollkommener Ordnung: gezählt, nach Stämmen aufgestellt, Gott in der Mitte. Dann bricht es auf – und kommt nicht an. Elfmal murrt das Volk, an den Kundschaftern entscheidet sich alles, und eine ganze Generation stirbt unterwegs. Dass das Buch trotzdem am Jordan endet, sagt ausgerechnet ein fremder Wahrsager: Gott ist kein Mensch, dass er lüge.',
+    en: 'At Sinai the camp stands in perfect order: counted, arranged by tribes, God in the middle. Then it sets out – and does not arrive. Eleven times the people murmur, everything is decided at the spies, and a whole generation dies on the way. That the book nevertheless ends at the Jordan is said, of all people, by a foreign diviner: God is not a man, that he should lie.',
+  },
+  heart: {
+    de: '4. Mose ist das Buch des Dazwischen. Es beginnt mit der schönsten Ordnung der Bibel – zwölf Stämme in einem Quadrat um ein Zelt, jeder Platz gezählt und benannt – und es endet in einem Lager am Ostufer des Jordan, ohne dass jemand drüben gewesen wäre. Dazwischen liegt eine einzige lange Verweigerung: Essen, Wasser, Führung, Land – an jedem Punkt findet das Volk, in Ägypten sei es besser gewesen. In Kapitel 14 fällt die Entscheidung, und sie ist hart: Diese Generation sieht das Land nicht. Aber das Buch hört dort nicht auf. Es zählt noch einmal, verteilt noch einmal, setzt einen Nachfolger ein und beschreibt Grenzen für ein Land, das niemand betreten hat. Die Frage, die 4. Mose stellt, ist nicht, ob Menschen treu bleiben. Sie tun es nicht. Die Frage ist, ob das reicht, um eine Zusage zu kippen.',
+    en: 'Numbers is the book of the in-between. It begins with the most beautiful order in the Bible – twelve tribes in a square around a tent, every place counted and named – and it ends in a camp on the east bank of the Jordan, without anyone having been across. In between lies one long refusal: food, water, leadership, land – at every point the people decide that Egypt was better. In chapter 14 the matter is settled, and harshly: this generation will not see the land. But the book does not stop there. It counts again, allots again, appoints a successor and describes borders for a country nobody has entered. The question Numbers asks is not whether people stay faithful. They do not. The question is whether that is enough to overturn a promise.',
+  },
+  verse: {
+    ref: '4. Mose 23:19',
+    refEn: 'Num 23:19',
+    de: 'Gott ist nicht ein Mensch, daß er lüge, noch ein Menschenkind, daß ihn etwas gereue.',
+    en: 'God is not a man, that he should lie, nor a son of man, that he should repent.',
+  },
+  facts: {
+    chapters: 36,
+    verses: 1288,
+    places: 138,
+    genre: {
+      de: 'Erzählung und Gesetz im Wechsel, dazu Listen: zwei Volkszählungen, eine Lagerordnung, ein Reisebericht mit 42 Stationen. Die Erzählungen dazwischen gehören zu den dichtesten der Tora.',
+      en: 'Narrative and law in alternation, plus lists: two censuses, a camp order, a travel record with 42 stations. The narratives in between are among the densest in the Torah.',
+    },
+    scene: {
+      de: 'Die Wüste zwischen dem Sinai und dem Jordan – und das ist wörtlich zu nehmen: 138 Ortsnamen in 36 Kapiteln. 3. Mose kam mit vieren aus.',
+      en: 'The wilderness between Sinai and the Jordan – and that is meant literally: 138 place names in 36 chapters. Leviticus managed with four.',
+    },
+    keyword: {
+      de: '„Murren" – elfmal, und jedes Mal treibt es die Handlung. Dagegen steht „Gemeinde": 82-mal, das Wort für dieselben Menschen in Ordnung.',
+      en: '"Murmur" – eleven times, and every time it drives the plot. Against it stands "congregation": 82 times, the word for the same people in order.',
+    },
+  },
+  movements: [
+    {
+      id: 'ordnung',
+      from: 1,
+      to: 10,
+      title: { de: 'Ein Lager wie ein Quadrat', en: 'A camp like a square' },
+      text: {
+        de: 'Elf Monate steht Israel schon am Sinai. Jetzt wird gezählt, nach Stämmen aufgestellt, der Dienst verteilt: drei Stämme an jeder Seite, die Leviten als Ring dazwischen, das Zelt in der Mitte. Dazu der Segen, den die Priester sprechen sollen, und die Wolke, die den Takt vorgibt. Am zwanzigsten Tag des zweiten Monats hebt sie sich – und der Zug setzt sich in Bewegung.',
+        en: 'Israel has been at Sinai for eleven months. Now they are counted, arranged by tribes, the service assigned: three tribes on each side, the Levites as a ring between, the tent in the middle. Then the blessing the priests are to speak, and the cloud that sets the pace. On the twentieth day of the second month it lifts – and the column starts to move.',
+      },
+      turn: {
+        de: '„Und so oft sich die Wolke aufhob von der Hütte, so zogen die Kinder Israel" – nicht der Kalender bestimmt den Aufbruch.',
+        en: '"Whenever the cloud was taken up from over the Tent, then after that the children of Israel traveled" – it is not the calendar that decides departure.',
+      },
+      color: '#3a6ea8',
+      symbol: 'M3 3h18v18H3zM9 15l3-5 3 5zM9 15h6M12 3v3M12 18v3',
+      places: ['Wilderness of Sinai', 'Mount Sinai'],
+    },
+    {
+      id: 'murren',
+      from: 11,
+      to: 12,
+      title: { de: 'Drei Tage später', en: 'Three days later' },
+      text: {
+        de: 'Der Zug ist drei Tagereisen alt, da fängt es an. Erst ein Feuer am Rand des Lagers, dann die Sehnsucht nach den Fischen, Gurken, Melonen, dem Lauch und dem Knoblauch Ägyptens – Wachteln bis zum Ekel, ein Grab mit dem Namen „Lustgräber". Mose bricht zusammen und sagt, er könne dieses Volk nicht allein tragen; siebzig Älteste bekommen Anteil an seinem Geist. Dann stellen sich seine eigenen Geschwister gegen ihn.',
+        en: 'The column is three days old when it starts. First a fire at the edge of the camp, then the longing for the fish, cucumbers, melons, leeks and garlic of Egypt – quail until they are sick of it, a grave named "Graves of Craving". Moses breaks down and says he cannot carry this people alone; seventy elders are given a share of his spirit. Then his own siblings turn against him.',
+      },
+      turn: {
+        de: '„Wollte Gott, daß all das Volk des HERRN weissagte" – Mose wehrt sich nicht gegen die Konkurrenz, er wünscht sie sich.',
+        en: '"I wish that all Yahweh’s people were prophets" – Moses does not defend himself against rivals, he wishes for more of them.',
+      },
+      color: '#b4562f',
+      symbol: 'M12 3c1.6 3.5 4.6 4.8 4.6 8.4A4.6 4.6 0 0 1 7.4 12c0-1.8.9-2.9 1.8-3.8.2 1.8 1 2.7 1.8 2.7 0-2.7.5-5.2 1-7.9zM6 20h12',
+      places: ['Taberah', 'Kibroth-hattaavah', 'Hazeroth'],
+    },
+    {
+      id: 'kundschafter',
+      from: 13,
+      to: 14,
+      title: { de: 'Vierzig Tage, vierzig Jahre', en: 'Forty days, forty years' },
+      text: {
+        de: 'Zwölf Männer gehen vierzig Tage lang ins Land und bringen eine Traube mit, die zwei tragen müssen. Zehn von ihnen sagen dasselbe wie die zwei anderen – das Land ist gut – und ziehen den entgegengesetzten Schluss. In der Nacht darauf will das Volk einen Hauptmann wählen und nach Ägypten zurück. Das Urteil rechnet Tag für Tag um: ein Jahr für jeden Tag der Erkundung. Diese Generation sieht das Land nicht mehr.',
+        en: 'Twelve men spend forty days in the land and bring back a cluster of grapes that takes two to carry. Ten of them say what the other two say – the land is good – and draw the opposite conclusion. That night the people want to choose a captain and go back to Egypt. The verdict converts day into year: one year for each day of scouting. This generation will not see the land.',
+      },
+      turn: {
+        de: '„Eure Leiber sollen in dieser Wüste verfallen" – gesagt zu denen, die eben noch gezählt worden waren.',
+        en: '"Your dead bodies shall fall in this wilderness" – said to the very people who had just been counted.',
+      },
+      color: '#c98a2b',
+      symbol: 'M12 2v4M10 8a2 2 0 1 0 4 0 2 2 0 1 0-4 0M7 13a2 2 0 1 0 4 0 2 2 0 1 0-4 0M13 13a2 2 0 1 0 4 0 2 2 0 1 0-4 0M10 18a2 2 0 1 0 4 0 2 2 0 1 0-4 0',
+      places: ['Paran', 'Valley of Eshcol', 'Kadesh-barnea', 'Hormah'],
+    },
+    {
+      id: 'aufstand',
+      from: 15,
+      to: 19,
+      title: { de: 'Wer darf nahe kommen?', en: 'Who may come near?' },
+      text: {
+        de: 'Korah, ein Levit, bringt 250 Angesehene gegen Mose und Aaron auf, und sein Satz klingt wie aus 3. Mose abgeschrieben: Die ganze Gemeinde ist heilig. Er hat nicht unrecht und trotzdem nicht recht – die Erde tut sich auf. Danach zwei Antworten auf dieselbe Frage: ein Stab, der über Nacht blüht und Mandeln trägt, und die rote Kuh, deren Asche jeden reinigt, der einen Toten berührt hat – und die jeden unrein macht, der sie zubereitet.',
+        en: 'Korah, a Levite, raises 250 men of standing against Moses and Aaron, and his line sounds copied out of Leviticus: the whole congregation is holy. He is not wrong and still not right – the earth opens. Then two answers to the same question: a staff that blossoms overnight and bears almonds, and the red heifer whose ashes cleanse everyone who has touched a corpse – and defile everyone who prepares them.',
+      },
+      turn: {
+        de: '„Denn die ganze Gemeinde ist überall heilig … warum erhebt ihr euch über die Gemeinde des HERRN?" – ein richtiger Satz im Dienst einer Machtfrage.',
+        en: '"All the congregation are holy … why do you lift yourselves up above Yahweh’s assembly?" – a true sentence in the service of a power struggle.',
+      },
+      color: '#8e3c6e',
+      symbol: 'M3 15h4l2 5 3-11 2 6h7M4 20h16M12 3v3',
+      places: ['Kadesh-barnea'],
+    },
+    {
+      id: 'fels',
+      from: 20,
+      to: 21,
+      title: { de: 'Der Fels, die Schlange, und zwei Gräber', en: 'The rock, the serpent, and two graves' },
+      text: {
+        de: 'Das kürzeste und härteste Stück des Buches. Mirjam stirbt in Kades. Es fehlt Wasser, Mose soll zum Felsen reden und schlägt ihn zweimal – und verliert damit das Land. Edom verweigert den Durchzug. Aaron stirbt auf dem Berg Hor, sein Gewand geht an Eleasar über. Und als Schlangen ins Lager kommen, richtet Mose eine eherne Schlange auf: Wer das ansieht, woran er stirbt, bleibt leben.',
+        en: 'The shortest and hardest stretch of the book. Miriam dies at Kadesh. There is no water, Moses is told to speak to the rock and strikes it twice – and so loses the land. Edom refuses passage. Aaron dies on Mount Hor, his garment passing to Eleazar. And when serpents come into the camp, Moses raises a serpent of bronze: whoever looks at the thing he is dying of, lives.',
+      },
+      turn: {
+        de: '„Darum daß ihr nicht an mich geglaubt habt … sollt ihr diese Gemeinde nicht in das Land bringen" – auch für Mose gilt das Urteil von Kapitel 14.',
+        en: '"Because you didn’t believe in me … therefore you shall not bring this assembly into the land" – the verdict of chapter 14 applies to Moses too.',
+      },
+      color: '#2f7f8f',
+      symbol: 'M4 20h16M6 20c0-5 2.5-8 6-8s6 3 6 8M12 12V5M10 7l2-2 2 2',
+      places: ['Meribah', 'Mount Hor', 'Edom', 'Arnon', 'Heshbon', 'Bashan'],
+    },
+    {
+      id: 'bileam',
+      from: 22,
+      to: 25,
+      title: { de: 'Der Fluch, der nicht kommt', en: 'The curse that never comes' },
+      text: {
+        de: 'Der König von Moab kauft einen Wahrsager ein, damit er Israel verflucht – und vier Anläufe lang kommt aus Bileams Mund Segen. Israel selbst erfährt davon nichts; das ganze Stück spielt hinter seinem Rücken. Kaum ist es vorbei, tut das Volk in Sittim genau das, was kein Fluch geschafft hätte: Es läuft den Göttern Moabs nach. Was von außen nicht zu erreichen war, geschieht von innen.',
+        en: 'The king of Moab hires a diviner to curse Israel – and four times over, what comes out of Balaam’s mouth is blessing. Israel itself learns nothing of it; the whole episode plays out behind its back. Barely is it over when the people at Shittim do exactly what no curse could have managed: they go after the gods of Moab. What could not be achieved from outside happens from within.',
+      },
+      turn: {
+        de: '„Es wird ein Stern aus Jakob aufgehen und ein Zepter aus Israel aufkommen" – der weiteste Blick des Buches, gesprochen von einem, der nicht dazugehört.',
+        en: '"A star will come out of Jacob. A scepter will rise out of Israel" – the book’s furthest view, spoken by someone who does not belong to it.',
+      },
+      color: '#7a5ca8',
+      symbol: 'M12 3l2.3 6 6.2.3-4.8 4 1.6 6-5.3-3.5L6.7 19.3l1.6-6L3.5 9.3 9.7 9z',
+      places: ['Moab', 'Shittim', 'Peor', 'Midian'],
+    },
+    {
+      id: 'zweite',
+      from: 26,
+      to: 30,
+      title: { de: 'Noch einmal zählen', en: 'Counting again' },
+      text: {
+        de: 'Vierzig Jahre später dieselbe Prozedur – und der Text sagt ausdrücklich, was der Unterschied ist: Von den zuerst Gezählten ist keiner mehr dabei außer Kaleb und Josua. Dann tritt ein Fall auf, den das Gesetz nicht vorsieht: Fünf Schwestern ohne Bruder fordern das Erbteil ihres Vaters. Mose bringt die Sache vor den HERRN, und das Recht wird geändert. Am Ende bekommt Mose einen Nachfolger, damit die Gemeinde nicht ohne Hirten bleibt.',
+        en: 'Forty years later, the same procedure – and the text says expressly what the difference is: of those counted first, not one is left except Caleb and Joshua. Then a case arises that the law does not cover: five sisters with no brother claim their father’s inheritance. Moses brings it before Yahweh, and the law is changed. At the end Moses is given a successor, so that the congregation is not left without a shepherd.',
+      },
+      turn: {
+        de: '„Und blieb keiner übrig als Kaleb, der Sohn Jephunnes, und Josua, der Sohn Nuns." Zwei Namen aus sechshunderttausend.',
+        en: '"There was not a man left of them, except Caleb the son of Jephunneh, and Joshua the son of Nun." Two names out of six hundred thousand.',
+      },
+      color: '#5c8a3a',
+      symbol: 'M5 5v14M9 5v14M13 5v14M3 12h12M17 7l3 5-3 5',
+      places: ['Moab'],
+    },
+    {
+      id: 'grenzen',
+      from: 31,
+      to: 36,
+      title: { de: 'Grenzen für ein Land, das niemand betreten hat', en: 'Borders for a land nobody has entered' },
+      text: {
+        de: 'Das Buch endet mit Verwaltung, und das ist die Pointe: Zwei Stämme bekommen Land im Osten, aber nur mit der Auflage, vorher mitzuziehen. Kapitel 33 zählt alle 42 Lagerplätze seit Ägypten auf – die Reiseliste, aus der auch die Route in dieser App gebaut ist. Dann die Grenzen, die Leviten­städte und sechs Freistädte, in die fliehen kann, wer ohne Absicht getötet hat. Der letzte Satz steht im Lager am Jordan, Jericho gegenüber.',
+        en: 'The book ends with administration, and that is the point: two tribes get land in the east, but only on condition that they march across first. Chapter 33 lists all 42 camp sites since Egypt – the itinerary this app’s route is built from. Then the borders, the Levitical towns and six cities of refuge, to which anyone who has killed unintentionally can flee. The last sentence stands in the camp by the Jordan, opposite Jericho.',
+      },
+      turn: {
+        de: '„daß sie Freistädte seien, wohin fliehe, wer einen Totschlag unversehens tut" – für ein Land, in dem noch niemand wohnt.',
+        en: '"cities of refuge for you, that the man slayer who kills any person unwittingly may flee there" – for a country nobody lives in yet.',
+      },
+      color: '#a8843a',
+      symbol: 'M2 20h20M4 20V9l4-3 4 3v11M14 20v-7h6v7M8 13h1M17 16h1',
+      places: ['Jordan', 'Jericho', 'Abel-shittim', 'Midian'],
+    },
+  ],
+  patterns: [
+    {
+      id: 'zwei',
+      title: { de: 'Zwei Zählungen, zwei Generationen', en: 'Two censuses, two generations' },
+      text: {
+        de: 'Das Buch zählt zweimal, und dazwischen liegen vierzig Jahre. Der zweite Zensus ist keine Wiederholung, sondern ein Nachruf: 603.550 beim ersten Mal, 601.730 beim zweiten – fast dieselbe Zahl, und kein einziger derselben Menschen. Der Text hält das ausdrücklich fest. Das ist der Bauplan von 4. Mose: Die Zusage bleibt, die Generation wird ausgewechselt.',
+        en: 'The book counts twice, and forty years lie in between. The second census is not a repetition but an obituary: 603,550 the first time, 601,730 the second – almost the same figure, and not one of the same people. The text says so expressly. That is the blueprint of Numbers: the promise stands, the generation is replaced.',
+      },
+      movements: ['ordnung', 'zweite'],
+      refs: ['4. Mose 1:46', '4. Mose 26:51', '4. Mose 26:65'],
+      color: '#7fe3d5',
+    },
+    {
+      id: 'murren',
+      title: { de: 'Elfmal murrt das Volk', en: 'Eleven times the people murmur' },
+      text: {
+        de: 'Das Wort steht elfmal im Buch, und es folgt immer demselben Muster: ein Mangel, eine Erinnerung an Ägypten, eine Anklage gegen Mose, ein Eingreifen Gottes. Sogar die Aufständischen benutzen es: Korahs Vorwurf ist theologisch korrekt und dient trotzdem nur ihm selbst. Was das Buch beschreibt, ist keine Bosheit, sondern Erschöpfung – und die Frage, ob Erschöpfung eine Zusage aushebelt.',
+        en: 'The word occurs eleven times in the book, and it always follows the same pattern: a lack, a memory of Egypt, an accusation against Moses, an intervention by God. Even the rebels use it: Korah’s charge is theologically correct and still serves only himself. What the book describes is not malice but exhaustion – and the question whether exhaustion can undo a promise.',
+      },
+      movements: ['murren', 'kundschafter', 'aufstand', 'fels'],
+      refs: ['4. Mose 11:1', '4. Mose 14:29', '4. Mose 16:3', '4. Mose 21:5'],
+      color: '#d96b5a',
+    },
+    {
+      id: 'trotzdem',
+      title: { de: 'Er hält es trotzdem', en: 'He keeps it anyway' },
+      text: {
+        de: 'Gegen die Kette der Weigerungen läuft eine zweite Linie, und sie wird nie unterbrochen: der Segen in Kapitel 6, die Wolke, die weiterführt, der gekaufte Fluch, der sich in Segen verkehrt, die zweite Zählung, die Grenzen am Ende. Der Satz, der das ausspricht, steht nicht im Mund eines Israeliten, sondern in dem eines bezahlten Wahrsagers – und genau deshalb fällt er auf.',
+        en: 'Against the chain of refusals runs a second line, and it is never broken: the blessing in chapter 6, the cloud that leads on, the bought curse that turns into blessing, the second census, the borders at the end. The sentence that states it stands not in the mouth of an Israelite but in that of a paid diviner – and that is exactly why it registers.',
+      },
+      movements: ['ordnung', 'bileam', 'zweite', 'grenzen'],
+      refs: ['4. Mose 6:27', '4. Mose 23:19', '4. Mose 26:65', '4. Mose 36:13'],
+      color: '#e0a449',
+    },
+  ],
+  figures: [
+    {
+      id: 'mose',
+      de: 'Mose',
+      en: 'Moses',
+      meaning: {
+        de: 'Hier steht der Satz über ihn, den er kaum selbst geschrieben haben kann: der geplagteste Mensch auf Erden.',
+        en: 'Here stands the sentence about him he can hardly have written himself: the humblest man on earth.',
+      },
+      who: {
+        de: 'In diesem Buch wird Mose müde. Er trägt Beschwerden, Aufstände, den Tod seiner Geschwister – und sagt einmal rundheraus, er könne nicht mehr. Siebzig Älteste bekommen Anteil an seinem Geist; als zwei davon im Lager weissagen, freut er sich darüber.',
+        en: 'In this book Moses grows tired. He carries complaints, revolts, the death of his siblings – and once says outright that he cannot go on. Seventy elders are given a share of his spirit; when two of them prophesy in the camp, he is glad of it.',
+      },
+      turn: {
+        de: 'Am Felsen von Meriba soll er reden und schlägt zweimal zu. Der Text erklärt nicht viel, das Urteil ist dasselbe wie für alle anderen: Er sieht das Land, er betritt es nicht.',
+        en: 'At the rock of Meribah he is to speak, and strikes twice. The text explains little; the verdict is the same as for everyone else: he sees the land, he does not enter it.',
+      },
+      ref: '4. Mose 12:3',
+      from: 1,
+      to: 36,
+      person: 'mose',
+      place: 'Meribah',
+    },
+    {
+      id: 'mirjam',
+      de: 'Mirjam',
+      en: 'Miriam',
+      meaning: {
+        de: 'Die Schwester, die ihn am Nil bewacht hat – und die als Einzige beider Geschwister bestraft wird.',
+        en: 'The sister who watched over him at the Nile – and the only one of the two siblings to be punished.',
+      },
+      who: {
+        de: 'Sie und Aaron stellen Moses Sonderstellung infrage: Redet der HERR allein durch ihn? Die Antwort kommt sofort, und sie trifft nur Mirjam: sieben Tage aussätzig, sieben Tage vor dem Lager. Das Volk bricht nicht auf, bis sie zurück ist.',
+        en: 'She and Aaron question Moses’ special standing: does Yahweh speak only through him? The answer comes at once, and it falls on Miriam alone: seven days leprous, seven days outside the camp. The people do not move on until she is back.',
+      },
+      turn: {
+        de: 'Ihr Tod in Kades steht in einem einzigen Vers, und im nächsten fehlt Wasser. Die jüdische Auslegung hat darin einen Zusammenhang gesehen und vom „Brunnen Mirjams" gesprochen.',
+        en: 'Her death at Kadesh takes a single verse, and in the next there is no water. Jewish interpretation has read a connection there and spoken of "Miriam’s well".',
+      },
+      ref: '4. Mose 12:1-15',
+      from: 12,
+      to: 20,
+      person: 'mirjam',
+      place: 'Hazeroth',
+    },
+    {
+      id: 'aaron',
+      de: 'Aaron',
+      en: 'Aaron',
+      meaning: {
+        de: 'Der Hohepriester, dessen Stab über Nacht blüht – und der dasselbe Urteil bekommt wie sein Bruder.',
+        en: 'The high priest whose staff blossoms overnight – and who receives the same verdict as his brother.',
+      },
+      who: {
+        de: 'Zweimal steht er zwischen Gott und dem Volk und hält die Plage auf, einmal mit der Räucherpfanne mitten unter den Toten. Und zweimal steht er auf der falschen Seite: bei Mirjams Vorwurf und am Felsen von Meriba.',
+        en: 'Twice he stands between God and the people and stops the plague, once with a censer in the middle of the dead. And twice he stands on the wrong side: at Miriam’s complaint and at the rock of Meribah.',
+      },
+      turn: {
+        de: 'Er stirbt auf dem Berg Hor, und der Text datiert es genau: im vierzigsten Jahr nach dem Auszug, am ersten Tag des fünften Monats. Sein Gewand zieht Eleasar an, noch auf dem Berg.',
+        en: 'He dies on Mount Hor, and the text dates it precisely: in the fortieth year after the exodus, on the first day of the fifth month. Eleazar puts on his garment, still on the mountain.',
+      },
+      ref: '4. Mose 20:22-29',
+      from: 1,
+      to: 20,
+      person: 'aaron',
+      place: 'Mount Hor',
+    },
+    {
+      id: 'josuakaleb',
+      de: 'Josua und Kaleb',
+      en: 'Joshua and Caleb',
+      meaning: {
+        de: '„Der HERR rettet" und „Hund" – zwei von zwölf Kundschaftern, und die einzigen zwei, die den Jordan überqueren werden.',
+        en: '"Yahweh saves" and "dog" – two of twelve spies, and the only two who will cross the Jordan.',
+      },
+      who: {
+        de: 'Sie sehen dasselbe wie die anderen zehn: befestigte Städte, große Menschen, gutes Land. Sie widersprechen nicht dem Bericht, sondern dem Schluss daraus – und wären dafür beinahe gesteinigt worden.',
+        en: 'They see the same as the other ten: fortified cities, large people, good land. They do not contradict the report but the conclusion drawn from it – and are nearly stoned for it.',
+      },
+      turn: {
+        de: 'Vierzig Jahre später nennt die zweite Zählung ihre beiden Namen als die Ausnahme von einer ganzen Generation. Josua wird am Ende vor der Gemeinde eingesetzt, damit sie nicht ohne Hirten bleibt.',
+        en: 'Forty years later the second census names the two of them as the exception to a whole generation. At the end Joshua is commissioned before the congregation, so that it is not left without a shepherd.',
+      },
+      ref: '4. Mose 13:30, 14:6-9, 26:65',
+      from: 13,
+      to: 27,
+      person: 'josua',
+      place: 'Valley of Eshcol',
+    },
+    {
+      id: 'korah',
+      de: 'Korah',
+      en: 'Korah',
+      meaning: {
+        de: 'Ein Levit – also einer, der ohnehin am Heiligtum dient. Der Aufstand kommt nicht von außen.',
+        en: 'A Levite – that is, someone who already serves at the sanctuary. The revolt does not come from outside.',
+      },
+      who: {
+        de: 'Mit Datan, Abiram und 250 Männern von Namen tritt er gegen Mose und Aaron an. Sein Argument ist ein Zitat: Die ganze Gemeinde ist heilig, und der HERR ist unter ihnen.',
+        en: 'With Dathan, Abiram and 250 men of repute he confronts Moses and Aaron. His argument is a quotation: the whole congregation is holy, and Yahweh is among them.',
+      },
+      turn: {
+        de: 'Der Satz stimmt – und wird zum Hebel für etwas anderes. Bemerkenswert am Ende: Seine Söhne sterben nicht mit ihm, und elf Psalmen tragen später die Überschrift „von den Kindern Korah".',
+        en: 'The sentence is true – and becomes a lever for something else. Remarkable at the end: his sons do not die with him, and eleven psalms later carry the heading "of the sons of Korah".',
+      },
+      ref: '4. Mose 16',
+      from: 16,
+      to: 17,
+    },
+    {
+      id: 'bileam',
+      de: 'Bileam',
+      en: 'Balaam',
+      meaning: {
+        de: 'Ein Wahrsager aus Petor am Euphrat, kein Israelit – und der Einzige im Buch, der Israel von außen sieht.',
+        en: 'A diviner from Pethor on the Euphrates, not an Israelite – and the only one in the book who sees Israel from outside.',
+      },
+      who: {
+        de: 'Balak, der König von Moab, bezahlt ihn dafür, Israel zu verfluchen. Unterwegs sieht seine Eselin den Engel, den er nicht sieht, und bekommt dafür Schläge; dann redet sie. Es ist die einzige Szene der Bibel, in der ein Tier eine Auseinandersetzung gewinnt.',
+        en: 'Balak, king of Moab, pays him to curse Israel. On the way his donkey sees the angel he does not see, and is beaten for it; then she speaks. It is the only scene in the Bible in which an animal wins an argument.',
+      },
+      turn: {
+        de: 'Viermal setzt er an, viermal kommt Segen heraus, beim letzten Mal der Stern aus Jakob. Und trotzdem ist das nicht das letzte Wort über ihn: 4. Mose 31,16 macht ihn für Baal-Peor verantwortlich.',
+        en: 'Four times he begins, four times blessing comes out, the last time the star out of Jacob. And still that is not the last word on him: Numbers 31:16 holds him responsible for Baal-Peor.',
+      },
+      ref: '4. Mose 22-24',
+      from: 22,
+      to: 24,
+      place: 'Peor',
+    },
+    {
+      id: 'toechter',
+      de: 'Die Töchter Zelophehads',
+      en: 'The daughters of Zelophehad',
+      meaning: {
+        de: 'Mahela, Noa, Hogla, Milka und Thirza – fünf Namen, die der Text vollständig nennt, zweimal.',
+        en: 'Mahlah, Noah, Hoglah, Milcah and Tirzah – five names the text gives in full, twice.',
+      },
+      who: {
+        de: 'Ihr Vater ist in der Wüste gestorben, ohne Sohn. Nach geltendem Recht verfällt sein Anteil. Sie treten vor Mose, den Priester und die ganze Gemeinde und sagen: Warum soll der Name unseres Vaters verschwinden?',
+        en: 'Their father died in the wilderness, without a son. Under the law as it stands, his share lapses. They come before Moses, the priest and the whole congregation and say: why should our father’s name disappear?',
+      },
+      turn: {
+        de: 'Mose entscheidet nicht selbst, sondern legt die Sache vor – und die Antwort gibt ihnen recht und ändert das Gesetz. In Kapitel 36 kommt der Fall noch einmal, mit einer Einschränkung; beide Male steht der Vorgang im Text, nicht nur das Ergebnis.',
+        en: 'Moses does not decide himself but brings the case forward – and the answer finds for them and changes the law. In chapter 36 the case returns with a qualification; both times the process is in the text, not just the outcome.',
+      },
+      ref: '4. Mose 27:1-11',
+      from: 26,
+      to: 36,
+    },
+  ],
+  beats: [
+    {
+      id: 'zaehlung',
+      chapter: 1,
+      label: { de: 'Erster Tag des zweiten Monats', en: 'First day of the second month' },
+      when: { de: 'Im zweiten Jahr nach dem Auszug', en: 'In the second year after the exodus' },
+      note: {
+        de: 'Der erste Satz datiert sich selbst. Einen Monat vorher war die Wohnung aufgerichtet worden (2. Mose 40,17), dazwischen liegt das ganze Buch 3. Mose. Jetzt wird gezählt.',
+        en: 'The first sentence dates itself. A month earlier the dwelling had been raised (Exodus 40:17); the whole book of Leviticus lies in between. Now they are counted.',
+      },
+    },
+    {
+      id: 'aufbruch',
+      chapter: 10,
+      label: { de: 'Der zwanzigste Tag', en: 'The twentieth day' },
+      when: { de: 'Achtzehn Tage nach der Zählung', en: 'Eighteen days after the census' },
+      note: {
+        de: 'Die Wolke hebt sich von der Wohnung, und Israel bricht vom Sinai auf – nach fast einem Jahr am selben Ort. Bis Kades-Barnea wären es elf Tagereisen (5. Mose 1,2).',
+        en: 'The cloud lifts from the dwelling and Israel departs from Sinai – after almost a year in the same place. To Kadesh-barnea it would be eleven days’ journey (Deuteronomy 1:2).',
+      },
+    },
+    {
+      id: 'kundschafter',
+      chapter: 13,
+      label: { de: 'Vierzig Tage im Land', en: 'Forty days in the land' },
+      when: { de: 'Zur Zeit der ersten Trauben', en: 'At the time of the first ripe grapes' },
+      note: {
+        de: 'Der Text merkt die Jahreszeit an – Frühsommer. Aus diesen vierzig Tagen werden im Urteil vierzig Jahre: „je ein Tag soll ein Jahr gelten".',
+        en: 'The text notes the season – early summer. Out of these forty days the verdict makes forty years: "for every day a year".',
+      },
+    },
+    {
+      id: 'wueste',
+      chapter: 20,
+      label: { de: 'Das vierzigste Jahr', en: 'The fortieth year' },
+      when: { de: 'Mirjam stirbt, Aaron stirbt', en: 'Miriam dies, Aaron dies' },
+      note: {
+        de: 'Zwischen Kapitel 19 und 20 liegen fast vierzig Jahre, über die das Buch nichts erzählt. Die einzige feste Datierung dieser Zeit steht in der Reiseliste: Aarons Tod am ersten Tag des fünften Monats im vierzigsten Jahr (4. Mose 33,38).',
+        en: 'Between chapters 19 and 20 lie almost forty years about which the book says nothing. The one firm date for that time stands in the itinerary: Aaron’s death on the first day of the fifth month of the fortieth year (Numbers 33:38).',
+      },
+    },
+    {
+      id: 'zweitezaehlung',
+      chapter: 26,
+      label: { de: 'Die zweite Zählung', en: 'The second census' },
+      when: { de: 'Im Gefilde der Moabiter', en: 'In the plains of Moab' },
+      note: {
+        de: 'Dieselbe Prozedur wie in Kapitel 1, fast dieselbe Zahl – und ausdrücklich niemand derselbe. Erst hier ist das Urteil von Kapitel 14 wirklich vollzogen.',
+        en: 'The same procedure as in chapter 1, almost the same figure – and expressly not one of the same people. Only here is the verdict of chapter 14 actually carried out.',
+      },
+    },
+    {
+      id: 'stationen',
+      chapter: 33,
+      label: { de: '42 Lagerplätze', en: '42 camp sites' },
+      when: { de: 'Der ganze Weg noch einmal, rückblickend', en: 'The whole way once more, in retrospect' },
+      note: {
+        de: 'Mose schreibt die Stationen auf, von Ramses bis an den Jordan. Diese Liste ist die Grundlage der Route, die der Modus „Der Weg" in dieser App zeichnet – nicht eine Rekonstruktion, sondern der Text selbst.',
+        en: 'Moses writes down the stations, from Rameses to the Jordan. This list is the basis of the route the "The Way" mode draws in this app – not a reconstruction but the text itself.',
+      },
+    },
+    {
+      id: 'ende',
+      chapter: 36,
+      label: { de: 'Am Jordan, Jericho gegenüber', en: 'By the Jordan, opposite Jericho' },
+      when: { de: 'Der letzte Satz des Buches', en: 'The book’s last sentence' },
+      note: {
+        de: 'Israel steht am Ostufer und geht nicht hinüber – das tut es erst im Buch Josua. Dazwischen liegt noch 5. Mose, und das ist eine einzige lange Rede an derselben Stelle.',
+        en: 'Israel stands on the east bank and does not cross – that happens only in the book of Joshua. Deuteronomy still lies in between, and it is one long speech in the same spot.',
+      },
+    },
+  ],
+  traces: [
+    {
+      id: 'schlange',
+      title: { de: 'Die Schlange, die man ansieht', en: 'The serpent you look at' },
+      seed: {
+        ref: '4. Mose 21:9',
+        refEn: 'Num 21:9',
+        de: 'Da machte Mose eine eherne Schlange und richtete sie auf zum Zeichen; und wenn jemanden eine Schlange biß, so sah er die eherne Schlange an und blieb leben.',
+        en: 'Moses made a serpent of brass, and set it on the pole. If a serpent had bitten any man, when he looked at the serpent of brass, he lived.',
+      },
+      echo: {
+        ref: 'Johannes 3:14',
+        refEn: 'John 3:14',
+        de: 'Und wie Mose in der Wüste eine Schlange erhöht hat, also muß des Menschen Sohn erhöht werden,',
+        en: 'As Moses lifted up the serpent in the wilderness, even so must the Son of Man be lifted up,',
+      },
+      text: {
+        de: 'Der deutlichste Verweis des Neuen Testaments auf dieses Buch, und Jesus macht ihn selbst. Das Merkwürdige bleibt stehen: Zu sehen ist nicht die Rettung, sondern das, woran man stirbt. Die eherne Schlange hat übrigens eine Nachgeschichte – Hiskia zerschlägt sie, weil man ihr geräuchert hatte (2. Könige 18,4).',
+        en: 'The clearest reference in the New Testament to this book, and Jesus makes it himself. The strangeness stays: what you look at is not the rescue but the thing you are dying of. The bronze serpent has an afterlife too – Hezekiah smashes it, because people had been burning incense to it (2 Kings 18:4).',
+      },
+    },
+    {
+      id: 'treu',
+      title: { de: 'Treu im ganzen Haus', en: 'Faithful in all the house' },
+      seed: {
+        ref: '4. Mose 12:7',
+        refEn: 'Num 12:7',
+        de: 'Aber nicht also mein Knecht Mose, der in meinem ganzen Hause treu ist.',
+        en: 'My servant Moses is not so. He is faithful in all my house.',
+      },
+      echo: {
+        ref: 'Hebräer 3:5',
+        refEn: 'Heb 3:5',
+        de: 'Und Mose war zwar treu in seinem ganzen Hause als ein Knecht, zum Zeugnis des, das gesagt sollte werden,',
+        en: 'Moses indeed was faithful in all his house as a servant, for a testimony of those things which were afterward to be spoken,',
+      },
+      text: {
+        de: 'Der Hebräerbrief nimmt das Lob auf Mose wörtlich auf und setzt ein einziges Wort dagegen: als Knecht. Das Argument lebt davon, dass die Stelle in 4. Mose ein Lob ist – es wird nicht bestritten, sondern eingeordnet.',
+        en: 'Hebrews takes up the praise of Moses word for word and sets a single word against it: as a servant. The argument works precisely because the passage in Numbers is praise – it is not denied but placed.',
+      },
+    },
+    {
+      id: 'hirte',
+      title: { de: 'Schafe ohne Hirten', en: 'Sheep without a shepherd' },
+      seed: {
+        ref: '4. Mose 27:17',
+        refEn: 'Num 27:17',
+        de: 'daß die Gemeinde des HERRN nicht sei wie die Schafe ohne Hirten.',
+        en: 'that the congregation of Yahweh may not be as sheep which have no shepherd.',
+      },
+      echo: {
+        ref: 'Markus 6:34',
+        refEn: 'Mark 6:34',
+        de: 'denn sie waren wie die Schafe, die keinen Hirten haben; und er fing an eine lange Predigt.',
+        en: 'because they were like sheep without a shepherd, and he began to teach them many things.',
+      },
+      text: {
+        de: 'Moses letzte Bitte ist keine für sich selbst: Er bittet um einen Nachfolger. Die Wendung, die er dabei gebraucht, steht bei Markus über einer Menge am See – und die Antwort dort ist dieselbe wie hier, nur anders verteilt: Es wird jemand eingesetzt, der vorangeht.',
+        en: 'Moses’ last request is not for himself: he asks for a successor. The phrase he uses stands in Mark over a crowd by the lake – and the answer there is the same as here, only differently distributed: someone is appointed who goes ahead.',
+      },
+    },
+    {
+      id: 'stern',
+      title: { de: 'Ein Stern aus Jakob', en: 'A star out of Jacob' },
+      seed: {
+        ref: '4. Mose 24:17',
+        refEn: 'Num 24:17',
+        de: 'Es wird ein Stern aus Jakob aufgehen und ein Zepter aus Israel aufkommen',
+        en: 'A star will come out of Jacob. A scepter will rise out of Israel,',
+      },
+      echo: {
+        ref: 'Matthäus 2:2',
+        refEn: 'Matt 2:2',
+        de: 'Wo ist der neugeborene König der Juden? Wir haben seinen Stern gesehen im Morgenland und sind gekommen, ihn anzubeten.',
+        en: 'Where is he who is born King of the Jews? For we saw his star in the east, and have come to worship him.',
+      },
+      text: {
+        de: 'Hier ist Vorsicht geboten: Matthäus zitiert diese Stelle nicht. Dass der Satz messianisch gelesen wurde, steht aber fest, und zwar lange vorher – in Qumran und später bei Rabbi Akiba, der Simon bar Kosiba deswegen „Bar Kochba", Sternensohn, nannte. Die Sterndeuter kommen zudem aus derselben Richtung wie Bileam: aus dem Osten.',
+        en: 'Caution is needed here: Matthew does not quote this passage. That the line was read messianically is certain, though, and long before – at Qumran, and later by Rabbi Akiva, who for this reason called Simon bar Kosiba "Bar Kokhba", son of the star. The magi also come from the same direction as Balaam: from the east.',
+      },
+    },
+    {
+      id: 'wueste',
+      title: { de: 'Die Wüstengeneration als Warnung', en: 'The wilderness generation as a warning' },
+      seed: {
+        ref: '4. Mose 14:29',
+        refEn: 'Num 14:29',
+        de: 'Eure Leiber sollen in dieser Wüste verfallen;',
+        en: 'Your dead bodies shall fall in this wilderness;',
+      },
+      echo: {
+        ref: '1. Korinther 10:5',
+        refEn: '1Cor 10:5',
+        de: 'Aber an ihrer vielen hatte Gott kein Wohlgefallen; denn sie wurden niedergeschlagen in der Wüste.',
+        en: 'However with most of them, God was not well pleased, for they were overthrown in the wilderness.',
+      },
+      text: {
+        de: 'Paulus geht in 1. Korinther 10 die Stationen dieses Buches durch – Wolke, Meer, Felsen, Baal-Peor, die Schlangen, das Murren – und zieht daraus keinen historischen, sondern einen gegenwärtigen Schluss: „uns zur Warnung". Kein Kapitel der Bibel benutzt 4. Mose so dicht wie dieses.',
+        en: 'In 1 Corinthians 10 Paul goes through the stations of this book – cloud, sea, rock, Baal-Peor, the serpents, the murmuring – and draws from them not a historical but a present conclusion: "for our admonition". No chapter of the Bible uses Numbers as densely as this one.',
+      },
+    },
+    {
+      id: 'fels',
+      title: { de: 'Der Fels, der mitging', en: 'The rock that went with them' },
+      seed: {
+        ref: '4. Mose 20:11',
+        refEn: 'Num 20:11',
+        de: 'Und Mose hob seine Hand auf und schlug den Fels mit dem Stab zweimal. Da ging viel Wasser heraus, daß die Gemeinde trank und ihr Vieh.',
+        en: 'Moses lifted up his hand, and struck the rock with his rod twice, and water came out abundantly. The congregation and their livestock drank.',
+      },
+      echo: {
+        ref: '1. Korinther 10:4',
+        refEn: '1Cor 10:4',
+        de: 'sie tranken aber vom geistlichen Fels, der mitfolgte, welcher war Christus.',
+        en: 'For they drank of a spiritual rock that followed them, and the rock was Christ.',
+      },
+      text: {
+        de: 'Zweimal kommt in der Tora Wasser aus einem Felsen: am Anfang der Wüstenzeit (2. Mose 17) und fast vierzig Jahre später hier. Paulus liest beide Stellen zusammen und nennt den Felsen einen, der mitging – eine Deutung, die er nicht aus dem Wortlaut nimmt, sondern ausdrücklich dazu sagt.',
+        en: 'Twice in the Torah water comes out of a rock: at the beginning of the wilderness years (Exodus 17) and almost forty years later here. Paul reads the two together and calls the rock one that went with them – a reading he does not take from the wording but states expressly as his own.',
+      },
+    },
+    {
+      id: 'zuflucht',
+      title: { de: 'Sechs Städte für den Notfall', en: 'Six cities for the emergency' },
+      seed: {
+        ref: '4. Mose 35:11',
+        refEn: 'Num 35:11',
+        de: 'sollt ihr Städte auswählen, daß sie Freistädte seien, wohin fliehe, wer einen Totschlag unversehens tut.',
+        en: 'then you shall appoint for yourselves cities to be cities of refuge for you, that the man slayer who kills any person unwittingly may flee there.',
+      },
+      echo: {
+        ref: 'Hebräer 6:18',
+        refEn: 'Heb 6:18',
+        de: 'einen starken Trost hätten, die wir Zuflucht haben und halten an der angebotenen Hoffnung,',
+        en: 'we may have a strong encouragement, who have fled for refuge to take hold of the hope set before us.',
+      },
+      text: {
+        de: 'Die Freistädte sind kein Straferlass, sondern eine Unterbrechung: Wer ohne Absicht getötet hat, bekommt Zeit und ein Verfahren, bevor die Blutrache greift. Der Hebräerbrief gebraucht dasselbe Bild – hingeflohen zu sein – für die Hoffnung. Zitiert wird die Stelle nicht; das Bild ist vorausgesetzt.',
+        en: 'The cities of refuge are not an amnesty but an interruption: whoever has killed unintentionally is given time and a procedure before blood vengeance takes hold. Hebrews uses the same image – having fled for refuge – for hope. The passage is not quoted; the image is assumed.',
+      },
+    },
+    {
+      id: 'segen',
+      title: { de: 'Erhobene Hände', en: 'Lifted hands' },
+      seed: {
+        ref: '4. Mose 6',
+        refEn: 'Num 6',
+        de: 'Der HERR segne dich und behüte dich; der HERR lasse sein Angesicht leuchten über dir und sei dir gnädig; der HERR hebe sein Angesicht über dich und gebe dir Frieden.',
+        en: 'Yahweh bless you, and keep you. Yahweh make his face to shine on you, and be gracious to you. Yahweh lift up his face toward you, and give you peace.',
+      },
+      echo: {
+        ref: 'Lukas 24:50',
+        refEn: 'Luke 24:50',
+        de: 'Er führte sie aber hinaus bis gen Bethanien und hob die Hände auf und segnete sie.',
+        en: 'He led them out as far as Bethany, and he lifted up his hands, and blessed them.',
+      },
+      text: {
+        de: 'Lukas zitiert den Segen nicht, er beschreibt eine Geste – und es ist die des Priesters. Das letzte, was die Jünger sehen, ist jemand mit erhobenen Händen. Wer diese drei Zeilen kennt, hört an der Stelle mehr als „er verabschiedete sich".',
+        en: 'Luke does not quote the blessing, he describes a gesture – and it is the priest’s. The last thing the disciples see is someone with lifted hands. Whoever knows these three lines hears more at that point than "he said goodbye".',
+      },
+    },
+  ],
+  deepen: [
+    {
+      id: 'namen',
+      title: { de: 'Zwei Namen, zwei Lesarten', en: 'Two names, two readings' },
+      text: {
+        de: 'Auf Hebräisch heißt das Buch „Bemidbar" – in der Wüste, nach dem fünften Wort des ersten Satzes. Der Name, den wir benutzen, kommt aus der griechischen Übersetzung: „Arithmoi", Zahlen, nach den beiden Volkszählungen. Die beiden Namen betonen verschiedene Dinge, und beide stehen im Buch: Der griechische sieht die Listen, der hebräische den Ort. Wer das Buch als Zahlenwerk erwartet, wird von den Erzählungen überrascht – und umgekehrt.',
+        en: 'In Hebrew the book is called "Bemidbar" – in the wilderness, after the fifth word of its first sentence. The name we use comes from the Greek translation: "Arithmoi", numbers, after the two censuses. The two names stress different things, and both are in the book: the Greek sees the lists, the Hebrew the place. Anyone expecting a book of figures is surprised by the narratives – and the other way round.',
+      },
+      source: {
+        de: '4. Mose 1,1 („in der Wüste Sinai"); der Titel Ἀριθμοί in der Septuaginta, von dort über die Vulgata („Numeri") in die deutschen Bibeln.',
+        en: 'Numbers 1:1 ("in the wilderness of Sinai"); the title Ἀριθμοί in the Septuagint, and from there via the Vulgate ("Numeri") into English Bibles.',
+      },
+    },
+    {
+      id: 'silber',
+      title: { de: 'Der älteste Bibeltext ist aus diesem Buch', en: 'The oldest biblical text comes from this book' },
+      text: {
+        de: '1979 fand Gabriel Barkay in einer Grabkammer am Hinnomtal in Jerusalem zwei winzige Silberröllchen. Es dauerte drei Jahre, sie zu entrollen, ohne sie zu zerstören. Auf den hauchdünnen Blechen steht der Priestersegen aus 4. Mose 6,24–26 – vierhundert Jahre älter als die Rollen von Qumran und damit der älteste bekannte Bibeltext überhaupt. Was er belegt, ist genau abgegrenzt: dass diese Formel vor dem Exil in Umlauf war. Nicht, dass das Buch damals schon so dastand wie heute.',
+        en: 'In 1979 Gabriel Barkay found two tiny silver scrolls in a burial chamber by the Hinnom valley in Jerusalem. It took three years to unroll them without destroying them. On the wafer-thin sheets stands the priestly blessing of Numbers 6:24–26 – four hundred years older than the Qumran scrolls and so the oldest known biblical text of any kind. What it proves is precisely bounded: that this formula was in circulation before the exile. Not that the book then stood as it stands today.',
+      },
+      source: {
+        de: 'Ketef Hinnom, Jerusalem, 1979; heute im Israel-Museum. Im Bücherregal dieser App steht der Fund ausführlich.',
+        en: 'Ketef Hinnom, Jerusalem, 1979; today in the Israel Museum. The find is described at length in this app’s shelf of discoveries.',
+      },
+    },
+    {
+      id: 'zahlen',
+      title: { de: 'Die Zahl, an der sich die Forschung reibt', en: 'The figure scholarship keeps arguing about' },
+      text: {
+        de: '603.550 wehrfähige Männer bei der ersten Zählung, 601.730 bei der zweiten – mit Frauen und Kindern also weit über zwei Millionen Menschen in einer Wüste, in der heute niemand lebt. Das ist seit Langem ein Problem, und es hat eine sprachliche Spur: Das hebräische Wort ’elef heißt „tausend", kann aber auch eine Sippe oder eine Truppeneinheit bezeichnen. Wer es so liest, kommt auf Größenordnungen von einigen Tausend. Eine Lösung ist das nicht – die Endsummen im Text sind ausdrücklich als Tausender addiert. Aber es ist der Grund, warum die Frage offen ist und nicht bloß peinlich.',
+        en: '603,550 fighting men in the first census, 601,730 in the second – with women and children, well over two million people in a desert where nobody lives today. This has long been a problem, and it has a linguistic trace: the Hebrew word ’elef means "thousand" but can also denote a clan or a military unit. Read that way, the orders of magnitude come down to a few thousand. That is not a solution – the totals in the text are expressly added up as thousands. But it is why the question is open rather than merely embarrassing.',
+      },
+      source: {
+        de: '4. Mose 1,46 und 26,51; zur Doppelbedeutung von ’elef etwa Richter 6,15, wo dasselbe Wort Gideons Sippe meint.',
+        en: 'Numbers 1:46 and 26:51; on the double meaning of ’elef see for instance Judges 6:15, where the same word means Gideon’s clan.',
+      },
+    },
+    {
+      id: 'deiralla',
+      title: { de: 'Bileam steht auch außerhalb der Bibel', en: 'Balaam appears outside the Bible too' },
+      text: {
+        de: '1967 kam in Deir Alla im Jordantal ein Text zutage, der nicht auf Papyrus oder Ton stand, sondern in roter und schwarzer Tinte auf Wandputz. Er beginnt mit den Worten „Buch des Bileam, Sohn des Beor, eines Sehers der Götter" – und erzählt eine Nachtvision, die nichts mit 4. Mose zu tun hat. Die Inschrift stammt aus der Zeit um 800 v. Chr. und ist damit jünger als die erzählte Zeit, aber unabhängig von der Bibel. Sie belegt nicht, dass die Geschichte in 4. Mose 22–24 so passiert ist. Sie belegt, dass diese Figur in der Region bekannt war, außerhalb Israels und in einer anderen Sprache.',
+        en: 'In 1967 a text came to light at Deir Alla in the Jordan valley, written not on papyrus or clay but in red and black ink on wall plaster. It begins with the words "Book of Balaam, son of Beor, a seer of the gods" – and tells a night vision that has nothing to do with Numbers. The inscription dates from around 800 BC, later than the time it narrates but independent of the Bible. It does not prove that the story in Numbers 22–24 happened as told. It proves that this figure was known in the region, outside Israel and in another language.',
+      },
+      source: {
+        de: 'Die Bileam-Inschrift von Deir Alla, gefunden 1967, heute im Archäologischen Museum von Amman.',
+        en: 'The Balaam inscription of Deir Alla, found in 1967, today in the Archaeological Museum of Amman.',
+      },
+    },
+    {
+      id: 'stationen',
+      title: { de: 'Die Liste, aus der die Karte gebaut ist', en: 'The list the map is built from' },
+      text: {
+        de: 'Kapitel 33 zählt 42 Lagerplätze auf, von Ramses bis in die Ebene von Moab, und sagt dazu ausdrücklich, dass Mose sie aufgeschrieben habe. Etwa die Hälfte dieser Namen lässt sich heute nicht mehr auf der Karte verorten – deshalb zeichnet der Modus „Der Weg" in dieser App auch nicht eine gesicherte Route, sondern die Stationen, die identifizierbar sind, und sagt bei den übrigen, dass sie unbekannt sind. Die Liste ist der einzige zusammenhängende Reisebericht der Tora.',
+        en: 'Chapter 33 lists 42 camp sites, from Rameses to the plains of Moab, and expressly says that Moses wrote them down. About half of these names can no longer be located on a map – which is why the "The Way" mode in this app does not draw a certain route but the stations that can be identified, and says of the rest that they are unknown. The list is the Torah’s only continuous travel record.',
+      },
+      source: {
+        de: '4. Mose 33,1-49; die Datierung von Aarons Tod in 33,38 ist die einzige Jahresangabe der Wüstenzeit.',
+        en: 'Numbers 33:1-49; the dating of Aaron’s death in 33:38 is the only year given for the wilderness period.',
+      },
+    },
+    {
+      id: 'toechter',
+      title: { de: 'Ein Gesetz, das auf Einspruch geändert wird', en: 'A law changed on appeal' },
+      text: {
+        de: 'Fünf Schwestern legen Widerspruch gegen das geltende Erbrecht ein, und sie gewinnen. Bemerkenswert ist nicht nur das Ergebnis, sondern das Verfahren: Mose entscheidet nicht selbst, sondern bringt den Fall vor – und die Antwort beginnt mit dem Satz, dass die Töchter recht reden. Neun Kapitel später kommt der Einwand der Gegenseite, ihre Sippe könnte Land verlieren, und das Recht wird noch einmal nachjustiert. Beide Runden stehen im Text. Ein Gesetzbuch, das den Streit um seine eigenen Regeln mitüberliefert, ist im Alten Orient nicht selbstverständlich.',
+        en: 'Five sisters lodge an objection to the inheritance law as it stands, and they win. What is remarkable is not only the outcome but the procedure: Moses does not decide himself but brings the case forward – and the answer begins by saying the daughters speak rightly. Nine chapters later the counter-objection arrives, that their clan could lose land, and the law is adjusted again. Both rounds are in the text. A law book that transmits the dispute over its own rules is not a matter of course in the ancient Near East.',
+      },
+      source: {
+        de: '4. Mose 27,1-11 und 36,1-12; die fünf Namen stehen an beiden Stellen vollständig.',
+        en: 'Numbers 27:1-11 and 36:1-12; the five names stand in full in both places.',
+      },
+    },
+    {
+      id: 'elf',
+      title: { de: 'Elf Tagereisen', en: 'Eleven days’ journey' },
+      text: {
+        de: '5. Mose beginnt mit einer beiläufigen Ortsangabe, die alles über 4. Mose sagt: „Elf Tagereisen von Horeb, durch den Weg des Gebirges Seir, bis gen Kades-Barnea." Genau diese Strecke liegt zwischen dem Aufbruch in Kapitel 10 und der Kundschafter-Geschichte in Kapitel 13. Elf Tage – und daraus werden vierzig Jahre. Die Zahl steht nicht in 4. Mose selbst; sie steht im nächsten Buch, und sie ist der schärfste Kommentar zu diesem.',
+        en: 'Deuteronomy opens with a casual geographical note that says everything about Numbers: "It is eleven days’ journey from Horeb by the way of Mount Seir to Kadesh Barnea." That is exactly the stretch between the departure in chapter 10 and the story of the spies in chapter 13. Eleven days – and out of them come forty years. The figure is not in Numbers itself; it is in the next book, and it is the sharpest comment on this one.',
+      },
+      source: {
+        de: '5. Mose 1,2; die vierzig Jahre in 4. Mose 14,34 und 32,13.',
+        en: 'Deuteronomy 1:2; the forty years in Numbers 14:34 and 32:13.',
+      },
+    },
+  ],
+  questions: [
+    {
+      de: 'Die Kundschafter sind sich über die Tatsachen einig und über den Schluss daraus nicht. Woran liegt der Unterschied?',
+      en: 'The spies agree about the facts and disagree about the conclusion. Where does the difference lie?',
+    },
+    {
+      de: 'Korahs Satz – die ganze Gemeinde ist heilig – stimmt. Warum wird er trotzdem zurückgewiesen?',
+      en: 'Korah’s sentence – the whole congregation is holy – is true. Why is it rejected all the same?',
+    },
+    {
+      de: 'Das Buch endet mit Grenzen, Städten und Erbrecht für ein Land, das niemand betreten hat. Was für eine Art von Hoffnung ist das?',
+      en: 'The book ends with borders, towns and inheritance law for a country nobody has entered. What kind of hope is that?',
+    },
+  ],
+};
+
+export const PORTRAITS: Portrait[] = [GENESIS, EXODUS, LEVITICUS, NUMBERS];
 
 export const PORTRAIT_BY_OSIS: Record<string, Portrait> = Object.fromEntries(
   PORTRAITS.map((p) => [p.osis, p]),

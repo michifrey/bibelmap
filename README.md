@@ -602,16 +602,21 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   Sätze etwas miteinander zu tun haben, bleibt ein Urteil – und steht als
   Urteil da, mit beiden Stellen daneben.
 
-  Fertig sind **1. Mose**, **2. Mose** und **3. Mose**. Das dritte ist die
-  Probe aufs Exempel: ein Buch fast ohne Erzählung, ohne einen einzigen
+  Fertig sind **1. Mose**, **2. Mose**, **3. Mose** und **4. Mose**. Die
+  beiden letzten sind die Probe aufs Exempel, und zwar an den entgegengesetzten
+  Enden. 3. Mose ist ein Buch fast ohne Erzählung, ohne einen einzigen
   Ortswechsel und mit **vier** Ortsnamen in 27 Kapiteln – 33-mal „der HERR
   redete mit Mose", „unrein" 141-mal, „rein" 59-mal. Auch das lässt sich als
   Rolle zeichnen: sieben Züge, die auf **ein einziges Kapitel** zulaufen (den
   Versöhnungstag) und danach in ein Leben münden, in dem dieselbe Heiligkeit
-  ehrliche Waagen und ungeerntete Feldränder verlangt. Die übrigen 63 Bücher
-  sagen, dass sie noch keins haben, statt eine leere Seite zu zeigen, und
-  verweisen auf das, was es zu ihnen trotzdem schon gibt: Bibeltext,
-  Bücherregal, BibleProject-Guide.
+  ehrliche Waagen und ungeerntete Feldränder verlangt. 4. Mose ist das
+  Gegenteil: **138** Ortsnamen in 36 Kapiteln, acht Züge, fast vierzig Jahre –
+  und trotzdem liegt die Mitte des Buches nicht in der Mitte, sondern in
+  Kapitel 14, wo die Kundschafter zurückkommen. Elfmal murrt das Volk, zweimal
+  wird gezählt, und die zweite Zählung nennt aus der ersten noch zwei Namen.
+  Die übrigen 62 Bücher sagen, dass sie noch keins haben, statt eine leere
+  Seite zu zeigen, und verweisen auf das, was es zu ihnen trotzdem schon gibt:
+  Bibeltext, Bücherregal, BibleProject-Guide.
 
 - **Bibelquiz** – ein Lernmodus: „Wo liegt Kapernaum?" Der Klick auf eine
   **unbeschriftete** Karte ist die Antwort, die Entfernung gibt die Punkte
