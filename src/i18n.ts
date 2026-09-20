@@ -292,6 +292,7 @@ const STRINGS: Dict = {
   bpPrevBook: { de: 'Vorheriges Porträt', en: 'Previous portrait' },
   bpNextBook: { de: 'Nächstes Porträt', en: 'Next portrait' },
   bpReadyCount: { de: '★ {n} Bücher haben ein Porträt', en: '★ {n} books have a portrait' },
+  bpInShort: { de: 'In Kürze', en: 'In short' },
   bpBuild: { de: 'Der Aufbau', en: 'How it is built' },
   bpPlay: { de: 'Aufbauen', en: 'Build it up' },
   bpPause: { de: 'Anhalten', en: 'Pause' },

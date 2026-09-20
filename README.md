@@ -531,8 +531,13 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 
 ### Lernen & weitergeben
 
-- **Buchporträts** – ein Buch der Bibel auf **einer** Seite (`#buch=Gen`), und
-  die Übersicht **baut sich auf**, statt dazustehen. Vorbild sind die Buchvideos
+- **Buchporträts** – ein Buch der Bibel auf **einer** Seite (`#buch=Gen`).
+  Ganz oben steht die **Kurzfassung**: drei Sätze, worum es in diesem Buch
+  geht, und daneben seine Maße (Kapitel, Verse, Orte, hebräischer Name).
+  Vorher begann die Seite mit der Maschine – „Der Aufbau" und ein leerer
+  Streifen, der sich erst auf Knopfdruck füllt –, und wer nicht wusste, was
+  ihn erwartet, hatte damit nichts in der Hand. Darunter **baut sich** die
+  Übersicht **auf**, statt dazustehen. Vorbild sind die Buchvideos
   von BibleProject: erst ein Feld, dann das Wort dazu, und ganz zum Schluss die
   Ebene darüber, die zeigt, was sich wiederholt hat. Ein fertiges Schaubild
   zeigt dasselbe und erklärt nichts – man sieht sieben Kästen und weiß nicht,
@@ -1540,9 +1545,17 @@ Buch heraus; findet es die nicht, bricht es ab, statt ein „bestanden" zu melde
 
 ### Buchporträts: Rolle, Figuren, Zitate
 
-`src/data/bookPortraits.ts` – je Buch ein Porträt. Sechs Teile, und die
+`src/data/bookPortraits.ts` – je Buch ein Porträt. Sieben Teile, und die
 Reihenfolge ist die der Fragen, die man an ein unbekanntes Buch hat:
 
+- `summary` – die **Kurzfassung** ganz oben, zwei bis drei Sätze. Sie steht
+  neben `heart` und nicht an seiner Stelle, weil die beiden verschiedene
+  Fragen beantworten: „worum geht es hier überhaupt?" in der Zeit, die jemand
+  hat, bevor er weiterklickt – und „was will dieses Buch?", wofür man ausholen
+  darf. Die Prüfung hält sie zwischen 150 und 600 Zeichen, verlangt, dass sie
+  kürzer bleibt als die Kernbotschaft, und schlägt an, wenn sie deren Anfang
+  wiederholt: Sonst steht derselbe Text zweimal auf einer Seite, und beide
+  werden überlesen.
 - `movements` – die **Züge** des Buches. Sie liegen **lückenlos** über seinen
   Kapiteln; die Oberfläche zeichnet sie nacheinander auf die Schriftrolle.
   Fehlte ein Kapitel, sähe man davon nichts – die Felder lägen einfach etwas

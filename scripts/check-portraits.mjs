@@ -70,6 +70,16 @@ const gegenprobe = process.argv.includes('--gegenprobe');
 /** Mindestlängen: ein Satz ist noch keine Erklärung. */
 const MIN_HEART = 200;
 const MIN_TEXT = 120;
+/**
+ * Die Kurzfassung ganz oben auf der Seite. Sie hat nach beiden Seiten eine
+ * Grenze, und das ist der Punkt: Unter 150 Zeichen steht dort ein Slogan
+ * statt einer Auskunft, über 600 ist es keine Kurzfassung mehr, sondern die
+ * Kernbotschaft an der falschen Stelle. Dass sie kürzer bleibt als `heart`
+ * und nicht dessen Anfang wiederholt, wird eigens geprüft – sonst steht
+ * derselbe Text zweimal auf einer Seite, und beide werden überlesen.
+ */
+const MIN_SUMMARY = 150;
+const MAX_SUMMARY = 600;
 
 const kapitelCache = new Map();
 /** Die Verse eines Kapitels in einer Sprache, oder null. */
@@ -291,6 +301,25 @@ export function pruefe(portraits) {
       meld(`${wo}: facts.places sagt ${p.facts.places}, places.json nennt ${orte}.`);
     }
 
+    for (const sprache of ['de', 'en']) {
+      const kurz = p.summary?.[sprache];
+      if (!kurz?.trim()) {
+        meld(`${wo}: die Kurzfassung fehlt auf ${sprache} – sie steht ganz oben auf der Seite.`);
+        continue;
+      }
+      if (kurz.length < MIN_SUMMARY || kurz.length > MAX_SUMMARY) {
+        meld(`${wo}: die Kurzfassung (${sprache}) misst ${kurz.length} Zeichen – erlaubt sind ${MIN_SUMMARY} bis ${MAX_SUMMARY}.`);
+      }
+      const lang = p.heart?.[sprache] ?? '';
+      if (kurz.length >= lang.length) {
+        meld(`${wo}: die Kurzfassung (${sprache}) ist nicht kürzer als die Kernbotschaft.`);
+      }
+      // Derselbe Anfang heißt: es ist kein eigener Text, sondern ein
+      // abgeschnittener. Verglichen werden die ersten sechzig Zeichen.
+      if (lang && kurz.slice(0, 60) === lang.slice(0, 60)) {
+        meld(`${wo}: die Kurzfassung (${sprache}) ist der Anfang der Kernbotschaft, nicht ein eigener Text.`);
+      }
+    }
     if ((p.heart?.de?.length ?? 0) < MIN_HEART) {
       meld(`${wo}: die Kernbotschaft ist mit ${p.heart?.de?.length ?? 0} Zeichen zu dünn (mindestens ${MIN_HEART}).`);
     }
@@ -344,6 +373,10 @@ if (gegenprobe) {
     ['Person nicht im Zeitbaum', /steht nicht in genealogy\.ts/, {
       ...p0,
       figures: p0.figures.map((f, i) => (i === 0 ? { ...f, person: 'gibtsnicht' } : f)),
+    }],
+    ['Kurzfassung abgeschrieben', /Anfang der Kernbotschaft/, {
+      ...p0,
+      summary: { de: p0.heart.de.slice(0, 300), en: p0.heart.en.slice(0, 300) },
     }],
   ];
   let gut = 0;

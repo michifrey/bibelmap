@@ -311,7 +311,9 @@ export default function BookPortrait({
             ▶
           </button>
         </div>
-        <span className="text-[11px] text-white/45">
+        {/* Auf dem Telefon eine eigene Zeile (`basis-full`): in einer Reihe
+            mit der Auswahl blieb von „1. Mose (Genesis)" ein „1." übrig. */}
+        <span className="basis-full text-[11px] text-white/45 sm:basis-auto">
           {t('bpReadyCount').replace('{n}', String(PORTRAITS.length))}
         </span>
       </div>
@@ -332,16 +334,57 @@ export default function BookPortrait({
             ref={boxRef}
             className="scroll-soft flex flex-none flex-col gap-3 border-b border-white/10 px-4 py-4 sm:px-5 lg:min-h-0 lg:w-[56%] lg:flex-1 lg:overflow-y-auto lg:border-b-0 lg:border-r"
           >
-            <div>
-              <div className="bm-eyebrow">{t('bpBuild')}</div>
+            {/*
+              Die Kurzfassung steht vor allem anderen – vor der Rolle, vor den
+              Tafeln. Vorher fing die Seite mit der Maschine an: „Der Aufbau"
+              und ein leerer Streifen, der sich erst auf Knopfdruck füllt. Wer
+              nicht wusste, was ihn erwartet, hatte damit nichts in der Hand.
+              Jetzt steht oben in drei Sätzen, worum es geht, und daneben die
+              Maße des Buches; die Rolle beginnt darunter.
+            */}
+            <header>
+              <div className="bm-eyebrow">{t('bpInShort')}</div>
               <h2 className="font-display text-xl leading-tight text-white sm:text-2xl">
                 {lang === 'de' ? portrait.subtitle.de : portrait.subtitle.en}
               </h2>
-            </div>
+              <p className="mt-2 text-[15px] leading-relaxed text-white/85">
+                {lang === 'de' ? portrait.summary.de : portrait.summary.en}
+              </p>
+              {/* Die Maße des Buches in einer Zeile – die Zahlen stehen in der
+                  Tafel „Auf einen Blick" noch einmal mit ihrer Beschriftung. */}
+              <p className="mt-2.5 flex flex-wrap items-baseline gap-x-2 gap-y-1 text-[11.5px] text-white/50">
+                <span>
+                  <b className="text-gold">{portrait.facts.chapters}</b> {t('bpChapters').toLowerCase()}
+                </span>
+                <span aria-hidden="true">·</span>
+                <span>
+                  <b className="text-gold">{portrait.facts.verses.toLocaleString(lang)}</b>{' '}
+                  {t('bpVerses').toLowerCase()}
+                </span>
+                <span aria-hidden="true">·</span>
+                <span>
+                  <b className="text-gold">{portrait.facts.places}</b> {t('bpPlaces').toLowerCase()}
+                </span>
+                <span aria-hidden="true">·</span>
+                <span lang="he" dir="rtl">{portrait.hebrew.word}</span>
+                <span>{portrait.hebrew.translit}</span>
+              </p>
+            </header>
 
-            {/* Die Rolle. Beiwerk für eine Vorlesehilfe – alles darin steht
-                darunter noch einmal als Knopf oder als Text. */}
-            <svg aria-hidden="true" viewBox={`0 0 ${W} ${H}`} className="w-full">
+            <div className="bm-eyebrow bm-eyebrow-dim">{t('bpBuild')}</div>
+
+            {/*
+              Die Rolle. Beiwerk für eine Vorlesehilfe – alles darin steht
+              darunter noch einmal als Knopf oder als Text.
+
+              `shrink-0` ist hier nicht Kosmetik: Die Spalte ist eine
+              Flexsäule mit eigenem Scrollbereich, und ein SVG hat keine
+              Mindesthöhe, an der sich das Schrumpfen bricht. Als die
+              Kurzfassung oben dazukam, war die Säule voll – und die Rolle
+              wurde auf null Pixel zusammengedrückt, lautlos. Übrig blieb
+              „Der Aufbau" und darunter die Knöpfe.
+            */}
+            <svg aria-hidden="true" viewBox={`0 0 ${W} ${H}`} className="w-full shrink-0">
               {/* Pergament: der Streifen und seine gerollten Enden */}
               <rect x={0} y={STRIP_Y} width={W} height={STRIP_H} fill="#ffffff" fillOpacity="0.07" />
               <rect x={0} y={STRIP_Y - 8} width={14} height={STRIP_H + 16} rx={7} fill="#e0a449" fillOpacity="0.5" />

@@ -156,6 +156,22 @@ export interface Portrait {
   /** Der hebräische Name – meist das erste Wort des Buches. */
   hebrew: { word: string; translit: string; means: Bilingual };
   subtitle: Bilingual;
+  /**
+   * Die **Kurzfassung**, zwei bis drei Sätze, und sie steht ganz oben auf der
+   * Seite – vor der Rolle, vor den Tafeln, vor allem.
+   *
+   * Warum sie neben `heart` steht und nicht an seiner Stelle: Die beiden
+   * beantworten verschiedene Fragen. Die Kurzfassung beantwortet „worum geht
+   * es hier überhaupt?" in der Zeit, die jemand hat, bevor er weiterklickt.
+   * Die Kernbotschaft beantwortet „was will dieses Buch?" und darf dafür
+   * ausholen. Eine Seite, die mit der ausführlichen Antwort beginnt, hat die
+   * kurze nicht – und eine, die nur die kurze hat, sagt am Ende zu wenig.
+   *
+   * Die Prüfung achtet darauf, dass die Kurzfassung kürzer bleibt als die
+   * Kernbotschaft und nicht deren erster Absatz ist: Sonst steht derselbe
+   * Text zweimal auf einer Seite, und beide werden überlesen.
+   */
+  summary: Bilingual;
   /** Die Kernbotschaft: worum es geht, wenn man nur drei Sätze hätte. */
   heart: Bilingual;
   /** Der Vers, an dem das Buch hängt – wörtlich. */
@@ -193,6 +209,10 @@ const GENESIS: Portrait = {
   subtitle: {
     de: 'Das Buch der Anfänge – und einer Verheißung, die alles zusammenhält',
     en: 'The book of beginnings – and of one promise that holds it all together',
+  },
+  summary: {
+    de: 'Dreimal bekommen Menschen eine gute Welt, dreimal greifen sie nach mehr, dreimal gehen sie auseinander – Garten, Flut, Babel. Dann fängt Gott mit einem einzigen kinderlosen Paar noch einmal an und sagt zu, dass durch seine Familie alle Völker gesegnet werden. Der Rest des Buches ist eine Familiengeschichte, die daran erinnert wird – und die endet, bevor die Zusage eintrifft.',
+    en: 'Three times people are given a good world, three times they grasp for more, three times they are driven apart – garden, flood, Babel. Then God begins again with one childless couple and promises that through their family all nations will be blessed. The rest of the book is a family story held to that promise – and it ends before the promise arrives.',
   },
   heart: {
     de: 'Gott macht eine gute Welt und setzt Menschen als seine Statthalter hinein. Die Menschen greifen selbst nach der Entscheidung über gut und böse – und dieselbe Bewegung wiederholt sich dreimal: im Garten, vor der Flut, am Turm von Babel. Jedes Mal endet sie in Zerstreuung. Und jedes Mal fängt Gott wieder an, zuletzt mit einem einzigen Menschen: Abraham, dem er zusagt, dass durch seine Familie „alle Geschlechter auf Erden" gesegnet werden. Von da an handelt das Buch nicht mehr von der Welt, sondern von einer Familie – und behauptet, dass das dasselbe ist.',
@@ -920,6 +940,10 @@ const EXODUS: Portrait = {
   subtitle: {
     de: 'Ein Volk wird befreit – und Gott zieht bei ihm ein',
     en: 'A people is set free – and God moves in with them',
+  },
+  summary: {
+    de: 'Aus der Familie vom Ende des ersten Buches ist ein versklavtes Volk geworden. Gott hört das Schreien, nennt einem Flüchtling seinen Namen und führt heraus – gegen eine Macht, die sich selbst für göttlich hält. Am Sinai bekommt der befreite Haufen einen Bund, bricht ihn nach sechs Wochen, und das Buch geht trotzdem weiter: Es endet nicht mit einem Gesetz, sondern mit einem Zelt mitten im Lager.',
+    en: 'The family from the end of the first book has become an enslaved nation. God hears the cry, tells a fugitive his name and brings them out – against a power that takes itself for divine. At Sinai the freed crowd is given a covenant, breaks it within six weeks, and the book carries on anyway: it ends not with a law but with a tent in the middle of the camp.',
   },
   heart: {
     de: 'Aus der Familie am Ende von 1. Mose ist ein Volk geworden, und das Volk ist versklavt. Gott hört das Schreien, nennt seinen Namen und führt heraus – nicht durch einen Aufstand, sondern gegen die Macht, die sich für göttlich hält. Am Sinai wird aus dem befreiten Haufen ein Volk mit einem Bund; und kaum ist der geschlossen, gießen sie ein Kalb. Das Buch endet trotzdem damit, dass Gott einzieht: Der letzte Satz handelt nicht von Gesetz, sondern von Wohnen.',
