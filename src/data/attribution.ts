@@ -415,8 +415,8 @@ export const CREDITS: CreditEntry[] = [
     license: null,
     terms: { de: 'Nur verlinkt', en: 'Linked only', url: 'https://www.bible.com/' },
     use: {
-      de: 'Die Wege zum Weiterlesen: Bibelstellen, Lutherbibel, ESV und der Faithlife-Faktenband zu jedem Ort.',
-      en: 'The ways to read on: passages, the Luther Bible, the ESV and the Faithlife factbook for each place.',
+      de: 'Die Wege zum Weiterlesen: Bibelstellen, Lutherbibel, ESV, der Faithlife-Faktenband zu jedem Ort – und die Leseplläne, auf die der Leseplan eines Buches hinausführt.',
+      en: 'The ways to read on: passages, the Luther Bible, the ESV, the Faithlife factbook for each place – and the reading plans a book\'s plan points out to.',
     },
     note: {
       de: 'Von diesen Diensten wird nichts gespeichert oder angezeigt – nur ihre Adressen stehen in den Karten.',

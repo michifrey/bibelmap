@@ -36,6 +36,7 @@
     "check:i18n-keys": "node scripts/check-i18n-keys.mjs",
     "check:map-keyboard": "node scripts/check-map-keyboard.mjs",
     "check:books": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-books.mjs",
+    "check:plans": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-plans.mjs",
     "check:portraits": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-portraits.mjs",
     "check:israel-geo": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-israel-geo.mjs",
     "check:nations": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-nations.mjs",

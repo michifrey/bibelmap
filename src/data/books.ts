@@ -97,6 +97,21 @@ export function bibleGatewayUrl(osis: string, chapter: number, version: string):
   return `https://www.biblegateway.com/passage/?search=${search}&version=${version}`;
 }
 
+/**
+ * Dasselbe für eine Kapitelspanne – „Genesis 3-4".
+ *
+ * BibleGateway versteht den Bindestrich in der Suchzeichenkette; gebaut wird
+ * die Adresse deshalb genauso wie die für ein einzelnes Kapitel, nur mit zwei
+ * Zahlen. Ein Leseplan braucht das: Sein Tag ist fast nie ein Kapitel.
+ */
+export function bibleGatewayRangeUrl(osis: string, from: number, to: number, version: string): string {
+  if (from === to) return bibleGatewayUrl(osis, from, version);
+  const b = BOOK_BY_OSIS[osis];
+  const name = b ? b.en : osis;
+  const search = encodeURIComponent(`${name} ${from}-${to}`);
+  return `https://www.biblegateway.com/passage/?search=${search}&version=${version}`;
+}
+
 // BibleProject "guide" pages carry the book-overview video plus resources.
 // Slugs follow `book-of-<name>`, except a few books that BibleProject groups
 // into a single guide (Kings, Samuel, Chronicles). Die Ausnahmen stehen in
