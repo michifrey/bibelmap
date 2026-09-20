@@ -19,6 +19,7 @@ import type { Mode, View } from '../components/Header';
 const MODUS: Record<Mode, string> = {
   israel: 'israel',
   present: 'presentation',
+  books: 'books',
   history: 'historyMode',
   journeys: 'journeys',
   gospel: 'gospel',
@@ -104,6 +105,7 @@ const EIGENE_UEBERSCHRIFT: Record<Mode, boolean> = {
   roadmap: true,
   imprint: true,
   present: false,
+  books: false,
   history: false,
   journeys: false,
   gospel: false,

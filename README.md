@@ -531,6 +531,56 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
 
 ### Lernen & weitergeben
 
+- **Buchporträts** – ein Buch der Bibel auf **einer** Seite (`#buch=Gen`).
+  Ganz oben steht die **Kurzfassung**: drei Sätze, worum es in diesem Buch
+  geht, und daneben seine Maße (Kapitel, Verse, Orte, hebräischer Name).
+  Vorher begann die Seite mit der Maschine – „Der Aufbau" und ein leerer
+  Streifen, der sich erst auf Knopfdruck füllt –, und wer nicht wusste, was
+  ihn erwartet, hatte damit nichts in der Hand. Darunter **baut sich** die
+  Übersicht **auf**, statt dazustehen. Vorbild sind die Buchvideos
+  von BibleProject: erst ein Feld, dann das Wort dazu, und ganz zum Schluss die
+  Ebene darüber, die zeigt, was sich wiederholt hat. Ein fertiges Schaubild
+  zeigt dasselbe und erklärt nichts – man sieht sieben Kästen und weiß nicht,
+  wo man anfangen soll.
+
+  **Eine einzige Achse trägt alles: die Kapitel des Buches.** Die Felder der
+  Schriftrolle sind so breit, wie ihr Abschnitt lang ist – Josef bekommt in
+  1. Mose vierzehn Kapitel, die Schöpfung zwei, und das sieht man, statt es zu
+  lesen. Darüber spannen sich die **Muster** als Bögen: in 1. Mose dreimal
+  dieselbe Bewegung (Segen – Griff – Zerstreuung: Garten, Flut, Babel), „der
+  Jüngere statt des Älteren" von Abel bis Ephraim, und der Segen, der von
+  Abraham über Isaak und Jakob bis zu Juda weitergereicht wird. Darunter, auf
+  derselben Achse, die Rauten der **kleinen Zeitschiene**, und in der Tafel
+  „Figuren" zeigt ein Balken je Mensch, wo im Buch er vorkommt.
+
+  Abgespielt wird auf Knopfdruck (Pfeiltasten blättern, Leertaste spielt ab);
+  bei `prefers-reduced-motion` erscheinen die Felder, statt einzufahren. Für
+  eine Vorlesehilfe ist die Rolle Beiwerk: Jeder Zug steht darunter als Knopf
+  mit Namen und Kapitelspanne, und alles Weitere daneben als Text.
+
+  Daneben, in sechs Tafeln: **Kernbotschaft** und Kernvers, **Auf einen Blick**
+  (Kapitel, Verse, Orte, hebräischer Name, Textart, Schauplatz, das Wort, das
+  den Takt schlägt), die **Figuren** mit Namensbedeutung und Wendepunkt – mit
+  Sprung in den Zeitbaum und auf die Karte –, die **Zeitschiene**, die
+  **Hinweise auf Jesus**, das **Vertiefungswissen** mit Quelle und die
+  **Medien**: das BibleProject-Buchvideo (auf Deutsch, wo es das gibt), die
+  Folgen zu diesem Buch in „Hören & Sehen", der Bibeltext Zug für Zug und der
+  Sprung ins Bücherregal.
+
+  **Die Hinweise auf Jesus sind der heikle Teil, und darum werden sie
+  nachgeschlagen.** Je Hinweis stehen zwei Sätze nebeneinander – einer aus dem
+  Buch, einer aus dem Neuen Testament –, und `npm run check:portraits` sucht
+  jeden einzeln im Bibeltext im Haus: deutsch gegen Luther 1912, englisch gegen
+  die World English Bible. „Christus im Alten Testament" ist ein Feld, auf dem
+  man mit etwas gutem Willen alles in allem findet; ein Zitat, das
+  nachgeschlagen wird, ist die einzige Bremse, die dort hilft. Ob die beiden
+  Sätze etwas miteinander zu tun haben, bleibt ein Urteil – und steht als
+  Urteil da, mit beiden Stellen daneben.
+
+  Fertig sind **1. Mose** und **2. Mose**. Die übrigen 64 Bücher sagen das,
+  statt eine leere Seite zu zeigen, und verweisen auf das, was es zu ihnen
+  trotzdem schon gibt: Bibeltext, Bücherregal, BibleProject-Guide.
+
 - **Bibelquiz** – ein Lernmodus: „Wo liegt Kapernaum?" Der Klick auf eine
   **unbeschriftete** Karte ist die Antwort, die Entfernung gibt die Punkte
   (bis 25 km Volltreffer). Drei Stufen nach Bekanntheit der Orte – ab 50, ab 15
@@ -598,7 +648,8 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   `#heilsgeschichte=exodus` (eine Station der
   Heilsgeschichte), `#stammbaum=zeit,bonhoeffer` (ein Mensch im Zeitbaum),
   `#kirche=vater,augustinus`
-  `#kirche=konzil,chalcedon` und `#vergleich=abraham`. Der Hash läuft beim
+  `#kirche=konzil,chalcedon`, `#buch=Gen` (das Porträt eines Buches) und
+  `#vergleich=abraham`. Der Hash läuft beim
   Blättern mit, der Zurück-Knopf funktioniert, und ein **Link**-Knopf in der
   Ortskarte und in den Reise-Modi kopiert die aktuelle Adresse.
 - **Hören & Sehen** – ein eigener Modus über alle **473 Folgen** der vier
@@ -830,10 +881,11 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die vierundzwanzig Prüfungen, die von sich aus immer
+`npm run check` bündelt die achtundzwanzig Prüfungen, die von sich aus immer
 dasselbe Ergebnis liefern – darunter Buchkürzel, Zeitdokumente, Stammesgrenzen,
 Farbkontraste, Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen,
-Quizfragen, Heilsgeschichte, Feste Israels, **Bücherregal**, **Philosophieregal**, Reisen & Mission,
+Quizfragen, Heilsgeschichte, Feste Israels, **Bücherregal**, **Buchporträts**,
+**Philosophieregal**, Reisen & Mission,
 Startzahlen und **Ortsdatei** – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
@@ -1490,6 +1542,76 @@ statt zweimal.
 
 Dazu die Gegenprobe: Das Skript baut vier Fehler ins Regal ein und nimmt ein
 Buch heraus; findet es die nicht, bricht es ab, statt ein „bestanden" zu melden.
+
+### Buchporträts: Rolle, Figuren, Zitate
+
+`src/data/bookPortraits.ts` – je Buch ein Porträt. Sieben Teile, und die
+Reihenfolge ist die der Fragen, die man an ein unbekanntes Buch hat:
+
+- `summary` – die **Kurzfassung** ganz oben, zwei bis drei Sätze. Sie steht
+  neben `heart` und nicht an seiner Stelle, weil die beiden verschiedene
+  Fragen beantworten: „worum geht es hier überhaupt?" in der Zeit, die jemand
+  hat, bevor er weiterklickt – und „was will dieses Buch?", wofür man ausholen
+  darf. Die Prüfung hält sie zwischen 150 und 600 Zeichen, verlangt, dass sie
+  kürzer bleibt als die Kernbotschaft, und schlägt an, wenn sie deren Anfang
+  wiederholt: Sonst steht derselbe Text zweimal auf einer Seite, und beide
+  werden überlesen.
+- `movements` – die **Züge** des Buches. Sie liegen **lückenlos** über seinen
+  Kapiteln; die Oberfläche zeichnet sie nacheinander auf die Schriftrolle.
+  Fehlte ein Kapitel, sähe man davon nichts – die Felder lägen einfach etwas
+  weiter auseinander, und 1. Mose hätte plötzlich 48 Kapitel. Gerechnet wird
+  mit `gaps()` aus `src/lib/bookScroll.ts`, also mit dem Code, den auch die
+  Ansicht benutzt, und nicht mit einer Nachbildung.
+- `patterns` – die **Muster** über mehreren Zügen, die Bögen über der Rolle.
+- `figures` – die Menschen, mit Namensbedeutung, Wendepunkt, Kapitelspanne
+  und, wo es sie gibt, der Kennung im Zeitbaum (`genealogy.ts`) und dem Ort in
+  `places.json`.
+- `beats` – die kleine **Zeitschiene**. Sie hängt an den **Kapiteln**, nicht an
+  Jahreszahlen: Die Urgeschichte liegt vor jeder Datierung, und eine Leiste,
+  die „3761 v. Chr." behauptet, erfindet eine Genauigkeit, die der Text nicht
+  hergibt. Wo eine Zahl vertretbar ist, steht das Wort dazu, nach dem gerechnet
+  wurde – „traditionelle Rechnung", „frühe/späte Datierung".
+- `traces` – die **Hinweise auf Jesus**: je ein Satz aus dem Buch und der Satz
+  im Neuen Testament, der ihn aufnimmt. Beide wörtlich.
+- `deepen` – Vertiefungswissen, **jedes mit Quelle**. „Man sagt" ist keine.
+
+`npm run check:portraits` (läuft in `npm run check` mit) prüft das alles gegen
+die Quellen im Haus:
+
+| geprüft | woran |
+| --- | --- |
+| die Rolle deckt das Buch lückenlos ab | `gaps()` aus `lib/bookScroll.ts` |
+| jedes Zitat steht **wörtlich** so da | `public/data/text/<Buch>.json` – deutsch Luther 1912, englisch WEB |
+| jede Stelle löst auf ihr Buch und ein vorhandenes Kapitel auf | `parseRef` – dasselbe wie in der Suche |
+| der Hinweis kommt aus *diesem* Buch und landet im NT | `books.ts` (`testament`) |
+| Kapitel, Verse und Orte im Kasten „Auf einen Blick" | nachgezählt in Text und `places.json` |
+| jeder Ortsname, jede Personenkennung | `places.json`, `genealogy.ts` |
+
+Zwei Dinge, die dabei auffielen und deshalb hier stehen:
+
+**Luther zählt anders.** 1. Mose 32 ist in der Lutherbibel um einen Vers
+verschoben – der neue Name Israel steht deutsch in 32,29 und englisch in 32:28.
+Ein Zitat darf deshalb ein zweites Kürzel für die englische Zählung tragen
+(`refEn`); geprüft wird jede Sprache gegen ihre eigene Stelle. Ohne diese
+Trennung müsste man entweder auf die Stelle verzichten oder ein falsches
+Kürzel anzeigen.
+
+**Wörtlich, aber nicht buchstabenfromm.** Verglichen wird nach einer
+Vereinheitlichung von Anführungszeichen, Apostrophen und Leerzeichen: Die
+Textdateien benutzen typografische Zeichen, eine TypeScript-Datei nicht. Groß-
+und Kleinschreibung bleibt, wie sie ist – wer mitten im Vers einsteigt, soll
+das auch so schreiben. Zwei Zitate sind beim ersten Lauf genau daran
+hängengeblieben.
+
+**Die deutschen Buchvideos.** `BP_VIDEO_DE` in `src/data/books.ts` nennt die
+YouTube-Kennungen vom Kanal „BibleProject – Deutsch" (Toraserie). Für eine
+Oberfläche, die zuerst deutsch ist, war es eine Schieflage, ein englisches
+Video einzubetten und darunter auf Deutsch zu erklären, was darin gesagt wird;
+`bibleProjectVideoIds(osis, lang)` nimmt jetzt die deutsche Fassung, wo es sie
+gibt – auch im Entdeckermodus –, und sagt am Player, welche es ist. Ob eine
+Kennung noch auf ein Video zeigt, prüft `npm run check:bp` täglich über die
+oEmbed-Auskunft von YouTube: Eine Kennung ist kein Link, den man ansieht, und
+ein zurückgezogenes Video bemerkt man sonst erst als leeren Player.
 
 ### Das Philosophieregal: Werke, Verweise, Zeitstrahl
 

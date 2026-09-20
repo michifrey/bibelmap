@@ -79,6 +79,8 @@ export default function ModePalette({ onPick, onClose }: Props) {
         key: 'learn',
         title: t('modeGroupLearn'),
         items: [
+          // Ein aufgeschlagenes Buch – zwei Seiten, ein Falz.
+          { id: 'books', label: t('books'), hint: t('booksHint'), icon: 'M4 5h6a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-6a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h6z' },
           { id: 'quiz', label: t('quiz'), hint: t('quizSub'), icon: 'M12 17h.01M9.5 9a2.5 2.5 0 1 1 3.6 2.2c-.7.4-1.1 1-1.1 1.8M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z' },
           { id: 'index', label: t('placeIndex'), hint: t('placeIndexHint'), icon: 'M4 5h16M4 5v14M8 9h8M8 13h8M8 17h5' },
           { id: 'route', label: t('ownRoute'), hint: t('ownRouteHint'), icon: 'M6 19a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.8 14.4l6.4-5.8' },

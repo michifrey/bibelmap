@@ -12,6 +12,7 @@ import { HISTORY } from '../data/history';
 import { FEASTS, MONTH_BY_ID } from '../data/feasts';
 import { GROUP_BY_ID, SHELF, formatSpan } from '../data/shelf';
 import { BOOK_BY_OSIS } from '../data/books';
+import { PORTRAITS } from '../data/bookPortraits';
 import { FINDS, FIND_KIND } from '../data/finds';
 import { LAW_TEXTS } from '../data/lawTexts';
 import { PHIL_WORKS, PHIL_PERIOD_BY_ID } from '../data/philosophy';
@@ -32,7 +33,8 @@ export type HitTarget =
   | { mode: 'gospel'; gospel: { act: string; station?: string; person?: string } }
   | { mode: 'history'; history: string }
   | { mode: 'feasts'; feasts: string }
-  | { mode: 'shelf'; shelf: ShelfSel };
+  | { mode: 'shelf'; shelf: ShelfSel }
+  | { mode: 'books'; book: string };
 
 export interface SearchHit {
   key: string;
@@ -383,6 +385,32 @@ export function searchStories(query: string, lang: Lang, limit = 8): SearchHit[]
       subtitle: `${lang === 'de' ? 'Das Bücherregal' : 'The bookshelf'} · ${formatSpan(b.from, b.to, lang)}`,
       color: GROUP_BY_ID[b.group].color,
       target: { mode: 'shelf', shelf: { kind: 'book', id: b.osis } },
+    });
+  }
+  /*
+   * Die Buchporträts. Sie stehen neben dem Regal-Treffer desselben Buches und
+   * nicht an seiner Stelle: Das Regal beantwortet „wann geschrieben", das
+   * Porträt „wovon handelt es". Gesucht wird auch über den Untertitel – wer
+   * „Anfänge" tippt, meint 1. Mose, auch wenn das Wort im Buchtitel fehlt.
+   */
+  for (const p of PORTRAITS) {
+    const meta = BOOK_BY_OSIS[p.osis];
+    if (!meta) continue;
+    const name = (lang === 'de' ? meta.de : meta.en).replace(/\s*\(.*\)$/, '');
+    const voll = lang === 'de' ? meta.de : meta.en;
+    const untertitel = lang === 'de' ? p.subtitle.de : p.subtitle.en;
+    const s2 = Math.max(
+      score(name, q),
+      score(voll, q) - 5,
+      score(p.osis, q) - 10,
+      norm(untertitel).includes(q) ? 40 : 0,
+    ) - 18;
+    add(s2, {
+      key: `bp:${p.osis}`,
+      title: name,
+      subtitle: `${lang === 'de' ? 'Buchporträt' : 'Book portrait'} · ${untertitel}`,
+      color: p.movements[0]?.color ?? '#e0a449',
+      target: { mode: 'books', book: p.osis },
     });
   }
   for (const l of LAW_TEXTS) {
