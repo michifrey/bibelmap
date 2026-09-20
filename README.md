@@ -913,11 +913,11 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die dreißig Prüfungen, die von sich aus immer
+`npm run check` bündelt die einunddreißig Prüfungen, die von sich aus immer
 dasselbe Ergebnis liefern – darunter Buchkürzel, Zeitdokumente, Stammesgrenzen,
 Farbkontraste, Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen,
 Quizfragen, Heilsgeschichte, Feste Israels, **Bücherregal**, **Buchporträts**,
-**Leseplläne**, **Weg zur Quelle**, **Philosophieregal**, Reisen & Mission,
+**Leseplläne**, **Weg zur Quelle**, **Fahrplan**, **Philosophieregal**, Reisen & Mission,
 Startzahlen und **Ortsdatei** – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
@@ -1644,6 +1644,33 @@ gibt – auch im Entdeckermodus –, und sagt am Player, welche es ist. Ob eine
 Kennung noch auf ein Video zeigt, prüft `npm run check:bp` täglich über die
 oEmbed-Auskunft von YouTube: Eine Kennung ist kein Link, den man ansieht, und
 ein zurückgezogenes Video bemerkt man sonst erst als leeren Player.
+
+### Der Fahrplan und seine Zahlen
+
+`src/data/roadmap.ts` ist die Liste der Stationen, aus der `Roadmap.tsx` die
+Strasse zeichnet. Ihr Kopfkommentar verspricht seit jeher: „Die geplanten
+Stationen stehen hier nur, wenn sie im Projekt nachweisbar offen sind – jede
+nennt ihre Zahl oder ihre Stelle in der PRD."
+
+Eine Zahl, die niemand nachrechnet, ist aber keine Auskunft, sondern eine
+Behauptung mit Haltbarkeitsdatum. Beim ersten Lauf von `npm run check:roadmap`
+stand auf der Station „Aufgeräumt und nachgemessen" die Zahl **23 Prüfungen
+bei jedem Lauf**; es waren längst dreißig. Niemand hatte etwas falsch gemacht –
+die Zahl war nur einmal richtig gewesen.
+
+Die Prüfung rechnet deshalb nach, was im Projekt liegt: die Prüfungen aus
+`check-all.mjs`, Orte und Orte-mit-Foto aus `places.json`, Bücher mit Porträt
+aus `bookPortraits.ts`, Feste, Funde, BibleProject-Adressen, Sprachen, und die
+Ansichten mit einem Weg zur Quelle aus dem Quelltext – **elf von dreizehn
+Zahlen**. Die beiden übrigen hängen an Daten, die woanders liegen; der Lauf
+nennt sie beim Namen, statt so zu tun, als sei alles gedeckt. Dazu das Gerüst:
+Kennungen eindeutig, beide Sprachen gefüllt, jeder Status bekannt, **genau
+eine** Station „hier" – und nichts Erledigtes dahinter, denn die Strasse
+rechnet ihren Verlauf aus dieser Reihenfolge.
+
+Die Zahl der Prüfungen prüft sich dabei selbst mit: Als `check:roadmap` in
+`check-all.mjs` eingetragen wurde, stimmte sie im selben Moment nicht mehr –
+aus dreißig wurden einunddreißig.
 
 ### Diese Seite verbessern: der Weg von der Seite zur Datei
 

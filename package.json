@@ -37,6 +37,7 @@
     "check:map-keyboard": "node scripts/check-map-keyboard.mjs",
     "check:books": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-books.mjs",
     "check:improve": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-improve.mjs",
+    "check:roadmap": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-roadmap.mjs",
     "check:plans": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-plans.mjs",
     "check:portraits": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-portraits.mjs",
     "check:israel-geo": "node --experimental-strip-types --import ./scripts/lib/ts-loader.mjs scripts/check-israel-geo.mjs",
