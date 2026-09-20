@@ -247,12 +247,26 @@ const STRINGS: Dict = {
     de: 'Die 66 Bücher als Regal – nach Entstehungszeit, mit Querverweisen, ihren ältesten Handschriften, den jüdischen Gesetzestexten und den philosophischen Werken von Platon bis heute.',
     en: 'The 66 books as a shelf – by date of writing, with cross-references, their oldest manuscripts, the Jewish legal texts and the philosophical works from Plato to the present.',
   },
-  shelfTabShelf: { de: 'Regal', en: 'Shelf' },
-  shelfTabFinds: { de: 'Funde', en: 'Discoveries' },
+  /*
+   * Die vier Knöpfe oben. Vorher lagen die drei Regale untereinander in einem
+   * einzigen Reiter „Regal" – wer nicht bis unter das letzte Brett der
+   * Philosophie scrollte, erfuhr nie, dass es die Gesetzestexte gibt. Jedes
+   * Regal hat jetzt seinen eigenen Knopf, und die Namen sind deshalb kurz:
+   * Vier Beschriftungen müssen nebeneinander auf ein Telefon passen.
+   */
+  shelfTabBooks: { de: 'Bibel', en: 'Bible' },
+  shelfTabLaw: { de: 'Gesetz', en: 'Law' },
+  shelfTabPhil: { de: 'Philosophie', en: 'Philosophy' },
+  shelfTabFinds: { de: 'Funde', en: 'Finds' },
+  /* Die Suche geht über alle Regale – das leere Regal sagt, wo die Treffer liegen. */
+  shelfFoundElsewhere: { de: 'Treffer auf einem anderen Regal', en: 'Hits on another shelf' },
   shelfOrderWritten: { de: 'Entstehung', en: 'When written' },
   shelfOrderTold: { de: 'Erzählte Zeit', en: 'Time told' },
   shelfOrderCanon: { de: 'Kanon', en: 'Canon' },
   shelfSearch: { de: 'Buch suchen …', en: 'Search a book …' },
+  /* Dasselbe Feld über den anderen beiden Regalen – dort steht kein Buch drin. */
+  shelfSearchLaw: { de: 'Gesetzestext suchen …', en: 'Search a legal text …' },
+  shelfSearchPhil: { de: 'Werk oder Verfasser suchen …', en: 'Search a work or author …' },
   shelfDatingNote: {
     de: 'Wann ein Buch geschrieben wurde, steht bei den wenigsten fest. Ein Rücken steht auf dem Brett, das die Forschung mehrheitlich vertritt – die volle Spanne der Vorschläge steht im Fenster daneben, bei 1. Mose sind das fast tausend Jahre. „Umstritten“ heißt nicht „unsicher“, sondern: Hier führen zwei Datierungen zu zwei verschiedenen Büchern.',
     en: 'When a book was written is settled for very few of them. A spine stands on the shelf most scholarship argues for – the full span of proposals stands in the panel beside it, which for Genesis is almost a thousand years. "Disputed" does not mean "uncertain" but: here two datings produce two different books.',
