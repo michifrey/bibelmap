@@ -2932,7 +2932,7 @@ von P52 „um 125". Bilder und Artikeltexte kommen wie bei den Zeitdokumenten
 (§ 4.34) zur Laufzeit von Wikipedia; die drei Bausteine dafür stehen seither
 gemeinsam in `components/WikiFigure.tsx` statt zweimal.
 
-**Die Auslegung geht weiter.** Unter dem biblischen Regal ein zweites mit
+**Die Auslegung geht weiter.** Neben dem biblischen Regal ein zweites mit
 **elf jüdischen Gesetzestexten** – Gemeinderegel und Damaskusschrift, Mischna,
 Tosefta, die Auslegungsmidraschim, beide Talmude, Raschi, Mischne Tora, Arbaa
 Turim, Schulchan Aruch mit der Mappa, Responsen. Ein Regal, das beim letzten
@@ -3209,6 +3209,57 @@ Zuordnung, und beides steht so in den Notizen der Quelle.
       Feed-Adresse bestätigt und die Folgen einliest.
 
 `src/data/roadmap.ts` – wer hier eine Zeile ergänzt, ergänzt sie dort mit.
+
+### 4.86 Drei Regale untereinander – zwei davon fand niemand — P1 ✅
+
+**Anlass:** Rückmeldung zum Bücherregal – die Seite sei zu lang, und „die drei
+Bücherregale untereinander werden nicht gefunden".
+
+**Was los war.** Der Reiter „Regal" trug alle drei Regale gestapelt: sechs
+Bretter mit den 66 Büchern, darunter die Legende, darunter fünf Bretter mit den
+elf Gesetzestexten, darunter der philosophische Zeitstrahl und acht weitere
+Bretter mit 49 Werken. Auf Telefonbreite sind das **gut vier Bildschirmhöhen**.
+Die beiden unteren Überschriften – „Die Auslegung geht weiter" und
+„Philosophische Werke" – standen damit an der einen Stelle, an der man sie
+sicher nicht sieht: hinter dem Ende des Regals, nach dem niemand weiterscrollt.
+Eine Ansicht, die drei Dinge zeigt, aber nur eines ankündigt, zeigt in der
+Praxis eines.
+
+**Vier Knöpfe oben statt einer Rolle nach unten.** Aus den zwei Reitern
+(*Regal*, *Funde*) werden vier: **Bibel · Gesetz · Philosophie · Funde**. Jedes
+Regal steht für sich, keines ist mehr länger als sein eigener Inhalt, und die
+Namen sind kurz gewählt, weil vier Beschriftungen bei 390 Pixeln nebeneinander
+passen müssen – nachgemessen: sie passen in eine Zeile, `scrollWidth` bleibt
+390.
+
+**Was mitgehen musste**, damit die Knöpfe nicht bloß Schnitte sind:
+
+- **Die Auswahl bestimmt den Reiter.** `pick()` schaltet über `TAB_FOR` auf das
+  Regal, auf dem das Gewählte steht. Sonst führte der Verweis vom Jesaja-Rücken
+  auf den Talmud in ein Fenster, dessen Rücken im Regal dahinter nirgends steht
+  – und der Tieflink `#regal=recht,mischna` öffnete das leere Bibelregal.
+- **Die Suche bleibt eine.** Sie läuft weiter über alle drei Regale, aber der
+  Reiter zeigt nur eines. Wer auf dem Bibelregal „Platon" tippt, bekäme
+  „Keine Treffer", während nebenan zwei Werke liegen. Das leere Regal zählt
+  darum die anderen mit und nennt sie als Knopf: *Philosophie · 2*.
+- **Der Ordnungsumschalter nur bei den Büchern.** *Entstehung / Erzählte Zeit /
+  Kanon* gibt es für die Gesetzestexte und die Werke nicht – dort stünden zwei
+  tote Knöpfe. Das Suchfeld daneben bleibt, mit dem Platzhalter des jeweiligen
+  Regals („Gesetzestext suchen …", „Werk oder Verfasser suchen …").
+- **Die Pfeiltasten** begehen weiter nur das Regal, auf dem die Auswahl steht;
+  die Prüfung auf den alten Reiternamen fiel weg, weil der Reiter der Auswahl
+  jetzt ohnehin folgt.
+
+**Akzeptanzkriterien**
+- [x] Vier Knöpfe oben, jeder mit `aria-pressed`, alle vier auf 390 Pixeln im
+      Bild (kein Bedienelement außerhalb, `scrollWidth` = 390).
+- [x] Jeder der vier Tieflinktypen (`buch`, `recht`, `fund`, `philosophie`)
+      öffnet sein eigenes Regal.
+- [x] Eine Suche ohne Treffer auf dem gewählten Regal nennt die anderen mit
+      Anzahl und führt hin.
+- [x] `npm run check` (31 Prüfungen), `tsc --noEmit` und das Größenbudget
+      sauber; keine neue Zeile in `roadmap.ts`, weil das keine Station ist,
+      sondern die Behebung eines Bedienfehlers in § 4.84.
 
 ---
 

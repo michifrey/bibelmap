@@ -74,7 +74,7 @@ import { findPlacesByNames, placeName } from '../lib/places';
  * letzten kanonischen Buch aufhört, behauptet zweierlei: dass der Text ohne
  * Weiteres da ist, und dass die Arbeit an ihm mit dem Kanon endete. Beides
  * stimmt nicht. Zu jedem Buch steht deshalb, welche Handschrift es am
- * längsten trägt und wer sie gefunden hat, und unter dem biblischen Regal
+ * längsten trägt und wer sie gefunden hat, und neben dem biblischen Regal
  * steht ein zweites mit dem, was danach weitergeschrieben wurde.
  *
  * **Und ein drittes: die philosophischen Werke.** Kein Satz dieser Bibel wurde
@@ -84,6 +84,14 @@ import { findPlacesByNames, placeName } from '../lib/places';
  * bekommt als einziges einen Zeitstrahl: Dort ist der Abstand die Aussage.
  * Zwischen Boethius und Anselm liegen 550 Jahre ohne einen Rücken, und diese
  * Lücke sieht man nur, wenn die Achse in Jahren rechnet und nicht in Einträgen.
+ *
+ * **Nebeneinander, nicht untereinander.** Die drei Regale standen gestapelt in
+ * einem Reiter: erst sechs Bretter Bibel, dann fünf Gesetzestexte, dann acht
+ * philosophische. Zusammen waren das gut vier Bildschirmhöhen, und die beiden
+ * unteren Überschriften lagen dort, wo sie niemand vermutet – hinter dem Ende
+ * des Regals, nach dem man nicht weitersucht. Jedes trägt jetzt oben einen
+ * eigenen Knopf (`Tab`), die Suche läuft weiter über alle drei, und das leere
+ * Regal sagt, auf welchem anderen die Treffer liegen.
  */
 
 /**
@@ -93,7 +101,40 @@ import { findPlacesByNames, placeName } from '../lib/places';
 export type Sel = { kind: 'book' | 'law' | 'find' | 'phil'; id: string };
 
 type Ordering = 'written' | 'told' | 'canon';
-type Tab = 'shelf' | 'finds';
+
+/*
+ * Ein Reiter je Regal, nicht eines unter dem anderen.
+ *
+ * Die drei Regale – die biblischen Bücher, die Gesetzestexte, die
+ * philosophischen Werke – standen untereinander in einem einzigen Reiter.
+ * Zusammen waren das über hundert Rücken auf zwanzig Brettern; das zweite
+ * Regal begann nach dem letzten Brett des ersten, das dritte nach dem
+ * Zeitstrahl des zweiten. Wer nicht weiterscrollte, sah nur die Bibel und
+ * hatte keinen Anlass zu vermuten, dass darunter noch etwas steht. Eine
+ * Überschrift, die man erst findet, wenn man an ihr vorbeigescrollt ist,
+ * kündigt nichts an.
+ *
+ * Jetzt trägt jedes Regal einen Knopf oben, neben den Funden, und jeder
+ * Reiter ist für sich kurz. Die Auswahl im Fenster rechts bestimmt den
+ * Reiter mit (`pick`), damit ein Tieflink auf einen Gesetzestext nicht auf
+ * dem leeren Bibelregal landet.
+ */
+type Tab = 'books' | 'law' | 'phil' | 'finds';
+
+const TAB_KEY: Record<Tab, string> = {
+  books: 'shelfTabBooks',
+  law: 'shelfTabLaw',
+  phil: 'shelfTabPhil',
+  finds: 'shelfTabFinds',
+};
+
+/** Welches Regal eine Auswahl zeigt – die Umkehrung ist `Sel['kind']`. */
+const TAB_FOR: Record<Sel['kind'], Tab> = {
+  book: 'books',
+  law: 'law',
+  phil: 'phil',
+  find: 'finds',
+};
 
 const ORDER_KEY: Record<Ordering, string> = {
   written: 'shelfOrderWritten',
@@ -230,7 +271,7 @@ export default function Bookshelf({
   onExit,
 }: Props) {
   const t = useT();
-  const [tab, setTab] = useState<Tab>(initial?.kind === 'find' ? 'finds' : 'shelf');
+  const [tab, setTab] = useState<Tab>(initial ? TAB_FOR[initial.kind] : 'books');
   const [ordering, setOrdering] = useState<Ordering>('written');
   const [query, setQuery] = useState('');
   const [sel, setSel] = useState<Sel | null>(initial ?? null);
@@ -324,16 +365,34 @@ export default function Bookshelf({
   /** Alle sichtbaren Werke – für den Zeitstrahl und die Pfeiltasten. */
   const philFlat = useMemo(() => philBoards.flatMap((s2) => s2.works), [philBoards]);
 
+  /*
+   * Wie viele Rücken jedes Regal gerade trägt. Die Suche geht über alle drei,
+   * der Reiter zeigt aber nur eines: Wer auf dem Bibelregal „Platon" tippt,
+   * stünde sonst vor „Keine Treffer", während nebenan sechs Werke liegen.
+   * Deshalb zählt jedes Regal mit, und das leere nennt die anderen beim Namen.
+   */
+  const hits: Record<Tab, number> = useMemo(
+    () => ({
+      books: boards.reduce((n, b) => n + b.books.length, 0),
+      law: lawBoards.reduce((n, b) => n + b.texts.length, 0),
+      phil: philFlat.length,
+      finds: FINDS.length,
+    }),
+    [boards, lawBoards, philFlat],
+  );
+
   function pick(next: Sel | null) {
     setSel(next);
-    if (next?.kind === 'find') setTab('finds');
-    else if (next) setTab('shelf');
+    // Ein Verweis führt oft auf ein anderes Regal – vom Buch auf den Talmud,
+    // vom Werk auf das Buch. Der Reiter geht mit, sonst zeigte das Fenster
+    // etwas, das im Regal daneben nirgends steht.
+    if (next) setTab(TAB_FOR[next.kind]);
   }
 
   // Pfeiltasten begehen die Rücken in der Reihenfolge der gewählten Ordnung.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (tab !== 'shelf' || (sel?.kind !== 'book' && sel?.kind !== 'phil')) return;
+      if (sel?.kind !== 'book' && sel?.kind !== 'phil') return;
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA') return;
       const step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
@@ -399,13 +458,18 @@ export default function Bookshelf({
           <div className="font-display text-lg uppercase leading-none sm:text-xl">{t('shelf')}</div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="bm-seg">
-            <button className={tab === 'shelf' ? 'is-on' : ''} onClick={() => setTab('shelf')}>
-              {t('shelfTabShelf')}
-            </button>
-            <button className={tab === 'finds' ? 'is-on' : ''} onClick={() => setTab('finds')}>
-              {t('shelfTabFinds')}
-            </button>
+          {/* Vier Knöpfe – auf dem Telefon brechen sie um, statt zu überlaufen. */}
+          <div className="bm-seg flex-wrap">
+            {(['books', 'law', 'phil', 'finds'] as Tab[]).map((id) => (
+              <button
+                key={id}
+                className={tab === id ? 'is-on' : ''}
+                aria-pressed={tab === id}
+                onClick={() => setTab(id)}
+              >
+                {t(TAB_KEY[id] as 'shelfTabBooks')}
+              </button>
+            ))}
           </div>
           <button onClick={onExit} className="bm-btn bm-btn-gold">
             {t('exit')} ✕
@@ -415,22 +479,21 @@ export default function Bookshelf({
 
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
         <div ref={shelfRef} className="scroll-soft min-h-0 flex-1 overflow-y-auto">
-          {tab === 'shelf' ? (
-            <ShelfBoards
-              boards={boards}
-              lawBoards={lawBoards}
-              philBoards={philBoards}
-              philFlat={philFlat}
-              ordering={ordering}
-              onOrdering={setOrdering}
-              query={query}
-              onQuery={setQuery}
-              sel={sel}
-              onPick={pick}
-              lang={lang}
-            />
-          ) : (
+          {tab === 'finds' ? (
             <FindList sel={sel} onPick={pick} lang={lang} />
+          ) : (
+            <div className="py-4">
+              <ShelfTools tab={tab} ordering={ordering} onOrdering={setOrdering} query={query} onQuery={setQuery} />
+              {hits[tab] === 0 ? (
+                <NoHits tab={tab} hits={hits} onTab={setTab} />
+              ) : tab === 'books' ? (
+                <BookBoards boards={boards} ordering={ordering} sel={sel} onPick={pick} lang={lang} />
+              ) : tab === 'law' ? (
+                <LawBoards boards={lawBoards} sel={sel} onPick={pick} lang={lang} />
+              ) : (
+                <PhilBoards boards={philBoards} philFlat={philFlat} sel={sel} onPick={pick} lang={lang} />
+              )}
+            </div>
           )}
         </div>
 
@@ -538,37 +601,30 @@ function Board({
   );
 }
 
-function ShelfBoards({
-  boards,
-  lawBoards,
-  philBoards,
-  philFlat,
+/**
+ * Die Leiste über jedem Regal: die Suche immer, die Ordnung nur bei den
+ * Büchern. Das Gesetzesregal und das philosophische sind chronologisch
+ * geordnet und kennen keinen Kanon – ein Umschalter mit zwei toten Knöpfen
+ * wäre dort ein Versprechen, das die Daten nicht halten.
+ */
+function ShelfTools({
+  tab,
   ordering,
   onOrdering,
   query,
   onQuery,
-  sel,
-  onPick,
-  lang,
 }: {
-  boards: Board[];
-  lawBoards: { period: (typeof PERIODS)[number]; texts: LawText[] }[];
-  philBoards: { period: (typeof PHIL_PERIODS)[number]; works: PhilWork[] }[];
-  philFlat: PhilWork[];
+  tab: Tab;
   ordering: Ordering;
   onOrdering: (o: Ordering) => void;
   query: string;
   onQuery: (q: string) => void;
-  sel: Sel | null;
-  onPick: (s: Sel) => void;
-  lang: Lang;
 }) {
   const t = useT();
-  const nothing = boards.length === 0 && lawBoards.length === 0 && philBoards.length === 0;
-
+  const suche = tab === 'law' ? 'shelfSearchLaw' : tab === 'phil' ? 'shelfSearchPhil' : 'shelfSearch';
   return (
-    <div className="py-4">
-      <div className="mb-5 flex flex-wrap items-center gap-2 px-4 sm:px-5">
+    <div className="mb-5 flex flex-wrap items-center gap-2 px-4 sm:px-5">
+      {tab === 'books' && (
         <div className="bm-seg">
           {(['written', 'told', 'canon'] as Ordering[]).map((o) => (
             <button key={o} className={ordering === o ? 'is-on-gold' : ''} onClick={() => onOrdering(o)}>
@@ -576,21 +632,68 @@ function ShelfBoards({
             </button>
           ))}
         </div>
-        <input
-          value={query}
-          onChange={(e) => onQuery(e.target.value)}
-          placeholder={t('shelfSearch')}
-          aria-label={t('shelfSearch')}
-          className="bm-input w-full sm:w-auto sm:max-w-xs sm:flex-1"
-        />
-      </div>
+      )}
+      <input
+        value={query}
+        onChange={(e) => onQuery(e.target.value)}
+        placeholder={t(suche as 'shelfSearch')}
+        aria-label={t(suche as 'shelfSearch')}
+        className="bm-input w-full sm:w-auto sm:max-w-xs sm:flex-1"
+      />
+    </div>
+  );
+}
 
+/**
+ * Das leere Regal – und wo die Treffer stattdessen liegen.
+ *
+ * „Keine Treffer" allein wäre hier falsch: Die Suche läuft über alle drei
+ * Regale, nur zeigt der Reiter eines. Die Knöpfe nennen die anderen mit
+ * Anzahl und führen hin; die Funde bleiben außen vor, sie sind eine Liste
+ * ohne Suchfeld.
+ */
+function NoHits({ tab, hits, onTab }: { tab: Tab; hits: Record<Tab, number>; onTab: (t: Tab) => void }) {
+  const t = useT();
+  const anderswo = (['books', 'law', 'phil'] as Tab[]).filter((id) => id !== tab && hits[id] > 0);
+  return (
+    <div className="px-4 py-8 text-center sm:px-5">
+      <p className="text-sm text-white/50">{t('noResults')}</p>
+      {anderswo.length > 0 && (
+        <>
+          <p className="bm-eyebrow bm-eyebrow-dim mt-5">{t('shelfFoundElsewhere')}</p>
+          <div className="mt-2 flex flex-wrap justify-center gap-2">
+            {anderswo.map((id) => (
+              <button key={id} onClick={() => onTab(id)} className="bm-btn bm-btn-ghost">
+                {t(TAB_KEY[id] as 'shelfTabBooks')} · {hits[id]}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+/** Das erste Regal: die 66 Bücher. */
+function BookBoards({
+  boards,
+  ordering,
+  sel,
+  onPick,
+  lang,
+}: {
+  boards: Board[];
+  ordering: Ordering;
+  sel: Sel | null;
+  onPick: (s: Sel) => void;
+  lang: Lang;
+}) {
+  const t = useT();
+  return (
+    <>
       {ordering === 'written' && (
         <p className="mb-5 max-w-prose px-4 text-[12.5px] leading-relaxed text-white/60 sm:px-5">{t('shelfDatingNote')}</p>
       )}
-
-      {nothing && <p className="px-5 py-8 text-center text-sm text-white/50">{t('noResults')}</p>}
-
       {boards.map((s) => (
         <Board key={s.id} title={s.title} range={s.range} note={s.note} color={s.color}>
           {s.books.map((b) => {
@@ -611,104 +714,130 @@ function ShelfBoards({
           })}
         </Board>
       ))}
-
-      {boards.length > 0 && (
-        <p className="mb-8 max-w-prose px-4 text-[12px] leading-relaxed text-white/45 sm:px-5">{t('shelfLegend')}</p>
-      )}
-
-      {/* Das zweite Regal: was nach dem letzten kanonischen Buch weiterging. */}
-      {lawBoards.length > 0 && (
-        <div className="border-t border-white/10 pt-6">
-          <div className="mb-2 px-4 sm:px-5">
-            <div className="bm-eyebrow mb-1">{t('shelfLawKicker')}</div>
-            <h2 className="font-display text-2xl uppercase leading-tight text-white">{t('shelfLawTitle')}</h2>
-          </div>
-          <p className="mb-6 max-w-prose px-4 text-[12.5px] leading-relaxed text-white/60 sm:px-5">
-            {lang === 'de' ? MIZWOT.de : MIZWOT.en}
-          </p>
-          {lawBoards.map(({ period, texts }) => (
-            <Board
-              key={period.id}
-              title={lang === 'de' ? period.de : period.en}
-              range={lang === 'de' ? period.range.de : period.range.en}
-              note={lang === 'de' ? period.note.de : period.note.en}
-              color="#7a5aa8"
-            >
-              {texts.map((l) => (
-                <Spine
-                  key={l.id}
-                  spineId={`law:${l.id}`}
-                  label={lang === 'de' ? l.shortDe : l.shortEn}
-                  sub={l.translit}
-                  width={LAW_BREIT}
-                  height={spineHeight(l.id.length)}
-                  color="#7a5aa8"
-                  on={sel?.kind === 'law' && sel.id === l.id}
-                  onClick={() => onPick({ kind: 'law', id: l.id })}
-                />
-              ))}
-            </Board>
-          ))}
-          <p className="px-4 pb-6 text-[12px] leading-relaxed text-white/45 sm:px-5">{t('shelfLawWidth')}</p>
-        </div>
-      )}
-
-      {/* Das dritte Regal: mit welchen Begriffen gelesen wurde. */}
-      {philBoards.length > 0 && (
-        <div className="border-t border-white/10 pt-6">
-          <div className="mb-2 px-4 sm:px-5">
-            <div className="bm-eyebrow mb-1">{t('shelfPhilKicker')}</div>
-            <h2 className="font-display text-2xl uppercase leading-tight text-white">{t('shelfPhilTitle')}</h2>
-          </div>
-          <p className="mb-5 max-w-prose px-4 text-[12.5px] leading-relaxed text-white/60 sm:px-5">
-            {lang === 'de' ? PHIL_INTRO.de : PHIL_INTRO.en}
-          </p>
-
-          <PhilTimeline works={philFlat} sel={sel} onPick={onPick} lang={lang} />
-
-          {philBoards.map(({ period, works }) => (
-            <Board
-              key={period.id}
-              title={lang === 'de' ? period.de : period.en}
-              range={lang === 'de' ? period.range.de : period.range.en}
-              note={lang === 'de' ? period.note.de : period.note.en}
-              color={period.color}
-            >
-              {works.map((w) => (
-                <Spine
-                  key={w.id}
-                  spineId={`phil:${w.id}`}
-                  label={lang === 'de' ? w.shortDe : w.shortEn}
-                  sub={lang === 'de' ? w.author.de : w.author.en}
-                  width={PHIL_BREIT}
-                  height={spineHeight(Math.abs(w.year))}
-                  color={period.color}
-                  on={sel?.kind === 'phil' && sel.id === w.id}
-                  onClick={() => onPick({ kind: 'phil', id: w.id })}
-                />
-              ))}
-            </Board>
-          ))}
-          <p className="max-w-prose px-4 text-[12px] leading-relaxed text-white/45 sm:px-5">
-            {lang === 'de' ? PHIL_BREITE.de : PHIL_BREITE.en}
-          </p>
-          <p className="max-w-prose px-4 pb-6 pt-2 text-[12px] leading-relaxed text-white/45 sm:px-5">
-            {lang === 'de' ? PHIL_ANSTOSS.de : PHIL_ANSTOSS.en}{' '}
-            <a
-              href="https://www.reflab.ch/category/podcasts/mindmaps/"
-              target="_blank"
-              rel="noreferrer"
-              className="text-mint hover:underline"
-            >
-              Mindmaps (RefLab)
-              <ExternalIcon />
-            </a>
-          </p>
-        </div>
-      )}
-    </div>
+      <p className="max-w-prose px-4 pb-6 text-[12px] leading-relaxed text-white/45 sm:px-5">{t('shelfLegend')}</p>
+    </>
   );
 }
+
+/** Das zweite Regal: was nach dem letzten kanonischen Buch weiterging. */
+function LawBoards({
+  boards,
+  sel,
+  onPick,
+  lang,
+}: {
+  boards: { period: (typeof PERIODS)[number]; texts: LawText[] }[];
+  sel: Sel | null;
+  onPick: (s: Sel) => void;
+  lang: Lang;
+}) {
+  const t = useT();
+  return (
+    <>
+      <div className="mb-2 px-4 sm:px-5">
+        <div className="bm-eyebrow mb-1">{t('shelfLawKicker')}</div>
+        <h2 className="font-display text-2xl uppercase leading-tight text-white">{t('shelfLawTitle')}</h2>
+      </div>
+      <p className="mb-6 max-w-prose px-4 text-[12.5px] leading-relaxed text-white/60 sm:px-5">
+        {lang === 'de' ? MIZWOT.de : MIZWOT.en}
+      </p>
+      {boards.map(({ period, texts }) => (
+        <Board
+          key={period.id}
+          title={lang === 'de' ? period.de : period.en}
+          range={lang === 'de' ? period.range.de : period.range.en}
+          note={lang === 'de' ? period.note.de : period.note.en}
+          color="#7a5aa8"
+        >
+          {texts.map((l) => (
+            <Spine
+              key={l.id}
+              spineId={`law:${l.id}`}
+              label={lang === 'de' ? l.shortDe : l.shortEn}
+              sub={l.translit}
+              width={LAW_BREIT}
+              height={spineHeight(l.id.length)}
+              color="#7a5aa8"
+              on={sel?.kind === 'law' && sel.id === l.id}
+              onClick={() => onPick({ kind: 'law', id: l.id })}
+            />
+          ))}
+        </Board>
+      ))}
+      <p className="px-4 pb-6 text-[12px] leading-relaxed text-white/45 sm:px-5">{t('shelfLawWidth')}</p>
+    </>
+  );
+}
+
+/** Das dritte Regal: mit welchen Begriffen gelesen wurde. */
+function PhilBoards({
+  boards,
+  philFlat,
+  sel,
+  onPick,
+  lang,
+}: {
+  boards: { period: (typeof PHIL_PERIODS)[number]; works: PhilWork[] }[];
+  philFlat: PhilWork[];
+  sel: Sel | null;
+  onPick: (s: Sel) => void;
+  lang: Lang;
+}) {
+  const t = useT();
+  return (
+    <>
+      <div className="mb-2 px-4 sm:px-5">
+        <div className="bm-eyebrow mb-1">{t('shelfPhilKicker')}</div>
+        <h2 className="font-display text-2xl uppercase leading-tight text-white">{t('shelfPhilTitle')}</h2>
+      </div>
+      <p className="mb-5 max-w-prose px-4 text-[12.5px] leading-relaxed text-white/60 sm:px-5">
+        {lang === 'de' ? PHIL_INTRO.de : PHIL_INTRO.en}
+      </p>
+
+      <PhilTimeline works={philFlat} sel={sel} onPick={onPick} lang={lang} />
+
+      {boards.map(({ period, works }) => (
+        <Board
+          key={period.id}
+          title={lang === 'de' ? period.de : period.en}
+          range={lang === 'de' ? period.range.de : period.range.en}
+          note={lang === 'de' ? period.note.de : period.note.en}
+          color={period.color}
+        >
+          {works.map((w) => (
+            <Spine
+              key={w.id}
+              spineId={`phil:${w.id}`}
+              label={lang === 'de' ? w.shortDe : w.shortEn}
+              sub={lang === 'de' ? w.author.de : w.author.en}
+              width={PHIL_BREIT}
+              height={spineHeight(Math.abs(w.year))}
+              color={period.color}
+              on={sel?.kind === 'phil' && sel.id === w.id}
+              onClick={() => onPick({ kind: 'phil', id: w.id })}
+            />
+          ))}
+        </Board>
+      ))}
+      <p className="max-w-prose px-4 text-[12px] leading-relaxed text-white/45 sm:px-5">
+        {lang === 'de' ? PHIL_BREITE.de : PHIL_BREITE.en}
+      </p>
+      <p className="max-w-prose px-4 pb-6 pt-2 text-[12px] leading-relaxed text-white/45 sm:px-5">
+        {lang === 'de' ? PHIL_ANSTOSS.de : PHIL_ANSTOSS.en}{' '}
+        <a
+          href="https://www.reflab.ch/category/podcasts/mindmaps/"
+          target="_blank"
+          rel="noreferrer"
+          className="text-mint hover:underline"
+        >
+          Mindmaps (RefLab)
+          <ExternalIcon />
+        </a>
+      </p>
+    </>
+  );
+}
+
 
 /* --- Der Zeitstrahl ------------------------------------------------------- */
 
