@@ -1047,6 +1047,14 @@ const STRINGS: Dict = {
     en: 'The 66 books shelved by when they were written rather than by canon – with the oldest surviving manuscript for each, the people who found it, and the philosophical works whose terms it was read with.',
   },
   lCard6Cta: { de: 'Regal ansehen', en: 'See the shelf' },
+  // Die siebte Karte liegt quer unter den sechs anderen – siehe Landing.tsx.
+  lCard7Kicker: { de: '07 — Die Bücher einzeln', en: '07 — Book by book' },
+  lCard7Title: { de: 'Buchporträts', en: 'Book portraits' },
+  lCard7Body: {
+    de: 'Ein Buch der Bibel auf einer Seite. Oben in Kürze, worum es geht – darunter baut sich der Aufbau Zug um Zug auf, wie in einem Erklärvideo, und am Ende zeigen Bögen, was sich wiederholt hat. Dazu die Figuren mit ihrem Wendepunkt, eine kleine Zeitschiene, die Hinweise auf Jesus und Vertiefungswissen mit Quelle. Angefangen mit 1. und 2. Mose.',
+    en: 'One book of the Bible on a single page. In short at the top what it is about – below, the structure builds itself up movement by movement, the way an explainer video does, and at the end arcs show what has repeated. With the people and their turning points, a small timeline, pointers to Jesus and background with sources. Starting with Genesis and Exodus.',
+  },
+  lCard7Cta: { de: 'Porträt ansehen', en: 'See a portrait' },
   lStatPlaces: { de: 'Kartierte Orte', en: 'Places mapped' },
   lStatEras: { de: 'Epochen', en: 'Eras' },
   lStatBooks: { de: 'Bücher im Entdeckermodus', en: 'Books in explorer mode' },

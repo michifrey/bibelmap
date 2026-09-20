@@ -325,6 +325,100 @@ function CardArtTree() {
   );
 }
 
+/**
+ * Karte 07: die Schriftrolle eines Buches, in Felder geteilt.
+ *
+ * Die Breiten sind nicht ausgedacht, sondern die von 1. Mose – 2, 2, 5, 2,
+ * 13, 12 und 14 Kapitel von fünfzig. Das ist der Einfall der Ansicht dahinter
+ * im Kleinen: Ein Feld ist so breit, wie sein Abschnitt lang ist, und Josef
+ * bekommt siebenmal so viel Platz wie die Schöpfung.
+ *
+ * Über den Feldern ein Bogen – das Muster, das sich über mehrere Züge legt –,
+ * darunter die Rauten der Zeitschiene. Anders als die sechs hochformatigen
+ * Bilder steht dieses in einer Querkarte und wird beschnitten statt gestaucht
+ * (`slice`): Die Rolle soll eine Rolle bleiben.
+ */
+function CardArtScroll() {
+  const kapitel = [2, 2, 5, 2, 13, 12, 14];
+  const gesamt = kapitel.reduce((n, k) => n + k, 0);
+  const X0 = 16;
+  const BREITE = 214;
+  const Y = 74;
+  const HOEHE = 44;
+  /** Das hervorgehobene Feld – dasselbe, das die Ansicht zuerst zeigt. */
+  const AKTIV = 4;
+
+  let x = X0;
+  const felder = kapitel.map((k) => {
+    const w = (k / gesamt) * BREITE;
+    const f = { x, w, mid: x + w / 2 };
+    x += w;
+    return f;
+  });
+  /**
+   * Zwei Bögen, und beide stehen wirklich so in den Daten: „dreimal dieselbe
+   * Bewegung" über Garten, Flut und Babel (die Felder 2 bis 4, zusammen neun
+   * Kapitel) und „der Segen wird weitergereicht" über Abraham, Jakob und
+   * Josef (die letzten drei, zusammen neununddreißig). Dass der eine schmal
+   * ist und der andere breit, ist die Aussage des Bildes.
+   */
+  const boegen: { von: number; bis: number; ueber: number[]; farbe: string; hoch: number }[] = [
+    { von: 1, bis: 3, ueber: [1, 2, 3], farbe: '#7fe3d5', hoch: 26 },
+    { von: 4, bis: 6, ueber: [4, 5, 6], farbe: '#e0a449', hoch: 44 },
+  ];
+
+  return (
+    <svg viewBox="0 0 246 178" className="block h-full w-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <rect width="246" height="178" fill="#073f3c" />
+
+      {/* die Bögen über den Zügen, die dasselbe Muster teilen */}
+      {boegen.map((b, i) => {
+        const von = felder[b.von].mid;
+        const bis = felder[b.bis].mid;
+        return (
+          <g key={i}>
+            <path
+              d={`M${von.toFixed(1)} ${Y - 8} Q${((von + bis) / 2).toFixed(1)} ${Y - 8 - b.hoch} ${bis.toFixed(1)} ${Y - 8}`}
+              fill="none"
+              stroke={b.farbe}
+              strokeOpacity="0.8"
+              strokeWidth="1.6"
+              strokeDasharray="5 4"
+            />
+            {b.ueber.map((n) => (
+              <circle key={n} cx={felder[n].mid} cy={Y - 8} r="2.6" fill={b.farbe} />
+            ))}
+          </g>
+        );
+      })}
+
+      {/* das Pergament und seine gerollten Enden */}
+      <rect x={X0} y={Y} width={BREITE} height={HOEHE} fill="#ffffff" fillOpacity="0.06" />
+      {felder.map((f, i) => (
+        <rect
+          key={i}
+          x={f.x + 0.8}
+          y={Y}
+          width={Math.max(2, f.w - 1.6)}
+          height={HOEHE}
+          fill={i === AKTIV ? '#e0a449' : '#0a5450'}
+          stroke={i === AKTIV ? '#e0a449' : '#7fe3d5'}
+          strokeOpacity={i === AKTIV ? 1 : 0.55}
+          strokeWidth="1.4"
+        />
+      ))}
+      <rect x={X0 - 7} y={Y - 6} width="8" height={HOEHE + 12} rx="4" fill="#c2812a" />
+      <rect x={X0 + BREITE - 1} y={Y - 6} width="8" height={HOEHE + 12} rx="4" fill="#c2812a" />
+
+      {/* das Lineal der Kapitel und die Marken der Zeitschiene */}
+      <line x1={X0} y1={Y + HOEHE + 12} x2={X0 + BREITE} y2={Y + HOEHE + 12} stroke="#7fe3d5" strokeOpacity="0.3" />
+      {[felder[0], felder[2], felder[4], felder[6]].map((f, i) => (
+        <path key={i} d={`M${f.mid.toFixed(1)} ${Y + HOEHE + 20} l4 5 -4 5 -4 -5z`} fill="#e0a449" fillOpacity="0.85" />
+      ))}
+    </svg>
+  );
+}
+
 export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }: Props) {
   const t = useT();
 
@@ -508,6 +602,37 @@ export default function Landing({ lang, onLang, placeCount, eraCounts, onEnter }
               </div>
             </button>
           ))}
+
+          {/*
+            Die siebte Karte liegt quer und über alle Spalten. Der Grund steht
+            eine Ebene höher: Sechs Karten füllen zwei Zeilen zu dritt, eine
+            siebte im selben Format stünde allein in der dritten. Quer füllt
+            sie die Zeile, und das Neueste hat den Platz, den eine Neuigkeit
+            braucht – statt als Rest einer Reihe dazustehen.
+          */}
+          <button
+            onClick={() => onEnter('books')}
+            className="group col-span-full flex flex-col bg-paper text-left shadow-[0_30px_60px_-30px_rgba(3,48,47,.6)] transition hover:-translate-y-1 sm:flex-row"
+          >
+            <div className="sm:w-[38%] sm:flex-none lg:w-[34%]">
+              <CardArtScroll />
+            </div>
+            <div className="flex flex-1 flex-col p-6 sm:p-8">
+              <div className="bm-eyebrow text-signal-deep" style={{ fontSize: 10 }}>
+                {t('lCard7Kicker')}
+              </div>
+              <div className="mt-2.5 font-display text-lg font-extrabold leading-tight tracking-tight text-ink sm:text-2xl">
+                {t('lCard7Title')}
+              </div>
+              <p className="mt-3 max-w-2xl flex-1 text-[12.5px] font-medium leading-[1.65] text-[#5c6b69] sm:text-[13.5px]">
+                {t('lCard7Body')}
+              </p>
+              <span className="mt-5 inline-flex items-center gap-2.5 self-start bg-deep px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.1em] text-white transition group-hover:bg-deepest">
+                {t('lCard7Cta')}
+                <Arrow className="text-gold" />
+              </span>
+            </div>
+          </button>
         </div>
       </div>
 
