@@ -122,8 +122,38 @@ export const BP_VIDEO: Record<string, string[]> = {
   Rev: ['5nvVVcYD-0w', 'QpnIrbq2bKo'],
 };
 
-export function bibleProjectVideoIds(osis: string): string[] {
+/**
+ * Dieselben Übersichtsvideos auf Deutsch.
+ *
+ * BibleProject hat einen eigenen deutschen Kanal („BibleProject – Deutsch"),
+ * und die Bücher der Tora liegen dort als „Toraserie" vor. Für eine App, deren
+ * Oberfläche zuerst deutsch ist, war es eine Schieflage, ein englisches Video
+ * einzubetten und darunter auf Deutsch zu erklären, was darin gesagt wird.
+ *
+ * Eingetragen ist nur, was benannt und nachprüfbar ist: `npm run check:bp`
+ * fragt zu jeder Kennung die oEmbed-Auskunft von YouTube ab und meldet, welche
+ * ins Leere zeigt. Wo hier nichts steht, bleibt es beim englischen Video –
+ * geraten wird keine Kennung, denn eine falsche Kennung zeigt kein leeres
+ * Feld, sondern ein fremdes Video.
+ */
+export const BP_VIDEO_DE: Record<string, string[]> = {
+  Gen: ['rpdZ2HTokSw', 'jAPBmqAxys8'],
+  Exod: ['x9qDLx-wLVc', 'VyIUoDFZqu4'],
+};
+
+/**
+ * Die Kennungen für eine Sprache. Deutsch, wo es das Video gibt, sonst das
+ * englische – ein Video in der falschen Sprache ist immer noch besser als
+ * keines, und die Fassung steht am Player dabei.
+ */
+export function bibleProjectVideoIds(osis: string, lang: 'de' | 'en' = 'en'): string[] {
+  if (lang === 'de' && BP_VIDEO_DE[osis]?.length) return BP_VIDEO_DE[osis];
   return BP_VIDEO[osis] ?? [];
+}
+
+/** Gibt es zu diesem Buch ein deutsches Video? Der Player sagt es an. */
+export function hasGermanVideo(osis: string): boolean {
+  return (BP_VIDEO_DE[osis]?.length ?? 0) > 0;
 }
 
 // Link to a book's BibleProject overview (guide page with the video).

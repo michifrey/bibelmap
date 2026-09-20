@@ -21,6 +21,14 @@
 // Die Slug-Regel selbst steht in `src/data/books.ts` und hier – drei Zeilen,
 // die der Browser nicht aus einem Node-Skript lesen kann. Die Ausnahmen, die
 // sich tatsächlich ändern, stehen nur an einer Stelle.
+//
+// **Dazu die deutschen Buchvideos.** `BP_VIDEO_DE` in `src/data/books.ts`
+// nennt YouTube-Kennungen vom Kanal „BibleProject – Deutsch"; das Buchporträt
+// bettet sie ein. Eine Kennung ist kein Link, den man ansieht – ein
+// zurückgezogenes Video sieht man erst als leeren Player. Gefragt wird die
+// oEmbed-Auskunft von YouTube: Sie antwortet mit 404, wenn es das Video nicht
+// (mehr) öffentlich gibt, und 200 sonst. Dieselbe Regel wie oben – 403 und
+// Zeitüberschreitung bleiben unentschieden.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -52,12 +60,33 @@ for (const b of books) {
   const s = OVERRIDES[b.osis] ?? `book-of-${slug(b.en)}`;
   if (seen.has(s)) continue;
   seen.add(s);
-  targets.push({ slug: s, url: `${BASE}/guides/${s}/`, books: [b.osis] });
+  targets.push({ kind: 'guide', slug: s, url: `${BASE}/guides/${s}/`, books: [b.osis] });
 }
 for (const b of books) {
   const s = OVERRIDES[b.osis] ?? `book-of-${slug(b.en)}`;
   const t = targets.find((x) => x.slug === s);
   if (t && !t.books.includes(b.osis)) t.books.push(b.osis);
+}
+
+/*
+ * Die deutschen Buchvideos. Sie hängen nicht an `BASE` – das ist YouTube und
+ * nicht BibleProject –, und mit `--base` (Prüfung gegen eine Kopie) bleiben
+ * sie deshalb draußen.
+ */
+if (BASE === 'https://bibleproject.com') {
+  const quelle = fs.readFileSync(path.resolve(__dirname, '..', 'src', 'data', 'books.ts'), 'utf8');
+  const block = quelle.match(/BP_VIDEO_DE: Record<string, string\[\]> = \{([\s\S]*?)\n\};/);
+  for (const m of (block?.[1] ?? '').matchAll(/(\w+):\s*\[([^\]]*)\]/g)) {
+    const osis = m[1];
+    for (const id of m[2].matchAll(/'([\w-]{11})'/g)) {
+      targets.push({
+        kind: 'video',
+        slug: `${osis}/${id[1]}`,
+        url: `https://www.youtube.com/oembed?format=json&url=${encodeURIComponent(`https://www.youtube.com/watch?v=${id[1]}`)}`,
+        books: [osis],
+      });
+    }
+  }
 }
 
 async function check(t) {
@@ -85,7 +114,11 @@ const moved = ok.filter((r) => r.finalUrl && r.finalUrl.replace(/\/$/, '') !== r
 const missing = results.filter(isMissing);
 const undecided = results.filter((r) => !isOk(r) && !isMissing(r));
 
-console.log(`${results.length} Guide-Adressen für ${books.length} Bücher (${BASE})`);
+const videos = results.filter((r) => r.kind === 'video');
+console.log(
+  `${results.length - videos.length} Guide-Adressen für ${books.length} Bücher (${BASE})` +
+    (videos.length ? ` und ${videos.length} deutsche Buchvideos (YouTube)` : ''),
+);
 console.log(`  erreichbar: ${ok.length}   fehlend: ${missing.length}   unentschieden: ${undecided.length}`);
 
 for (const r of moved) console.log(`  → umgeleitet: ${r.slug}  ⇒  ${r.finalUrl}`);
@@ -101,7 +134,13 @@ if (undecided.length === results.length) {
   process.exit(2);
 }
 if (missing.length) {
-  console.error('\nRichtigen Slug heraussuchen und in src/data/bpGuides.json eintragen.');
+  if (missing.some((r) => r.kind === 'guide')) {
+    console.error('\nRichtigen Slug heraussuchen und in src/data/bpGuides.json eintragen.');
+  }
+  if (missing.some((r) => r.kind === 'video')) {
+    console.error('Fehlendes Video: die Kennung in BP_VIDEO_DE (src/data/books.ts) ersetzen');
+    console.error('oder streichen – ohne Eintrag zeigt das Porträt das englische Video.');
+  }
   process.exit(1);
 }
 if (undecided.length) {

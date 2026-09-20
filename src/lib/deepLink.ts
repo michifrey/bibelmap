@@ -44,6 +44,13 @@ export interface Route {
   /** Fest im Jahreskreis: `#feste=pessach`. */
   feasts?: string;
   /**
+   * Buchporträt: `#buch=Gen`. Das OSIS-Kürzel steht unverändert da – es ist
+   * kurz, es ist schon die Sprache der übrigen Adressen (`#regal=buch,Isa`),
+   * und ein deutscher Buchname („1. Mose") trüge einen Punkt und ein
+   * Leerzeichen in den Hash.
+   */
+  book?: string;
+  /**
    * Auswahl im Bücherregal: `#regal=buch,Isa`, `#regal=recht,mischna`,
    * `#regal=fund,qumran`, `#regal=philosophie,kant-kritik`. Vier Arten stehen
    * dort nebeneinander, und ein Buch kann so heißen wie ein Fund – deshalb die
@@ -178,6 +185,10 @@ export function parseHash(hash: string): Route | null {
       return args[0]
         ? { view: 'map', mode: 'feasts', feasts: args[0] }
         : { view: 'map', mode: 'feasts' };
+    case 'buch':
+      return args[0]
+        ? { view: 'map', mode: 'books', book: args[0] }
+        : { view: 'map', mode: 'books' };
     case 'regal': {
       const kind =
         args[0] === 'recht' ? 'law'
@@ -271,6 +282,9 @@ export function formatRoute(route: Route): string {
   }
   if (mode === 'feasts') {
     return route.feasts ? `#feste=${route.feasts}` : '#feste';
+  }
+  if (mode === 'books') {
+    return route.book ? `#buch=${route.book}` : '#buch';
   }
   if (mode === 'shelf') {
     const sh = route.shelf;

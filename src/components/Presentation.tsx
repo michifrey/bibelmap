@@ -302,7 +302,7 @@ export default function Presentation({
                   <span className="bm-num">{mediaCount}</span>
                 </button>
               )}
-              {bibleProjectVideoIds(meta.osis).length > 0 ? (
+              {bibleProjectVideoIds(meta.osis, lang).length > 0 ? (
                 <button
                   onClick={() => setShowVideo(true)}
                   className="inline-flex items-center gap-1 bg-deep px-3 py-1.5 text-[11px] font-extrabold tracking-wide text-white transition hover:bg-signal"
@@ -407,7 +407,7 @@ export default function Presentation({
         )}
       </div>
 
-      {showVideo && bibleProjectVideoIds(meta.osis).length > 0 && (
+      {showVideo && bibleProjectVideoIds(meta.osis, lang).length > 0 && (
         <div
           className="fixed inset-0 z-[2200] grid place-items-center bg-black/60 p-4"
           onClick={() => setShowVideo(false)}
@@ -425,7 +425,7 @@ export default function Presentation({
                 <svg aria-hidden="true" viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor"><path d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z" /></svg>
               </button>
             </div>
-            <YouTubeEmbed ids={bibleProjectVideoIds(meta.osis)} title={lang === 'de' ? meta.de : meta.en} />
+            <YouTubeEmbed ids={bibleProjectVideoIds(meta.osis, lang)} title={lang === 'de' ? meta.de : meta.en} />
           </div>
         </div>
       )}

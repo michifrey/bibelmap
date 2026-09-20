@@ -34,6 +34,7 @@ const IsraelMode = lazyView(() => import('./components/IsraelMode'));
 const MediaMode = lazyView(() => import('./components/MediaMode'));
 const OwnRoute = lazyView(() => import('./components/OwnRoute'));
 const PlaceIndex = lazyView(() => import('./components/PlaceIndex'));
+const BookPortrait = lazyView(() => import('./components/BookPortrait'));
 // Die Karte wiegt am schwersten von allem, was jeder lädt: Leaflet mit seinen
 // Erweiterungen sind zusammen 187 kB. Die Startseite kehrt weiter oben früh
 // zurück und zeigt gar keine Karte – wer auf / landet, brauchte davon nichts
@@ -193,6 +194,7 @@ export default function App() {
   const [israelNav, setIsraelNav] = useState<string | null>(INITIAL_ROUTE?.israel ?? null);
   const [historyNav, setHistoryNav] = useState<string | null>(INITIAL_ROUTE?.history ?? null);
   const [feastsNav, setFeastsNav] = useState<string | null>(INITIAL_ROUTE?.feasts ?? null);
+  const [bookNav, setBookNav] = useState<string | null>(INITIAL_ROUTE?.book ?? null);
   const [shelfNav, setShelfNav] = useState<ShelfSel | null>(INITIAL_ROUTE?.shelf ?? null);
   const [treeNav, setTreeNav] = useState(INITIAL_ROUTE?.tree ?? null);
   /*
@@ -276,8 +278,10 @@ export default function App() {
     if (target === 'media') setMediaNav(null);
     if (target === 'feasts') setFeastsNav(null);
     if (target === 'shelf') setShelfNav(null);
+    if (target === 'books') setBookNav(null);
     setMode(
       target === 'present' ? 'present'
+      : target === 'books' ? 'books'
       : target === 'media' ? 'media'
       : target === 'feasts' ? 'feasts'
       : target === 'shelf' ? 'shelf'
@@ -449,6 +453,7 @@ export default function App() {
           israel: israelNav ?? undefined,
           history: historyNav ?? undefined,
           feasts: feastsNav ?? undefined,
+          book: bookNav ?? undefined,
           shelf: shelfNav ?? undefined,
           own: mode === 'route' ? ownIds : undefined,
           tree: treeNav ?? undefined,
@@ -470,6 +475,7 @@ export default function App() {
     compareNav,
     historyNav,
     feastsNav,
+    bookNav,
     shelfNav,
     ownIds,
     treeNav,
@@ -517,6 +523,7 @@ export default function App() {
       setIsraelNav(route.israel ?? null);
       setHistoryNav(route.history ?? null);
       setFeastsNav(route.feasts ?? null);
+      setBookNav(route.book ?? null);
       setShelfNav(route.shelf ?? null);
       if (route.own?.length) setOwnIds(route.own);
       setTreeNav(route.tree ?? null);
@@ -692,6 +699,9 @@ export default function App() {
     } else if (hit.target.mode === 'shelf') {
       setShelfNav(hit.target.shelf);
       setMode('shelf');
+    } else if (hit.target.mode === 'books') {
+      setBookNav(hit.target.book);
+      setMode('books');
     } else {
       setMissionNav(hit.target.mission);
       setMode('mission');
@@ -1259,6 +1269,27 @@ export default function App() {
                   onNavigate={setMediaNav}
                   onShowPlace={showPlaceFromGenealogy}
                   onOpenReading={openReading}
+                  onExit={() => setMode(null)}
+                />
+              </Suspense>
+            )}
+            {mode === 'books' && (
+              <Suspense fallback={<ModeFallback />}>
+                <BookPortrait
+                  key={`books-${navEpoch}`}
+                  places={places}
+                  lang={lang}
+                  initial={bookNav}
+                  onNavigate={setBookNav}
+                  onShowPlace={showPlaceFromGenealogy}
+                  onOpenReading={openReading}
+                  onOpenMedia={openMediaForRef}
+                  onOpenShelf={(osis) => {
+                    setShelfNav({ kind: 'book', id: osis });
+                    setMode('shelf');
+                    setNavEpoch((n) => n + 1);
+                  }}
+                  onOpenPerson={openPersonInTree}
                   onExit={() => setMode(null)}
                 />
               </Suspense>
