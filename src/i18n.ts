@@ -333,6 +333,27 @@ const STRINGS: Dict = {
   },
   bpDeep: { de: 'Vertiefung', en: 'Background' },
   bpSource: { de: 'Quelle', en: 'Source' },
+  bpPlan: { de: 'Leseplan', en: 'Reading plan' },
+  bpPlanNote: {
+    de: 'Ein Buch liest sich leichter mit einem Ende in Sicht. Der Plan nach den Zügen schneidet dort, wo das Buch selbst schneidet – ein Tag ist dann eine ganze Geschichte und keine Kapitelspanne. Die gleichmäßigen Pläne beantworten die andere Frage: bis wann bin ich durch?',
+    en: 'A book reads more easily with an end in sight. The plan that follows the movements cuts where the book itself cuts – a day is then a whole story rather than a span of chapters. The even plans answer the other question: by when am I through?',
+  },
+  bpPlanByMovements: { de: 'Nach den Zügen · {n} Tage', en: 'By the movements · {n} days' },
+  bpPlanDays: { de: '{n} Tage', en: '{n} days' },
+  bpPlanDay: { de: 'Tag', en: 'Day' },
+  bpPlanHere: { de: 'Hier lesen', en: 'Read here' },
+  bpPlanSummary: {
+    de: '{days} Tage, {chapters} Kapitel – im Schnitt {per} Kapitel am Tag.',
+    en: '{days} days, {chapters} chapters – {per} chapters a day on average.',
+  },
+  bpPlanWhole: { de: 'Pläne für die ganze Bibel', en: 'Plans for the whole Bible' },
+  bpPlanWholeNote: {
+    de: 'Ein Plan über die ganze Bibel ist eine Entscheidung – chronologisch oder kanonisch, in einem Jahr oder in acht. Andere haben sie mit Sorgfalt getroffen und pflegen sie; hier stehen deshalb Verweise und keine Kopien.',
+    en: 'A plan across the whole Bible is a decision – chronological or canonical, in one year or in eight. Others have made it carefully and maintain it; so what stands here are pointers, not copies.',
+  },
+  bpPlanOnlyDe: { de: 'nur deutsch', en: 'German only' },
+  bpPlanOnlyEn: { de: 'nur englisch', en: 'English only' },
+  bpPlanMore: { de: 'Alle Pläne bei YouVersion', en: 'All plans on YouVersion' },
   bpMedia: { de: 'Medien', en: 'Media' },
   bpVideoDe: {
     de: 'Deutsche Fassung vom Kanal „BibleProject – Deutsch".',

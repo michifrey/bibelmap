@@ -9,11 +9,15 @@ import { loadMedia, type MediaIndex } from '../lib/media';
 import {
   BOOKS,
   BOOK_BY_OSIS,
+  bibleGatewayRangeUrl,
   bibleGatewayUrl,
   bibleProjectUrl,
   bibleProjectVideoIds,
   hasGermanVideo,
 } from '../data/books';
+import { bibleRefUrl } from '../data/genealogy';
+import { PLAN_INDEX, READING_PLANS, planUrl } from '../data/readingPlans';
+import { daySteps, planByDays, planFromMovements, spanLabel, type Day } from '../lib/readingPlan';
 import {
   PORTRAITS,
   PORTRAIT_BY_OSIS,
@@ -90,7 +94,7 @@ const BEAT_Y = RULER_Y + 52;
 /** Wie lange ein Schritt beim Abspielen steht. */
 const STEP_MS = 4200;
 
-type Tab = 'heart' | 'figures' | 'time' | 'jesus' | 'deep' | 'media';
+type Tab = 'heart' | 'figures' | 'time' | 'jesus' | 'deep' | 'plan' | 'media';
 
 interface Props {
   places: Place[];
@@ -652,7 +656,10 @@ export default function BookPortrait({
 
           {/* ---------------------------------------------- rechts: die Tafeln */}
           <div className="scroll-soft flex min-h-0 flex-1 flex-col lg:overflow-hidden">
-            <div className="scroll-soft flex flex-none gap-1 overflow-x-auto border-b border-white/10 px-4 py-2 sm:px-5">
+            {/* Umbrechen statt seitwärts scrollen: Mit dem siebten Reiter lief die
+                Zeile auch auf einem breiten Schirm rechts hinaus, und ein Reiter,
+                den man wegscrollen muss, wird nicht gefunden. */}
+            <div className="flex flex-none flex-wrap gap-1 border-b border-white/10 px-4 py-2 sm:px-5">
               {(
                 [
                   ['heart', 'bpHeart'],
@@ -660,6 +667,7 @@ export default function BookPortrait({
                   ['time', 'bpTime'],
                   ['jesus', 'bpJesus'],
                   ['deep', 'bpDeep'],
+                  ['plan', 'bpPlan'],
                   ['media', 'bpMedia'],
                 ] as [Tab, string][]
               ).map(([id, key]) => (
@@ -693,6 +701,15 @@ export default function BookPortrait({
               )}
               {tab === 'jesus' && <JesusPanel portrait={portrait} lang={lang} version={bibleVersion} />}
               {tab === 'deep' && <DeepPanel portrait={portrait} lang={lang} />}
+              {tab === 'plan' && (
+                <PlanPanel
+                  portrait={portrait}
+                  lang={lang}
+                  book={book}
+                  version={bibleVersion}
+                  onOpenReading={(c) => onOpenReading?.(osis, c)}
+                />
+              )}
               {tab === 'media' && (
                 <MediaPanel
                   portrait={portrait}
@@ -968,6 +985,158 @@ function DeepPanel({ portrait, lang }: { portrait: Portrait; lang: Lang }) {
           </p>
         </article>
       ))}
+    </div>
+  );
+}
+
+/**
+ * Der Leseplan zu diesem Buch.
+ *
+ * **Der Plan nach den Zügen ist der Punkt.** Ein gleichmäßiger Plan schneidet
+ * mitten durch: „1. Mose in 7 Tagen" liest am vierten Tag 23–29 und hört
+ * mitten bei Laban auf. Die Züge der Rolle schneiden dort, wo das Buch selbst
+ * schneidet – und ein Tag hat dann einen Namen statt einer Zahlenspanne.
+ * Deshalb steht dieser Plan vorn und ist die Vorgabe; die gleichmäßigen
+ * stehen daneben, weil „bis Ostern durch" eine andere, ebenso gute Frage ist.
+ *
+ * Gerechnet wird in `lib/readingPlan.ts`, geprüft von `npm run check:plans`:
+ * jedes Kapitel genau einmal, in der Reihenfolge des Buches, kein leerer Tag.
+ *
+ * **Drei Wege je Tag, und alle drei führen woandershin.** In die App (der
+ * Entdeckermodus mit der Karte daneben), zu Bible.com – dorthin verlinkt
+ * diese App schon überall, und wer die Bibel-App benutzt, liest dort ohnehin –
+ * und zu BibleGateway für die Lutherbibel oder die WEB. Welcher davon der
+ * richtige ist, weiß nur der Leser.
+ */
+function PlanPanel({
+  portrait,
+  lang,
+  book,
+  version,
+  onOpenReading,
+}: {
+  portrait: Portrait;
+  lang: Lang;
+  book: { osis: string; de: string; en: string; chapters: number };
+  version: string;
+  onOpenReading: (chapter: number) => void;
+}) {
+  const t = useT();
+  /** `null` heißt „nach den Zügen", eine Zahl ist die Tageszahl. */
+  const [days, setDays] = useState<number | null>(null);
+  const plan: Day[] = useMemo(
+    () => (days === null ? planFromMovements(portrait.movements) : planByDays(book.chapters, days)),
+    [days, portrait, book],
+  );
+  const steps = daySteps(book.chapters);
+  const name = (lang === 'de' ? book.de : book.en).replace(/\s*\(.*\)$/, '');
+  /**
+   * Die Stelle für eine Suchadresse: „1. Mose 3-4", mit Bindestrich. Auf dem
+   * Bildschirm steht ein Gedankenstrich (`spanLabel`), und genau der kam auch
+   * in der Adresse an – „1. Mose 1–2" findet die Suche von Bible.com nicht.
+   */
+  const refOf = (d: Day) => (d.from === d.to ? `${name} ${d.from}` : `${name} ${d.from}-${d.to}`);
+
+  return (
+    <div className="flex flex-col gap-4">
+      <section>
+        <div className="bm-eyebrow">{t('bpPlan')}</div>
+        <p className="mt-1 text-sm leading-relaxed text-white/75">{t('bpPlanNote')}</p>
+        <div className="mt-2.5 flex flex-wrap gap-1.5">
+          <button
+            onClick={() => setDays(null)}
+            className={`bm-chip ${days === null ? 'bg-white/18 ring-1 ring-gold' : 'hover:bg-white/14'}`}
+          >
+            {t('bpPlanByMovements').replace('{n}', String(portrait.movements.length))}
+          </button>
+          {steps.map((n) => (
+            <button
+              key={n}
+              onClick={() => setDays(n)}
+              className={`bm-chip ${days === n ? 'bg-white/18 ring-1 ring-gold' : 'hover:bg-white/14'}`}
+            >
+              {t('bpPlanDays').replace('{n}', String(n))}
+            </button>
+          ))}
+        </div>
+        <p className="mt-2 text-[11px] text-white/45">
+          {t('bpPlanSummary')
+            .replace('{days}', String(plan.length))
+            .replace('{chapters}', String(book.chapters))
+            .replace('{per}', (book.chapters / plan.length).toFixed(1).replace('.', lang === 'de' ? ',' : '.'))}
+        </p>
+      </section>
+
+      <ol className="flex flex-col gap-1.5">
+        {plan.map((d) => (
+          <li key={d.day} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-l-2 border-white/10 bg-white/5 px-3 py-2">
+            <span className="w-12 flex-none text-[11px] uppercase tracking-wide text-white/40">
+              {t('bpPlanDay')} {d.day}
+            </span>
+            <span className="font-display text-sm text-gold">{spanLabel(d)}</span>
+            {d.title && (
+              <span className="min-w-0 flex-1 text-[12.5px] text-white/75">
+                {lang === 'de' ? d.title.de : d.title.en}
+              </span>
+            )}
+            <span className="ml-auto flex flex-none gap-1.5">
+              <button className="bm-chip hover:bg-white/14" onClick={() => onOpenReading(d.from)}>
+                {t('bpPlanHere')}
+              </button>
+              <a href={bibleRefUrl(refOf(d))} target="_blank" rel="noreferrer" className="bm-chip hover:bg-white/14">
+                Bible.com
+              </a>
+              <a
+                href={bibleGatewayRangeUrl(book.osis, d.from, d.to, version)}
+                target="_blank"
+                rel="noreferrer"
+                className="bm-chip hover:bg-white/14"
+              >
+                BibleGateway
+              </a>
+            </span>
+          </li>
+        ))}
+      </ol>
+
+      <section>
+        <div className="bm-eyebrow bm-eyebrow-dim">{t('bpPlanWhole')}</div>
+        <p className="mt-1 text-[11.5px] leading-snug text-white/45">{t('bpPlanWholeNote')}</p>
+        <div className="mt-2 flex flex-col gap-2">
+          {READING_PLANS.map((p) => (
+            <a
+              key={p.id}
+              href={planUrl(p, lang)}
+              target="_blank"
+              rel="noreferrer"
+              className="border-l-2 border-mint/40 bg-white/5 px-3 py-2 transition hover:bg-white/10"
+            >
+              <div className="flex flex-wrap items-baseline gap-x-2">
+                <span className="text-sm font-bold text-white">{lang === 'de' ? p.title.de : p.title.en}</span>
+                <span className="text-[11px] text-mint">{p.provider}</span>
+                <span className="text-[11px] text-white/40">
+                  {lang === 'de' ? p.duration.de : p.duration.en}
+                </span>
+                {/* „nur deutsch" steht dabei, statt die andere Sprache zu behaupten. */}
+                {p.only && p.only !== lang && (
+                  <span className="bm-chip">{t(p.only === 'de' ? 'bpPlanOnlyDe' : 'bpPlanOnlyEn')}</span>
+                )}
+              </div>
+              <p className="mt-1 text-[12px] leading-snug text-white/65">
+                {lang === 'de' ? p.what.de : p.what.en}
+              </p>
+            </a>
+          ))}
+        </div>
+        <a
+          href={PLAN_INDEX[lang]}
+          target="_blank"
+          rel="noreferrer"
+          className="bm-btn bm-btn-ghost mt-2 inline-block"
+        >
+          {t('bpPlanMore')}
+        </a>
+      </section>
     </div>
   );
 }

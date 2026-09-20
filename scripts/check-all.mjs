@@ -42,6 +42,7 @@ const CHECKS = [
   { name: 'Feste Israels', script: 'check-feasts.mjs', ts: true },
   { name: 'Bücherregal', script: 'check-shelf.mjs', ts: true },
   { name: 'Buchporträts', script: 'check-portraits.mjs', ts: true },
+  { name: 'Leseplläne', script: 'check-plans.mjs', ts: true },
   { name: 'Philosophieregal', script: 'check-philosophie.mjs', ts: true },
   { name: 'Reisen & Mission', script: 'check-journeys.mjs', ts: true },
   { name: 'Kamera im Gehen', script: 'check-walk.mjs', ts: true },

@@ -558,7 +558,7 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   eine Vorlesehilfe ist die Rolle Beiwerk: Jeder Zug steht darunter als Knopf
   mit Namen und Kapitelspanne, und alles Weitere daneben als Text.
 
-  Daneben, in sechs Tafeln: **Kernbotschaft** und Kernvers, **Auf einen Blick**
+  Daneben, in sieben Tafeln: **Kernbotschaft** und Kernvers, **Auf einen Blick**
   (Kapitel, Verse, Orte, hebräischer Name, Textart, Schauplatz, das Wort, das
   den Takt schlägt), die **Figuren** mit Namensbedeutung und Wendepunkt – mit
   Sprung in den Zeitbaum und auf die Karte –, die **Zeitschiene**, die
@@ -566,6 +566,25 @@ Look & Feel sind an [bibleproject.com](https://bibleproject.com) angelehnt
   **Medien**: das BibleProject-Buchvideo (auf Deutsch, wo es das gibt), die
   Folgen zu diesem Buch in „Hören & Sehen", der Bibeltext Zug für Zug und der
   Sprung ins Bücherregal.
+
+  **Und ein Leseplan.** Nicht abgetippt, sondern gerechnet: „1. Mose in 7
+  Tagen" nach den **Zügen** der Rolle – ein Tag ist dann eine ganze Geschichte
+  mit Namen und keine Kapitelspanne –, daneben gleichmäßige Pläne über 7, 14,
+  30 oder 90 Tage für die andere Frage: bis wann bin ich durch? Je Tag drei
+  Wege, weil nur der Leser weiß, welcher seiner ist: in den Entdeckermodus mit
+  der Karte daneben, zu **Bible.com** (YouVersion) und zu **BibleGateway**.
+  `npm run check:plans` rechnet für alle 66 Bücher und jede angebotene
+  Tageszahl nach, dass jedes Kapitel genau einmal vorkommt und kein Tag mehr
+  als ein Kapitel über dem Schnitt liegt – 207 Pläne bei jedem Lauf.
+
+  Darunter die **Pläne für die ganze Bibel**, und die sind verlinkt statt
+  nachgebaut: BibleProjects Jahresplan „Die Bücher der Bibel" (mit denselben
+  Videos, die in den Porträts stecken), „Wie man die Bibel liest",
+  „Die kleinen Propheten", der klassische Jahresplan von YouVersion und der
+  **ÖAB-Bibelleseplan**. Ein Plan über die ganze Bibel ist eine Entscheidung –
+  chronologisch oder kanonisch, in einem Jahr oder in acht –, und die haben
+  andere mit Sorgfalt getroffen und pflegen sie. Wo es einen Plan nur auf
+  Deutsch gibt, steht das dabei.
 
   **Die Hinweise auf Jesus sind der heikle Teil, und darum werden sie
   nachgeschlagen.** Je Hinweis stehen zwei Sätze nebeneinander – einer aus dem
@@ -881,11 +900,11 @@ npm run preview    # Build lokal anschauen
 npm run check      # alle Prüfungen, die ohne Netz auskommen
 ```
 
-`npm run check` bündelt die achtundzwanzig Prüfungen, die von sich aus immer
+`npm run check` bündelt die neunundzwanzig Prüfungen, die von sich aus immer
 dasselbe Ergebnis liefern – darunter Buchkürzel, Zeitdokumente, Stammesgrenzen,
 Farbkontraste, Jesus-Sektion, Israel-Karte, Kirchengeschichte, Kachelquellen,
 Quizfragen, Heilsgeschichte, Feste Israels, **Bücherregal**, **Buchporträts**,
-**Philosophieregal**, Reisen & Mission,
+**Leseplläne**, **Philosophieregal**, Reisen & Mission,
 Startzahlen und **Ortsdatei** – und läuft in der CI **vor** dem Build: ein Tippfehler in `bookAliases.json` oder
 eine Stammesgrenze, die einen biblisch benannten Ort verfehlt, hält die
 Veröffentlichung auf, statt still mitzufahren.
@@ -1612,6 +1631,49 @@ gibt – auch im Entdeckermodus –, und sagt am Player, welche es ist. Ob eine
 Kennung noch auf ein Video zeigt, prüft `npm run check:bp` täglich über die
 oEmbed-Auskunft von YouTube: Eine Kennung ist kein Link, den man ansieht, und
 ein zurückgezogenes Video bemerkt man sonst erst als leeren Player.
+
+### Leseplläne: gerechnet, nicht abgetippt
+
+Zwei Dateien, und die Trennung zwischen ihnen ist die Aussage:
+
+- `src/lib/readingPlan.ts` – **rechnet** den Plan für ein Buch. `planByDays`
+  teilt n Kapitel auf t Tage (Reste **vorn**, nicht hinten: Bei 50 Kapiteln
+  auf 7 Tage ist der volle Tag der erste – hinten anzuhängen hieße, die
+  letzten Tage schwerer zu machen als die ersten, und genau dort hören die
+  meisten auf). `planFromMovements` nimmt die Züge des Buchporträts als Tage.
+  `covers()` sagt, ob ein Plan sein Buch lückenlos abdeckt.
+- `src/data/readingPlans.ts` – **verweist** auf die Pläne über die ganze
+  Bibel. Hier steht kein Plan, sondern Titel, Anbieter, Dauer, ein Satz dazu
+  und die Adresse.
+
+**Warum das eine gerechnet und das andere verlinkt ist.** Der Plan für ein
+Buch ist Arithmetik: Kapitel durch Tage, und die Daten liegen im Haus. Ein
+Plan über die ganze Bibel ist eine *Entscheidung* – chronologisch oder
+kanonisch, mit Psalmen nebenher oder ohne, in einem Jahr oder in acht. Solche
+Entscheidungen haben andere mit Sorgfalt getroffen und pflegen sie seit
+Jahrzehnten; sie abzuschreiben hieße, eine schlechtere Kopie zu betreuen.
+
+**Warum der Plan nach den Zügen vorn steht.** Ein gleichmäßiger Plan schneidet
+mitten durch: „1. Mose in 7 Tagen" liest am vierten Tag die Kapitel 23–29 und
+hört mitten bei Laban auf – zwischen Jakobs Ankunft am Brunnen und der Nacht,
+in der ihm Lea untergeschoben wird. Die Züge der Rolle schneiden dort, wo das Buch selbst
+schneidet – Schöpfung, Griff, Flut, Babel, Abraham, Jakob, Josef –, und ein
+Tag hat dann einen Namen statt einer Zahlenspanne.
+
+`npm run check:plans` (läuft in `npm run check` mit) rechnet **alle** Pläne
+durch, nicht Stichproben: 66 Bücher mal jede angebotene Tageszahl, dazu die
+Ränder (ein Tag; so viele Tage wie Kapitel; mehr Tage als Kapitel) und die
+Pläne nach den Zügen – 207 Stück bei jedem Lauf. Geprüft wird, dass jedes
+Kapitel **genau einmal** vorkommt, in der Reihenfolge des Buches, dass kein
+Tag leer ist und keiner mehr als ein Kapitel über dem Schnitt liegt. Denn eine
+Lücke in einer Liste von Kapitelspannen sieht niemand: Ein Plan, der Kapitel
+24 zweimal nennt und 31 gar nicht, liest sich tagelang völlig richtig.
+
+An den verlinkten Plänen wird geprüft, was ohne Netz prüfbar ist – beide
+Sprachen gefüllt, jede Adresse eine https-Adresse, und `only` („gibt es nur
+auf Deutsch") stimmt mit den Adressen überein. Ob eine Adresse noch irgendwohin
+führt, sagt `npm run check:urls`: Die zehn Plan-Adressen stehen seither in den
+129, die der Lauf „Agent – Links" täglich abklopft.
 
 ### Das Philosophieregal: Werke, Verweise, Zeitstrahl
 
