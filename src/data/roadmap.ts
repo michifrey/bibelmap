@@ -107,7 +107,7 @@ export const ROAD: RoadStop[] = [
       en: 'One book of the Bible on a single page – and its structure builds itself up instead of just standing there: the movements of the book as a scroll, one by one, and at the end the arcs above that show what has repeated. With the core message, the people and their turning points, a small timeline, the pointers to Jesus – every quotation looked up in the Bible text – and a reading plan that cuts by the movements rather than by chapter counts.',
     },
     status: 'done',
-    figure: { value: '3/66', label: { de: 'Bücher mit Porträt', en: 'books with a portrait' } },
+    figure: { value: '4/66', label: { de: 'Bücher mit Porträt', en: 'books with a portrait' } },
   },
   {
     id: 'quelle',
@@ -135,11 +135,11 @@ export const ROAD: RoadStop[] = [
     tag: { de: 'als Nächstes', en: 'next up' },
     title: { de: 'Die übrigen Bücher', en: 'The remaining books' },
     body: {
-      de: 'Drei von 66 Büchern haben ein Porträt: 1., 2. und 3. Mose. Die Form trägt auch, wo nichts passiert – 3. Mose nennt in 27 Kapiteln vier Orte und wechselt keinen einzigen Mal den Ort –, und sie ist gegen den Bibeltext im Haus geprüft. Was fehlt, ist kein Bau, sondern Arbeit an den Texten: je Buch die Züge, die Figuren, die Zeitschiene und die Zitate, und jedes Zitat wird nachgeschlagen.',
-      en: 'Three of 66 books have a portrait: Genesis, Exodus and Leviticus. The form carries even where nothing happens – Leviticus names four places in 27 chapters and never changes location – and it is checked against the Bible text in the house. What is missing is not machinery but work on the texts: for each book the movements, the people, the timeline and the quotations, and every quotation gets looked up.',
+      de: 'Vier von 66 Büchern haben ein Porträt: 1. bis 4. Mose. Die Form trägt an beiden Enden – 3. Mose nennt in 27 Kapiteln vier Orte und bewegt sich nie, 4. Mose nennt 138 in 36 Kapiteln und kommt kaum zur Ruhe –, und sie ist gegen den Bibeltext im Haus geprüft. Was fehlt, ist kein Bau, sondern Arbeit an den Texten: je Buch die Züge, die Figuren, die Zeitschiene und die Zitate, und jedes Zitat wird nachgeschlagen.',
+      en: 'Four of 66 books have a portrait: Genesis through Numbers. The form carries at both ends – Leviticus names four places in 27 chapters and never moves, Numbers names 138 in 36 chapters and barely stands still – and it is checked against the Bible text in the house. What is missing is not machinery but work on the texts: for each book the movements, the people, the timeline and the quotations, and every quotation gets looked up.',
     },
     status: 'planned',
-    figure: { value: '3/66', label: { de: 'Bücher mit Porträt', en: 'books with a portrait' } },
+    figure: { value: '4/66', label: { de: 'Bücher mit Porträt', en: 'books with a portrait' } },
   },
   {
     id: 'quelleueberall',
